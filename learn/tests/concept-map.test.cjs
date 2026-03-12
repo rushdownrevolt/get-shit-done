@@ -1,37 +1,78 @@
 'use strict';
 
-const { test, describe } = require('node:test');
+const { test, describe, beforeEach, afterEach } = require('node:test');
 const assert = require('node:assert');
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
 
 describe('concept-map.cjs', () => {
-  describe('renderConceptMap()', () => {
-    test('returns string containing YOU ARE HERE near the matching section', () => {
+  let tmpDir;
+  let moduleDir;
+
+  beforeEach(() => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gsd-concept-map-test-'));
+    moduleDir = path.join(tmpDir, 'test-module');
+    fs.mkdirSync(moduleDir, { recursive: true });
+  });
+
+  afterEach(() => {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  describe('renderConceptMap(moduleDir, currentSection)', () => {
+    test('loads ASCII art from concept-map.txt in moduleDir', () => {
       const { renderConceptMap } = require('../lib/concept-map.cjs');
-      const result = renderConceptMap('entry-point');
+      fs.writeFileSync(path.join(moduleDir, 'concept-map.txt'), 'Box A --> Box B');
+      fs.writeFileSync(path.join(moduleDir, 'module.json'), JSON.stringify({ sectionMap: {} }));
+      const result = renderConceptMap(moduleDir, null);
+      assert.ok(result.includes('Box A --> Box B'), 'should contain the ASCII art from file');
+    });
+
+    test('returns fallback message when concept-map.txt is missing', () => {
+      const { renderConceptMap } = require('../lib/concept-map.cjs');
+      fs.writeFileSync(path.join(moduleDir, 'module.json'), JSON.stringify({ sectionMap: {} }));
+      const result = renderConceptMap(moduleDir, null);
+      assert.ok(result.includes('No concept map available'), 'should contain fallback message');
+      // Should not crash
+    });
+
+    test('applies YOU ARE HERE marker using sectionMap from module.json', () => {
+      const { renderConceptMap } = require('../lib/concept-map.cjs');
+      fs.writeFileSync(path.join(moduleDir, 'concept-map.txt'), '| Command Spec     |\n| Workflow          |');
+      fs.writeFileSync(path.join(moduleDir, 'module.json'), JSON.stringify({
+        sectionMap: {
+          'entry-point': 'Command Spec',
+          'workflow': 'Workflow',
+        },
+      }));
+      const result = renderConceptMap(moduleDir, 'entry-point');
       assert.ok(result.includes('YOU ARE HERE'), 'should contain YOU ARE HERE marker');
     });
 
-    test('returns concept map without marker when section is null', () => {
+    test('renders without marker when currentSection is null', () => {
       const { renderConceptMap } = require('../lib/concept-map.cjs');
-      const result = renderConceptMap(null);
+      fs.writeFileSync(path.join(moduleDir, 'concept-map.txt'), '| Command Spec     |');
+      fs.writeFileSync(path.join(moduleDir, 'module.json'), JSON.stringify({ sectionMap: {} }));
+      const result = renderConceptMap(moduleDir, null);
       assert.ok(!result.includes('YOU ARE HERE'), 'should not contain YOU ARE HERE marker');
     });
 
-    test('output contains section labels', () => {
+    test('renders without marker when module.json has no sectionMap', () => {
       const { renderConceptMap } = require('../lib/concept-map.cjs');
-      const result = renderConceptMap(null);
-      assert.ok(result.includes('Command Spec'), 'should contain Command Spec');
-      assert.ok(result.includes('Workflow'), 'should contain Workflow');
-      assert.ok(result.includes('Tool Dispatch'), 'should contain Tool Dispatch');
+      fs.writeFileSync(path.join(moduleDir, 'concept-map.txt'), '| Command Spec     |');
+      fs.writeFileSync(path.join(moduleDir, 'module.json'), JSON.stringify({}));
+      const result = renderConceptMap(moduleDir, 'entry-point');
+      // No sectionMap means no label lookup, so no marker
+      assert.ok(!result.includes('YOU ARE HERE'), 'should not add marker without sectionMap');
     });
-  });
 
-  describe('CONCEPT_MAP', () => {
-    test('exports the ASCII architecture diagram string', () => {
-      const { CONCEPT_MAP } = require('../lib/concept-map.cjs');
-      assert.strictEqual(typeof CONCEPT_MAP, 'string');
-      assert.ok(CONCEPT_MAP.length > 50, 'concept map should be a substantial string');
-      assert.ok(CONCEPT_MAP.includes('Command Spec'), 'should contain Command Spec');
+    test('output contains Architecture Overview header', () => {
+      const { renderConceptMap } = require('../lib/concept-map.cjs');
+      fs.writeFileSync(path.join(moduleDir, 'concept-map.txt'), 'diagram');
+      fs.writeFileSync(path.join(moduleDir, 'module.json'), JSON.stringify({ sectionMap: {} }));
+      const result = renderConceptMap(moduleDir, null);
+      assert.ok(result.includes('Architecture Overview'), 'should contain Architecture Overview header');
     });
   });
 });
