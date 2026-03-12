@@ -4,9 +4,9 @@
 **Researched:** 2026-03-12
 **Confidence:** HIGH
 
-## Standard Architecture
+## System Overview
 
-### System Overview (Current State)
+### Current State
 
 ```
 learn/
@@ -43,20 +43,57 @@ learn/
 └── tests/                      # node:test based, one per lib module
 ```
 
+### Target State
+
+```
+learn/
+├── bin/gsd-learn.cjs           # MODIFIED: smart default, --list-modules, per-module progress
+├── lib/
+│   ├── lessons.cjs             # MODIFIED: add listModules()
+│   ├── progress.cjs            # MODIFIED: v2 schema, per-module tracking, auto-migrate
+│   ├── parser.cjs              # UNCHANGED
+│   ├── markdown-parser.cjs     # NEW: parse .md command/workflow files
+│   ├── verifier.cjs            # MODIFIED: resolve ~ paths
+│   ├── prompt-templates.cjs    # MODIFIED: handle md-specific markers
+│   └── [all others unchanged]
+├── content/
+│   ├── modules/
+│   │   ├── gsd-commands/       # NEW: Module 1
+│   │   │   ├── module.json     # { id, title, description, order: 1 }
+│   │   │   ├── lessons/        # 01-welcome.json ... 06-mini-project.json
+│   │   │   └── project/        # spec.json, hints.json
+│   │   └── command-lifecycle/  # MODIFIED: order: 2, updated mini-project
+│   │       ├── module.json     # Add "order": 2
+│   │       ├── lessons/        # 06-mini-project.json updated for full-stack
+│   │       └── project/        # spec.json expanded to 4-layer verification
+│   └── prompts/
+│       ├── overview.prompt.md          # UNCHANGED (reusable for Module 1 welcome)
+│       ├── source-dive.prompt.md       # UNCHANGED
+│       └── markdown-dive.prompt.md     # NEW: template for markdown file lessons
+└── tests/
+    └── markdown-parser.test.cjs  # NEW
+```
+
 ### Component Responsibilities
 
-| Component | Responsibility | Module-Aware? |
-|-----------|----------------|---------------|
-| `gsd-learn.cjs` | CLI entry, flag parsing, wiring all modules together | YES -- hardcodes `moduleId = flags.module \|\| 'command-lifecycle'` |
-| `lessons.cjs` | Load module metadata + lesson JSONs from content dir | YES -- `loadModule(moduleId, contentDir)` already supports any module ID |
-| `progress.cjs` | Persist/load learner position | PARTIAL -- has `currentModule` and `modules: {}` fields but stores `currentLesson` globally, not per-module |
-| `navigator.cjs` | Keypress loop, lesson traversal | NO -- module-agnostic, works on any lesson array |
-| `renderer.cjs` | Format lesson to ANSI string | NO -- module-agnostic, renders any lesson matching the JSON schema |
-| `verifier.cjs` | Check project artifacts exist and match regex patterns | YES -- takes absolute specPath, already module-agnostic |
-| `hints.cjs` | Progressive hint delivery | NO -- takes a hint array, module-agnostic |
-| `feedback.cjs` | Track project events (starts, attempts, completions) | YES -- keyed by projectId, already supports multiple projects |
-| `parser.cjs` | Parse .cjs source files into structured data | NO -- JavaScript-only parser, cannot parse markdown |
-| `evaluator.cjs` | Score lessons against rubric | NO -- module-agnostic |
+| Component | Responsibility | Change Type |
+|-----------|----------------|-------------|
+| `gsd-learn.cjs` | CLI entry, flag parsing, wiring all modules together | MODIFY: smart default module, `--list-modules`, per-module progress |
+| `lessons.cjs` | Load module metadata + lesson JSONs from content dir | MODIFY: add `listModules()` function |
+| `progress.cjs` | Persist/load learner position | MODIFY: v2 schema with per-module tracking + auto-migration |
+| `parser.cjs` | Parse .cjs source files into structured data | UNCHANGED |
+| `markdown-parser.cjs` | Parse .md command/workflow files into structured data | NEW |
+| `prompt-templates.cjs` | Assemble prompts from templates + context | MODIFY: add markdown-specific markers |
+| `verifier.cjs` | Check project artifacts exist and match regex patterns | MODIFY: resolve `~` in artifact paths |
+| `navigator.cjs` | Keypress navigation loop | UNCHANGED |
+| `renderer.cjs` | Format lesson JSON blocks to ANSI terminal output | UNCHANGED |
+| `hints.cjs` | Progressive hint delivery | UNCHANGED |
+| `feedback.cjs` | Track project events | UNCHANGED |
+| `evaluator.cjs` | Score lessons against rubric | UNCHANGED |
+| `terminal.cjs` | ANSI style utilities | UNCHANGED |
+| `concept-map.cjs` | Render concept map | UNCHANGED |
+| `clipboard.cjs` / `clipboard-formatter.cjs` | Copy lesson to clipboard | UNCHANGED |
+| `errors.cjs` | Environment validation | UNCHANGED |
 
 ## Integration Analysis
 
@@ -64,48 +101,21 @@ learn/
 
 These components are module-agnostic by design and require zero modification:
 
-1. **`lessons.cjs`** -- `loadModule(moduleId, contentDir)` loads any module by ID from `content/modules/{moduleId}/`. Create the new directory with `module.json` + lessons and it works immediately.
+1. **`navigator.cjs`** -- Takes a lessons array, render function, and progress callback. Zero module awareness.
 
-2. **`navigator.cjs`** -- Takes a lessons array, render function, and progress callback. Zero module awareness. The copy, next, prev, quit actions are universal.
+2. **`renderer.cjs`** -- Renders any lesson object matching the JSON schema. All content types (`text`, `code`, `project`) already supported.
 
-3. **`renderer.cjs`** -- Renders any lesson object matching the JSON schema. All three content types (`text`, `code`, `project`) already supported. The new module's lessons use the same JSON schema.
+3. **`hints.cjs`** -- Takes a hints array. Module-agnostic.
 
-4. **`verifier.cjs`** -- Takes an absolute specPath. The `runVerification()` function reads spec.json and checks artifacts. Already supports any module's project spec.
+4. **`feedback.cjs`** -- Uses projectId as key in a flat object. Multiple projects from different modules already coexist in feedback.json.
 
-5. **`hints.cjs`** -- Takes a hints array. Module-agnostic.
+5. **`evaluator.cjs`** -- Scores by lesson ID against rubric dimensions. Module-agnostic.
 
-6. **`feedback.cjs`** -- Uses projectId as key in a flat object. Multiple projects from different modules already coexist in feedback.json without conflict.
-
-7. **`evaluator.cjs`** -- Scores by lesson ID against rubric dimensions. Module-agnostic.
-
-8. **`terminal.cjs`** -- Pure formatting utilities. Module-agnostic.
-
-9. **`concept-map.cjs`** -- Renders any concept map string. Module-agnostic.
-
-10. **`clipboard.cjs` / `clipboard-formatter.cjs`** -- Formats and copies any lesson. Module-agnostic.
+6. **`terminal.cjs`** / **`concept-map.cjs`** / **`errors.cjs`** / **`clipboard*.cjs`** -- Pure utilities. Module-agnostic.
 
 ### What Needs Modification
 
-#### 1. `gsd-learn.cjs` -- Module Selection and Progress Wiring (CRITICAL)
-
-**Current problem:** The CLI hardcodes `command-lifecycle` as default (line 43: `const moduleId = flags.module || 'command-lifecycle'`) and has no module discovery or listing UI.
-
-**Required changes:**
-
-- **Module discovery:** Import new `listModules()` from `lessons.cjs`. Use it for `--list-modules` output and smart default selection.
-- **Smart default:** Instead of hardcoding `command-lifecycle`, find the first incomplete module by checking progress. Fall back to the first module by order if no progress exists.
-- **`--list-modules` flag:** Show available modules with completion indicators.
-- **`--status` enhancement:** Show all modules with progress, not just the current one.
-- **Progress save:** Write lesson index into `modules[moduleId].currentLesson` instead of top-level `currentLesson`.
-- **`--verify` and `--hint` paths:** Already use `moduleId` to resolve spec/hints paths. These work as-is when `moduleId` is correctly resolved.
-
-**Specific lines affected:**
-- Line 43: Default module selection logic
-- Lines 55-61: `--status` handler (show multi-module progress)
-- Lines 134-137: Progress loading (read from `modules[moduleId]`)
-- Lines 146-148: Progress save callback (write to `modules[moduleId]`)
-
-#### 2. `progress.cjs` -- Per-Module Progress Tracking (CRITICAL)
+#### 1. `progress.cjs` -- v2 Schema with Per-Module Tracking (CRITICAL)
 
 **Current schema (v1):**
 ```json
@@ -129,76 +139,167 @@ These components are module-agnostic by design and require zero modification:
 }
 ```
 
-The `modules` field already exists as an empty object in the v1 schema -- this was clearly designed for future per-module tracking. The `currentModule` field remains as the "last active module" pointer.
+The `modules` field already exists as an empty object -- it was designed for this. The `currentModule` field remains as the "last active module" pointer.
 
-**Migration strategy:** On `loadProgress()`, detect `version === 1` (or missing version). If `currentModule` and `currentLesson` exist at top level, migrate them into `modules[currentModule].currentLesson`. Bump version to 2. Save on next `saveProgress()` call. No data loss, fully transparent to the learner.
+**Migration strategy:** On `loadProgress()`, detect `version === 1` (or missing version). If `currentModule` and `currentLesson` exist at top level, migrate them into `modules[currentModule].currentLesson`. Bump version to 2. Save on next `saveProgress()` call. No data loss, fully transparent.
 
-#### 3. `lessons.cjs` -- Add `listModules()` Function (MODERATE)
+#### 2. `lessons.cjs` -- Add `listModules()` Function (MODERATE)
 
 **Current state:** Only exports `loadModule()`. No way to discover available modules.
 
-**New function needed:**
+**New function:**
 ```javascript
 function listModules(contentDir) {
-  const modulesDir = path.join(contentDir, 'modules');
+  const modulesDir = path.join(contentDir || path.join(__dirname, '..', 'content'), 'modules');
   const dirs = fs.readdirSync(modulesDir).filter(d => {
-    const jsonPath = path.join(modulesDir, d, 'module.json');
-    return fs.existsSync(jsonPath);
+    return fs.existsSync(path.join(modulesDir, d, 'module.json'));
   });
   return dirs.map(d => {
-    const meta = JSON.parse(fs.readFileSync(
-      path.join(modulesDir, d, 'module.json'), 'utf-8'
-    ));
+    const meta = JSON.parse(fs.readFileSync(path.join(modulesDir, d, 'module.json'), 'utf-8'));
     return { id: meta.id, title: meta.title, description: meta.description, order: meta.order || 999 };
   }).sort((a, b) => a.order - b.order);
 }
 ```
 
-This scans `content/modules/*/module.json`, reads each, and returns them sorted by the `order` field.
+Scans `content/modules/*/module.json`, reads each, returns sorted by `order` field.
 
-#### 4. `module.json` Schema -- Add `order` Field
+#### 3. `gsd-learn.cjs` -- Multi-Module Wiring (CRITICAL)
 
-**Current `command-lifecycle/module.json`:**
-```json
-{
-  "id": "command-lifecycle",
-  "title": "Command Lifecycle",
-  "description": "Follow a GSD command from user input to execution..."
+**Changes:**
+- **Smart default:** Replace hardcoded `'command-lifecycle'` with first-module-by-order from `listModules()`.
+- **`--list-modules` flag:** Show available modules with completion indicators.
+- **`--status` enhancement:** Show all modules with progress.
+- **Progress read/write:** Use `modules[moduleId].currentLesson` instead of top-level `currentLesson`.
+
+**Specific lines affected:**
+- Line 43: `const moduleId = flags.module || 'command-lifecycle'` -- replace with smart default
+- Lines 55-61: `--status` handler -- show multi-module progress
+- Lines 134-137: Progress loading -- read from `modules[moduleId]`
+- Lines 146-148: Progress save callback -- write to `modules[moduleId]`
+
+#### 4. `verifier.cjs` -- Home Directory Path Resolution (SMALL)
+
+**Problem:** Module 2's full-stack mini-project needs to verify files in `~/.claude/`. The verifier currently joins paths with `cwd`:
+```javascript
+const filePath = path.join(cwd, artifact.path);
+```
+
+**Fix:** Resolve `~` prefix before joining:
+```javascript
+let filePath = artifact.path;
+if (filePath.startsWith('~')) {
+  filePath = path.join(os.homedir(), filePath.slice(1));
+} else {
+  filePath = path.join(cwd, artifact.path);
 }
 ```
 
-**Updated:**
-```json
-{
-  "id": "command-lifecycle",
-  "title": "Command Lifecycle",
-  "description": "Follow a GSD command from user input to execution...",
-  "order": 2
-}
-```
+This is a 4-line change. Enables spec.json to use `~/.claude/commands/gsd/echo.md` as an artifact path.
 
-The `order` field determines module sequence. `gsd-commands` gets `"order": 1`, `command-lifecycle` gets `"order": 2`. Missing `order` defaults to 999 (sorts last).
+#### 5. `prompt-templates.cjs` -- Markdown-Specific Markers (MODERATE)
+
+Add new marker replacements for markdown-parsed context:
+
+| New Marker | Source | Purpose |
+|------------|--------|---------|
+| `{{FILE_PURPOSE}}` | xmlSections.purpose or xmlSections.objective | What the file does |
+| `{{FRONTMATTER_FIELDS}}` | Formatted frontmatter key-value pairs | Command metadata |
+| `{{PROCESS_STEPS}}` | xmlSections steps, formatted | Workflow structure |
+| `{{FILE_REFERENCES}}` | @file: patterns | Dependencies |
+| `{{CODE_BLOCKS}}` | Embedded bash/code blocks | Implementation details |
+
+Existing markers (`{{FILE_NAME}}`, `{{SOURCE_CODE}}`, `{{LESSON_NUMBER}}`, `{{LESSON_TITLE}}`, `{{FOCUS}}`) remain unchanged and work for both .cjs and .md lessons.
 
 ### What Needs to Be Created
 
-#### New Content: `learn/content/modules/gsd-commands/`
+#### 1. `learn/lib/markdown-parser.cjs` (NEW)
 
-```
-learn/content/modules/gsd-commands/
-├── module.json
-├── lessons/
-│   ├── 01-welcome.json          # GSD's two-layer architecture overview
-│   ├── 02-slash-commands.json    # Command.md anatomy: frontmatter, sections
-│   ├── 03-workflows.json        # Workflow.md anatomy: purpose, steps, patterns
-│   ├── 04-command-workflow.json  # Trace: execute-phase.md command -> workflow
-│   ├── 05-patterns.json         # Cross-cutting: init steps, checkpoints, agents
-│   └── 06-mini-project.json     # Build a command.md + workflow.md pair
-└── project/
-    ├── spec.json                 # Verify command.md + workflow.md exist with correct structure
-    └── hints.json                # 5 progressive hints (vague to specific)
+The existing `parser.cjs` extracts JavaScript-specific structures. Markdown files need completely different extraction.
+
+**What it extracts:**
+- YAML frontmatter (between `---` delimiters): name, description, argument-hint, allowed-tools
+- XML-style sections: `<objective>`, `<execution_context>`, `<context>`, `<process>`, `<purpose>`
+- Step blocks: `<step name="...">` within `<process>`
+- File references: `@path/to/file` patterns
+- Embedded code blocks: triple-backtick fenced blocks with language tags
+
+**Return structure:**
+```javascript
+function parseMarkdownFile(filePath) {
+  const source = fs.readFileSync(filePath, 'utf-8');
+  const lines = source.split('\n');
+
+  return {
+    filePath,
+    fileName: path.basename(filePath),
+    lineCount: lines.length,
+    type: detectType(filePath),           // 'command' | 'workflow'
+    frontmatter: extractFrontmatter(source),
+    xmlSections: extractXmlSections(source),
+    steps: extractSteps(source),
+    codeBlocks: extractCodeBlocks(source),
+    fileReferences: extractFileReferences(source),
+  };
+}
 ```
 
-**Module metadata:**
+**Structural parallel with parser.cjs:**
+
+| parser.cjs | markdown-parser.cjs | Teaching parallel |
+|------------|---------------------|-------------------|
+| `moduleDoc` (JSDoc) | `xmlSections.purpose` | "What does this file do?" |
+| `requires` (require calls) | `fileReferences` (@file: refs) | "What does it depend on?" |
+| `exports` (module.exports) | `frontmatter` (name, flags) | "What does it expose?" |
+| `functions` (function bodies) | `steps` (process steps) | "What are the logical units?" |
+| `sections` (separator comments) | `xmlSections` | "How is it organized?" |
+
+**Why separate from parser.cjs:** JavaScript parsing uses brace-counting for function scope, regex for require/export patterns. Markdown parsing uses YAML delimiter detection, XML tag matching, and triple-backtick fence detection. These are fundamentally different algorithms. Mixing them into one module would create a god-module that is hard to test and reason about.
+
+#### 2. `learn/content/prompts/markdown-dive.prompt.md` (NEW)
+
+Analogous to `source-dive.prompt.md` but for markdown command/workflow files:
+
+```markdown
+# Markdown File Deep-Dive Lesson Generator
+
+## Lesson Metadata
+- **Lesson Number:** {{LESSON_NUMBER}}
+- **Title:** {{LESSON_TITLE}}
+- **Focus Area:** {{FOCUS}}
+
+## Source File Context
+
+**File:** {{FILE_NAME}}
+
+### File Purpose
+{{FILE_PURPOSE}}
+
+### Frontmatter (Command Metadata)
+{{FRONTMATTER_FIELDS}}
+
+### Process Steps
+{{PROCESS_STEPS}}
+
+### File References
+{{FILE_REFERENCES}}
+
+### Embedded Code Blocks
+{{CODE_BLOCKS}}
+
+### Full Source
+```markdown
+{{SOURCE_CODE}}
+```
+
+## Instructions
+[Adapted guidelines for teaching markdown structure]
+```
+
+The existing `overview.prompt.md` is reusable as-is for Module 1's welcome lesson.
+
+#### 3. Module 1 Content: `learn/content/modules/gsd-commands/`
+
+**Module metadata (`module.json`):**
 ```json
 {
   "id": "gsd-commands",
@@ -208,261 +309,317 @@ learn/content/modules/gsd-commands/
 }
 ```
 
-#### New Parser: `learn/lib/markdown-parser.cjs`
+**Lesson plan (6 lessons):**
 
-The existing `parser.cjs` only handles `.cjs` JavaScript files (extracts requires, exports, functions, constants, JSDoc). The new module teaches markdown files. A separate parser is needed.
+| # | ID | Type | Title | Sources | Focus |
+|---|-----|------|-------|---------|-------|
+| 1 | welcome-commands | overview | How GSD Commands Work | (none) | Two-layer architecture: command.md specs + workflow.md orchestration |
+| 2 | slash-commands | md-dive | Anatomy of a Slash Command | commands/gsd/echo.md, commands/gsd/new-project.md | Frontmatter, XML sections, @file references |
+| 3 | workflows | md-dive | Anatomy of a Workflow | workflows/echo.md, workflows/execute-phase.md | Purpose, process steps, bash code blocks |
+| 4 | command-workflow-link | md-dive | Commands Connect to Workflows | commands/gsd/new-project.md + workflows/new-project.md | execution_context -> workflow data flow |
+| 5 | patterns | md-dive | Cross-Cutting Patterns | workflows/execute-phase.md, workflows/plan-phase.md | Init steps, checkpoints, agent spawning |
+| 6 | mini-project | project | Build a Slash Command | (none) | Create command.md + workflow.md pair |
 
-**What it extracts from command/workflow `.md` files:**
-- YAML frontmatter (name, description, argument-hint, allowed-tools)
-- XML-style sections (`<objective>`, `<execution_context>`, `<context>`, `<process>`)
-- File references (`@path/to/file` patterns in execution_context)
-- Step names and contents within `<process>` blocks (`<step name="...">`)
-- Bash code blocks within steps
+**Mini-project spec (`project/spec.json`):**
+```json
+{
+  "id": "gsd-commands-project",
+  "moduleId": "gsd-commands",
+  "title": "Build a GSD Slash Command",
+  "description": "Create command.md and workflow.md files for a new GSD command",
+  "artifacts": [
+    {
+      "description": "Slash command file",
+      "path": "~/.claude/commands/gsd/echo.md",
+      "checks": [
+        { "pattern": "^---", "description": "Has YAML frontmatter" },
+        { "pattern": "name:\\s*gsd:", "description": "Has name field with gsd: prefix" },
+        { "pattern": "<execution_context>", "description": "Has execution_context section" }
+      ]
+    },
+    {
+      "description": "Workflow file",
+      "path": "~/.claude/get-shit-done/workflows/echo.md",
+      "checks": [
+        { "pattern": "<purpose>|<process>", "description": "Has purpose or process section" },
+        { "pattern": "<step", "description": "Has at least one step" }
+      ]
+    }
+  ]
+}
+```
 
-**Why a separate module (not extending parser.cjs):** JavaScript and markdown have completely different structures. `parser.cjs` extracts JS-specific constructs (require graphs, function bodies, brace-counting for scope). Markdown parsing extracts frontmatter and XML-like sections. Mixing them violates single responsibility and makes both harder to test and maintain.
+#### 4. Updated Module 2 Content
 
-#### New Prompt Template: `learn/content/prompts/markdown-dive.prompt.md`
+**Updated `command-lifecycle/module.json`:**
+```json
+{
+  "id": "command-lifecycle",
+  "title": "Command Lifecycle",
+  "description": "Follow a GSD command from user input to execution, understanding how each piece connects.",
+  "order": 2
+}
+```
 
-Analogous to `source-dive.prompt.md` but for markdown command/workflow files. Template variables include parsed frontmatter fields, section contents, file references, and step names instead of functions/exports/requires.
-
-The existing `overview.prompt.md` template can be reused as-is for the welcome lesson (lesson 01) since it is not file-type-specific.
-
-#### Updated Mini-Project: Command Lifecycle (Module 2)
-
-The existing mini-project spec only requires 2 artifacts:
-1. `get-shit-done/bin/lib/echo.cjs` (handler module)
-2. Switch case in `gsd-tools.cjs`
-
-Per PROJECT.md, this should expand to all 4 layers:
-1. `~/.claude/commands/gsd/echo.md` (slash command)
-2. `~/.claude/get-shit-done/workflows/echo.md` (workflow)
-3. `get-shit-done/bin/lib/echo.cjs` (handler module)
-4. Switch case in `gsd-tools.cjs`
-
-**Note:** Artifacts 1-2 live in the user's home directory (`~/.claude/`), not the repo. The verifier resolves paths relative to `cwd` (line 44 of verifier.cjs: `path.join(cwd, artifact.path)`). Paths starting with `~` or absolute paths will need either:
-- A small verifier enhancement to handle home-relative paths, OR
-- The spec uses absolute paths (less portable), OR
-- The spec only verifies repo-local artifacts and the lesson text tells the learner to also create the command/workflow files
-
-**Recommendation:** Extend the verifier to resolve `~` in artifact paths. This is a 3-line change in `runVerification()`.
+**Updated `command-lifecycle/project/spec.json`** -- add 2 new artifacts:
+```json
+{
+  "id": "command-lifecycle-project",
+  "moduleId": "command-lifecycle",
+  "title": "Build a Full-Stack GSD Command",
+  "description": "Add a new command across all 4 layers: command.md, workflow.md, echo.cjs, gsd-tools.cjs switch",
+  "artifacts": [
+    {
+      "description": "Slash command file",
+      "path": "~/.claude/commands/gsd/echo.md",
+      "checks": [
+        { "pattern": "name:\\s*gsd:echo", "description": "Has name: gsd:echo" }
+      ]
+    },
+    {
+      "description": "Workflow file",
+      "path": "~/.claude/get-shit-done/workflows/echo.md",
+      "checks": [
+        { "pattern": "<process>", "description": "Has process section" }
+      ]
+    },
+    {
+      "description": "Echo handler module",
+      "path": "get-shit-done/bin/lib/echo.cjs",
+      "checks": [
+        { "pattern": "module\\.exports", "description": "File exports a module" },
+        { "pattern": "function\\s+cmd", "description": "Follows cmd* naming convention" }
+      ]
+    },
+    {
+      "description": "Switch case for echo command",
+      "path": "get-shit-done/bin/gsd-tools.cjs",
+      "checks": [
+        { "pattern": "case\\s+['\"]echo['\"]", "description": "Echo case exists in switch statement" }
+      ]
+    }
+  ]
+}
+```
 
 ## Data Flow
 
-### Current Flow (Single Module)
+### Lesson Content Generation Flow (Build-Time)
 
 ```
-CLI args
-    ↓
-moduleId = flags.module || 'command-lifecycle'   (hardcoded default)
-    ↓
-loadModule(moduleId, contentDir)
-    ↓
-loadProgress(cwd) → startIndex = progress.currentLesson   (global, not per-module)
-    ↓
-runNavigationLoop(lessons, startIndex, renderFn, progressFn)
-    ↓
-saveProgress(cwd, { currentModule, currentLesson })   (single global position)
-```
-
-### Required Flow (Multi-Module)
-
-```
-CLI args
-    ↓
-listModules(contentDir) → ordered module list
-    ↓
-moduleId = flags.module || smartDefault(progress, modules)
-    ↓
-loadModule(moduleId, contentDir)
-    ↓
-loadProgress(cwd) → startIndex = progress.modules[moduleId].currentLesson
-    ↓
-runNavigationLoop(lessons, startIndex, renderFn, progressFn)
-    ↓
-saveProgress(cwd, { currentModule: moduleId, modules: { [moduleId]: { currentLesson } } })
-```
-
-### Lesson Content Generation Flow (Build-Time, Not Runtime)
-
-```
-Source files:
+Source files (at build time):
   ~/.claude/commands/gsd/*.md       (slash commands)
   ~/.claude/get-shit-done/workflows/*.md   (workflows)
-         ↓
-markdown-parser.cjs → { frontmatter, sections, fileRefs, steps }
-         ↓
-markdown-dive.prompt.md   (template + parsed data = LLM prompt)
-         ↓
-LLM generates lesson JSON
-         ↓
+         |
+         v
+markdown-parser.cjs --> { frontmatter, xmlSections, steps, codeBlocks, fileRefs }
+         |
+         v
+prompt-templates.cjs + markdown-dive.prompt.md --> assembled LLM prompt
+         |
+         v
+LLM generates lesson JSON --> validated and copied to lessons/
+         |
+         v
 learn/content/modules/gsd-commands/lessons/NN-slug.json
 ```
 
-This is the same pattern used for the existing module: `parser.cjs` feeds `source-dive.prompt.md`, LLM generates lesson JSONs, JSONs are committed to the content directory. Content generation is a development-time workflow, not a runtime operation.
+This matches the existing pattern: `parser.cjs` feeds `source-dive.prompt.md`, LLM generates lesson JSONs. Content generation is development-time, not runtime.
+
+### Runtime Lesson Flow (Multi-Module)
+
+```
+CLI args
+    |
+    v
+listModules(contentDir) --> [{ id: 'gsd-commands', order: 1 }, { id: 'command-lifecycle', order: 2 }]
+    |
+    v
+moduleId = flags.module || smartDefault(progress, modules)
+    |
+    v
+loadModule(moduleId, contentDir) --> { id, title, lessons[] }
+    |
+    v
+loadProgress(cwd) --> startIndex = progress.modules[moduleId].currentLesson
+    |
+    v
+runNavigationLoop(lessons, startIndex, renderFn, progressFn)
+    |
+    v
+saveProgress(cwd, { currentModule: moduleId, modules: { [moduleId]: { currentLesson } } })
+```
+
+### Mini-Project Verification Flow
+
+```
+Module 1 (gsd-commands) verifies:
+  +-- ~/.claude/commands/gsd/echo.md      (has frontmatter + execution_context)
+  +-- ~/.claude/get-shit-done/workflows/echo.md  (has purpose/process + steps)
+
+Module 2 (command-lifecycle) verifies ALL 4 LAYERS:
+  +-- ~/.claude/commands/gsd/echo.md      (has name: gsd:echo)
+  +-- ~/.claude/get-shit-done/workflows/echo.md  (has process section)
+  +-- get-shit-done/bin/lib/echo.cjs      (exports cmd* function)
+  +-- get-shit-done/bin/gsd-tools.cjs     (has case 'echo')
+```
+
+Module 2's full-stack check naturally validates Module 1's artifacts still exist.
 
 ## Recommended Build Order
 
-### Phase 1: Multi-Module Infrastructure (Code Changes)
+Dependencies determine ordering. Each step depends only on completed predecessors.
 
-Build the plumbing before creating content. All existing tests must continue passing.
+### Phase 1: Multi-Module Infrastructure
 
-**1a. `progress.cjs` -- v2 schema with per-module tracking**
-- Add migration logic: v1 -> v2 (move top-level `currentLesson` into `modules[currentModule]`)
-- Backward-compatible: v1 files auto-migrate on load
-- Keep `loadProgress()` / `saveProgress()` function signatures unchanged
-- Tests: migration from v1, fresh v2 creation, module lookup, completed flag
+All existing tests must continue passing. This is pure plumbing.
 
-**1b. `lessons.cjs` -- add `listModules()` function** (parallel with 1a)
-- Scan `content/modules/*/module.json`, return array sorted by `order` field
-- Handle missing `order` (default to 999)
-- Add `order` field to existing `command-lifecycle/module.json` (`"order": 2`)
-- Tests: ordering, missing order defaults, empty modules dir, module without module.json skipped
+**1a. `progress.cjs` v2 schema** (no dependencies)
+- Per-module `currentLesson` in `modules[moduleId]` sub-object
+- Auto-migration from v1 (move top-level `currentLesson` into `modules[currentModule]`)
+- Tests: v1 migration, fresh v2 creation, per-module read/write
 
-**1c. `gsd-learn.cjs` -- multi-module wiring** (depends on 1a + 1b)
-- Smart default module selection using `listModules()` + progress state
-- `--list-modules` flag with completion indicators
-- `--status` shows all modules
-- Progress read/write uses `modules[moduleId]` sub-object
-- Tests: updated integration expectations for navigator.test, CLI flag tests
+**1b. `lessons.cjs` add `listModules()`** (parallel with 1a)
+- Scan `content/modules/*/module.json`, return sorted by `order`
+- Add `"order": 2` to existing `command-lifecycle/module.json`
+- Tests: ordering, missing order defaults to 999, missing module.json skipped
 
-### Phase 2: Markdown Parser + Prompt Template (New Code)
+**1c. `gsd-learn.cjs` multi-module wiring** (depends on 1a + 1b)
+- Smart default using `listModules()` + progress
+- `--list-modules` flag
+- Progress read/write uses `modules[moduleId]`
+- Tests: CLI flag tests, integration with updated progress format
 
-**2a. `markdown-parser.cjs`** -- New module
-- Parse YAML frontmatter (between `---` fences)
-- Extract XML-style sections and their content
-- Extract `@path/to/file` references
+**1d. `verifier.cjs` tilde path resolution** (parallel with 1a-1c)
+- Resolve `~` prefix to `os.homedir()` in artifact paths
+- Tests: tilde resolution, normal paths unchanged
+
+### Phase 2: Markdown Parser + Prompt Templates
+
+**2a. `markdown-parser.cjs`** (no dependencies on Phase 1)
+- Parse YAML frontmatter between `---` fences
+- Extract XML-style sections (`<purpose>`, `<process>`, etc.)
 - Extract `<step name="...">` blocks
-- Tests: parse real command.md files, parse real workflow.md files, malformed input
+- Extract `@path/to/file` references
+- Extract fenced code blocks
+- Detect file type: command vs workflow
+- Tests: parse real command.md, parse real workflow.md, malformed input, edge cases
 
-**2b. `markdown-dive.prompt.md`** -- New prompt template
-- Template variables: frontmatter fields, section contents, file references, step names
-- Guidelines adapted for markdown structure (vs JavaScript structure in source-dive.prompt.md)
+**2b. `markdown-dive.prompt.md`** (depends on 2a output structure)
+- Template with markdown-specific markers
+- Guidelines for teaching markdown file structure
 
-### Phase 3: New Module Content (Content Creation)
+**2c. `prompt-templates.cjs` updates** (depends on 2b)
+- Add markdown-specific marker replacements
+- Existing markers remain unchanged
 
-**3a. Module metadata and structure**
+### Phase 3: Module 1 Content
+
+**3a. Module metadata** (depends on Phase 1 for ordering)
 - Create `gsd-commands/module.json` with `"order": 1`
-- Create lessons/ and project/ directories
 
-**3b. Generate lesson prompts using markdown parser**
-- Run `markdown-parser.cjs` against target command/workflow files
-- Feed output into `markdown-dive.prompt.md` to create per-lesson prompts
-- Save generated prompts to `content/prompts/generated/`
+**3b. Generate lesson prompts** (depends on 2a, 2b, 2c)
+- Update `generate-lessons.cjs` with Module 1 lesson plan
+- Run markdown-parser against target command/workflow files
+- Feed into markdown-dive template
+- Generate prompt files
 
-**3c. Generate lesson JSONs via LLM**
-- Lesson 01: GSD two-layer architecture overview (uses `overview.prompt.md`)
-- Lesson 02: Slash command anatomy (frontmatter, objective, execution_context, process)
-- Lesson 03: Workflow anatomy (purpose, process steps, bash code blocks)
-- Lesson 04: Trace execute-phase from command.md through workflow.md
-- Lesson 05: Cross-cutting patterns (init steps, checkpoints, agent spawning, state updates)
-- Lesson 06: Mini-project description (build command.md + workflow.md pair)
+**3c. Generate and validate lesson JSONs** (depends on 3b)
+- Feed prompts to LLM
+- Validate JSON schema
+- Copy to `gsd-commands/lessons/`
 
-**3d. Mini-project spec and hints**
-- `project/spec.json`: Verify command.md has frontmatter with `name` field, has `<execution_context>` with workflow reference; verify workflow.md has `<purpose>` and `<process>` sections
-- `project/hints.json`: 5 progressive hints from vague to specific
+**3d. Module 1 mini-project** (depends on 1d for tilde paths)
+- Create `spec.json` checking command.md + workflow.md
+- Create `hints.json` with 5 progressive hints
+- Create lesson 06 (project description)
 
-### Phase 4: Command Lifecycle Mini-Project Update
+### Phase 4: Module 2 Full-Stack Update
 
-**4a. Update `command-lifecycle/project/spec.json`** to require all 4 layers:
-- `~/.claude/commands/gsd/echo.md` (slash command)
-- `~/.claude/get-shit-done/workflows/echo.md` (workflow)
-- `get-shit-done/bin/lib/echo.cjs` (handler module -- already verified)
-- `gsd-tools.cjs` switch case (already verified)
+**4a. Update `command-lifecycle/project/spec.json`** (depends on 1d)
+- Add command.md and workflow.md artifact checks (with `~` paths)
 
-**4b. Extend `verifier.cjs`** to resolve home-directory paths (`~` prefix -> `os.homedir()`)
+**4b. Update `command-lifecycle/project/hints.json`** (parallel with 4a)
+- Add hints for markdown layer artifacts
 
-**4c. Update `command-lifecycle/project/hints.json`** with hints covering all 4 layers
-
-**4d. Update lesson `06-mini-project.json`** to describe the full-stack project scope
+**4c. Update lesson `06-mini-project.json`** (parallel with 4a)
+- Describe full-stack deliverables (all 4 layers)
 
 ## Architectural Patterns
 
-### Pattern 1: Content-Driven Module Discovery
+### Pattern 1: Separate Parsers per File Type
 
-**What:** Modules are discovered by scanning the filesystem for `module.json` files. No central registry.
+**What:** One parser module per source file type (`parser.cjs` for .cjs, `markdown-parser.cjs` for .md).
+**When to use:** When file types have fundamentally different structures.
+**Trade-offs:** Pro: clean separation, focused tests, no conditional branching. Con: slight code duplication (both read files, both return structured objects). The duplication is trivial and not worth abstracting.
+
+### Pattern 2: Content-Driven Module Discovery
+
+**What:** Modules are discovered by scanning filesystem for `module.json` files. No central registry.
 **When to use:** When modules are self-contained directories with their own metadata.
-**Trade-offs:** Pro: Adding a module is just creating a directory. No other file to update. Con: Requires filesystem scan on every `--list-modules` call (trivially fast for this scale).
+**Trade-offs:** Pro: adding a module is just creating a directory. Con: requires filesystem scan (trivially fast at this scale).
 
-### Pattern 2: Schema Migration in Progress Files
+### Pattern 3: Schema Migration in Progress Files
 
 **What:** Progress files carry a `version` field. On load, detect old versions and migrate in-place.
-**When to use:** When changing the shape of persisted state in a tool real humans depend on.
-**Trade-offs:** Pro: Learner never loses progress. Transparent upgrade. Con: Migration code must be maintained indefinitely (acceptable for a 1-to-2 migration).
-
-### Pattern 3: Separate Parsers per File Type
-
-**What:** One parser module per source file type (`.cjs` files vs `.md` files).
-**When to use:** When file types have fundamentally different structure.
-**Trade-offs:** Pro: Clean separation, focused tests, no conditional branching. Con: Slight code duplication (both read files, both return structured objects). The duplication is trivial and not worth abstracting.
+**When to use:** When changing the shape of persisted state that real humans depend on.
+**Trade-offs:** Pro: learner never loses progress. Con: migration code must be maintained (acceptable for v1-to-v2).
 
 ## Anti-Patterns
 
-### Anti-Pattern 1: Module Registry File
+### Anti-Pattern 1: Extending parser.cjs for Markdown
+
+**What people do:** Add `if (filePath.endsWith('.md'))` branches to existing parser.cjs.
+**Why it is wrong:** `parser.cjs` extracts JS-specific constructs (brace-counted function bodies, require graphs, JSDoc). Markdown needs frontmatter, XML tags, code fences. Mixing them creates a god-module.
+**Do this instead:** Create `markdown-parser.cjs` as a parallel parser with its own test file.
+
+### Anti-Pattern 2: Module Registry File
 
 **What people do:** Create a central `modules.json` listing all modules in order.
-**Why it is wrong:** Two files to maintain per module addition. The registry drifts from reality when someone creates a module directory but forgets the registry.
+**Why it is wrong:** Two files to maintain per module. The registry drifts from reality.
 **Do this instead:** Put `order` in each module's own `module.json`. Discovery function scans and sorts.
 
-### Anti-Pattern 2: Breaking Progress Backward Compatibility
+### Anti-Pattern 3: Breaking Progress Backward Compatibility
 
-**What people do:** Change the progress schema shape without versioning/migration.
-**Why it is wrong:** The learner loses their place. In a teaching tool, making someone redo lessons they already completed is a trust-breaking experience.
+**What people do:** Change the progress schema without versioning/migration.
+**Why it is wrong:** The learner loses their place. Making someone redo lessons they completed breaks trust.
 **Do this instead:** Version the schema. Auto-migrate v1 to v2 transparently on load.
 
-### Anti-Pattern 3: Extending parser.cjs for Markdown
+### Anti-Pattern 4: Sharing Mini-Projects Across Modules
 
-**What people do:** Add markdown parsing conditionally inside the existing JavaScript parser.
-**Why it is wrong:** `parser.cjs` extracts JS constructs (requires, exports, functions, brace-counted bodies, JSDoc). Markdown has frontmatter, XML-like sections, file references. Mixing them creates a god-module that is hard to test and reason about.
-**Do this instead:** Create `markdown-parser.cjs` as a separate module with its own test file.
+**What people do:** Have Module 1 and Module 2 share a single project spec.
+**Why it is wrong:** Module 1 focuses on markdown layers. Module 2 focuses on Node.js layers. A shared spec means neither module verifies independently.
+**Do this instead:** Module 1 spec checks command.md + workflow.md. Module 2 spec checks all 4 layers. Module 2 naturally re-validates Module 1 artifacts.
 
-### Anti-Pattern 4: Hardcoding Module Order in the CLI
+### Anti-Pattern 5: Importing GSD's frontmatter.cjs into learn/
 
-**What people do:** Put module sequencing logic in `gsd-learn.cjs` (`if moduleId === 'gsd-commands' ...`).
-**Why it is wrong:** Every new module requires CLI code changes. The CLI should be module-agnostic.
-**Do this instead:** Module ordering lives in content metadata (`order` field). CLI discovers and sorts generically.
-
-### Anti-Pattern 5: Copy-Pasting Full Markdown Files into Lesson Content
-
-**What people do:** Embed entire command.md or workflow.md contents as lesson `text` blocks.
-**Why it is wrong:** Content drifts from actual source files. Lessons become walls of text. The learner does not learn to read the files themselves.
-**Do this instead:** Show focused snippets of actual markdown files in `code` blocks (same pattern as JavaScript lessons). Use the markdown parser to identify which sections to highlight. Reference the source file path so the learner can open it.
+**What people do:** Import `get-shit-done/bin/lib/frontmatter.cjs` to parse command.md frontmatter.
+**Why it is wrong:** The learn tool is architecturally separate from gsd-tools. Importing from `get-shit-done/bin/lib/` creates a cross-boundary dependency.
+**Do this instead:** Implement frontmatter extraction in `markdown-parser.cjs` with simple regex, matching how `parser.cjs` uses regex for everything.
 
 ## Integration Points
 
-### Internal Boundaries (Module-to-Module)
+### Internal Boundaries
 
-| Boundary | Communication | Changes Needed |
-|----------|---------------|----------------|
-| `gsd-learn.cjs` -> `lessons.cjs` | Direct require, function call | Add `listModules()` import and call |
-| `gsd-learn.cjs` -> `progress.cjs` | Direct require, function call | Read/write `modules[moduleId]` sub-object (no API signature change) |
-| `lessons.cjs` -> `content/modules/*/module.json` | Filesystem read | Add `order` field to existing module.json |
-| `verifier.cjs` -> `content/modules/*/project/spec.json` | Filesystem read | New spec.json for gsd-commands; handle `~` paths for command-lifecycle update |
-| NEW: `markdown-parser.cjs` -> source markdown files | Filesystem read | Build-time only, not runtime |
-| NEW: `markdown-dive.prompt.md` -> prompt generation | Template interpolation | Build-time only |
+| Boundary | Communication | Change |
+|----------|---------------|--------|
+| `gsd-learn.cjs` -> `lessons.cjs` | Direct require, function call | Add `listModules()` import |
+| `gsd-learn.cjs` -> `progress.cjs` | Direct require, function call | Read/write `modules[moduleId]` sub-object |
+| `lessons.cjs` -> `content/modules/*/module.json` | Filesystem read | Add `order` field |
+| `verifier.cjs` -> artifact files | Filesystem read | Resolve `~` prefix in paths |
+| `generate-lessons.cjs` -> `markdown-parser.cjs` | Direct require (build-time only) | New import |
+| `generate-lessons.cjs` -> `prompt-templates.cjs` | assemblePrompt() call | New md-specific markers |
 
-### External Dependencies (GSD Source Files Being Taught)
+### External Dependencies (GSD Source Files)
 
 | Source Location | Used By | When | Risk |
 |----------------|---------|------|------|
-| `~/.claude/commands/gsd/*.md` | Lesson content generation (build-time) | Phase 3 | Stable format. Files exist after GSD install. |
-| `~/.claude/get-shit-done/workflows/*.md` | Lesson content generation (build-time) | Phase 3 | Stable format. Files exist after GSD install. |
-| `~/.claude/commands/gsd/echo.md` | Mini-project verification (runtime) | Phase 4 | Created by the learner. Verifier needs `~` path resolution. |
-| `~/.claude/get-shit-done/workflows/echo.md` | Mini-project verification (runtime) | Phase 4 | Created by the learner. Verifier needs `~` path resolution. |
+| `~/.claude/commands/gsd/*.md` | Lesson content generation | Build-time | Stable. Files exist after GSD install. |
+| `~/.claude/get-shit-done/workflows/*.md` | Lesson content generation | Build-time | Stable. Files exist after GSD install. |
+| `~/.claude/commands/gsd/echo.md` | Mini-project verification | Runtime | Created by learner. Needs `~` path resolution. |
+| `~/.claude/get-shit-done/workflows/echo.md` | Mini-project verification | Runtime | Created by learner. Needs `~` path resolution. |
 
-**Key risk:** Source files for the new module live in `~/.claude/`, not in the repo. Lesson content generation (a build-time step run by the developer) requires these files to exist. The runtime learner experience only reads pre-generated lesson JSONs from `content/modules/` and does not parse source files directly.
-
-## Key Architectural Decisions
-
-| Decision | Rationale |
-|----------|-----------|
-| Module ID: `gsd-commands` | Short, matches `/gsd:*` prefix, easy to type with `--module gsd-commands` |
-| 6 lessons per module | Proven by Module 2 (command-lifecycle). 1 overview + 4 deep-dives + 1 mini-project. |
-| Module 1 mini-project: build command.md + workflow.md | Natural complement to Module 2's Node.js mini-project. Together they cover all 4 layers. |
-| `order` field in module.json (not registry file) | Self-contained modules. No central file to maintain. |
-| Separate `markdown-parser.cjs` | JS and markdown have different structures. Separate parsers, separate tests, clean boundaries. |
-| Progress v2 with auto-migration | Backward compatible. No learner data loss. Transparent upgrade. |
-| `listModules()` in lessons.cjs (not standalone) | lessons.cjs already reads module.json. Keeps module loading logic in one place. |
-| Verifier `~` path resolution | 3-line addition enables home-directory artifact checking for the full-stack mini-project. |
+**Key note:** Command specs live under `~/.claude/commands/gsd/`, NOT under `~/.claude/get-shit-done/`. Path resolution must account for this different base directory.
 
 ## Sources
 

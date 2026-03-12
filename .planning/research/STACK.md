@@ -84,9 +84,7 @@ GSD's frontmatter parser handles YAML header extraction. But lesson content need
 | `workflow-dive.prompt.md` | Deep-dive into a workflow .md file | `{{WORKFLOW_NAME}}`, `{{PURPOSE}}`, `{{STEPS}}`, `{{TOOL_CALLS}}`, `{{AGENT_SPAWNS}}`, `{{SOURCE_MARKDOWN}}` |
 | `connection.prompt.md` | Lesson connecting command -> workflow -> tool chain | `{{COMMAND_FILE}}`, `{{WORKFLOW_FILE}}`, `{{TOOL_CALLS}}`, `{{DATA_FLOW}}` |
 
-**Implementation:** New files in `learn/content/prompts/`. The existing `prompt-templates.cjs` `assemblePrompt()` function already handles `{{PLACEHOLDER}}` replacement generically -- it just needs the new template files, not code changes.
-
-Wait -- re-examining `prompt-templates.cjs`, it actually hardcodes specific placeholder names in the replace chain. It does NOT do generic placeholder replacement. Each new placeholder needs a corresponding `.replace()` call.
+**Implementation:** New files in `learn/content/prompts/`. The existing `prompt-templates.cjs` `assemblePrompt()` function has hardcoded placeholder replacements -- each new placeholder needs a corresponding `.replace()` call.
 
 **Recommended change:** Refactor `assemblePrompt()` to accept a context object and do generic replacement:
 
@@ -174,11 +172,11 @@ learn/content/modules/gsd-commands/
 
 **Confidence: HIGH** -- `verifier.cjs` is file-type agnostic. It reads any file and runs regex checks.
 
-### 6. Module Renumbering Support
+### 6. Module Ordering and Multi-Module Support
 
-**Need:** Current progress tracks `currentModule: "command-lifecycle"`. Module 1 becomes `gsd-commands`, Module 2 becomes `command-lifecycle`. Progress file needs a `moduleOrder` concept.
+**Need:** Current progress tracks by module ID. Module 1 becomes `gsd-commands`, Module 2 stays `command-lifecycle`. A module ordering concept is needed.
 
-**Change:** Add a top-level `modules.json` or extend `gsd-learn.cjs` with module ordering:
+**Change:** Add a top-level `learn/content/modules.json` manifest:
 
 ```json
 {
@@ -189,26 +187,26 @@ learn/content/modules/gsd-commands/
 }
 ```
 
-This is a data file, not a library addition. The `--module` flag already exists in `gsd-learn.cjs`.
+This is a data file, not a library addition. The `gsd-learn.cjs` module selection already works by module ID.
 
 **Confidence: HIGH** -- Minimal change, follows existing patterns.
 
 ## Reuse Opportunities (Existing Code That Serves Module 1)
 
-| Existing Module | Reuse for Module 1 | Notes |
-|-----------------|---------------------|-------|
-| `learn/lib/lessons.cjs` | Load gsd-commands module | Already generic: `loadModule(moduleId)` |
-| `learn/lib/renderer.cjs` | Render markdown-source lessons | Content format is the same JSON schema (text, code blocks) |
-| `learn/lib/navigator.cjs` | Lesson navigation | Fully module-agnostic |
-| `learn/lib/progress.cjs` | Track Module 1 progress | Already supports multiple modules by ID |
-| `learn/lib/verifier.cjs` | Verify mini-project | File-type agnostic regex checking |
-| `learn/lib/hints.cjs` | Progressive hints | Reads from any hints.json |
-| `learn/lib/feedback.cjs` | Track learning events | Module-agnostic event recording |
-| `learn/lib/terminal.cjs` | ANSI formatting | No changes needed |
-| `learn/lib/clipboard.cjs` | Copy lesson to clipboard | No changes needed |
-| `learn/lib/clipboard-formatter.cjs` | Format lesson for clipboard | No changes needed |
-| `learn/lib/errors.cjs` | Error formatting | No changes needed |
-| `learn/lib/evaluator.cjs` | Score lesson quality | No changes needed |
+| Existing Module | Reuse for Module 1 | Changes Needed |
+|-----------------|---------------------|----------------|
+| `learn/lib/lessons.cjs` | Load gsd-commands module | None -- `loadModule(moduleId)` is already generic |
+| `learn/lib/renderer.cjs` | Render markdown-source lessons | None -- content format is the same JSON schema |
+| `learn/lib/navigator.cjs` | Lesson navigation | None -- fully module-agnostic |
+| `learn/lib/progress.cjs` | Track Module 1 progress | None -- already supports multiple modules by ID |
+| `learn/lib/verifier.cjs` | Verify mini-project | None -- file-type agnostic regex checking |
+| `learn/lib/hints.cjs` | Progressive hints | None -- reads from any hints.json |
+| `learn/lib/feedback.cjs` | Track learning events | None -- module-agnostic event recording |
+| `learn/lib/terminal.cjs` | ANSI formatting | None |
+| `learn/lib/clipboard.cjs` | Copy lesson to clipboard | None |
+| `learn/lib/clipboard-formatter.cjs` | Format lesson for clipboard | None |
+| `learn/lib/errors.cjs` | Error formatting | None |
+| `learn/lib/evaluator.cjs` | Score lesson quality | None |
 
 **Key insight:** 10 of 12 existing lib modules need zero changes. Only `parser.cjs` gets a sibling (`md-parser.cjs`) and `prompt-templates.cjs` gets a small refactor.
 
@@ -262,15 +260,44 @@ Per PROJECT.md, the existing Module 2 mini-project expands to "full-stack (all 4
 ```json
 {
   "artifacts": [
-    { "path": "commands/gsd/echo.md", "checks": [...] },
-    { "path": "get-shit-done/workflows/echo.md", "checks": [...] },
-    { "path": "get-shit-done/bin/lib/echo.cjs", "checks": [...] },
-    { "path": "get-shit-done/bin/gsd-tools.cjs", "checks": [...] }
+    { "path": "commands/gsd/echo.md", "checks": ["frontmatter", "name field", "execution_context tag"] },
+    { "path": "get-shit-done/workflows/echo.md", "checks": ["purpose tag", "process tag", "gsd-tools call"] },
+    { "path": "get-shit-done/bin/lib/echo.cjs", "checks": ["module.exports", "cmd* function", "output pattern"] },
+    { "path": "get-shit-done/bin/gsd-tools.cjs", "checks": ["case 'echo'"] }
   ]
 }
 ```
 
 No new libraries needed -- same `verifier.cjs` with more artifact entries.
+
+### Concept Map Update
+
+`learn/lib/concept-map.cjs` has a single ASCII diagram showing the Node.js tool layers. Module 1 needs an updated or separate concept map that includes the markdown layer:
+
+```
+  User types /gsd:new-project
+        |
+        v
+  +------------------+     +------------------+
+  | Command Spec     |---->| Workflow          |   <-- Module 1 teaches this layer
+  | commands/gsd/    |     | workflows/*.md    |
+  +------------------+     +--------+---------+
+                                    |
+                                    v
+                           +------------------+
+                           | Tool Dispatch    |   <-- Module 2 teaches this layer
+                           | gsd-tools.cjs    |
+                           +--------+---------+
+                                    |
+                       +------------+------------+
+                       v            v            v
+                 +---------+  +---------+  +---------+
+                 | State   |  | Config  |  | Phase   |
+                 | .cjs    |  | .cjs    |  | .cjs    |
+                 +---------+  +---------+  +---------+
+```
+
+**Change needed:** Add module-layer annotations and potentially a separate `renderConceptMap()` variant for Module 1 that highlights the top layer. No new libraries -- just updated string content in `concept-map.cjs`.
 
 ## Installation
 
@@ -310,11 +337,14 @@ All work is new .cjs modules, .json content files, and .prompt.md templates with
 - `learn/lib/lessons.cjs` -- generic `loadModule()`, confirms no changes needed
 - `learn/lib/verifier.cjs` -- file-agnostic regex checks, confirms no changes needed
 - `learn/bin/generate-lessons.cjs` -- hardcoded lesson plan, confirms extension pattern
-- `learn/bin/gsd-learn.cjs` -- module flag already exists, confirms routing support
 - `commands/gsd/new-project.md` -- actual command file structure (frontmatter + XML tags)
+- `commands/gsd/execute-phase.md` -- actual command file structure (frontmatter + XML tags)
 - `get-shit-done/workflows/new-project.md` -- actual workflow file structure (XML tags + bash blocks)
 - `get-shit-done/bin/lib/frontmatter.cjs` -- YAML parser available for reuse
-- `.planning/codebase/CONVENTIONS.md` -- confirms consistent markdown conventions across GSD
+- `learn/lib/concept-map.cjs` -- current diagram needing module-layer annotations
+- `learn/content/modules/command-lifecycle/project/spec.json` -- mini-project spec pattern
+- `.planning/codebase/STACK.md` -- confirms zero-dependency constraint
+- `.planning/PROJECT.md` -- confirms v2.0 requirements and constraints
 
 ---
 
