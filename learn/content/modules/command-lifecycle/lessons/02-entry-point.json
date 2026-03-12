@@ -2,37 +2,61 @@
   "id": "entry-point",
   "title": "Where Commands Start",
   "lessonNumber": 2,
-  "objective": "Understand how gsd-tools.cjs receives commands and begins processing them",
+  "objective": "Understand how gsd-tools.cjs parses CLI arguments, handles the --cwd and --raw flags, and sets up the execution context before dispatching commands",
   "content": [
     {
       "type": "text",
-      "value": "Every GSD command enters through a single file: get-shit-done/bin/gsd-tools.cjs. This is the entry point. When a workflow or agent needs to interact with GSD, it runs:\n\n  node gsd-tools.cjs <command> [args] [--raw]"
-    },
-    {
-      "type": "text",
-      "value": "The entry point does three things:\n1. Requires all the library modules (state, phase, roadmap, config, etc.)\n2. Determines the current working directory (cwd)\n3. Reads the command from process.argv and dispatches it"
+      "value": "Every GSD command begins in gsd-tools.cjs. Before any command logic runs, the entry point must answer three questions: What directory are we working in? Does the caller want raw output? What command was requested?"
     },
     {
       "type": "code",
       "language": "javascript",
-      "value": "// gsd-tools.cjs — the single entry point\nconst fs = require('fs');\nconst path = require('path');\nconst { error } = require('./lib/core.cjs');\nconst state = require('./lib/state.cjs');\nconst phase = require('./lib/phase.cjs');\nconst roadmap = require('./lib/roadmap.cjs');\nconst config = require('./lib/config.cjs');\nconst commands = require('./lib/commands.cjs');",
-      "highlight": [4, 5, 6, 7, 8, 9]
+      "value": "async function main() {\n  const args = process.argv.slice(2);\n\n  // Optional cwd override for sandboxed subagents running outside project root.\n  let cwd = process.cwd();\n  const cwdEqArg = args.find(arg => arg.startsWith('--cwd='));\n  const cwdIdx = args.indexOf('--cwd');\n  if (cwdEqArg) {\n    const value = cwdEqArg.slice('--cwd='.length).trim();\n    if (!value) error('Missing value for --cwd');\n    args.splice(args.indexOf(cwdEqArg), 1);\n    cwd = path.resolve(value);\n  }",
+      "highlight": [4, 5]
     },
     {
       "type": "text",
-      "value": "Notice how each require() loads a specific domain module. This is GSD's module boundary pattern: each .cjs file owns one area of functionality. There are no barrel files or index.cjs re-exports — each module explicitly requires what it needs."
+      "value": "Why does --cwd exist? Sandboxed subagents may be spawned in a temporary directory, not the project root. Without --cwd, every file operation would target the wrong directory. The flag supports both `--cwd /path` (two args) and `--cwd=/path` (single arg) formats because different shells construct arguments differently. Notice that the --cwd argument is spliced out of the args array after extraction -- downstream code never sees it."
     },
     {
       "type": "code",
       "language": "javascript",
-      "value": "// Working directory detection\nconst cwd = process.cwd();\nconst args = process.argv.slice(2);\nconst raw = args.includes('--raw');\nconst cmd = args[0];",
-      "highlight": [1, 3]
+      "value": "  if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {\n    error(`Invalid --cwd: ${cwd}`);\n  }\n\n  const rawIndex = args.indexOf('--raw');\n  const raw = rawIndex !== -1;\n  if (rawIndex !== -1) args.splice(rawIndex, 1);\n\n  const command = args[0];",
+      "highlight": [5, 6, 7]
     },
     {
       "type": "text",
-      "value": "The --raw flag controls output format: without it, GSD outputs JSON; with it, GSD outputs plain text. This dual-mode output lets both machines (JSON parsing) and humans (readable text) use the same commands."
+      "value": "The --raw flag controls output format. Without it, GSD outputs JSON (machine-readable for programmatic callers). With --raw, it outputs plain text (human-readable for shell pipelines). This dual-mode design lets the same tool serve both AI agents (who parse JSON) and humans (who read text). Like --cwd, --raw is spliced out so command handlers receive clean argument arrays."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "const fs = require('fs');\nconst path = require('path');\nconst { error } = require('./lib/core.cjs');\nconst state = require('./lib/state.cjs');\nconst phase = require('./lib/phase.cjs');\nconst roadmap = require('./lib/roadmap.cjs');\nconst verify = require('./lib/verify.cjs');\nconst config = require('./lib/config.cjs');\nconst template = require('./lib/template.cjs');\nconst milestone = require('./lib/milestone.cjs');\nconst commands = require('./lib/commands.cjs');\nconst init = require('./lib/init.cjs');\nconst frontmatter = require('./lib/frontmatter.cjs');",
+      "highlight": [3, 4, 5]
+    },
+    {
+      "type": "text",
+      "value": "Why are all modules loaded eagerly at the top instead of lazily inside each switch case? Because GSD is a CLI tool that exits after one command. Lazy loading would save startup time only if some modules were expensive to load, but all of GSD's modules are small CommonJS files with no heavy initialization. Eager loading keeps the code straightforward: all dependencies are declared upfront, making it easy to see what the tool needs."
+    },
+    {
+      "type": "text",
+      "value": "The require chain follows a consistent pattern: each lib module imports from core.cjs for shared utilities (output, error, path helpers), then exports cmd* functions that the router calls. This creates a clean one-way dependency: gsd-tools.cjs -> lib/*.cjs -> core.cjs."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "  if (!command) {\n    error('Usage: gsd-tools <command> [args] [--raw] [--cwd <path>]\\n' +\n      'Commands: state, resolve-model, find-phase, commit, ' +\n      'verify-summary, verify, frontmatter, template, ...');\n  }",
+      "highlight": [1, 2]
+    },
+    {
+      "type": "text",
+      "value": "Error handling is immediate and fail-fast. The error() function from core.cjs writes to stderr and exits with code 1. There is no try/catch around the entry point -- if something goes wrong, the process crashes with a clear message. Why? Because GSD commands are atomic operations called by agents. A partial success is worse than a clear failure, since agents can detect exit code 1 and report the error."
+    },
+    {
+      "type": "text",
+      "value": "You have now seen the first layer of the command lifecycle: argument parsing and context setup. In the previous lesson (Welcome), you saw the four-layer architecture. In the next lesson (Command Dispatch), you will follow the `command` variable into the switch statement that routes it to handler functions. The pattern you learned here -- splice flags out, validate early, fail fast -- sets the stage for how commands are processed downstream."
     }
   ],
   "conceptMap": "entry-point",
-  "successCriteria": "You can identify gsd-tools.cjs as the single entry point and explain the role of cwd, args, and the --raw flag"
+  "successCriteria": "You can explain how --cwd and --raw flags are parsed and spliced from args, why eager module loading is used, and how the error function provides fail-fast behavior"
 }

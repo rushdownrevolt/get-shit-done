@@ -2,37 +2,61 @@
   "id": "dispatch",
   "title": "Command Dispatch",
   "lessonNumber": 3,
-  "objective": "Understand how GSD routes commands to the correct handler function",
+  "objective": "Understand how GSD's switch statement routes commands to handler functions, including two-level dispatch for commands with sub-commands",
   "content": [
     {
       "type": "text",
-      "value": "Once gsd-tools.cjs has the command name from process.argv, it needs to route it to the right handler. GSD uses a straightforward switch statement for this — no dynamic routing, no plugin system, just explicit cases."
+      "value": "Once gsd-tools.cjs has parsed --cwd and --raw, it reads args[0] as the command name. A switch statement maps that string to the right module function. This is the command router -- the central hub that connects the CLI interface to all of GSD's functionality."
     },
     {
       "type": "code",
       "language": "javascript",
-      "value": "// Command dispatch in gsd-tools.cjs\nswitch (cmd) {\n  case 'state':\n    // Routes to state module functions\n    break;\n  case 'find-phase':\n    phase.cmdFindPhase(cwd, args[1], raw);\n    break;\n  case 'resolve-model':\n    config.cmdResolveModel(cwd, args[1], raw);\n    break;\n  case 'commit':\n    commands.cmdCommit(cwd, args.slice(1), raw);\n    break;\n  default:\n    error('Unknown command: ' + cmd);\n}",
-      "highlight": [2, 6, 9, 12]
+      "value": "  const command = args[0];\n\n  if (!command) {\n    error('Usage: gsd-tools <command> [args] [--raw] [--cwd <path>]\\n' +\n      'Commands: state, resolve-model, find-phase, commit, ...');\n  }\n\n  switch (command) {\n    case 'state': {\n      const subcommand = args[1];\n      if (subcommand === 'json') {\n        state.cmdStateJson(cwd, raw);\n      } else if (subcommand === 'update') {\n        state.cmdStateUpdate(cwd, args[2], args[3]);\n      }\n      break;\n    }",
+      "highlight": [1, 8, 9, 10]
     },
     {
       "type": "text",
-      "value": "Each case maps a command string to a function call. The naming convention is consistent: command functions start with 'cmd' followed by the operation name in camelCase. For example:\n\n  find-phase  -> phase.cmdFindPhase()\n  resolve-model -> config.cmdResolveModel()\n  commit -> commands.cmdCommit()"
-    },
-    {
-      "type": "text",
-      "value": "Some commands have sub-commands. The 'state' command, for instance, dispatches further based on args[1]:\n\n  state load -> state.cmdStateLoad()\n  state advance-plan -> state.cmdAdvancePlan()\n  state add-decision -> state.cmdAddDecision()"
+      "value": "Why a switch statement instead of a command registry or plugin pattern? Because GSD has a fixed, known command set. A registry adds indirection -- you'd have to search multiple files to find what commands exist. The switch makes every command visible in one scroll. When you want to add a command, you add a case. When you want to find how a command works, you search for `case 'command-name'`."
     },
     {
       "type": "code",
       "language": "javascript",
-      "value": "// Sub-command dispatch for 'state'\ncase 'state': {\n  const sub = args[1];\n  switch (sub) {\n    case 'load':\n      state.cmdStateLoad(cwd, raw);\n      break;\n    case 'advance-plan':\n      state.cmdAdvancePlan(cwd, raw);\n      break;\n    case 'add-decision':\n      state.cmdAddDecision(cwd, args.slice(2), raw);\n      break;\n  }\n  break;\n}",
-      "highlight": [3, 4, 8, 11]
+      "value": "    case 'resolve-model': {\n      commands.cmdResolveModel(cwd, args[1], raw);\n      break;\n    }\n\n    case 'find-phase': {\n      phase.cmdFindPhase(cwd, args[1], raw);\n      break;\n    }\n\n    case 'commit': {\n      const amend = args.includes('--amend');\n      const filesIndex = args.indexOf('--files');\n      const endIndex = filesIndex !== -1 ? filesIndex : args.length;\n      const messageArgs = args.slice(1, endIndex).filter(a => !a.startsWith('--'));\n      const message = messageArgs.join(' ') || undefined;\n      const files = filesIndex !== -1 ? args.slice(filesIndex + 1).filter(a => !a.startsWith('--')) : [];\n      commands.cmdCommit(cwd, message, files, raw, amend);\n      break;\n    }",
+      "highlight": [2, 7, 11, 12, 13, 14, 15]
     },
     {
       "type": "text",
-      "value": "This two-level dispatch (command -> sub-command) keeps the routing flat and readable. Every command path is visible by scanning the switch statement — no indirection, no dynamic lookups."
+      "value": "Notice the naming convention: every handler function starts with `cmd` followed by the module domain and operation in camelCase. `find-phase` maps to `phase.cmdFindPhase()`, `resolve-model` maps to `commands.cmdResolveModel()`. This convention lets you predict function names from command names."
+    },
+    {
+      "type": "text",
+      "value": "The `commit` case shows argument parsing inline within the switch. Why not extract it to a helper? Because each command's argument structure is different -- commit takes --files and --amend, state takes sub-commands, scaffold takes --phase and --name. Inline parsing keeps each command's interface self-contained and avoids a generic args-parsing abstraction that would need to handle every case."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "    case 'state': {\n      const subcommand = args[1];\n      if (subcommand === 'json') {\n        state.cmdStateJson(cwd, raw);\n      } else if (subcommand === 'update') {\n        state.cmdStateUpdate(cwd, args[2], args[3]);\n      } else if (subcommand === 'patch') {\n        const patches = {};\n        for (let i = 2; i < args.length; i += 2) {\n          const key = args[i].replace(/^--/, '');\n          const value = args[i + 1];\n          if (key && value !== undefined) {\n            patches[key] = value;\n          }\n        }\n        state.cmdStatePatch(cwd, patches, raw);\n      } else if (subcommand === 'advance-plan') {\n        state.cmdStateAdvancePlan(cwd, raw);\n      } else {\n        state.cmdStateLoad(cwd, raw);\n      }\n      break;\n    }",
+      "highlight": [2, 7, 8, 9, 17, 19, 20]
+    },
+    {
+      "type": "text",
+      "value": "The `state` command uses two-level dispatch: args[0] selects the module, args[1] selects the sub-command. This pattern appears for state, phase, verify, frontmatter, template, and init -- commands with multiple related operations. The if/else chain inside each case acts as a second-level router. Notice the else clause at line 19: when no sub-command matches, it falls through to `cmdStateLoad` as the default. This means `gsd-tools state` with no sub-command still works."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "    case 'init': {\n      const workflow = args[1];\n      switch (workflow) {\n        case 'execute-phase':\n          init.cmdInitExecutePhase(cwd, args[2], raw);\n          break;\n        case 'plan-phase':\n          init.cmdInitPlanPhase(cwd, args[2], raw);\n          break;\n        case 'resume':\n          init.cmdInitResume(cwd, raw);\n          break;\n        default:\n          error(`Unknown init workflow: ${workflow}`);\n      }\n      break;\n    }",
+      "highlight": [2, 3, 4, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "The `init` command uses a nested switch instead of if/else -- this is the only place where a second switch appears. Why? Because init has many sub-commands (execute-phase, plan-phase, new-project, quick, resume, etc.) and a switch with explicit cases reads more clearly than a long if/else chain. The default case provides a specific error message listing available workflows, guiding the user to the correct command."
+    },
+    {
+      "type": "text",
+      "value": "You have now seen how args flow from the entry point (Lesson 2) into the router. Each case in the switch calls a cmd* function from a lib module -- these are the tool modules you will explore in Lesson 4. The naming convention (cmd + Module + Operation) creates a direct mapping: when you see `phase.cmdPhaseAdd()` in the switch, you know to look in lib/phase.cjs. In Lesson 5, you will follow one of these calls (state.cmdStateAdvancePlan) all the way to STATE.md being rewritten."
     }
   ],
-  "conceptMap": "tool-dispatch",
-  "successCriteria": "You can trace how a command string like 'find-phase' maps to phase.cmdFindPhase() through the switch dispatch"
+  "conceptMap": "command-dispatch",
+  "successCriteria": "You can trace how a command string like 'state advance-plan' flows through the two-level dispatch, and explain why GSD uses a switch statement instead of a command registry"
 }

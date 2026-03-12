@@ -2,41 +2,67 @@
   "id": "state-and-config",
   "title": "State and Configuration",
   "lessonNumber": 5,
-  "objective": "Understand how STATE.md and config.json track project state and settings across sessions",
+  "objective": "Understand how STATE.md is parsed with regex, how the frontmatter sync engine keeps YAML and markdown in sync, and how config.json provides defensive defaults with migration support",
   "content": [
     {
       "type": "text",
-      "value": "GSD needs to remember things between sessions: which phase you are on, what decisions were made, how the project is configured. Two files handle this:\n\n  .planning/config.json — Project settings (model profile, granularity, feature flags)\n  .planning/STATE.md    — Current position, decisions, blockers, session continuity"
-    },
-    {
-      "type": "text",
-      "value": "config.json is a simple JSON file with flat key-value pairs. GSD reads it with loadConfig(), which always returns a valid object — if the file is missing or corrupted, it falls back to sensible defaults. This defensive pattern appears throughout GSD."
+      "value": "GSD needs to remember things between sessions: which phase you are on, what decisions were made, how the project is configured. Two files handle this:\n\n  .planning/config.json  - Project settings (model profile, feature flags, branching strategy)\n  .planning/STATE.md     - Current position, decisions, blockers, performance metrics, session continuity\n\nconfig.json is a simple JSON file. STATE.md is more interesting: it's a Markdown file that's both human-readable AND machine-parseable."
     },
     {
       "type": "code",
       "language": "javascript",
-      "value": "// loadConfig pattern from config.cjs\nfunction loadConfig(cwd) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n  try {\n    const raw = fs.readFileSync(configPath, 'utf-8');\n    const parsed = JSON.parse(raw);\n    return {\n      mode: parsed.mode || 'yolo',\n      granularity: parsed.granularity || 'standard',\n      model_profile: parsed.model_profile || 'balanced',\n      commit_docs: parsed.commit_docs !== false,\n    };\n  } catch {\n    return { mode: 'yolo', granularity: 'standard',\n             model_profile: 'balanced', commit_docs: true };\n  }\n}",
-      "highlight": [4, 5, 6, 13, 14]
+      "value": "function stateExtractField(content, fieldName) {\n  const escaped = fieldName.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n  // Try **Field:** bold format first\n  const boldPattern = new RegExp(\n    `\\\\*\\\\*${escaped}:\\\\*\\\\*\\\\s*(.+)`, 'i'\n  );\n  const boldMatch = content.match(boldPattern);\n  if (boldMatch) return boldMatch[1].trim();\n  // Fall back to plain Field: format\n  const plainPattern = new RegExp(`^${escaped}:\\\\s*(.+)`, 'im');\n  const plainMatch = content.match(plainPattern);\n  return plainMatch ? plainMatch[1].trim() : null;\n}",
+      "highlight": [1, 3, 4, 9, 10]
     },
     {
       "type": "text",
-      "value": "The try/catch with silent fallback is GSD's standard pattern for loading persisted state. You will see it in loadProgress() (the progress tracker), loadConfig(), and state parsing. The principle: never crash on bad data, always have a safe default."
+      "value": "Why regex instead of a Markdown parser? Three reasons: (1) Zero dependencies -- no markdown-it, no remark, no unified. (2) STATE.md uses a predictable format with bold labels (`**Status:** Executing`) that regex handles perfectly. (3) The same regex approach handles both the bold Markdown format and plain-text format, making STATE.md flexible in how it's written. The regex is escaped to handle field names with special characters safely."
     },
     {
       "type": "code",
       "language": "javascript",
-      "value": "// STATE.md is Markdown with structured sections\n// state.cjs parses it with regex, not a Markdown library\n\nfunction parseStateMd(content) {\n  // Extract 'Current Position' section\n  const posMatch = content.match(\n    /## Current Position([\\s\\S]*?)(?=\\n## |$)/\n  );\n  // Extract phase, plan numbers from the text\n  const phaseMatch = posMatch[1].match(\n    /Phase:\\s*(\\d+)/\n  );\n  return { phase: phaseMatch[1] };\n}",
-      "highlight": [4, 6, 7, 10, 11]
+      "value": "function stateReplaceField(content, fieldName, newValue) {\n  const escaped = fieldName.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n  const boldPattern = new RegExp(\n    `(\\\\*\\\\*${escaped}:\\\\*\\\\*\\\\s*)(.*)`, 'i'\n  );\n  if (boldPattern.test(content)) {\n    return content.replace(boldPattern,\n      (_match, prefix) => `${prefix}${newValue}`);\n  }\n  const plainPattern = new RegExp(`(^${escaped}:\\\\s*)(.*)`, 'im');\n  if (plainPattern.test(content)) {\n    return content.replace(plainPattern,\n      (_match, prefix) => `${prefix}${newValue}`);\n  }\n  return null;\n}",
+      "highlight": [1, 6, 7, 8, 15]
     },
     {
       "type": "text",
-      "value": "STATE.md is a Markdown file parsed with regular expressions — no YAML frontmatter, no Markdown parser dependency. GSD reads it as a string and uses regex to find sections. This is intentional: STATE.md is human-readable and human-editable, while still machine-parseable."
+      "value": "stateReplaceField preserves the field prefix (the bold markers and colon) while replacing only the value. This means editing STATE.md programmatically doesn't break its Markdown formatting. The function returns null if the field isn't found, letting callers handle missing fields gracefully. This extract/replace pair is the foundation of every state mutation in GSD."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "function writeStateMd(statePath, content, cwd) {\n  const synced = syncStateFrontmatter(content, cwd);\n  fs.writeFileSync(statePath, synced, 'utf-8');\n}\n\nfunction syncStateFrontmatter(content, cwd) {\n  const body = stripFrontmatter(content);\n  const fm = buildStateFrontmatter(body, cwd);\n  const yamlStr = reconstructFrontmatter(fm);\n  return `---\\n${yamlStr}\\n---\\n\\n${body}`;\n}",
+      "highlight": [1, 2, 6, 7, 8]
     },
     {
       "type": "text",
-      "value": "This completes the command lifecycle. You have traced a GSD command from user input (gsd-tools.cjs) through dispatch (switch statement) to handler functions (lib/*.cjs) that read and write state (config.json, STATE.md). Every GSD command follows this exact path."
+      "value": "Why does writeStateMd exist instead of raw writeFileSync? Because STATE.md has dual representations: the human-readable Markdown body AND a YAML frontmatter block at the top. Every time the body changes, the frontmatter must be regenerated to stay in sync. buildStateFrontmatter extracts machine-readable fields from the Markdown body (phase, plan, status, progress), and syncStateFrontmatter prepends the updated YAML. This means tools can read state via `gsd-tools state json` (fast YAML parse) while humans read the Markdown."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "function cmdConfigSet(cwd, keyPath, value, raw) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n\n  // Parse value (handle booleans and numbers)\n  let parsedValue = value;\n  if (value === 'true') parsedValue = true;\n  else if (value === 'false') parsedValue = false;\n  else if (!isNaN(value) && value !== '') parsedValue = Number(value);\n\n  // Set nested value using dot notation (e.g., \"workflow.research\")\n  const keys = keyPath.split('.');\n  let current = config;\n  for (let i = 0; i < keys.length - 1; i++) {\n    const key = keys[i];\n    if (current[key] === undefined || typeof current[key] !== 'object') {\n      current[key] = {};\n    }\n    current = current[key];\n  }\n  current[keys[keys.length - 1]] = parsedValue;\n}",
+      "highlight": [5, 6, 7, 8, 10, 11]
+    },
+    {
+      "type": "text",
+      "value": "config-set supports dot notation (workflow.research) for nested values. Why? Because config.json has nested sections (workflow, git, planning) and agents need to set individual fields without knowing the full config structure. The auto-parsing of 'true'/'false'/numbers from strings is necessary because CLI arguments are always strings -- without it, `config-set commit_docs true` would store the string \"true\" instead of the boolean true."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "function cmdStateAdvancePlan(cwd, raw) {\n  let content = fs.readFileSync(statePath, 'utf-8');\n  const currentPlan = parseInt(\n    stateExtractField(content, 'Current Plan'), 10\n  );\n  const totalPlans = parseInt(\n    stateExtractField(content, 'Total Plans in Phase'), 10\n  );\n\n  if (currentPlan >= totalPlans) {\n    content = stateReplaceField(content, 'Status',\n      'Phase complete \\u2014 ready for verification') || content;\n  } else {\n    const newPlan = currentPlan + 1;\n    content = stateReplaceField(content, 'Current Plan',\n      String(newPlan)) || content;\n    content = stateReplaceField(content, 'Status',\n      'Ready to execute') || content;\n  }\n  writeStateMd(statePath, content, cwd);\n}",
+      "highlight": [3, 4, 10, 11, 14, 15, 20]
+    },
+    {
+      "type": "text",
+      "value": "cmdStateAdvancePlan shows the full state mutation lifecycle: extract fields from markdown, compute new values, replace fields in content, write through writeStateMd (which syncs frontmatter). The `|| content` fallback after stateReplaceField ensures that if a field doesn't exist, the original content is preserved rather than becoming null. Why this defensive pattern? Because STATE.md is both human-edited and machine-edited. A human might rename a section or delete a field -- the tool should gracefully skip the missing field rather than crash or silently discard the entire file."
+    },
+    {
+      "type": "text",
+      "value": "You have now traced the complete command lifecycle across all five lessons:\n\n1. **Welcome**: The four-layer architecture (entry point -> router -> modules -> output)\n2. **Entry Point**: --cwd/--raw parsing, eager module loading, fail-fast error handling\n3. **Command Dispatch**: switch routing, two-level dispatch, cmd* naming convention\n4. **Tool Modules**: output/error exit pattern, cmd* vs internal functions, defensive defaults\n5. **State and Config** [YOU ARE HERE]: regex-based STATE.md parsing, frontmatter sync, config CRUD\n\nThe key design thread: every piece of GSD is built for reliability in automated environments. Zero dependencies, defensive defaults, fail-fast errors, dual-format output (JSON + raw), and the regex-based state engine all serve the same goal: a tool that works correctly even when called by agents with no human oversight."
     }
   ],
-  "conceptMap": "state",
-  "successCriteria": "You can explain the loadConfig defensive pattern and how STATE.md is parsed with regex instead of a Markdown library"
+  "conceptMap": "state-and-config",
+  "successCriteria": "You can explain the stateExtractField/stateReplaceField regex pattern, why writeStateMd syncs YAML frontmatter on every write, and how config-set handles dot notation with type coercion"
 }

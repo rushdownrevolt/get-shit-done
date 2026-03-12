@@ -1,0 +1,202 @@
+{
+  "iteration": 1,
+  "timestamp": "2026-03-12T12:52:57.752Z",
+  "notes": "Baseline iteration. Weakest dimensions: conceptMapConnection (avg 3.0) and whyExplanations (avg 3.6). Lessons use real source code but need stronger cross-lesson references and more consistent why explanations for design decisions.",
+  "lessons": {
+    "welcome": {
+      "scores": {
+        "accuracy": 4,
+        "clarity": 5,
+        "depth": 3,
+        "whyExplanations": 4,
+        "conceptMapConnection": 3
+      },
+      "weighted": 3.85,
+      "pass": true,
+      "dimensions": {
+        "accuracy": {
+          "score": 4,
+          "weight": 0.25,
+          "contribution": 1
+        },
+        "clarity": {
+          "score": 5,
+          "weight": 0.2,
+          "contribution": 1
+        },
+        "depth": {
+          "score": 3,
+          "weight": 0.2,
+          "contribution": 0.6
+        },
+        "whyExplanations": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "conceptMapConnection": {
+          "score": 3,
+          "weight": 0.15,
+          "contribution": 0.45
+        }
+      }
+    },
+    "entry-point": {
+      "scores": {
+        "accuracy": 5,
+        "clarity": 4,
+        "depth": 4,
+        "whyExplanations": 4,
+        "conceptMapConnection": 3
+      },
+      "weighted": 4.1,
+      "pass": true,
+      "dimensions": {
+        "accuracy": {
+          "score": 5,
+          "weight": 0.25,
+          "contribution": 1.25
+        },
+        "clarity": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "depth": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "whyExplanations": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "conceptMapConnection": {
+          "score": 3,
+          "weight": 0.15,
+          "contribution": 0.45
+        }
+      }
+    },
+    "command-dispatch": {
+      "scores": {
+        "accuracy": 5,
+        "clarity": 4,
+        "depth": 4,
+        "whyExplanations": 4,
+        "conceptMapConnection": 3
+      },
+      "weighted": 4.1,
+      "pass": true,
+      "dimensions": {
+        "accuracy": {
+          "score": 5,
+          "weight": 0.25,
+          "contribution": 1.25
+        },
+        "clarity": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "depth": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "whyExplanations": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "conceptMapConnection": {
+          "score": 3,
+          "weight": 0.15,
+          "contribution": 0.45
+        }
+      }
+    },
+    "tool-modules": {
+      "scores": {
+        "accuracy": 5,
+        "clarity": 4,
+        "depth": 4,
+        "whyExplanations": 3,
+        "conceptMapConnection": 3
+      },
+      "weighted": 3.9,
+      "pass": true,
+      "dimensions": {
+        "accuracy": {
+          "score": 5,
+          "weight": 0.25,
+          "contribution": 1.25
+        },
+        "clarity": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "depth": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "whyExplanations": {
+          "score": 3,
+          "weight": 0.2,
+          "contribution": 0.6
+        },
+        "conceptMapConnection": {
+          "score": 3,
+          "weight": 0.15,
+          "contribution": 0.45
+        }
+      }
+    },
+    "state-and-config": {
+      "scores": {
+        "accuracy": 4,
+        "clarity": 4,
+        "depth": 4,
+        "whyExplanations": 3,
+        "conceptMapConnection": 3
+      },
+      "weighted": 3.65,
+      "pass": true,
+      "dimensions": {
+        "accuracy": {
+          "score": 4,
+          "weight": 0.25,
+          "contribution": 1
+        },
+        "clarity": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "depth": {
+          "score": 4,
+          "weight": 0.2,
+          "contribution": 0.8
+        },
+        "whyExplanations": {
+          "score": 3,
+          "weight": 0.2,
+          "contribution": 0.6
+        },
+        "conceptMapConnection": {
+          "score": 3,
+          "weight": 0.15,
+          "contribution": 0.45
+        }
+      }
+    }
+  },
+  "summary": {
+    "totalLessons": 5,
+    "averageWeighted": 3.92,
+    "allPassed": true
+  }
+}
