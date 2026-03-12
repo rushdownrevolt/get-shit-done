@@ -126,7 +126,10 @@ Plans:
   2. Learner can run verification that structurally checks their markdown artifacts (frontmatter fields, XML sections, file references) without requiring exact content matches
   3. Learner can request progressive hints (5 levels) that guide from conceptual reframe to step-by-step without giving away the answer
 
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 06-01-PLAN.md — Mini-project content: spec.json, hints.json, lesson JSON, concept map update
 
 ## Progress
 
@@ -143,4 +146,4 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 3. Mini-Project Validation | v1.0 | 3/3 | Complete | 2026-03-12 |
 | 4. Multi-Module Infrastructure | v2.0 | 0/3 | Not started | - |
 | 5. Module 1 Lessons | v2.0 | 0/2 | Not started | - |
-| 6. Module 1 Mini-Project | v2.0 | 0/? | Not started | - |
+| 6. Module 1 Mini-Project | v2.0 | 0/1 | Not started | - |
