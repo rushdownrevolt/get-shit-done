@@ -57,9 +57,9 @@
 ### Module 1: GSD Commands & Workflows
 
 - [x] **MOD1-01**: Lesson 1 — Conceptual overview of two-layer architecture (command.md dispatches to workflow.md)
-- [ ] **MOD1-02**: Lesson 2 — Command.md anatomy (frontmatter, XML sections, @file: references)
-- [ ] **MOD1-03**: Lesson 3 — Workflow.md anatomy (purpose, process steps, bash code blocks)
-- [ ] **MOD1-04**: Lesson 4 — Command-to-workflow wiring (dispatch chain from /gsd:X to execution)
+- [x] **MOD1-02**: Lesson 2 — Command.md anatomy (frontmatter, XML sections, @file: references)
+- [x] **MOD1-03**: Lesson 3 — Workflow.md anatomy (purpose, process steps, bash code blocks)
+- [x] **MOD1-04**: Lesson 4 — Command-to-workflow wiring (dispatch chain from /gsd:X to execution)
 - [ ] **MOD1-05**: Lesson 5 — Mini-project: build a custom command.md + workflow.md pair, verified structurally
 - [x] **MOD1-06**: Bridge lesson previewing Module 2's Node.js layer
 - [ ] **MOD1-07**: spec.json with markdown artifact checks for mini-project verification
@@ -149,9 +149,9 @@
 | PIPE-02 | Phase 4 | Pending |
 | PIPE-03 | Phase 4 | Pending |
 | MOD1-01 | Phase 5 | Complete |
-| MOD1-02 | Phase 5 | Pending |
-| MOD1-03 | Phase 5 | Pending |
-| MOD1-04 | Phase 5 | Pending |
+| MOD1-02 | Phase 5 | Complete |
+| MOD1-03 | Phase 5 | Complete |
+| MOD1-04 | Phase 5 | Complete |
 | MOD1-05 | Phase 6 | Pending |
 | MOD1-06 | Phase 5 | Complete |
 | MOD1-07 | Phase 6 | Pending |
