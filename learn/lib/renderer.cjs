@@ -94,7 +94,7 @@ function renderLesson(lesson, currentIndex, totalLessons) {
   parts.push('\n\n');
 
   // 10. Navigation footer
-  parts.push('  [n] Next  [p] Previous  [q] Quit');
+  parts.push('  [n] Next  [p] Previous  [c] Copy  [q] Quit');
   parts.push('\n');
 
   return parts.join('');

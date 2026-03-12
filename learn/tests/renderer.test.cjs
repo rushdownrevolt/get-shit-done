@@ -95,6 +95,12 @@ describe('renderLesson', () => {
     assert.ok(!output.includes('vscode://'), 'output should not contain vscode URI without source');
   });
 
+  test('footer includes [c] Copy option', () => {
+    const output = renderLesson(lesson, 0, 1);
+    assert.ok(output.includes('[c]'), 'output should contain [c] hint');
+    assert.ok(output.includes('Copy'), 'output should contain Copy label');
+  });
+
   test('code block renders line numbers via renderCodeBlock', () => {
     const lessonMultiline = {
       ...lesson,
