@@ -64,4 +64,46 @@ describe('renderLesson', () => {
     const output = renderLesson(lessonWithMap, 0, 1);
     assert.ok(output.includes('Architecture Overview'), 'output should contain concept map header');
   });
+
+  test('code section with source field renders file path text', () => {
+    const lessonWithSource = {
+      ...lesson,
+      content: [
+        {
+          type: 'code',
+          language: 'javascript',
+          value: 'const x = 1;',
+          source: { file: 'bin/gsd-tools.cjs', startLine: 10 },
+        },
+      ],
+    };
+    const output = renderLesson(lessonWithSource, 0, 1);
+    assert.ok(output.includes('bin/gsd-tools.cjs'), 'output should contain file path');
+    assert.ok(output.includes('10'), 'output should contain start line number');
+  });
+
+  test('code section without source field renders normally (backward compatible)', () => {
+    const lessonNoSource = {
+      ...lesson,
+      content: [
+        { type: 'code', language: 'javascript', value: 'const y = 2;' },
+      ],
+    };
+    const output = renderLesson(lessonNoSource, 0, 1);
+    assert.ok(output.includes('const'), 'output should contain code keyword');
+    assert.ok(output.includes('y = 2'), 'output should contain code content');
+    assert.ok(!output.includes('vscode://'), 'output should not contain vscode URI without source');
+  });
+
+  test('code block renders line numbers via renderCodeBlock', () => {
+    const lessonMultiline = {
+      ...lesson,
+      content: [
+        { type: 'code', language: 'javascript', value: 'line one\nline two\nline three' },
+      ],
+    };
+    const output = renderLesson(lessonMultiline, 0, 1);
+    assert.ok(output.includes('1'), 'output should contain line number 1');
+    assert.ok(output.includes('|'), 'output should contain gutter separator');
+  });
 });
