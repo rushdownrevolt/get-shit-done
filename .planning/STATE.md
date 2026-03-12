@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: GSD Commands & Workflows Module
-status: executing
-stopped_at: Completed 01.2-01-PLAN.md
-last_updated: "2026-03-12T18:07:42Z"
-last_activity: 2026-03-12 — Completed 01.2-01 Progressive Accumulation Renderer
+status: phase-complete
+stopped_at: Completed 01.2-02-PLAN.md
+last_updated: "2026-03-12T18:17:07Z"
+last_activity: 2026-03-12 — Completed 01.2-02 Prompt Templates and Lesson Regeneration
 progress:
   total_phases: 9
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 15
-  completed_plans: 10
+  completed_plans: 12
+  percent: 80
 ---
 
 # Project State
@@ -25,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-12)
 ## Current Position
 
 Phase: 01.2 of 6 (Adaptive Per-Part Lesson Structure)
-Plan: 1 of 2 in current phase
-Status: Executing
-Last activity: 2026-03-12 — Completed 01.2-01 Progressive Accumulation Renderer
+Plan: 2 of 2 in current phase
+Status: Phase complete — ready for next phase
+Last activity: 2026-03-12 — Completed 01.2-02 Prompt Templates and Lesson Regeneration
 
-Progress: [██████████░░░░░░░░░░] 67%
+Progress: [████████████████░░░░] 80%
 
 ## Performance Metrics
 
@@ -58,6 +59,7 @@ Progress: [██████████░░░░░░░░░░] 67%
 |-------|------|----------|-------|-------|
 | Phase 04 | P02 | 3min | 1 | 3 |
 | Phase 01.2 | P01 | 5min | 2 | 4 |
+| Phase 01.2 | P02 | 6min | 2 | 9 |
 
 ## Accumulated Context
 
@@ -76,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase 01.2]: Bridge sections use Unicode box-drawing characters for bordered display
 - [Phase 01.2]: Focus lines use dim style with cyan triangle-right marker on current block only
 - [Phase 01.2]: Validation uses strict truthy+typeof check for focus/bridge fields
+- [Phase 01.2]: Focus phrases 3-8 words; bridge sentences connect blocks and reference next lesson title
+- [Phase 01.2]: Lesson 6 mini-project last bridge references module completion
 
 ### Pending Todos
 
@@ -91,6 +95,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-12T18:07:42Z
-Stopped at: Completed 01.2-01-PLAN.md
-Resume file: .planning/phases/01.2-adaptive-per-part-lesson-structure-with-progressive-content-accumulation/01.2-01-SUMMARY.md
+Last session: 2026-03-12T18:17:07Z
+Stopped at: Completed 01.2-02-PLAN.md
+Resume file: .planning/phases/01.2-adaptive-per-part-lesson-structure-with-progressive-content-accumulation/01.2-02-SUMMARY.md
