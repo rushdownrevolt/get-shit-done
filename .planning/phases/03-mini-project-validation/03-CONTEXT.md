@@ -1,7 +1,7 @@
 # Phase 3: Mini-Project Validation - Context
 
 **Gathered:** 2026-03-12
-**Status:** Ready for replanning
+**Status:** Ready for replanning (updated)
 
 <domain>
 ## Phase Boundary
@@ -13,66 +13,86 @@ Learner completes a capstone mini-project that proves real capability, with prog
 <decisions>
 ## Implementation Decisions
 
+### Mini-project scope (full stack)
+- The mini-project asks the learner to build a complete `/gsd:echo` command across ALL 4 layers:
+  1. `~/.claude/commands/gsd/echo.md` — slash command definition
+  2. `~/.claude/get-shit-done/workflows/echo.md` — workflow implementation
+  3. `~/.claude/get-shit-done/bin/lib/echo.cjs` — Node.js handler module
+  4. `~/.claude/get-shit-done/bin/gsd-tools.cjs` — switch case entry
+- This proves the learner can wire the complete stack top-to-bottom
+
 ### Project outcome expectations
 - The learner's echo command MUST actually work as a live GSD command after completion
-- Learner creates files in the LIVE GSD installation (~/.claude/get-shit-done/bin/lib/), not the project repo copy
-- The spec.json artifact paths must target ~/.claude/get-shit-done/ not get-shit-done/ (project-local)
-- After passing --verify, running `/gsd:echo` (or `node ~/.claude/get-shit-done/bin/gsd-tools.cjs echo "message"`) should produce real output
-
-### Verification depth
-- Structural checks (regex patterns) remain as the verification mechanism
-- Since the learner modifies the real gsd-tools.cjs and creates echo.cjs in the live install, the command works by definition if structural checks pass
-- No need for the verifier to do additional wiring — the learner does the full wiring themselves
-
-### Lesson clarity
-- Lesson 06 (mini-project) must explicitly state the live GSD install paths where files go
-- Learner should not have to guess paths — lesson tells them exactly where to create echo.cjs and where gsd-tools.cjs lives
-- Hints focus on code patterns (function signatures, export patterns, switch case syntax), not path discovery
+- All files are created in the LIVE GSD installation, not the project repo copy
+- The spec.json artifact paths must target the live install paths (~ expansion)
+- The final test is the learner running `/gsd:echo` in Claude Code and seeing real output
 - The lesson should clearly state the expected outcome: "When you're done, /gsd:echo will be a real command you can use"
+
+### Verification approach
+- Verifier performs structural checks on ALL 4 files (not just the Node.js layer)
+- Structural checks: file existence + regex patterns for each file
+- The final validation is MANUAL: lesson tells the learner to test by running `/gsd:echo` in Claude Code
+- No automated functional test — the structural checks plus manual run IS the validation
+
+### Hint progression
+- Hints stay focused on the Node.js layer (the harder part)
+- Assume the markdown files are straightforward enough from Module 1 knowledge
+- Current escalation strategy (conceptual → specific file → specific pattern → step-by-step) remains
+
+### Lesson 06 format
+- Include an ASCII diagram showing the full command chain: command.md → workflow.md → gsd-tools.cjs → echo.cjs
+- Follow with prose explaining each file's role
+- Explicitly state all 4 live install paths — learner should not have to guess
+- Deliverables list all 4 files
 
 ### Claude's Discretion
 - Exact wording of lesson instructions and hints
 - Whether to include a "cleanup" mechanism to remove the echo command after the exercise
 - Error messaging when verification fails
+- Exact structural patterns for the markdown file checks
 
 </decisions>
 
 <specifics>
 ## Specific Ideas
 
-- User expected `/gsd:echo Does this work?` to actually run after completing the project — this IS the core promise
-- The current spec.json points to `get-shit-done/bin/lib/echo.cjs` (project-local) but should point to `~/.claude/get-shit-done/bin/lib/echo.cjs` (live install)
-- The current spec.json points to `get-shit-done/bin/gsd-tools.cjs` for the switch case check but should point to `~/.claude/get-shit-done/bin/gsd-tools.cjs`
+- User expects `/gsd:echo Does this work?` to actually run after completing the project — this IS the core promise
+- This module will become Module 2 after a new milestone creates Module 1 (slash commands + workflows)
+- After that new milestone, this module will be updated to account for learner already knowing the markdown layer
+- The two markdown files needed are minimal: creating `~/.claude/commands/gsd/echo.md` and `~/.claude/get-shit-done/workflows/echo.md`
 
 </specifics>
 
 <code_context>
 ## Existing Code Insights
 
-### Key Files to Update
-- `learn/content/modules/command-lifecycle/project/spec.json` — artifact paths need to change to live install
-- `learn/content/modules/command-lifecycle/lessons/06-mini-project.json` — lesson text needs explicit paths
-- `learn/content/modules/command-lifecycle/project/hints.json` — hints reference paths that need updating
-- `learn/lib/verifier.cjs` — resolves paths from spec.json against cwd; may need to resolve ~ or $HOME
+### Key Files (current state)
+- `learn/content/modules/command-lifecycle/project/spec.json` — currently checks only 2 artifacts (Node.js layer), needs to check all 4
+- `learn/content/modules/command-lifecycle/lessons/06-mini-project.json` — needs full-stack instructions + ASCII diagram
+- `learn/content/modules/command-lifecycle/project/hints.json` — 5 hints, Node.js focused (stays as-is)
+- `learn/lib/verifier.cjs` — uses `path.join(cwd, artifact.path)`, needs HOME expansion for live install paths
 
 ### Established Patterns
-- verifier.cjs uses `path.join(cwd, artifact.path)` — needs to handle absolute paths or HOME expansion
-- spec.json uses relative paths currently — switching to absolute or HOME-relative paths is a design choice
+- verifier.cjs uses `path.join(cwd, artifact.path)` — needs to handle ~ or $HOME for live install paths
+- spec.json uses relative paths currently — must switch to HOME-relative paths for all 4 artifacts
 
 ### Integration Points
-- gsd-tools.cjs at ~/.claude/get-shit-done/bin/gsd-tools.cjs is the live command dispatcher
-- ~/.claude/get-shit-done/bin/lib/ is where command modules live
+- `~/.claude/commands/gsd/echo.md` — Claude Code reads this to register the slash command
+- `~/.claude/get-shit-done/workflows/echo.md` — orchestrator reads this when command is invoked
+- `~/.claude/get-shit-done/bin/gsd-tools.cjs` — the live command dispatcher (switch statement)
+- `~/.claude/get-shit-done/bin/lib/` — where Node.js command modules live
 
 </code_context>
 
 <deferred>
 ## Deferred Ideas
 
-None — discussion stayed within phase scope
+- Update this module after new milestone completes Module 1 (slash commands + workflows) — the mini-project can then assume learner already knows the markdown layer
+- Module renumbering: current Command Lifecycle module becomes Module 2
 
 </deferred>
 
 ---
 
 *Phase: 03-mini-project-validation*
-*Context gathered: 2026-03-12*
+*Context gathered: 2026-03-12 (updated)*
