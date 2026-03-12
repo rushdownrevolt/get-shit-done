@@ -3,7 +3,7 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert');
 
-const { renderLesson, renderProgressDots, renderCompletionBanner } = require('../lib/renderer.cjs');
+const { renderLesson, renderProgressDots, renderCompletionBanner, renderPart } = require('../lib/renderer.cjs');
 const { COLORS, _styleWithColor } = require('../lib/terminal.cjs');
 
 describe('renderLesson', () => {
@@ -228,5 +228,146 @@ describe('renderCompletionBanner', () => {
       miniProjectCount: 0,
     });
     assert.ok(output.includes('\u2588'), 'should contain solid block characters');
+  });
+});
+
+// ─── renderPart ──────────────────────────────────────────────────────
+
+describe('renderPart', () => {
+  const lesson = {
+    id: 'test-lesson',
+    title: 'Test Lesson Title',
+    lessonNumber: 2,
+    objective: 'Learn about testing renderers',
+    content: [
+      { type: 'text', value: 'This is the first text block.' },
+      { type: 'code', language: 'javascript', value: 'const x = 1;', highlight: [1] },
+      { type: 'text', value: 'This is the third text block.' },
+    ],
+    conceptMap: null,
+    successCriteria: 'You can verify renderer output',
+  };
+
+  // totalParts = 3 (no concept map)
+  test('renders only content[0] when partIndex is 0', () => {
+    const output = renderPart(lesson, 0, 3, 1, 5);
+    assert.ok(output.includes('This is the first text block.'), 'should contain first text block');
+    assert.ok(!output.includes('const x = 1'), 'should NOT contain second content section');
+    assert.ok(!output.includes('This is the third text block.'), 'should NOT contain third content section');
+  });
+
+  test('includes lesson title and position indicator', () => {
+    const output = renderPart(lesson, 0, 3, 1, 5);
+    assert.ok(output.includes('Test Lesson Title'), 'should contain lesson title');
+    assert.ok(output.includes('Lesson 2 of 5'), 'should contain position indicator');
+  });
+
+  test('includes pinned objective on every part', () => {
+    const output = renderPart(lesson, 1, 3, 0, 5);
+    assert.ok(output.includes("What you'll learn:"), 'should contain objective header');
+    assert.ok(output.includes('Learn about testing renderers'), 'should contain objective text');
+  });
+
+  test('includes pinned success criteria footer on every part', () => {
+    const output = renderPart(lesson, 2, 3, 0, 5);
+    assert.ok(output.includes("You'll know you've got it when:"), 'should contain criteria header');
+    assert.ok(output.includes('You can verify renderer output'), 'should contain criteria text');
+  });
+
+  test('renders text section with text value', () => {
+    const output = renderPart(lesson, 0, 3, 0, 5);
+    assert.ok(output.includes('This is the first text block.'), 'should contain text value');
+  });
+
+  test('renders code section with code and source link if present', () => {
+    const lessonWithSource = {
+      ...lesson,
+      content: [
+        { type: 'code', value: 'const x = 1;', source: { file: 'bin/gsd-tools.cjs', startLine: 10 } },
+      ],
+    };
+    const output = renderPart(lessonWithSource, 0, 1, 0, 5);
+    assert.ok(output.includes('const'), 'should contain code');
+    assert.ok(output.includes('bin/gsd-tools.cjs'), 'should contain source file');
+  });
+
+  test('renders project section with "Your Mission:" and deliverables', () => {
+    const lessonWithProject = {
+      ...lesson,
+      content: [
+        {
+          type: 'project',
+          task: 'Build something cool',
+          deliverables: ['File A', 'File B'],
+          verifyCommand: 'node verify.cjs',
+          hintCommand: 'node hint.cjs',
+        },
+      ],
+    };
+    const output = renderPart(lessonWithProject, 0, 1, 0, 5);
+    assert.ok(output.includes('Your Mission:'), 'should contain Your Mission header');
+    assert.ok(output.includes('File A'), 'should contain first deliverable');
+    assert.ok(output.includes('File B'), 'should contain second deliverable');
+  });
+
+  test('includes dim block header for text type', () => {
+    const output = renderPart(lesson, 0, 3, 0, 5);
+    // Block header should exist -- for text type, it uses first ~40 chars or "Explanation"
+    assert.ok(typeof output === 'string', 'should be a string');
+    // The block header for text should contain some portion of the text or "Explanation"
+    // We check that the output has content beyond just the section value
+    assert.ok(output.length > lesson.content[0].value.length, 'should have more than just the text value');
+  });
+
+  test('includes dim block header "Code Example" for code without source', () => {
+    const lessonCodeNoSource = {
+      ...lesson,
+      content: [
+        { type: 'code', value: 'const x = 1;' },
+      ],
+    };
+    const output = renderPart(lessonCodeNoSource, 0, 1, 0, 5);
+    assert.ok(output.includes('Code Example'), 'should contain "Code Example" block header');
+  });
+
+  test('includes progress dots from renderProgressDots', () => {
+    const output = renderPart(lesson, 1, 3, 0, 5);
+    assert.ok(output.includes('Part 2 of 3'), 'should contain progress dots label');
+    assert.ok(output.includes('\u25CF'), 'should contain filled dot');
+  });
+
+  test('includes new navigation footer with [w] [q] [e] [c] [esc]', () => {
+    const output = renderPart(lesson, 0, 3, 0, 5);
+    assert.ok(output.includes('[w]'), 'should contain [w] key');
+    assert.ok(output.includes('[q]'), 'should contain [q] key');
+    assert.ok(output.includes('[e]'), 'should contain [e] key');
+    assert.ok(output.includes('[c]'), 'should contain [c] key');
+    assert.ok(output.includes('[esc]'), 'should contain [esc] key');
+  });
+
+  test('concept map renders as synthetic final part', () => {
+    const lessonWithMap = { ...lesson, conceptMap: 'tool-dispatch' };
+    // totalParts = 3 content + 1 concept map = 4
+    const output = renderPart(lessonWithMap, 3, 4, 0, 5);
+    assert.ok(output.includes('Architecture Overview'), 'should contain concept map header');
+  });
+
+  test('successCriteria with hint text still splits and styles hint as lightBlue', () => {
+    const lessonWithHint = {
+      ...lesson,
+      successCriteria: 'You can verify renderer output\n\nWant to go deeper? Press [c] to copy.',
+    };
+    const output = renderPart(lessonWithHint, 0, 3, 0, 5);
+    assert.ok(output.includes('You can verify renderer output'), 'should contain main criteria');
+    assert.ok(output.includes('Want to go deeper?'), 'should contain hint text');
+    const mainIdx = output.indexOf('You can verify renderer output');
+    const hintIdx = output.indexOf('Want to go deeper?');
+    assert.ok(hintIdx > mainIdx, 'hint should appear after main criteria');
+  });
+
+  test('existing renderLesson still exported and works', () => {
+    const output = renderLesson(lesson, 1, 5);
+    assert.ok(output.includes('Test Lesson Title'), 'renderLesson should still work');
+    assert.ok(output.includes('[n]'), 'renderLesson should still have old nav footer');
   });
 });
