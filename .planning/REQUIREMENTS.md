@@ -27,17 +27,17 @@
 
 ### Validation
 
-- [ ] **VALD-01**: User can run a verify command to check if mini-project is complete
-- [ ] **VALD-02**: Mini-project validation checks structural use of GSD (did they produce a result), not exact code match
-- [ ] **VALD-03**: Progressive hint system provides nudges when learner is stuck without giving answers
-- [ ] **VALD-04**: Quality feedback loop tracks time-to-complete, hints used, and verification attempts to measure lesson effectiveness
+- [x] **VALD-01**: User can run a verify command to check if mini-project is complete
+- [x] **VALD-02**: Mini-project validation checks structural use of GSD (did they produce a result), not exact code match
+- [x] **VALD-03**: Progressive hint system provides nudges when learner is stuck without giving answers
+- [x] **VALD-04**: Quality feedback loop tracks time-to-complete, hints used, and verification attempts to measure lesson effectiveness
 
 ### Module
 
 - [x] **MODL-01**: MVP includes one complete module: Command Lifecycle (follow `/gsd:quick` end-to-end)
 - [x] **MODL-02**: Module starts with conceptual overview, then drills into GSD source code
-- [ ] **MODL-03**: Module ends with a mini-project where learner uses GSD to build something real
-- [ ] **MODL-04**: Mini-project results serve as lesson quality measurement — assess before building module 2
+- [x] **MODL-03**: Module ends with a mini-project where learner uses GSD to build something real
+- [x] **MODL-04**: Mini-project results serve as lesson quality measurement — assess before building module 2
 
 ## v2 Requirements
 
@@ -85,14 +85,14 @@
 | PROG-01 | Phase 1 | Complete |
 | PROG-02 | Phase 1 | Complete |
 | PROG-03 | Phase 1 | Complete |
-| VALD-01 | Phase 3 | Pending |
-| VALD-02 | Phase 3 | Pending |
-| VALD-03 | Phase 3 | Pending |
-| VALD-04 | Phase 3 | Pending |
+| VALD-01 | Phase 3 | Complete |
+| VALD-02 | Phase 3 | Complete |
+| VALD-03 | Phase 3 | Complete |
+| VALD-04 | Phase 3 | Complete |
 | MODL-01 | Phase 2 | Complete |
 | MODL-02 | Phase 2 | Complete |
-| MODL-03 | Phase 3 | Pending |
-| MODL-04 | Phase 3 | Pending |
+| MODL-03 | Phase 3 | Complete |
+| MODL-04 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 19 total
