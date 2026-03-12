@@ -39,7 +39,26 @@
 - [x] **MODL-03**: Module ends with a mini-project where learner uses GSD to build something real
 - [x] **MODL-04**: Mini-project results serve as lesson quality measurement — assess before building module 2
 
-## v2 Requirements
+## v2.0 Requirements
+
+### Infrastructure
+
+- [ ] **INFR-01**: Progress tracking supports multiple modules with per-module lesson state (v2 schema migration preserves existing data)
+- [ ] **INFR-02**: Module discovery via listModules() scans content directories and sorts by order field
+- [ ] **INFR-03**: Markdown parser extracts YAML frontmatter, XML sections, code blocks, and @file references from .md files
+- [ ] **INFR-04**: Concept map is parameterized per module (not hardcoded to Command Lifecycle)
+- [ ] **INFR-05**: CLI entry point supports multi-module selection with smart defaults (first incomplete module)
+
+### Module 1 Content
+
+- [ ] **MOD1-01**: Module 1 overview lesson explains the two-layer architecture (command.md dispatches to workflow.md)
+- [ ] **MOD1-02**: Command.md anatomy lesson teaches frontmatter fields, XML sections, and @file references
+- [ ] **MOD1-03**: Workflow.md anatomy lesson teaches purpose, process steps, and bash code blocks
+- [ ] **MOD1-04**: Wiring lesson traces the dispatch chain from /gsd:X through command.md to workflow execution
+- [ ] **MOD1-05**: Mini-project: learner builds a working /gsd:greet command (command.md + workflow.md pair)
+- [ ] **MOD1-06**: Module ordering: GSD Commands = Module 1, Command Lifecycle = Module 2
+
+## v3+ Requirements
 
 ### Content Enhancement
 
@@ -56,6 +75,10 @@
 - **MODL-05**: State Machine module (how GSD tracks project state and transitions)
 - **MODL-06**: Agent Orchestration module (how commands spawn and coordinate agents)
 - **MODL-07**: Tools & Config module (how gsd-tools.cjs, config.json, and templates work together)
+
+### Module 2 Update
+
+- **MOD2-01**: Command Lifecycle mini-project updated to full-stack (command.md + workflow.md + echo.cjs + switch case)
 
 ## Out of Scope
 
@@ -95,10 +118,11 @@
 | MODL-04 | Phase 3 | Complete |
 
 **Coverage:**
-- v1 requirements: 19 total
-- Mapped to phases: 19
-- Unmapped: 0
+- v1 requirements: 19 total — all complete
+- v2.0 requirements: 11 total
+- Mapped to phases: 0 (pending roadmap)
+- Unmapped: 11
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-11 after roadmap revision (added CONT-05, updated CONT-03)*
+*Last updated: 2026-03-12 after v2.0 milestone start*
