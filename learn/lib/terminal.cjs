@@ -12,6 +12,7 @@ const COLORS = {
   magenta: '\x1b[35m',
   cyan: '\x1b[36m',
   white: '\x1b[37m',
+  lightBlue: '\x1b[94m',
   bgYellow: '\x1b[43m',
 };
 

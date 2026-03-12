@@ -86,7 +86,14 @@ function renderLesson(lesson, currentIndex, totalLessons) {
   // 8. Success criteria
   parts.push(style('You\'ll know you\'ve got it when:', 'green', 'bold'));
   parts.push('\n');
-  parts.push(lesson.successCriteria);
+  const hintIdx = lesson.successCriteria.indexOf('\n\nWant to go deeper?');
+  if (hintIdx !== -1) {
+    parts.push(lesson.successCriteria.substring(0, hintIdx));
+    parts.push('\n\n');
+    parts.push(style(lesson.successCriteria.substring(hintIdx + 2), 'lightBlue'));
+  } else {
+    parts.push(lesson.successCriteria);
+  }
   parts.push('\n\n');
 
   // 9. Horizontal rule
