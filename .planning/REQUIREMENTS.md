@@ -141,13 +141,29 @@
 | MODL-02 | Phase 2 | Complete |
 | MODL-03 | Phase 3 | Complete |
 | MODL-04 | Phase 3 | Complete |
+| INFRA-01 | Phase 4 | Pending |
+| INFRA-02 | Phase 4 | Pending |
+| INFRA-03 | Phase 4 | Pending |
+| INFRA-04 | Phase 4 | Pending |
+| PIPE-01 | Phase 4 | Pending |
+| PIPE-02 | Phase 4 | Pending |
+| PIPE-03 | Phase 4 | Pending |
+| MOD1-01 | Phase 5 | Pending |
+| MOD1-02 | Phase 5 | Pending |
+| MOD1-03 | Phase 5 | Pending |
+| MOD1-04 | Phase 5 | Pending |
+| MOD1-05 | Phase 6 | Pending |
+| MOD1-06 | Phase 5 | Pending |
+| MOD1-07 | Phase 6 | Pending |
+| MOD1-08 | Phase 6 | Pending |
+| MOD2-01 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 19 total — all complete
-- v2.0 requirements: 16 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 16
+- v2.0 requirements: 16 total — all mapped
+- Mapped to phases: 16/16
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-12 after v2.0 requirements scoped*
+*Last updated: 2026-03-12 after v2.0 roadmap created*
