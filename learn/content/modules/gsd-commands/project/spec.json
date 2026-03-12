@@ -1,0 +1,31 @@
+{
+  "id": "gsd-commands-project",
+  "moduleId": "gsd-commands",
+  "title": "Build /gsd:skeptic",
+  "description": "Create a command spec + workflow pair that critiques a GSD phase",
+  "artifacts": [
+    {
+      "description": "Skeptic command spec",
+      "path": "~/.claude/commands/gsd/skeptic.md",
+      "checks": [
+        { "pattern": "---[\\s\\S]*?---", "description": "Has YAML frontmatter block" },
+        { "pattern": "name:\\s*gsd:skeptic", "description": "Has name field set to gsd:skeptic" },
+        { "pattern": "description:", "description": "Has description field in frontmatter" },
+        { "pattern": "allowed-tools:", "description": "Has allowed-tools field in frontmatter" },
+        { "pattern": "<objective>[\\s\\S]*?</objective>", "description": "Has objective section" },
+        { "pattern": "<execution_context>[\\s\\S]*?</execution_context>", "description": "Has execution_context section" },
+        { "pattern": "@.*workflows/skeptic\\.md", "description": "execution_context references skeptic workflow via @file" },
+        { "pattern": "<context>[\\s\\S]*?</context>", "description": "Has context section" },
+        { "pattern": "<process>[\\s\\S]*?</process>", "description": "Has process section" }
+      ]
+    },
+    {
+      "description": "Skeptic workflow",
+      "path": "~/.claude/get-shit-done/workflows/skeptic.md",
+      "checks": [
+        { "pattern": "<purpose>[\\s\\S]*?</purpose>", "description": "Has purpose section" },
+        { "pattern": "<process>[\\s\\S]*?</process>", "description": "Has process section with steps" }
+      ]
+    }
+  ]
+}

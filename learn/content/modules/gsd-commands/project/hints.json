@@ -1,0 +1,7 @@
+[
+  "You already know the structure. Lessons 2 and 3 showed you the exact anatomy of both file types -- a command spec and a workflow. Two files, two layers. Think about what each one contains.",
+  "Re-read Lesson 2 (Command Spec Anatomy) and Lesson 3 (Workflow Anatomy). Every structural element you need is documented there. Pay attention to the YAML frontmatter fields and the XML sections.",
+  "The two files go at specific paths in your GSD install: the command spec at ~/.claude/commands/gsd/skeptic.md and the workflow at ~/.claude/get-shit-done/workflows/skeptic.md. These are real files that Claude Code will find.",
+  "The command spec needs YAML frontmatter with name, description, and allowed-tools fields, plus XML sections: objective, execution_context (with an @file reference to the workflow), context, and process. The workflow needs purpose and process sections.",
+  "Create skeptic.md at ~/.claude/commands/gsd/skeptic.md. Start with YAML frontmatter: name: gsd:skeptic, a description, and allowed-tools. Then add <objective>, <execution_context> containing @~/.claude/get-shit-done/workflows/skeptic.md, <context>, and <process> sections. Create the workflow at ~/.claude/get-shit-done/workflows/skeptic.md with <purpose> and <process> sections. The @file reference in execution_context is the critical wiring between the two layers."
+]
