@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v2.0
+milestone_name: GSD Commands & Workflows Module
+status: planning
+stopped_at: Phase 4 context gathered
+last_updated: "2026-03-12T17:38:37.307Z"
+last_activity: 2026-03-12 — v2.0 roadmap created
+progress:
+  total_phases: 9
+  completed_phases: 3
+  total_plans: 10
+  completed_plans: 8
+  percent: 50
+---
+
 # Project State
 
 ## Project Reference
@@ -55,12 +71,16 @@ Recent decisions affecting current work:
 
 None yet.
 
+### Roadmap Evolution
+
+- Phase 01.2 inserted after Phase 01: Adaptive per-part lesson structure with progressive content accumulation (URGENT) — per-part objective/criteria, block-to-block context bridging, explore progressive content accumulation model
+
 ### Blockers/Concerns
 
 None.
 
 ## Session Continuity
 
-Last session: 2026-03-12
-Stopped at: v2.0 roadmap created — ready to plan Phase 4
-Resume file: None
+Last session: 2026-03-12T17:38:37.304Z
+Stopped at: Phase 4 context gathered
+Resume file: .planning/phases/04-multi-module-infrastructure/04-CONTEXT.md
