@@ -1,309 +1,230 @@
-# Domain Pitfalls
+# Pitfalls Research
 
-**Domain:** Interactive CLI learning tool (source-parsing-based, teaching a Node.js codebase)
-**Researched:** 2026-03-11
+**Domain:** Adding Module 1 (GSD Commands & Workflows) to gsd-learn single-module CLI
+**Researched:** 2026-03-12
+**Confidence:** HIGH (based on direct codebase analysis of existing system)
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites or major issues.
+### Pitfall 1: Parser Cannot Handle Markdown Files
 
-### Pitfall 1: Brittle Source Parsing That Breaks on Refactors
+**What goes wrong:**
+The existing `parser.cjs` is built exclusively for CommonJS `.cjs` files. It extracts `require()` calls, `module.exports`, `function` declarations, JSDoc comments, and `UPPER_SNAKE_CASE` constants. None of these patterns exist in the markdown files that Module 1 teaches (`commands/gsd/*.md` and `workflows/*.md`). If the new module tries to reuse the existing parser, it will return empty structures for every field, producing empty or broken lessons.
 
-**What goes wrong:** The parser couples tightly to specific source file structures (function names, comment formats, file paths, export patterns). When GSD's source changes -- renamed files, restructured modules, new patterns -- lessons silently produce wrong content or crash entirely. This is the single highest-risk pitfall because the core value proposition ("lessons auto-update when source changes") becomes a liability.
+**Why it happens:**
+The v1.0 system was built for a single module (Command Lifecycle) that teaches Node.js internals. The parser was purpose-built for that content type. It is natural to assume "parse source files" means "use the existing parser" -- but the source files for Module 1 are a completely different format.
 
-**Why it happens:** It is tempting to write regex-based or line-number-based parsers that extract "the function starting at line 42" or "the module.exports block." These are fast to build but assume structural stability that CommonJS files do not guarantee.
-
-**Consequences:**
-- Lessons display stale or incorrect code snippets after any source refactor
-- Silent content corruption (worse than a crash -- learner reads wrong information)
-- Maintenance burden grows with every source change, defeating the purpose of auto-generation
-- Loss of trust in the tool if content is visibly wrong even once
+**How to avoid:**
+Build a new markdown parser (e.g., `markdown-parser.cjs`) that extracts meaningful structures from GSD command/workflow markdown files: YAML frontmatter metadata, section headings, bash code blocks, agent spawn patterns (`/claude` calls), `@file:` references, gsd-tools.cjs command invocations within code blocks, and structured workflow steps. The existing `parser.cjs` should remain untouched -- Module 2 still needs it.
 
 **Warning signs:**
-- Parser tests break when unrelated source changes land
-- Hardcoded file paths or line ranges in lesson definitions
-- No integration test that verifies lesson output against current source
-- Parser relies on comments or formatting conventions that are not enforced by linting
+- Lesson JSON files for Module 1 have empty `content` arrays or only `text` blocks with no `code` blocks
+- The prompt templates reference `{{EXPORTS}}` or `{{FUNCTIONS}}` for markdown source files
+- Generated lessons describe what a workflow "should do" instead of showing actual source snippets
 
-**Prevention:**
-- Parse using AST (Node.js built-in `require('module')` or `vm` module for CommonJS; `acorn` if zero-dep constraint allows vendoring a small parser) rather than regex/string matching
-- If AST parsing violates zero-dependency constraint, build a lightweight structural parser that finds exports, function declarations, and call sites by token patterns rather than exact string matches
-- Use semantic anchors (exported function names, module.exports keys) rather than positional anchors (line numbers, nth occurrence)
-- Create a "source contract" test suite: a set of assertions about what the parser expects to find in GSD source files, run as part of GSD's own test suite so refactors that break lesson generation are caught immediately
-- Design parser output as an intermediate representation (IR) that lessons consume, so parser changes do not cascade into lesson template changes
-
-**Detection:** Run lesson generation in CI. If output changes unexpectedly, flag it.
-
-**Phase relevance:** Must be addressed in the very first phase (parser/source analysis foundation). Getting this wrong means rebuilding the entire content pipeline later.
+**Phase to address:**
+Phase 1 (Content Infrastructure) -- the markdown parser must exist before any lesson generation begins.
 
 ---
 
-### Pitfall 2: Over-Engineering Lesson Content Generation Before Validating the Teaching Approach
+### Pitfall 2: Hardcoded Single-Module Assumptions in Progress Tracking
 
-**What goes wrong:** Significant effort goes into building a sophisticated source parser, content templating system, and progress tracker -- only to discover that the generated lessons do not actually teach effectively. The auto-generated content is technically accurate but pedagogically useless (too dense, wrong ordering, missing conceptual bridges).
+**What goes wrong:**
+The current `progress.json` structure stores a flat `currentModule` and `currentLesson` at the top level, with an empty `modules: {}` object that is never populated. The `--status` flag reads `progress.currentModule` and `progress.currentLesson` directly. The `--reset` flag deletes the entire progress file. There is no per-module progress tracking -- switching to Module 1 would overwrite Module 2's progress, and resetting one module resets everything.
 
-**Why it happens:** Engineering the "how" (parsing, templating, tracking) is more comfortable than validating the "what" (does this sequence of information actually build understanding?). The MVP scope says "Command Lifecycle via /gsd:quick" but there is a risk of building the full pipeline before testing whether one hand-crafted lesson for that flow even works.
+**Why it happens:**
+v1.0 only had one module, so there was no need for per-module progress. The `modules: {}` field in `DEFAULT_PROGRESS` hints at future multi-module support but was never wired up. When adding Module 1, the temptation is to "just change the moduleId" without restructuring progress storage.
 
-**Consequences:**
-- Weeks of parser/template engineering wasted if the lesson design is fundamentally wrong
-- Sunk cost pressure to keep a bad teaching approach because "we already built the infrastructure"
-- The feedback loop (mini-project results measure lesson quality) never fires because you never ship a lesson
+**How to avoid:**
+Migrate progress to per-module tracking before adding Module 1 content:
+```json
+{
+  "version": 2,
+  "currentModule": "gsd-commands",
+  "modules": {
+    "gsd-commands": { "currentLesson": 3, "completed": false },
+    "command-lifecycle": { "currentLesson": 5, "completed": false }
+  }
+}
+```
+Add a migration path from version 1 to version 2 that preserves the existing Command Lifecycle progress. Update `--reset` to accept `--module` flag for selective reset. Update `--status` to show progress across all modules.
 
 **Warning signs:**
-- More than 2 weeks building infrastructure before a single lesson is testable end-to-end
-- No hand-written lesson prototype exists to validate the pedagogical approach
-- "Content auto-generation" is the first thing built rather than the last
-- Mini-project design is deferred as "we will figure that out later"
+- Starting Module 1 clobbers Module 2 lesson position
+- `--status` only shows one module's progress
+- `--reset` wipes all progress with no way to reset just one module
+- The `modules: {}` field remains empty after using multiple modules
 
-**Prevention:**
-- Start with a semi-manual MVP: hand-write the Command Lifecycle lesson content, wire up minimal CLI navigation and progress tracking, and test whether the lesson actually teaches. THEN automate content generation for subsequent modules.
-- Build the source parser to support the hand-written lesson (extract specific code blocks the lesson references) rather than to generate the lesson wholesale
-- Ship the MVP module to a real test (even if the learner is you) before building module 2 infrastructure
-- Define "lesson quality measurement" concretely before building lessons: what does the mini-project test? What score/outcome means the lesson worked?
-
-**Detection:** If you cannot describe what a learner should be able to do after completing the MVP module, the teaching approach is not validated.
-
-**Phase relevance:** Phase 1 must produce a testable lesson, not just infrastructure. The feedback loop must fire in Phase 1.
+**Phase to address:**
+Phase 1 (Infrastructure) -- progress restructuring must happen before any multi-module navigation is built.
 
 ---
 
-### Pitfall 3: Progress Tracking State Corruption and Migration Hell
+### Pitfall 3: Concept Map is Hardcoded to Command Lifecycle Architecture
 
-**What goes wrong:** Progress state (which lessons completed, which mini-projects passed, where the learner left off) gets corrupted, lost, or becomes incompatible with updated lesson structures. When lesson content changes (because GSD source changed), existing progress records may reference lessons that no longer exist or have different structures.
+**What goes wrong:**
+The `concept-map.cjs` module contains a single hardcoded ASCII art diagram showing the Command Lifecycle flow (Command Spec -> Workflow -> Tool Dispatch -> State/Config/Phase). The `sectionMap` for YOU ARE HERE markers only maps to these specific labels. Module 1 teaches the markdown layer (commands and workflows), which needs its own concept map showing how `.md` command specs connect to workflow orchestrators, how workflows spawn agents, and how `@file:` references work. Using the existing concept map for Module 1 lessons would show an irrelevant diagram.
 
-**Why it happens:** Progress tracking seems simple ("just save a JSON file") but the relationship between progress records and lesson identity is tricky. If lessons are generated from source, and source changes, lesson identity is unstable. Lesson 3 today might cover different content than Lesson 3 yesterday.
+**Why it happens:**
+The concept map was built as a single global constant rather than a per-module resource. Since v1.0 had one module, there was no reason to parameterize it.
 
-**Consequences:**
-- Learner loses progress after a GSD update
-- "Resume where you left off" sends learner to wrong place
-- Progress percentage becomes meaningless (completed 5/10 lessons, but 3 of those no longer exist)
-- Frustration drives learner to abandon the tool
+**How to avoid:**
+Make concept maps module-specific. Either: (a) move concept map definitions into each module's `module.json` (as a `conceptMap` field with the ASCII art and section mappings), or (b) create a concept map registry in `concept-map.cjs` keyed by module ID. Option (a) is better because it keeps module content self-contained.
 
 **Warning signs:**
-- Progress file references lessons by index/position rather than by stable identifier
-- No migration strategy for when lesson structure changes
-- Progress file format is undocumented
-- No test for "load progress from previous version"
+- Module 1 lessons show the Tool Dispatch / State / Config / Phase diagram when they should show the Command -> Workflow -> Agent flow
+- YOU ARE HERE markers never highlight anything because Module 1's `conceptMap` field values don't match the hardcoded `sectionMap`
 
-**Prevention:**
-- Give each lesson a stable content-addressable or semantic identifier (e.g., `command-lifecycle.phase-dispatch` not `module-1.lesson-3`)
-- Store progress with enough context to detect staleness (hash of lesson content at completion time, or a version field)
-- When lesson content changes, mark affected progress as "needs review" rather than silently invalidating
-- Keep progress schema minimal and forward-compatible (flat key-value, not deeply nested)
-- Store progress in `.planning/` alongside other GSD state, using the same conventions (YAML frontmatter in a markdown file, matching GSD's own state patterns)
-
-**Detection:** Manually change a source file that affects lesson content, then check if progress tracking still behaves correctly.
-
-**Phase relevance:** Address in the phase that implements progress tracking. Design the identifier scheme when designing the lesson data model, not after.
+**Phase to address:**
+Phase 1 (Infrastructure) -- concept maps must be per-module before Module 1 lessons can render correctly.
 
 ---
 
-### Pitfall 4: Terminal UI Complexity Trap
+### Pitfall 4: Module Renumbering Breaks Existing User Progress
 
-**What goes wrong:** Building a rich interactive terminal experience (syntax highlighting, scrollable panes, interactive menus, animated transitions) consumes enormous effort and introduces fragile dependencies on terminal capabilities that vary across environments. The tool ends up fighting terminal rendering instead of teaching.
+**What goes wrong:**
+The project requires the new module to become Module 1 and Command Lifecycle to become Module 2. If module IDs change (e.g., from `command-lifecycle` to `module-2-command-lifecycle`), existing progress.json files that reference `"currentModule": "command-lifecycle"` will point to a nonexistent module. Worse, if lesson content is renumbered to reflect the new module ordering, saved `currentLesson` indices will land on the wrong lesson.
 
-**Why it happens:** CLI learning tools like `rustlings` or `exercism` have polished UIs that feel natural. Replicating that polish from scratch requires deep understanding of ANSI escape codes, terminal dimensions, stdin raw mode, and cross-platform terminal behavior (Windows Terminal vs. CMD vs. WSL vs. macOS Terminal vs. iTerm2). GSD's zero-dependency constraint means no `ink`, `blessed`, or `inquirer`.
+**Why it happens:**
+The natural instinct when renumbering is to rename directories, change IDs in module.json, and update lesson numbers. But the progress file is stored in the user's project directory (`.planning/learn/progress.json`), separate from the content. There is no mechanism to detect or migrate stale references.
 
-**Consequences:**
-- Windows Terminal renders differently than expected (GSD runs on Windows per the project env)
-- Raw mode stdin handling breaks on certain terminal emulators
-- Weeks spent on "make the menu look right" instead of "make the lesson teach well"
-- Accessibility issues (screen readers, high contrast mode, narrow terminals)
+**How to avoid:**
+Keep the module ID `command-lifecycle` unchanged. Module IDs are internal identifiers, not display names. Add a `displayOrder` or `order` field to `module.json` to control presentation order without changing IDs. The module title can change to "Module 2: Command Lifecycle" for display purposes while the ID stays stable. This avoids any migration complexity.
 
 **Warning signs:**
-- Using ANSI escape codes for anything beyond basic coloring
-- Building a custom scrollable text view
-- Spending more than a day on "how to clear the screen and redraw"
-- Testing only in one terminal emulator
+- After update, running `gsd-learn --status` shows "Module not found" errors
+- User's saved progress.json references a module ID that no longer exists in `content/modules/`
+- Lesson indices mismatch (user was on lesson 3 but now sees lesson 4's content at index 3)
 
-**Prevention:**
-- Use the simplest possible UI: paginated text output (press Enter for next page), numbered menu choices, clear/simple prompts. Think `man` pages, not `vim`.
-- Limit ANSI usage to bold, color (with `NO_COLOR` env var support), and clear screen. No cursor positioning, no alternate screen buffer.
-- Test on Windows Terminal (primary, given GSD's environment) and at least one Unix terminal from the start
-- If richer UI is needed later, add it as a separate enhancement phase after the teaching approach is validated
-- Accept that the terminal is a text medium. Long code blocks should be displayed with file path references so the learner can open them in their editor.
-
-**Detection:** If the terminal rendering code is longer than the lesson content code, priorities are inverted.
-
-**Phase relevance:** Set UI constraints in Phase 1 and do not revisit until post-MVP. The MVP should look boring but teach well.
+**Phase to address:**
+Phase 1 (Infrastructure) -- module ordering strategy must be decided before any content is created.
 
 ---
 
-### Pitfall 5: Source-to-Lesson Mapping Assumes Linear Code
+### Pitfall 5: Prompt Templates Assume JavaScript Source Code Input
 
-**What goes wrong:** GSD's architecture is not linear. The Command Lifecycle (/gsd:quick) spans: command definition (commands/gsd/quick.md) -> workflow orchestration (workflows/quick.md or similar) -> tool dispatch (gsd-tools.cjs) -> state management (lib/state.cjs) -> agent spawning (agents/*.md) -> phase operations (lib/phase.cjs). A lesson that tries to present this as "step 1, step 2, step 3" either oversimplifies (losing the real architecture) or overwhelms (too many files at once).
+**What goes wrong:**
+The existing lesson generation prompts (`overview.prompt.md` and `source-dive.prompt.md`) have template variables like `{{EXPORTS}}`, `{{FUNCTIONS}}`, `{{REQUIRES}}`, `{{SOURCE_CODE}}` -- all JavaScript-specific constructs. The source-dive prompt literally says "Parse a GSD CommonJS source file." These prompts cannot generate lessons for markdown files without modification. Using them as-is would produce lessons that awkwardly try to explain markdown files using JavaScript terminology.
 
-**Why it happens:** Lesson designers think in linear narratives. Codebases are graphs. The tension between "follow the data flow" and "introduce one concept at a time" is hard to resolve, especially when auto-generating content from source files that were not written with pedagogical ordering in mind.
+**Why it happens:**
+The prompt templates were designed for a single content type. The v1.0 lesson generation pipeline was: parse .cjs file -> fill template variables -> generate lesson JSON. For markdown files, the pipeline needs different parsing, different template variables, and different instructional framing.
 
-**Consequences:**
-- Learner gets lost jumping between 8+ files in a single lesson
-- Lesson presents code without enough context ("here is phase.cjs line 200, which is called from... somewhere")
-- Learner memorizes the tour but cannot independently navigate the codebase
-- Lesson structure fights the codebase structure, making auto-generation harder
+**How to avoid:**
+Create new prompt templates for markdown content:
+- `command-spec.prompt.md` -- for teaching command definition files (frontmatter metadata, description, flags, workflow references)
+- `workflow-dive.prompt.md` -- for teaching workflow orchestration files (step sequences, agent spawning, state management patterns, gsd-tools.cjs calls)
 
-**Warning signs:**
-- A single lesson references more than 4-5 source files
-- Lesson content requires "we will explain this later" forward references
-- The lesson order does not match any natural reading order of the code
-- Learner feedback (or mini-project results) shows they cannot find things independently
-
-**Prevention:**
-- Design lessons around "zoom levels": Module overview (architecture diagram, which files exist and why) -> Component deep-dive (one file/module at a time, its API and purpose) -> Flow trace (follow data through components you already understand individually)
-- Each lesson should have ONE focal file with supporting references to previously-learned files
-- The Command Lifecycle module should start with the entry point (gsd-tools.cjs dispatch) and expand outward, not try to cover the full flow in one lesson
-- Include "navigator exercises" early: "Find the function that does X" -- building the skill of independent code navigation before trying to teach implementation details
-- Let the mini-project test navigation ability, not recall of specific code locations
-
-**Detection:** If a lesson outline has more than 3 source file references that the learner has not seen before, it needs restructuring.
-
-**Phase relevance:** This is a lesson design concern that must be addressed when designing the module structure (likely Phase 1 or 2), before building content generation tooling.
-
-## Moderate Pitfalls
-
-### Pitfall 6: Mini-Project Validation That Is Too Rigid or Too Loose
-
-**What goes wrong:** Mini-projects are the primary validation mechanism (no quizzes), but designing good validation is hard. Too rigid: "your output must match this exact string" -- fragile and does not test understanding. Too loose: "do something with GSD" -- no signal about whether learning happened.
-
-**Prevention:**
-- Define mini-projects as "achieve this outcome" not "produce this output." Example: "Create a new GSD command that lists all phases with their status" -- validate that the command exists, runs without error, and produces phase-related output. Do not validate exact formatting.
-- Use structural checks: file exists, exports a function, function runs without throwing, output contains expected keywords/patterns
-- Provide a rubric with the mini-project so the learner knows what "done" looks like before starting
-- Keep mini-projects small (15-30 minutes). If they take longer, the lesson did not teach enough.
+These templates should have markdown-appropriate variables: `{{FRONTMATTER}}`, `{{SECTIONS}}`, `{{BASH_BLOCKS}}`, `{{AGENT_SPAWNS}}`, `{{GSD_TOOL_CALLS}}`.
 
 **Warning signs:**
-- Mini-project validation uses string equality checks
-- No mini-project prototype exists before the validation code is written
-- Mini-projects require knowledge not covered in the lesson
+- Lesson generator prompts reference `{{FUNCTIONS}}` or `{{EXPORTS}}` for markdown files
+- Generated lessons describe markdown files as if they were JavaScript modules
+- Lessons fail to explain the key structural elements of command/workflow markdown (frontmatter, step numbering, agent references)
 
-**Phase relevance:** Design mini-project validation framework alongside the first module, not after.
+**Phase to address:**
+Phase 2 (Content Generation) -- new prompts needed before generating Module 1 lessons, but after the markdown parser (Phase 1) provides the structured data to fill template variables.
 
 ---
 
-### Pitfall 7: Ignoring the "Lesson Content Auto-Updates" Requirement Until Too Late
+### Pitfall 6: Teaching "What" Without "How to Modify"
 
-**What goes wrong:** The requirement that "lesson content auto-updates when GSD source changes" is treated as a nice-to-have enhancement. Content is hand-written or semi-generated with manual curation steps. When GSD source changes, lessons drift and nobody notices until they are visibly wrong.
+**What goes wrong:**
+Module 1 teaches markdown files (slash commands and workflows). The danger is creating lessons that merely describe the structure of these files without teaching the learner how to create or modify their own. Unlike Module 2 where code patterns provide clear "here's how to add a new command" transferable knowledge, markdown configuration files can feel like documentation reading. The learner finishes the module knowing what the files contain but unable to write new ones.
 
-**Prevention:**
-- Design the content pipeline with auto-update as a first-class constraint from the start, even if early lessons are partly hand-written
-- Every lesson should declare its source dependencies explicitly (which files/functions it references)
-- Build a staleness detector: hash the source dependencies at lesson generation time, check hashes before displaying a lesson, warn if stale
-- Accept that some lesson content (conceptual explanations, pedagogical framing) will be hand-written and will NOT auto-update. Clearly separate "source-derived content" from "authored content" in the lesson data model.
+**Why it happens:**
+Markdown-based configuration is inherently declarative -- there is less "why was this designed this way?" to explain compared to code. It is tempting to fill lessons with "this field means X, that field means Y" reference material rather than building problem-solving skills.
+
+**How to avoid:**
+Structure Module 1 lessons around the question "What happens when I want to add a new /gsd command?" rather than "What does each field in a command.md file mean?" Each lesson should include a practical mental exercise: "If you wanted to add /gsd:my-custom-command, which file would you create? What frontmatter would you need?" The mini-project should have the learner create a new command.md + workflow.md pair, not just read existing ones.
 
 **Warning signs:**
-- Lesson files contain inline code snippets copy-pasted from source
-- No mechanism to detect when a lesson's source dependencies change
-- "Auto-update" is a phase 4 feature
+- Lessons are structured as "here are the fields" reference docs rather than "here's how the pieces connect" narratives
+- No lesson connects the creation of a command.md to its workflow.md -- they are taught in isolation
+- Mini-project only asks learner to identify existing files rather than create new ones
 
-**Phase relevance:** The staleness detection mechanism should exist by Phase 2 at latest, even if full auto-regeneration comes later.
+**Phase to address:**
+Phase 2 (Content Generation) -- lesson narrative design must prioritize "how to modify" framing.
 
 ---
 
-### Pitfall 8: CommonJS Parsing Complexity Underestimation
+## Technical Debt Patterns
 
-**What goes wrong:** GSD uses CommonJS (`module.exports`, `require()`), not ESM. CommonJS is harder to statically analyze because exports can be dynamic (`module.exports[key] = value` in a loop), conditional (`if (condition) module.exports.x = ...`), or computed. Standard AST tools are designed for ESM or TypeScript and handle CommonJS as a second-class citizen.
+| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+|----------|-------------------|----------------|-----------------|
+| Duplicating parser.cjs and modifying for markdown | Quick markdown parsing without refactoring | Two parsers with no shared interface; each module addition requires a new parser | Never -- build a separate markdown-parser.cjs from scratch instead of forking the JS parser |
+| Keeping progress.json flat (version 1 format) | No migration needed, ship faster | Every future module addition hits the same progress-clobbering bug | Never -- the migration from v1 to v2 format is trivial and prevents ongoing issues |
+| Hardcoding Module 1 concept map alongside Module 2's | Quick visual result | concept-map.cjs becomes a growing dump of hardcoded diagrams, one per module | Only if you cap at 2 modules permanently -- unlikely given the project trajectory |
+| Generating Module 1 lessons manually (hand-written JSON) instead of using parsed source | Skip building markdown parser entirely | Lessons drift from actual source files, violating the core project constraint ("parse GSD source files directly") | Only for initial prototyping during content design, never for shipped lessons |
+| Reusing verifier.cjs regex checks for markdown mini-project | Quick verification without new code | Regex patterns designed for .cjs files will not validate markdown artifact structure | Never -- the mini-project spec.json should define markdown-appropriate checks |
 
-**Prevention:**
-- Survey GSD's actual export patterns before designing the parser. GSD appears to use straightforward `module.exports = { fn1, fn2 }` patterns -- if so, a simple parser suffices
-- Do not try to build a general-purpose CommonJS analyzer. Build a parser that handles GSD's specific patterns and fails loudly on patterns it does not recognize
-- Add a "parser coverage" metric: what percentage of GSD's exports/functions does the parser successfully identify? Track this and alert on regression.
-- If using Node.js `require()` to load modules for analysis, be aware of side effects -- some modules may execute code on load
+## Integration Gotchas
 
-**Warning signs:**
-- Parser works on simple test files but fails on actual GSD source
-- Parser silently skips functions it cannot parse (no error, just missing content)
-- Parser tries to handle every possible CommonJS pattern
+| Integration | Common Mistake | Correct Approach |
+|-------------|----------------|------------------|
+| Module loading (`lessons.cjs`) | Assuming `loadModule()` needs changes for new modules | `loadModule()` is already generic -- it loads any `content/modules/{id}/module.json`. Just create the new module directory with the right structure. No code changes needed in lessons.cjs. |
+| Navigation loop (`navigator.cjs`) | Modifying navigator to handle module switching | Navigator handles a single lesson array and does not need to know about modules. Module selection happens in `gsd-learn.cjs` before the navigation loop starts. Add module selection logic in the CLI entry point, not the navigator. |
+| Verification (`verifier.cjs`) | Reusing Command Lifecycle verification patterns for markdown artifacts | Create a new `spec.json` in `content/modules/gsd-commands/project/spec.json` with markdown-appropriate regex checks (e.g., checking for YAML frontmatter `---` blocks, specific field names, workflow step structure). |
+| Concept map rendering | Passing Module 1 section names to the existing `renderConceptMap()` | The function's `sectionMap` only knows Command Lifecycle sections. Either extend the section map with Module 1 sections (creates coupling) or make concept maps module-owned resources loaded from module.json. |
+| Lesson renderer (`renderer.cjs`) | Assuming markdown source files need a new content type | The renderer already handles `text`, `code`, and `project` content types. Markdown source snippets can use the existing `code` type with `language: "markdown"`. No renderer changes needed for basic rendering -- only concept map rendering needs to be module-aware. |
 
-**Phase relevance:** Address in Phase 1 when building the source analysis layer. Start with a pattern survey of GSD's actual code.
+## UX Pitfalls
 
----
+| Pitfall | User Impact | Better Approach |
+|---------|-------------|-----------------|
+| No module selection UI | Learner must know to pass `--module=gsd-commands` flag; default still goes to command-lifecycle | Add a module selection screen when no `--module` flag is passed. Show available modules with completion status. Or change the default to Module 1 since it is now the recommended starting point. |
+| Module 1 and Module 2 feel disconnected | Learner finishes Module 1 (markdown layer) and starts Module 2 (Node.js layer) with no bridge | Add a bridge lesson at the end of Module 1 that previews how the markdown layer connects to the Node.js layer. "You now know how commands and workflows are structured. Module 2 shows what happens when gsd-tools.cjs executes the commands these workflows call." |
+| Full-stack mini-project in Module 2 assumes Module 1 knowledge | Learner who skips Module 1 and jumps to Module 2 cannot complete the 4-layer mini-project | Add a prerequisite check: if Module 1 is not completed, show a warning when starting Module 2's mini-project. Do not block -- just inform. |
+| No visual distinction between modules | Learner cannot tell which module they are in while navigating lessons | Add the module name to the lesson header. Currently the header shows "Lesson X of Y" -- change to "Module 1: GSD Commands / Lesson X of Y". |
+| Lessons for markdown files feel flat compared to code-heavy Module 2 | Markdown lessons are all `text` blocks with occasional `code` blocks showing yaml/markdown. Less visual variety than Module 2's highlighted JavaScript. | Use the `code` content type liberally with `language: "yaml"` for frontmatter and `language: "bash"` for workflow steps. Add a new content type `callout` or use bold text patterns to highlight key structural rules. |
 
-### Pitfall 9: Overscoping Beyond Single-User, Single-Codebase
+## "Looks Done But Isn't" Checklist
 
-**What goes wrong:** The design starts accommodating "what if we want to teach other codebases later?" or "what if multiple learners use this?" These hypothetical requirements add abstraction layers (plugin systems, user databases, generic codebase adapters) that slow down the MVP without delivering value.
+- [ ] **Module selection:** Verify that `gsd-learn` without `--module` flag handles two modules gracefully (not just defaulting to the old module)
+- [ ] **Progress migration:** Verify that an existing `progress.json` (version 1) is correctly migrated to version 2 format without losing Command Lifecycle progress
+- [ ] **Module 1 concept map:** Verify the concept map renders correctly with YOU ARE HERE markers for Module 1 lessons (not showing Module 2's diagram)
+- [ ] **Module 1 lessons parse real source:** Verify that every `code` block in Module 1 lessons contains actual content from the source markdown files, not hand-written approximations
+- [ ] **Mini-project verification:** Verify that `gsd-learn --verify --module=gsd-commands` runs spec.json checks appropriate for markdown artifacts (not .cjs patterns)
+- [ ] **Hints system:** Verify that `gsd-learn --hint --module=gsd-commands` loads hints from the correct module's `project/hints.json`, not the default Command Lifecycle hints
+- [ ] **Module ordering:** Verify that `--status` shows Module 1 before Module 2 in display order, regardless of internal module IDs
+- [ ] **Cross-module links:** Verify the bridge between Module 1 and Module 2 -- the final Module 1 lesson should reference Module 2, and Module 2's updated mini-project should reference all 4 layers including the markdown ones taught in Module 1
+- [ ] **Reset per-module:** Verify that `--reset --module=gsd-commands` only resets Module 1 progress, not Module 2
 
-**Prevention:**
-- Hardcode GSD-specific paths, patterns, and module names. This tool teaches GSD. Period.
-- No abstraction layers for "other codebases." If that need arises later, refactor then.
-- No user authentication, no multi-user progress, no server component
-- The constraint from PROJECT.md is explicit: single learner, GSD only. Treat scope creep as a bug.
+## Recovery Strategies
 
-**Warning signs:**
-- Config files for "which codebase to teach"
-- Abstract base classes for "LessonProvider" or "CodebaseAdapter"
-- Database for progress tracking instead of a flat file
-- Discussion of "extensibility" before MVP ships
+| Pitfall | Recovery Cost | Recovery Steps |
+|---------|---------------|----------------|
+| Parser cannot handle markdown | MEDIUM | Build markdown-parser.cjs from scratch. Does not require modifying existing parser.cjs. Estimated effort: one focused phase. |
+| Progress tracking clobbers between modules | LOW | Add version 2 progress format with migration function. Small change to progress.cjs -- the `modules: {}` field was already designed for this. |
+| Concept map shows wrong diagram | LOW | Move concept maps into module.json. Update renderConceptMap() to accept a map definition instead of using a global constant. Small refactor. |
+| Module renumbering breaks progress | LOW if caught early, HIGH if shipped | If IDs were already changed: add an alias map in loadModule() that redirects old IDs to new ones. Better: keep IDs stable and use display order. |
+| Lessons are reference docs not learning material | HIGH | Requires regenerating all Module 1 lesson content with different prompt framing. Content quality issues are expensive to fix after generation because the prompt templates, source parsing, and lesson structure all need rework. |
+| Full-stack mini-project unclear without Module 1 | LOW | Add prerequisite warning check in gsd-learn.cjs before entering Module 2's mini-project lesson. Small code addition. |
 
-**Phase relevance:** Every phase. Scope creep is a continuous threat.
+## Pitfall-to-Phase Mapping
 
-## Minor Pitfalls
-
-### Pitfall 10: Lesson Navigation UX Friction
-
-**What goes wrong:** Small UX issues compound: no way to jump to a specific lesson, no "where am I?" indicator, confusing back/forward navigation, unclear distinction between "lesson content" and "exercise instructions."
-
-**Prevention:**
-- Implement a simple table of contents command (`gsd-learn list`) showing all lessons with completion status
-- Show current position at the top of every lesson ("Module 1: Command Lifecycle -- Lesson 3 of 7")
-- Allow direct navigation (`gsd-learn go 1.3`) from the start
-- Clearly separate reading content from action items (use visual markers like `[DO]` or `[READ]`)
-
-**Phase relevance:** Build basic navigation in Phase 1. Polish in later phases.
-
----
-
-### Pitfall 11: Not Dogfooding Early Enough
-
-**What goes wrong:** The tool is built to completion before anyone actually tries to learn from it. Issues that are obvious in 5 minutes of real use (confusing ordering, too much text per screen, unclear what to do next) are discovered after the architecture is set.
-
-**Prevention:**
-- Use the tool yourself to learn a part of GSD you are less familiar with, as soon as the first lesson is functional
-- Keep a running list of friction points during dogfooding
-- Treat your own learning experience as the primary test, not unit tests
-
-**Warning signs:**
-- No one has completed a full lesson flow end-to-end
-- "We will dogfood after Phase 3"
-
-**Phase relevance:** Phase 1 must end with a dogfooding session.
-
----
-
-### Pitfall 12: Markdown-in-Terminal Rendering Edge Cases
-
-**What goes wrong:** GSD's source files are heavily markdown-based (workflows, agents, commands are all `.md` files). Displaying markdown content in a terminal without a renderer produces raw syntax. Rendering markdown in a terminal introduces its own set of problems (tables, nested lists, code blocks inside blockquotes).
-
-**Prevention:**
-- Strip markdown formatting to plain text for terminal display rather than trying to render it faithfully
-- For code blocks, preserve them as-is (they are already terminal-friendly)
-- For markdown structural elements (headers, lists, tables), convert to simple indented text
-- Do not pull in a markdown rendering library. Simple regex-based stripping of `#`, `*`, `|` delimiters is sufficient for display purposes.
-
-**Warning signs:**
-- Raw `###` headers showing up in lesson output
-- Tables rendered as unaligned pipe-separated text
-- Attempting to render markdown tables with box-drawing characters
-
-**Phase relevance:** Address when building the lesson display component, likely Phase 1 or 2.
-
-## Phase-Specific Warnings
-
-| Phase Topic | Likely Pitfall | Mitigation |
-|-------------|---------------|------------|
-| Source parser/analyzer | Brittle parsing (Pitfall 1), CommonJS complexity (Pitfall 8) | Survey GSD export patterns first; use semantic anchors; build source contract tests |
-| Lesson content design | Linear code assumption (Pitfall 5), over-engineering before validating (Pitfall 2) | Start with hand-written prototype; use zoom-level lesson structure |
-| Progress tracking | State corruption (Pitfall 3) | Stable semantic IDs; content hashing; staleness detection |
-| Terminal UI | Complexity trap (Pitfall 4), markdown rendering (Pitfall 12) | Keep it boring; paginated text; test on Windows Terminal |
-| Mini-projects | Too rigid/too loose validation (Pitfall 6) | Structural checks over exact matching; define rubrics upfront |
-| Auto-update pipeline | Deferred too long (Pitfall 7) | Build staleness detection early; separate source-derived from authored content |
-| All phases | Scope creep (Pitfall 9), not dogfooding (Pitfall 11) | Hardcode GSD specifics; dogfood after every phase |
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Parser cannot handle markdown | Phase 1: Content Infrastructure | markdown-parser.cjs exists and produces structured output from command.md and workflow.md files |
+| Progress tracking single-module | Phase 1: Content Infrastructure | progress.json uses version 2 format; switching modules preserves per-module lesson position |
+| Concept map hardcoded | Phase 1: Content Infrastructure | Each module.json contains its own concept map; renderConceptMap() loads from module data |
+| Module renumbering breaks progress | Phase 1: Content Infrastructure | Module IDs are stable; display order controlled by `order` field in module.json |
+| Prompt templates assume JavaScript | Phase 2: Content Generation | New prompt templates exist for markdown source; generated lessons reference actual markdown structures |
+| Lessons are flat reference docs | Phase 2: Content Generation | Lessons follow "how to add a new command" narrative arc; each lesson includes a practical mental exercise |
+| No module selection UX | Phase 3: Navigation and Polish | Running `gsd-learn` with no flag shows module picker or auto-selects Module 1 |
+| Modules feel disconnected | Phase 3: Navigation and Polish | Bridge lesson exists at end of Module 1; Module 2 intro references Module 1 concepts |
+| Full-stack mini-project prerequisites | Phase 3: Navigation and Polish | Module 2 mini-project shows prerequisite warning if Module 1 not completed |
 
 ## Sources
 
-- GSD codebase analysis: `.planning/codebase/STRUCTURE.md`, `.planning/codebase/ARCHITECTURE.md`
-- PROJECT.md requirements and constraints
-- Domain knowledge: patterns from exercism, rustlings, and similar CLI learning tools (training data, MEDIUM confidence)
-- CommonJS parsing challenges are well-documented in the Node.js ecosystem (training data, HIGH confidence for the general claim)
+- Direct codebase analysis of `learn/lib/parser.cjs` (line-by-line: only handles .cjs files)
+- Direct codebase analysis of `learn/lib/progress.cjs` (flat structure, unused `modules: {}` field)
+- Direct codebase analysis of `learn/lib/concept-map.cjs` (hardcoded single diagram and section map)
+- Direct codebase analysis of `learn/bin/gsd-learn.cjs` (hardcoded `moduleId` default, single-module flow)
+- Direct codebase analysis of `learn/content/prompts/` (JavaScript-specific template variables)
+- Direct codebase analysis of `learn/content/modules/command-lifecycle/` (module structure, lesson schema, project spec)
+- `.planning/PROJECT.md` (v2.0 milestone requirements and constraints)
+- `.planning/codebase/ARCHITECTURE.md` (GSD two-layer architecture: markdown + Node.js)
 
 ---
-
-*Pitfalls analysis: 2026-03-11*
+*Pitfalls research for: gsd-learn Module 1 (GSD Commands & Workflows)*
+*Researched: 2026-03-12*

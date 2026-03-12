@@ -1,126 +1,203 @@
-# Feature Landscape
+# Feature Research
 
-**Domain:** Interactive CLI learning tool (codebase-specific, terminal-native)
-**Researched:** 2026-03-11
-**Confidence:** MEDIUM (based on training knowledge of exercism, rustlings, codecrafters, NodeSchool workshoppers, tour-of-go; no live web verification available)
+**Domain:** Interactive CLI teaching module for GSD slash commands and workflows
+**Researched:** 2026-03-12
+**Confidence:** HIGH
 
-## Reference Tools Studied
+## Feature Landscape
 
-The feature analysis below draws from established interactive CLI learning tools:
+### Table Stakes (Users Expect These)
 
-- **Rustlings** - Small exercises with compiler-driven feedback, watch mode
-- **Exercism** - Track-based exercises with mentoring, CLI submission
-- **NodeSchool workshoppers** (learnyounode, etc.) - Module-based Node.js tutorials with verification
-- **CodeCrafters** - Build-your-own-X projects with automated testing
-- **Tour of Go** - Step-by-step guided walkthrough of language concepts
-- **freeCodeCamp CLI challenges** - Progressive curriculum with automated validation
-
-GSD Learn is unique in that it teaches a specific codebase (not a language), targets a single user, parses source for content, and validates through creative mini-projects rather than test correctness.
-
----
-
-## Table Stakes
-
-Features users expect. Missing = product feels incomplete or broken.
+Features the learner assumes exist. Missing these = module feels incomplete or broken compared to the existing Command Lifecycle module.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Clear lesson progression | Every learning tool has a linear path; without it, learners feel lost | Low | Numbered modules with a defined order. Rustlings and workshoppers both do this simply. |
-| Progress persistence | Learners close terminal and come back later. Losing place = instant frustration | Low | JSON file in `.gsd-learn/` or similar. Every tool in this space does this. |
-| Current position indicator | "You are on lesson 3 of 8" — learners need orientation at all times | Low | Show on launch and between lessons. Rustlings shows "Progress: [####----] 4/8". |
-| Readable terminal output | Lessons displayed in terminal must be formatted well (colors, spacing, code blocks) | Medium | chalk/ANSI formatting. Bad terminal output kills trust instantly. Zero-dep constraint means hand-rolling ANSI codes. |
-| Source code display in context | The tool teaches a codebase — showing relevant source snippets inline is non-negotiable | Medium | Must highlight the specific lines being discussed, not dump entire files. |
-| Run/verify command | A single command to check if the mini-project/exercise is done correctly | Medium | `gsd-learn verify` or similar. Exercism has `exercism submit`, workshoppers have `verify`. Without this, "am I done?" has no answer. |
-| Clear instructions per lesson | Each lesson must state: what you will learn, what to do, what success looks like | Low | Template-driven lesson structure. Ambiguous instructions are the #1 complaint in every CLI tutorial. |
-| Graceful error handling | Tool crashes or confusing errors break learning flow | Low | Catch common mistakes (wrong directory, missing files) with helpful messages. |
-| Help/hint system | Learner gets stuck — they need a lifeline before they quit | Medium | At minimum: `gsd-learn hint` shows a nudge. Rustlings does this well with progressive hints. |
+| Conceptual overview lesson (Lesson 1) | Established pattern from Command Lifecycle module. Learner needs mental model before source dives. Must explain the two-layer markdown architecture: command.md dispatches to workflow.md. | LOW | Reuse `overview` prompt template. Source material: the relationship between `commands/gsd/*.md` and `workflows/*.md`. |
+| Source-dive: command.md anatomy | Learner must see inside a real command file to understand frontmatter (name, description, allowed-tools), XML sections (objective, execution_context, process), and how `@file:` references wire commands to workflows. | LOW | Parse a simple command like `echo.md` or `help.md`. Reuse `source-dive` prompt template. |
+| Source-dive: workflow.md anatomy | Learner must see inside a real workflow file to understand the `<purpose>`, `<required_reading>`, `<process>` with `<step>` structure, bash code blocks calling gsd-tools.cjs, and agent spawning via Task(). | MEDIUM | Parse a simple workflow like `echo.md` first, then reference a complex one. Key challenge: workflows are markdown-as-code, not JavaScript. The existing parser extracts exports/functions/requires from .cjs files -- it needs a markdown-focused mode or the lesson plan needs a different content assembly strategy. |
+| Source-dive: command-to-workflow wiring | Learner must understand the dispatch chain: user types `/gsd:X` -> runtime loads `commands/gsd/X.md` -> command's `execution_context` points to `workflows/X.md` -> workflow orchestrates. This is the "aha" moment of the module. | LOW | Side-by-side snippets from echo command + echo workflow. |
+| Mini-project lesson (final lesson) | Established pattern. Learner builds something real, verified structurally. Without this, the module is passive reading, not validated learning. | MEDIUM | Must verify markdown artifacts, not JavaScript. See mini-project design section below. |
+| module.json configuration | Command Lifecycle module has module.json with id, title, description. New module needs the same. Lesson infrastructure expects it. | LOW | Trivial: create `learn/content/modules/gsd-commands/module.json`. |
+| Progressive hint system for mini-project | Command Lifecycle provides 5 progressive hints. Learner expects the same safety net. | LOW | Create `hints.json` following established pattern: vague -> specific, never gives the answer. |
+| Navigation, progress tracking, clipboard copy | These are infrastructure features already built. Learner expects them to work identically for the new module. | LOW | Zero new code needed. Existing `navigator.cjs`, `progress.cjs`, `clipboard.cjs` handle any module with the right content directory structure. |
+| Module renumbering | PROJECT.md requires this module to be Module 1 and Command Lifecycle to become Module 2. Learner should encounter the simpler markdown layer before Node.js internals. | LOW | Update module ordering in navigation/progress systems. May be as simple as directory naming or a modules manifest. |
 
-## Differentiators
+### Differentiators (Competitive Advantage)
 
-Features that set GSD Learn apart. Not expected, but create real value.
+Features that make this module valuable beyond "more lessons." These connect to the Core Value: learner can confidently modify and extend GSD.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Auto-generated lessons from source | Content never drifts from reality; unique to teaching your own codebase | High | This IS the core innovation. Parsing AST/comments from GSD source to generate lesson content. No other tool does this. |
-| Mini-project validation (not quizzes) | Proves real capability, not recall. Learner builds something creative with GSD | High | Validation must check "did they use GSD to produce a result" not "did they write exact code." This is novel. |
-| Watch mode for exercises | File changes trigger re-verification automatically (Rustlings' killer feature) | Medium | `gsd-learn watch` — detects file saves, re-runs verification, shows pass/fail instantly. Dramatically improves flow state. |
-| Lesson quality feedback loop | Mini-project results measure whether the lesson actually taught well | Medium | Track: time to complete, hints used, verification attempts. Feed back into lesson design iteration. |
-| Content auto-update on source change | When GSD source changes, lessons reflect new reality automatically | High | Requires robust source parsing. Unique differentiator — no other tutorial tool does this. |
-| Concept map / architecture visualization | ASCII art showing where current lesson fits in the bigger GSD architecture | Medium | Show "You are HERE" in the system diagram. Helps learner build mental model beyond current lesson. |
-| Contextual "why" explanations | Not just "this code does X" but "this code exists because Y design decision" | Medium | Pull from commit messages, inline comments, or curated annotations in source. Teaches architectural thinking. |
-| Module completion certificates (terminal art) | Fun ASCII art celebration when finishing a module | Low | Low effort, high delight. Rustlings does a congratulations screen. Motivates completion. |
+| Mini-project: build a custom slash command end-to-end (command.md + workflow.md) | THE differentiator. The learner creates a real, functional `/gsd:` command by writing two markdown files. Proves they understand the full markdown layer. Verified by checking file structure, frontmatter fields, and workflow step presence. | MEDIUM | Analogous to the echo command mini-project but targeting the markdown layer instead of JavaScript. See detailed design below. |
+| Workflow patterns lesson (simple vs orchestrator vs agent-spawning) | Not all workflows are equal. Some are trivial (echo, help), some orchestrate multi-step processes (plan-phase), some spawn subagents (execute-phase, new-project). Teaching this taxonomy helps learners identify which pattern to use when building their own commands. | MEDIUM | Source-dive comparing echo.md (trivial), health.md (single tool call), and a complex workflow excerpt showing Task() agent spawning. |
+| Bridge content connecting Module 1 to Module 2 | The markdown layer and Node.js layer work together. Showing how workflow bash blocks call `node gsd-tools.cjs <command>` creates a "this is how everything connects" moment and motivates Module 2. | LOW | Woven into the workflow anatomy lesson rather than standalone. Show the bash code block and connect forward to Module 2's entry-point lesson. |
+| Updated Module 2 mini-project: full-stack (all 4 layers) | Per PROJECT.md, the Command Lifecycle mini-project should expand to require command.md + workflow.md + echo.cjs + switch case. This validates cross-module understanding. | MEDIUM | Depends on Module 1 being complete. Update `spec.json` to add two more artifact checks for command.md and workflow.md. Update hints.json to cover the markdown layer. |
+| Concept map spanning both layers | "You are here" marker showing command-to-workflow-to-tool flow. Helps learner see where each lesson fits in the overall GSD architecture. | LOW | Extend existing `conceptMap` field in lesson JSON. New sections: "command-layer", "workflow-layer", "wiring", "patterns", "mini-project". |
 
-## Anti-Features
+### Anti-Features (Commonly Requested, Often Problematic)
 
-Features to explicitly NOT build. These are tempting but wrong for GSD Learn.
-
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| Multiple choice quizzes | PROJECT.md explicitly excludes these. They test recall, not capability. They also require maintaining a question bank that drifts from source. | Mini-projects that require using GSD commands to produce real output. |
-| Web UI / browser experience | Breaks the terminal-native philosophy. Adds massive complexity (server, frontend, routing). The learner lives in the terminal. | Rich terminal formatting with ANSI colors, box-drawing characters, and clear layout. |
-| Multi-user support / accounts | Single learner tool. User management adds auth, storage, and complexity for zero value. | Local JSON progress file. Simple, private, zero infrastructure. |
-| Video or multimedia content | Cannot be displayed in terminal. Requires hosting, streaming, media players. Out of scope per PROJECT.md. | Well-formatted code snippets with inline annotations. ASCII diagrams for architecture. |
-| Gamification (points, badges, streaks) | Extrinsic motivation distracts from the actual goal (modification confidence). Adds complexity for engagement theater. | Intrinsic motivation through visible capability growth — "look what you built." |
-| AI-powered tutoring / chat | Adds LLM dependency, cost, latency, and unpredictability. GSD Learn should be deterministic and self-contained. | Well-written progressive hints that guide without giving answers. |
-| Timed challenges / leaderboards | Single user. Competition is meaningless. Time pressure harms deep learning. | Self-paced progression with no time tracking visible to user. |
-| Plugin/extension system for lessons | Premature abstraction. Build one good module first (MVP), then decide if extensibility is needed. | Hard-coded module structure. Refactor to extensible only if multiple modules prove the pattern. |
-| Backward compatibility for lesson format | The tool is pre-1.0 and single-user. Maintaining old lesson formats adds drag for no audience. | Break freely during development. Version the progress file format, migrate on load. |
+| Feature | Why Requested | Why Problematic | Alternative |
+|---------|---------------|-----------------|-------------|
+| Teaching every command and workflow exhaustively | "Cover all 50+ commands and 37+ workflows" seems thorough | Overwhelming, repetitive, unmaintainable. Most commands follow 2-3 patterns. Teaching all of them is like teaching every function in a library instead of the API design. | Teach 3-4 representative commands (trivial, moderate, complex) and the patterns they embody. Learner extrapolates to the rest. |
+| Interactive command execution within lessons | "Let learner run `/gsd:echo` from within the lesson" | gsd-learn runs in a Node.js terminal process. Launching Claude Code commands from within it creates process management complexity, unclear error states, and conflates the teaching tool with the taught tool. | Lessons describe what happens. Mini-project has the learner create files and verify statically. Learner can run commands in a separate terminal. |
+| Auto-generating lessons from ALL markdown source files | "Just parse every .md file and create a lesson" | Produces shallow, disconnected lessons. Good teaching requires narrative arc, deliberate sequencing, and curated examples. Auto-gen from all files produces a reference manual, not a tutorial. | Hand-curate the lesson plan (which files, which order, which focus). Use the generation pipeline to assemble content from curated sources. |
+| Agent system deep-dive in this module | "Teach how agents like gsd-planner and gsd-executor work" | Agents are the most complex part of GSD. They depend on understanding both the markdown layer AND the Node.js layer. Including them in Module 1 violates the "simple first" principle. | Mention agents briefly in the workflow patterns lesson (they are spawned via Task()). Defer deep agent teaching to a potential future Module 3. |
+| Quizzes or multiple-choice questions | "Add knowledge checks between lessons" | PROJECT.md explicitly excludes these. Validation is through doing (mini-projects), not recall. | The mini-project IS the assessment. Progressive hints guide without giving answers. |
+| Teaching markdown/YAML syntax generically | "Explain YAML frontmatter, XML tags" | General knowledge, not GSD-specific. Learner is a developer who already knows markdown. | Assume markdown/YAML literacy. Focus on GSD-specific conventions: why frontmatter has `allowed-tools`, why `<execution_context>` uses `@file:` references. |
+| Writing mini-project files to actual GSD install directory | "Make the command actually work by writing to ~/.claude/" | Risks breaking the GSD install if learner writes malformed files. Cleanup is harder. Requires elevated file system access. | Use a sandbox directory (`learn/sandbox/`). Verification checks the same structural patterns. Learner can copy to real location after passing. |
 
 ## Feature Dependencies
 
 ```
-Progress Persistence --> Current Position Indicator (need stored state to show position)
-Source Code Display --> Auto-generated Lessons (lessons reference source, display must work first)
-Auto-generated Lessons --> Lesson Progression (content must exist before ordering it)
-Clear Instructions --> Run/Verify Command (instructions say what to do, verify confirms it)
-Run/Verify Command --> Mini-project Validation (verify is the mechanism, validation is the logic)
-Mini-project Validation --> Lesson Quality Feedback Loop (can't measure quality without validation data)
-Help/Hint System --> Run/Verify Command (hints help when verify fails)
-Watch Mode --> Run/Verify Command (watch re-runs verify on file change)
-Content Auto-update --> Auto-generated Lessons (auto-update requires the generation pipeline to exist)
+module.json (gsd-commands module identity)
+    └── standalone, no dependencies
+
+Lesson 1: Conceptual Overview
+    └──requires──> module.json
+
+Lesson 2: Command.md Anatomy
+    └──requires──> Lesson 1 (overview provides mental model)
+    └──requires──> Content assembly handles markdown source files
+
+Lesson 3: Workflow.md Anatomy
+    └──requires──> Lesson 2 (learner already knows command.md)
+    └──requires──> Content assembly handles markdown source files
+
+Lesson 4: Command-to-Workflow Wiring
+    └──requires──> Lessons 2 + 3 (both sides of the connection)
+
+Lesson 5 (optional): Workflow Patterns
+    └──requires──> Lesson 3 (basic workflow anatomy)
+
+Mini-Project Lesson (final)
+    └──requires──> All previous lessons
+    └──requires──> spec.json (artifact checks targeting .md files)
+    └──requires──> hints.json (progressive hints)
+    └──requires──> Sandbox directory structure
+
+Module renumbering
+    └──requires──> New module content exists
+    └──requires──> Navigation/progress system supports module ordering
+
+Updated Module 2 Mini-Project (full-stack)
+    └──requires──> Module 1 complete and validated
+    └──requires──> Updated spec.json with 4 artifacts (command.md, workflow.md, echo.cjs, switch case)
 ```
 
-### Critical Path for MVP
+### Dependency Notes
 
-```
-1. Readable Terminal Output (foundation — everything displays through this)
-2. Source Code Display (core capability — the tool shows code)
-3. Auto-generated Lessons from Source (the innovation — parse GSD source into lessons)
-4. Lesson Progression + Clear Instructions (structure the generated content)
-5. Progress Persistence + Position Indicator (remember where learner is)
-6. Run/Verify Command (learner can check their work)
-7. Mini-project Validation (the capstone of each module)
-8. Help/Hint System (support for when learner gets stuck)
-```
+- **Content assembly for markdown files is the critical dependency.** The existing `parser.cjs` extracts exports, functions, and require() calls from `.cjs` files. Markdown command/workflow files have entirely different structure: YAML frontmatter, XML-like sections, bash code blocks. Options: (a) extend parser.cjs with a markdown mode, (b) hand-write lesson JSON directly (bypassing the generation pipeline for this module), or (c) create a new markdown-specific parser. Option (b) is fastest for MVP since lesson content can be curated directly; option (a) aligns with the long-term "parse source for content" principle.
+- **Mini-project verification works with existing infrastructure.** The `verifier.cjs` uses regex pattern checks defined in `spec.json`. These regexes work on any file content, including markdown. No verifier changes needed -- just different patterns in spec.json.
+- **Module 2 update depends on Module 1 shipping first.** The full-stack mini-project references concepts from both modules. Sequence: ship Module 1 -> validate -> update Module 2 mini-project.
 
-## MVP Recommendation
+## MVP Definition
 
-**Prioritize (must ship in MVP):**
+### Launch With
 
-1. **Readable terminal output** — Foundation. Everything renders through this. Without good formatting, nothing else matters.
-2. **Lesson progression with clear instructions** — The structural backbone. Learner must know where they are and what to do.
-3. **Progress persistence** — Learner closes terminal and returns. Losing place is unacceptable even in MVP.
-4. **Source code display in context** — The tool teaches a codebase. Showing relevant code inline is the core interaction.
-5. **Auto-generated lessons from source** — The key differentiator. Even if rough in MVP, this must work because it validates the core thesis.
-6. **Run/verify command** — Without verification, mini-projects have no feedback. The "am I done?" question needs an answer.
-7. **One mini-project (Command Lifecycle)** — Validates the entire learning model. Does the learner actually gain capability?
+Minimum set to deliver a complete, verified learning experience for the markdown layer.
 
-**Defer to post-MVP:**
+- [ ] `module.json` for gsd-commands module (id, title, description)
+- [ ] Lesson 1: Conceptual overview of the markdown layer (command.md + workflow.md relationship, two-layer architecture)
+- [ ] Lesson 2: Command.md anatomy (frontmatter fields, XML sections, @file: execution_context references)
+- [ ] Lesson 3: Workflow.md anatomy (purpose, process steps, bash code blocks calling gsd-tools.cjs)
+- [ ] Lesson 4: Command-to-workflow wiring (dispatch chain from `/gsd:X` to workflow execution)
+- [ ] Lesson 5: Mini-project (build a custom slash command: command.md + workflow.md pair)
+- [ ] `spec.json` with markdown artifact checks for mini-project verification
+- [ ] `hints.json` with 5 progressive hints for mini-project
+- [ ] Sandbox directory for mini-project artifacts (`learn/sandbox/`)
+- [ ] Module renumbering: gsd-commands = Module 1, command-lifecycle = Module 2
 
-- **Watch mode**: Nice but not essential. Manual `verify` works fine initially.
-- **Lesson quality feedback loop**: Collect data in MVP (timestamps, attempt counts) but defer the analysis dashboard.
-- **Content auto-update**: MVP can require manual regeneration. Auto-detection adds complexity.
-- **Concept map visualization**: Helpful but not blocking. A static ASCII diagram in the lesson text suffices initially.
-- **Help/hint system**: Can ship MVP with inline hints in lesson text rather than a separate `hint` command. Add progressive hints in v2.
+### Add After Validation
 
-**Rationale:** The MVP must prove that auto-generated-from-source lessons can teach effectively, validated by a mini-project. Everything else is enhancement. If the core thesis fails (source-parsed lessons are too noisy, mini-project validation is too loose), no amount of watch mode or gamification saves it.
+Features to add once the 5-lesson module works and learner feedback confirms approach.
+
+- [ ] Lesson on workflow patterns (simple vs orchestrator vs agent-spawning) -- add if learners ask "which pattern do I use when?"
+- [ ] Updated Module 2 mini-project requiring all 4 layers (command.md + workflow.md + echo.cjs + switch case)
+- [ ] Lesson generation pipeline entry for new module (LESSON_PLAN in generate-lessons.cjs) -- add when content stabilizes
+- [ ] Markdown-aware parser mode in parser.cjs for automated content regeneration
+
+### Future Consideration
+
+- [ ] Module 3: Agent system deep-dive -- defer until Modules 1-2 prove the teaching model scales to multiple modules
+- [ ] Module 4: Template and reference system -- lower learner demand
+- [ ] Cross-module concept map visualization spanning all layers
+
+## Feature Prioritization Matrix
+
+| Feature | User Value | Implementation Cost | Priority |
+|---------|------------|---------------------|----------|
+| Conceptual overview lesson | HIGH | LOW | P1 |
+| Command.md anatomy lesson | HIGH | LOW | P1 |
+| Workflow.md anatomy lesson | HIGH | MEDIUM | P1 |
+| Command-to-workflow wiring lesson | HIGH | LOW | P1 |
+| Mini-project + spec.json + hints.json | HIGH | MEDIUM | P1 |
+| Module renumbering | MEDIUM | LOW | P1 |
+| Sandbox directory for mini-project | MEDIUM | LOW | P1 |
+| Workflow patterns lesson | MEDIUM | MEDIUM | P2 |
+| Full-stack Module 2 mini-project update | MEDIUM | MEDIUM | P2 |
+| Lesson generation pipeline for new module | LOW | MEDIUM | P2 |
+| Markdown-aware parser mode | LOW | HIGH | P3 |
+
+**Priority key:**
+- P1: Must have for launch -- the 5-lesson module with verification, hints, and renumbering
+- P2: Should have, add after Module 1 validation confirms the approach works
+- P3: Nice to have, future milestone work
+
+## Mini-Project Design: Build a Custom Slash Command
+
+The mini-project is the most important feature in the module. It validates whether the lessons actually taught the learner to build something real.
+
+### Task
+
+Build a new `/gsd:greet` command that displays a personalized greeting using GSD conventions. The learner creates two files: a command specification and its orchestrating workflow.
+
+### Deliverables
+
+1. **Command specification** (`learn/sandbox/commands/gsd/greet.md`):
+   - Valid YAML frontmatter with `name: gsd:greet`, `description`, and `allowed-tools`
+   - `<objective>` section describing what the command does
+   - `<execution_context>` with `@file:` reference pointing to the workflow file
+   - `<process>` section delegating to the workflow
+
+2. **Workflow file** (`learn/sandbox/workflows/greet.md`):
+   - `<purpose>` section explaining the workflow's job
+   - `<process>` section with at least one `<step>`
+   - At least one bash code block (can call gsd-tools.cjs echo or a simple shell command)
+   - `<step>` for formatting and displaying output
+
+### Verification Checks
+
+The spec.json artifact checks use the same regex pattern system as the existing Command Lifecycle mini-project. Each check targets a structural element the lessons taught:
+
+- Command file: has frontmatter, name follows `gsd:` convention, has description, has objective/execution_context/process sections
+- Workflow file: has purpose section, has process section, has at least one step, has a bash code block
+
+### Why This Design
+
+- **Mirrors the echo command pattern.** The learner studied echo.md (command) and echo.md (workflow) in lessons 2-4. Greet follows the same structure with room for creativity in the greeting message and workflow logic.
+- **Sandbox avoids polluting the real GSD install.** Files go in `learn/sandbox/`, not `~/.claude/`. Safe to experiment. Learner can copy to the real location after verification if they want to see it work.
+- **Creative freedom within structural constraints.** The learner decides what the greeting says and how the workflow works, but the file structure must follow GSD conventions. Tests understanding, not copy-paste ability.
+- **Progressive hints guide without solving.** Hints reference specific lessons ("Re-read lesson 2 and look at the frontmatter fields") and get more specific ("Your command.md needs name, description, and allowed-tools in the frontmatter"), but never provide the actual content.
+
+### Hint Progression (5 levels)
+
+1. "Think about the two files you studied in lessons 2-4. Your greet command follows exactly the same pattern."
+2. "Lesson 2 showed you the anatomy of a command.md file. Re-read it and note the three sections every command needs: objective, execution_context, and process."
+3. "Your workflow.md needs a purpose section explaining what it does, and a process section with steps. Check lesson 3 for the exact structure."
+4. "The execution_context in your command.md must use an @file: reference pointing to your workflow.md. This is the wiring that connects them."
+5. "Command file: YAML frontmatter (name: gsd:greet, description, allowed-tools) plus objective, execution_context (@file: pointing to workflow), and process sections. Workflow file: purpose, process with at least one step containing a bash code block. The content is up to you."
 
 ## Sources
 
-- Rustlings (github.com/rust-lang/rustlings) - watch mode, progressive hints, progress tracking patterns
-- Exercism (exercism.org) - track-based exercise structure, CLI submission workflow
-- NodeSchool workshoppers (nodeschool.io) - Node.js tutorial CLI patterns, verify command
-- CodeCrafters (codecrafters.io) - build-your-own-X project validation approach
-- Tour of Go (go.dev/tour) - step-by-step guided concept introduction
+- Existing Command Lifecycle module structure: `learn/content/modules/command-lifecycle/` (6 lessons, module.json, project/spec.json, project/hints.json)
+- GSD command file examples: `~/.claude/commands/gsd/echo.md`, `help.md`, `new-project.md`, `execute-phase.md`, `plan-phase.md`, `quick.md` (33 files total)
+- GSD workflow file examples: `~/.claude/get-shit-done/workflows/echo.md`, `new-project.md` (35 files total)
+- GSD architecture documentation: `.planning/codebase/ARCHITECTURE.md`, `.planning/codebase/STRUCTURE.md`
+- Lesson generation pipeline: `learn/bin/generate-lessons.cjs` (LESSON_PLAN structure, prompt assembly)
+- Prompt templates: `learn/content/prompts/overview.prompt.md`, `source-dive.prompt.md`
+- Source file parser: `learn/lib/parser.cjs` (currently .cjs-focused)
+- PROJECT.md: v2.0 milestone context, constraints, key decisions
 
-**Confidence note:** These observations are from training data (pre-May 2025). The tools themselves are mature and stable, so feature sets are unlikely to have changed substantially. However, any new entrants in the CLI learning space since mid-2025 are not captured here.
+---
+*Feature research for: GSD Commands & Workflows teaching module*
+*Researched: 2026-03-12*

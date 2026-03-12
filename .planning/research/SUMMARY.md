@@ -1,162 +1,165 @@
 # Project Research Summary
 
-**Project:** GSD Learn
-**Domain:** Interactive CLI learning tool (codebase-specific, terminal-native)
-**Researched:** 2026-03-11
-**Confidence:** MEDIUM-HIGH
+**Project:** GSD Commands & Workflows — Module 1 for gsd-learn CLI
+**Domain:** Interactive CLI teaching tool expansion (new learning module)
+**Researched:** 2026-03-12
+**Confidence:** HIGH
 
 ## Executive Summary
 
-GSD Learn is an interactive terminal-based tool that teaches contributors the GSD codebase through source-parsed lessons and validated mini-projects. The dominant pattern in this space (rustlings, exercism, NodeSchool workshoppers) is linear lesson progression with automated verification, but GSD Learn's core innovation is auto-generating lesson content directly from source code so it never drifts from reality. The recommended approach uses zero runtime dependencies -- exclusively Node.js 18+ built-ins (readline, fs, ANSI escape codes, node:test) -- matching GSD's own philosophy and existing patterns.
+This project adds a new Module 1 ("GSD Commands & Workflows") to the existing gsd-learn CLI, which currently has a single module ("Command Lifecycle") teaching Node.js internals. The core challenge is that the existing system was built with single-module assumptions throughout: a JavaScript-only source parser, flat progress tracking, a hardcoded concept map, and a hardcoded default module ID. All four of these must be upgraded to multi-module-capable implementations before any new module content can work correctly. The good news: 10 of 12 existing lib modules are already module-agnostic and need zero changes.
 
-The architecture is a five-component pipeline: Source Parser extracts structure from GSD's CommonJS/markdown files, Content Generator transforms parsed data into lesson objects via template interpolation, Lesson Renderer presents content interactively, Progress Tracker persists state as JSON, and Mini-Project Runner validates learning through structural checks on real GSD artifacts. All components use patterns already proven in GSD's own codebase. The build order follows data flow dependencies, with standalone components (CLI entry, progress tracker, source parser) built first, then the content pipeline, then the interactive experience, and finally the validation layer.
+The recommended approach is a strict phase sequence. Phase 1 upgrades the infrastructure (progress schema migration, module discovery, concept map parameterization) and builds the new markdown parser. Only after the plumbing works should Phase 2 create the lesson content for the new module (6 lessons following the established pattern: 1 overview + 4 dives + 1 mini-project). Phase 3 then polishes the multi-module UX (module selection screen, module headers in lesson display, cross-module bridge content) and extends Module 2's mini-project to require all 4 architectural layers.
 
-The highest risk is building sophisticated infrastructure before validating that the teaching approach actually works. The source parser's regex-based extraction could break on refactors (Pitfall 1), and lessons that try to present GSD's graph-structured codebase as linear steps will overwhelm learners (Pitfall 5). The mitigation is clear: start with a semi-manual MVP -- hand-write the first module's lesson content, wire up minimal navigation and progress, test whether it teaches effectively, THEN automate content generation. Dogfood after Phase 1, not Phase 3.
+The key risk is content quality: markdown-based configuration files can produce flat "reference doc" lessons if the prompt framing asks "what are the fields?" instead of "how do you create a new command?" Lesson prompts must be structured around the creation task ("build a /gsd:greet command") not the documentation task ("here is what each field means"). A secondary risk is the progress migration — the v1-to-v2 schema change must preserve existing Command Lifecycle progress or learners will be forced to redo completed lessons, which is a trust-breaking experience.
 
 ## Key Findings
 
 ### Recommended Stack
 
-Zero runtime dependencies. Everything uses Node.js built-ins, matching GSD's existing patterns. The only opinionated decision is raising the Node floor to 18+ (from GSD's 16.7.0) to get `readline/promises` and stable `node:test`. This is acceptable because GSD Learn is an internal dev tool, not a published package.
+No new runtime dependencies are required. The entire implementation uses Node.js built-in APIs (`fs`, `path`, `os`, `RegExp`) and the project's existing zero-dependency constraint remains intact. The only meaningful new code artifact is `markdown-parser.cjs` — a new lib module parallel to the existing `parser.cjs` that extracts YAML frontmatter, XML-style sections, bash code blocks, and `@file:` references from GSD command and workflow markdown files.
+
+The existing `frontmatter.cjs` from GSD's own `bin/lib/` can be required directly (same-repo require) for the YAML portion of markdown parsing, keeping the approach DRY without adding dependencies. The `prompt-templates.cjs` `assemblePrompt()` function needs a one-time refactor from hardcoded per-placeholder `.replace()` chains to a generic `{{KEY}}` replacement loop — a small backward-compatible change that eliminates ongoing maintenance for every new template variable.
 
 **Core technologies:**
-- **Node.js >= 18 (CommonJS):** Runtime -- unlocks readline/promises and stable node:test while staying on GSD's module format
-- **readline + ANSI escape codes:** Terminal UI -- GSD already uses these in install.js; no framework needed for paginated text with navigation
-- **Regex-based source parsing:** Content extraction -- GSD's consistent CommonJS conventions make regex reliable for structural extraction (function names, exports, requires, JSDoc)
-- **JSON file persistence:** Progress tracking -- matches GSD's existing .planning/ state management pattern exactly
-- **node:test + node:assert:** Testing -- identical to GSD's existing test setup, zero additional dependencies
-
-**Critical version note:** Node 18 is the floor. Do NOT require Node 21+ for util.styleText.
+- `Node.js >= 18.0.0` (built-ins only): `fs`, `path`, `os`, `RegExp` — zero-dependency constraint enforced throughout
+- `markdown-parser.cjs` (new): regex-based extraction of GSD markdown structure — same approach as existing `parser.cjs` but for .md files
+- `frontmatter.cjs` (GSD existing): reused via same-repo `require()` for YAML frontmatter parsing — no new dep
+- `node:test` + `node:assert` + `c8`: unchanged test infrastructure
+- New prompt templates (`.prompt.md` files): `command-spec.prompt.md`, `workflow-dive.prompt.md` — markdown-appropriate variables replacing JS-specific ones
 
 ### Expected Features
 
-**Must have (table stakes):**
-- Lesson progression with clear instructions and position indicator
-- Progress persistence across sessions (JSON file)
-- Readable terminal output (ANSI colors, code blocks, spacing)
-- Source code display in context (the core interaction -- showing relevant GSD code inline)
-- Run/verify command for mini-project completion
-- Help/hint system (at minimum, inline hints in lesson text)
-- Graceful error handling with helpful messages
+The 5-lesson + mini-project structure mirrors the proven Command Lifecycle pattern exactly. Users expect feature parity with the existing module (navigation, clipboard copy, hints, progress tracking, concept map). The differentiator is the mini-project: build a working `/gsd:greet` command by creating both `greet.md` (command spec) and `greet.md` (workflow) in a sandbox directory, verified by the existing `verifier.cjs` with markdown-appropriate regex checks.
 
-**Should have (differentiators):**
-- Auto-generated lessons from source (the core innovation -- validates the thesis)
-- Mini-project validation via structural checks (proves capability, not recall)
-- Concept map / "you are here" architecture visualization
-- Contextual "why" explanations pulled from comments/annotations
+**Must have (table stakes):**
+- `module.json` for gsd-commands (id, title, description, order: 1) — module infrastructure requires it
+- Lesson 1: Conceptual overview of the two-layer architecture (command.md dispatches to workflow.md)
+- Lesson 2: Command.md anatomy (frontmatter fields, XML sections, `@file:` execution_context references)
+- Lesson 3: Workflow.md anatomy (purpose, process steps, bash code blocks calling gsd-tools.cjs)
+- Lesson 4: Command-to-workflow wiring (dispatch chain from `/gsd:X` to execution)
+- Lesson 5/6: Mini-project — build a custom slash command + workflow pair, verified structurally
+- `spec.json` with markdown artifact checks and `hints.json` with 5 progressive hints
+- Module renumbering via `order` field: gsd-commands = 1, command-lifecycle = 2
+- Progress schema migration v1 to v2 (per-module lesson tracking without data loss)
+
+**Should have (competitive):**
+- Workflow patterns lesson (simple vs orchestrator vs agent-spawning) — add if learner feedback requests it
+- Bridge content at end of Module 1 previewing Module 2's Node.js layer
+- Updated Module 2 mini-project requiring all 4 layers (command.md + workflow.md + echo.cjs + switch case)
+- Module name displayed in lesson header ("Module 1: GSD Commands / Lesson X of Y")
 
 **Defer (v2+):**
-- Watch mode for exercises (manual verify works initially)
-- Lesson quality feedback dashboard (collect data in MVP, analyze later)
-- Content auto-update on source change (MVP can require manual regeneration)
-- Progressive hint command (inline hints suffice for MVP)
-
-**Anti-features (do NOT build):** Multiple choice quizzes, web UI, multi-user support, gamification (points/badges/streaks), AI tutoring, plugin system, timed challenges.
+- Module 3: Agent system deep-dive — requires understanding both layers first
+- Markdown-aware automated lesson regeneration pipeline — hand-curated content is fine for initial module
+- Cross-module concept map visualization spanning all layers
 
 ### Architecture Approach
 
-Pipeline architecture with unidirectional data flow. Five components with clear boundaries, each independently testable. Content is generated lazily (on-demand per lesson, not pre-built) to ensure freshness. Narrative templates are separated from source code injection -- templates provide stable pedagogical framing while `{{source:path:symbol}}` interpolation injects current code at render time.
+The architecture follows a content-driven module discovery pattern: modules are self-contained directories under `learn/content/modules/{id}/` with their own `module.json` containing an `order` field. No central registry file. The `listModules()` function (new, added to `lessons.cjs`) scans and sorts by `order` field. Two critical infrastructure components need schema changes: `progress.cjs` upgrades from flat v1 to per-module v2 with auto-migration, and `concept-map.cjs` shifts from a hardcoded single diagram to module-owned concept map definitions stored in `module.json`. The `gsd-learn.cjs` entry point gets smart default module selection (first incomplete module by order) and a `--list-modules` flag.
 
 **Major components:**
-1. **CLI Entry** (gsd-learn.cjs) -- command parsing and dispatch; minimal args (--module, --reset, --status)
-2. **Source Parser** (parser/*.cjs) -- regex extraction of function signatures, exports, requires, JSDoc, workflow steps from GSD source
-3. **Content Generator** (content/*.cjs) -- transforms parsed data into lesson objects using module definition JSON files and narrative markdown templates
-4. **Lesson Renderer** (renderer/*.cjs) -- paginated terminal display with ANSI formatting, navigation (next/prev/toc/quit), stateless design
-5. **Progress Tracker** (progress/*.cjs) -- JSON file read/write, stable lesson IDs, completion timestamps
-6. **Mini-Project Runner** (projects/*.cjs) -- scaffolding, structural validation (file exists, exports function, runs without error), self-assessment feedback
+1. `progress.cjs` (modified) — v2 schema with per-module `currentLesson` tracking; auto-migrates v1 files on load
+2. `lessons.cjs` (modified) — adds `listModules()` function; `module.json` gains `order` field for sequence control
+3. `gsd-learn.cjs` (modified) — smart default selection, `--list-modules` flag, per-module progress read/write
+4. `markdown-parser.cjs` (new) — extracts frontmatter, XML sections, file refs, steps from command/workflow .md files
+5. `content/modules/gsd-commands/` (new) — module.json, 6 lesson JSONs, spec.json, hints.json
+6. `concept-map.cjs` (modified) — loads concept map from module.json instead of hardcoded constant
+7. `verifier.cjs` (minor mod) — 3-line addition to resolve `~` paths for home-directory artifact checking
 
 ### Critical Pitfalls
 
-1. **Brittle source parsing that breaks on refactors** -- Use semantic anchors (exported function names) not positional anchors (line numbers). Build "source contract" tests that run in CI. Design parser output as an intermediate representation.
-2. **Over-engineering before validating the teaching approach** -- Start with hand-written lesson content for MVP module. Build parser to support hand-written lessons, not to generate lessons wholesale. Dogfood immediately.
-3. **Progress state corruption on lesson changes** -- Use stable semantic IDs (command-lifecycle.phase-dispatch, not module-1.lesson-3). Store content hashes. Mark affected progress as "needs review" rather than silently invalidating.
-4. **Terminal UI complexity trap** -- Keep it boring: paginated text, Enter to continue, numbered menus. No cursor positioning, no alternate screen buffer. Test on Windows Terminal from day one.
-5. **Linear lesson design for graph-structured code** -- Use "zoom levels": architecture overview first, then single-component deep-dives, then cross-component flow traces. Each lesson has ONE focal file.
+1. **Markdown parser gap** — `parser.cjs` is JavaScript-only and returns empty structures for .md files. Build `markdown-parser.cjs` as a separate module in Phase 1 before any lesson generation begins. Never extend `parser.cjs` with markdown conditionals (violates single responsibility, creates a god-module).
+
+2. **Progress schema clobbers between modules** — The v1 flat `currentLesson` field is overwritten when switching modules. Migrate to v2 per-module schema (`modules[moduleId].currentLesson`) with a transparent migration function. The `modules: {}` field already exists in DEFAULT_PROGRESS — it was clearly designed for this.
+
+3. **Hardcoded concept map** — `concept-map.cjs` has a single hardcoded diagram for Command Lifecycle. Module 1 lessons will show the wrong "YOU ARE HERE" markers unless concept maps are moved into each `module.json`. Fix in Phase 1 before content creation.
+
+4. **Module renumbering breaks progress** — Changing the `command-lifecycle` module ID to reflect new ordering will invalidate all existing `progress.json` files. Keep the module ID `command-lifecycle` stable. Use the `order` field in `module.json` for display sequencing only. IDs are internal identifiers, not display names.
+
+5. **Flat "reference doc" lesson content** — Markdown configuration files invite field-by-field documentation rather than task-oriented teaching. Every lesson prompt must frame content around "how to create a new /gsd command" not "what this field means." Content quality issues are the most expensive pitfall to recover from — regenerating all lessons requires reworking prompt templates, source parsing, and lesson structure.
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+Based on research, the build must be sequenced infrastructure-first. Content depends on the parser. Multi-module navigation depends on the progress schema. Suggested 3-phase structure:
 
-### Phase 1: Foundation and Pedagogical Validation
+### Phase 1: Multi-Module Infrastructure
+**Rationale:** Eight of the nine architectural changes needed are infrastructure changes that block all subsequent phases. The markdown parser must exist before content generation. Progress migration must happen before module switching works. Concept map parameterization must happen before Module 1 lessons can render correctly. All existing tests must continue passing throughout.
+**Delivers:** A gsd-learn CLI capable of hosting multiple modules, with correct per-module progress tracking, module discovery, smart default selection, and a working markdown parser ready to feed lesson generation.
+**Addresses:** Module renumbering (order field), navigation UX (listModules, --list-modules flag), progress persistence
+**Avoids:** Pitfalls 2 (progress clobber), 3 (concept map wrong diagram), 4 (renumbering breaks progress)
+**Sub-tasks (1a + 1b can be parallelized):**
+- 1a: `progress.cjs` v2 schema + v1-to-v2 migration
+- 1b: `lessons.cjs` listModules() + `order` field in module.json
+- 1c: `gsd-learn.cjs` multi-module wiring (depends on 1a + 1b)
+- 1d: `concept-map.cjs` module-owned definitions
+- 1e: `markdown-parser.cjs` new module with tests
 
-**Rationale:** The architecture research and pitfalls research both converge on the same conclusion: build the skeleton and validate the teaching approach before investing in automation. CLI Entry and Progress Tracker are leaf nodes with no upstream dependencies. A hand-written first lesson proves the concept cheaply.
-**Delivers:** Working CLI shell (gsd-learn command), progress persistence, terminal rendering utilities, and ONE hand-written lesson for Command Lifecycle entry point -- testable end-to-end.
-**Addresses:** Lesson progression, progress persistence, readable terminal output, clear instructions, graceful error handling.
-**Avoids:** Over-engineering before validation (Pitfall 2), terminal UI complexity trap (Pitfall 4), scope creep (Pitfall 9).
-**Must end with:** A dogfooding session where someone completes the hand-written lesson. If the teaching approach does not work, pivot before building more infrastructure.
+### Phase 2: Module 1 Content Generation
+**Rationale:** With infrastructure in place, content can be generated cleanly. The markdown parser provides structured data to feed new prompt templates, which feed the LLM to produce lesson JSONs. Lesson content must be framed as task-oriented teaching, not reference documentation. Generate Lesson 1 first and review before generating lessons 2-6 to catch framing issues early.
+**Delivers:** 6 complete lesson JSON files, spec.json, hints.json for the gsd-commands module; module is fully playable end-to-end.
+**Uses:** `markdown-parser.cjs` (Phase 1), `command-spec.prompt.md` and `workflow-dive.prompt.md` (new), existing `overview.prompt.md` (reused for Lesson 1)
+**Implements:** `content/modules/gsd-commands/` directory with all content artifacts
+**Avoids:** Pitfall 5 (flat reference docs) — enforce creation-task framing in prompt templates; Pitfall 1 (parser gap) — parser from Phase 1 provides real source snippets
 
-### Phase 2: Source Parser and Content Pipeline
-
-**Rationale:** Source Parser is the riskiest component (regex vs. real GSD source). Build it early so failures surface before downstream work depends on it. Content Generator defines the lesson object shape consumed by the renderer -- its interface must stabilize here.
-**Delivers:** Working source parser that extracts structures from GSD's CommonJS modules and markdown files. Content generator with template interpolation. Staleness detection (hash-based). Multiple lessons for the Command Lifecycle module generated from source.
-**Addresses:** Auto-generated lessons from source (the core differentiator), source code display in context.
-**Avoids:** Brittle parsing (Pitfall 1), CommonJS complexity (Pitfall 8), deferred auto-update (Pitfall 7).
-**Key risk:** Regex parsing may not handle all of GSD's export patterns. Survey actual patterns first. Build parser coverage metrics.
-
-### Phase 3: Mini-Project Validation and First Complete Module
-
-**Rationale:** Mini-Project Runner is the last-mile validation and only makes sense when the full content pipeline exists. The first complete module (Command Lifecycle) serves as the end-to-end integration test.
-**Delivers:** Mini-project scaffolding and structural validation. Complete Command Lifecycle module with all lessons and a capstone project. Feedback collection (time to complete, hint usage, self-assessment rating).
-**Addresses:** Run/verify command, mini-project validation, help/hint system, lesson quality feedback loop (data collection).
-**Avoids:** Too rigid/too loose validation (Pitfall 6), linear code assumption (Pitfall 5).
-
-### Phase 4: Polish and Second Module
-
-**Rationale:** With one validated module, the pattern is proven. Polish the experience and build a second module to confirm the content pipeline generalizes.
-**Delivers:** Navigation improvements (table of contents, direct lesson jump), concept map visualization, a second learning module (e.g., Agent System or State Management), watch mode for exercises.
-**Addresses:** Watch mode, concept map visualization, contextual "why" explanations.
-**Avoids:** Not dogfooding (Pitfall 11) -- each module ships to a real user.
+### Phase 3: UX Polish and Module 2 Update
+**Rationale:** Once Module 1 content exists and is playable, cross-module UX and the expanded Module 2 mini-project can be completed. These are lower-risk, smaller changes that depend on both modules existing and being validated.
+**Delivers:** Polished multi-module experience; Module 2 mini-project expanded to require all 4 architectural layers (command.md + workflow.md + echo.cjs + switch case in gsd-tools.cjs).
+**Implements:** Module name in lesson header, bridge lesson at end of Module 1, prerequisite warning for Module 2 mini-project, verifier `~` path resolution for home-directory artifact checking, updated Module 2 spec.json and hints.json
 
 ### Phase Ordering Rationale
 
-- **Dependencies drive order:** CLI Entry and Progress Tracker have no upstream dependencies (Phase 1). Source Parser must exist before Content Generator. Renderer needs Generator's output format finalized. Mini-Project Runner needs all other components.
-- **Risk drives priority:** Source Parser is the highest-risk component -- building it in Phase 2 (not Phase 3 or 4) means failures surface early enough to pivot.
-- **Validation before automation:** Hand-written lessons in Phase 1 prove the teaching model works before Phase 2 automates content generation. This directly prevents Pitfall 2 (the most costly mistake).
-- **Scope discipline:** Each phase produces a usable artifact. No phase is pure infrastructure.
+- Infrastructure must precede content: the markdown parser is a hard dependency for lesson generation; progress migration is a hard dependency for multi-module navigation. Building content on broken infrastructure creates rework.
+- Content before polish: the bridge lesson, module headers, and Module 2 mini-project update all require Module 1 lessons to exist and be validated first.
+- Phase 1 sub-tasks 1a and 1b are independent (progress.cjs and lessons.cjs touch different files) and can be developed in parallel to compress timeline.
+- Module 2 mini-project update is deliberately last — it references Module 1 concepts, so Module 1 must be complete and validated before the cross-module spec.json is written.
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 2 (Source Parser):** Needs concrete survey of GSD's actual CommonJS export patterns, markdown file structures, and workflow step formats before parser design is finalized. Run `/gsd:research-phase` here.
-- **Phase 3 (Mini-Project):** Mini-project validation design is novel (no exact precedent in the reference tools). Needs prototyping. Run `/gsd:research-phase` here.
+- **Phase 1e (markdown-parser.cjs):** STACK.md already examined real command/workflow files and confirmed consistent tag patterns, but regex extractors should be spot-checked against 3-5 real files (trivial, not representative, and complex) before finalizing the parser interface.
+- **Phase 2 (lesson content):** Prompt framing quality cannot be pre-validated. Recommend treating Lesson 1 generation as a prototype step — review output before generating the full set, and be prepared to revise prompt template framing before committing to all 6 lessons.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1 (Foundation):** Uses patterns already in GSD's codebase (readline, ANSI, JSON persistence). Well-understood.
-- **Phase 4 (Polish):** Enhancement work on established foundation. Standard CLI UX improvements.
+- **Phase 1a-1c (infrastructure modifications):** All files are fully analyzed. Changes are mechanical with clear before/after schemas documented in ARCHITECTURE.md and PITFALLS.md.
+- **Phase 1d (concept-map.cjs):** Small refactor, well-understood component. Move constant to module.json, update one function to accept parameter.
+- **Phase 3 (UX polish):** All changes are small targeted additions to existing files. No novel patterns required.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Zero-dependency constraint eliminates choice paralysis. All recommended technologies are GSD's existing stack. Node 18 floor is the only opinionated call. |
-| Features | MEDIUM | Reference tools (rustlings, exercism, workshoppers) are well-established but observations are from training data (pre-May 2025). Feature prioritization is sound. |
-| Architecture | HIGH | Pipeline architecture follows directly from the data flow. Component boundaries map cleanly to GSD's own patterns. Build order is dependency-driven. |
-| Pitfalls | MEDIUM-HIGH | Critical pitfalls (brittle parsing, premature engineering) are well-documented across CLI tutorial ecosystems. GSD-specific pitfalls (CommonJS parsing, markdown rendering) are inferred from codebase analysis. |
+| Stack | HIGH | Zero-dependency constraint is firm; all needed capabilities confirmed in existing codebase with line-level analysis. No external library decisions needed. |
+| Features | HIGH | Existing module provides a proven 6-lesson template. Feature scope is bounded. Anti-features are clearly called out with rationale. |
+| Architecture | HIGH | Direct codebase analysis of every affected file. Before/after schemas documented. Migration strategy specified. Sub-task dependencies mapped. |
+| Pitfalls | HIGH | All pitfalls identified from direct code inspection, not speculation. Recovery costs estimated. Specific line references provided for affected code. |
 
-**Overall confidence:** MEDIUM-HIGH
+**Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **GSD export pattern survey:** Before Phase 2, catalog every CommonJS export pattern in GSD source. The parser design depends on knowing what patterns it must handle. This is a 1-2 hour audit, not a research project.
-- **Mini-project design prototyping:** No existing tool validates learning through structural checks on generated artifacts. The validation logic for "did the learner create a working GSD command" needs prototyping before Phase 3 planning is finalized.
-- **Windows Terminal rendering verification:** GSD's primary environment is Windows. ANSI escape code behavior in Windows Terminal, PowerShell, and CMD should be tested early (Phase 1).
-- **Node 18 adoption check:** Verify that GSD contributors are on Node 18+. If some are on Node 16, the learn tool needs a clear version gate with a helpful error message.
+- **Lesson content quality:** Research identifies the risk of flat reference-doc lessons but cannot pre-validate prompt framing quality until the first lesson is generated. Mitigate by treating Lesson 1 as a prototype with explicit review gate before generating lessons 2-6.
+- **Homedir-based source paths:** The markdown parser uses `os.homedir() + '/.claude/'` paths, which requires GSD to be installed (not just cloned). This is the existing pattern in `generate-lessons.cjs` and is acceptable for development-time content generation, but should be documented in the generation script comments.
+- **Verifier `~` path resolution:** The 3-line change to `verifier.cjs` for tilde expansion is specified but not fully implemented in research. Confirm whether `path.resolve()` or explicit `os.homedir()` string substitution is the right approach during Phase 3 implementation.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- GSD `package.json` -- zero production dependencies, engine requirement
-- GSD `bin/install.js` -- existing readline and ANSI color patterns
-- GSD `.planning/codebase/ARCHITECTURE.md` -- system architecture
-- GSD `.planning/codebase/CONVENTIONS.md` -- code style contract enabling regex parsing
-- GSD `.planning/codebase/STACK.md` -- built-in module usage
-- GSD `.planning/PROJECT.md` -- requirements and constraints
+- `learn/lib/parser.cjs` — confirms JavaScript-only scope, motivates separate markdown-parser.cjs
+- `learn/lib/progress.cjs` — confirms flat v1 schema with unused `modules: {}` field designed for future use
+- `learn/lib/concept-map.cjs` — confirms hardcoded single-module diagram and section map
+- `learn/bin/gsd-learn.cjs` — confirms hardcoded default moduleId and single-module progress flow
+- `learn/content/prompts/overview.prompt.md` and `source-dive.prompt.md` — confirms JavaScript-specific template variables
+- `learn/content/modules/command-lifecycle/` — proven 6-lesson module structure used as template
+- `~/.claude/commands/gsd/` (33 command .md files examined) — confirms consistent frontmatter + XML tag conventions
+- `~/.claude/get-shit-done/workflows/` (35 workflow .md files examined) — confirms step structure and bash block patterns
+- `.planning/PROJECT.md` — v2.0 milestone requirements and hard constraints (zero runtime dependencies)
 
 ### Secondary (MEDIUM confidence)
-- Rustlings, Exercism, NodeSchool workshoppers, CodeCrafters, Tour of Go -- feature patterns and pitfalls (training data, pre-May 2025)
-- Node.js documentation for readline, readline/promises, node:test -- API availability boundaries
-- CommonJS static analysis challenges -- well-documented in Node.js ecosystem
+- `.planning/codebase/ARCHITECTURE.md` — GSD two-layer architecture overview (markdown + Node.js layers)
+- `.planning/codebase/CONVENTIONS.md` — markdown conventions consistency confirmed across GSD files
+- `get-shit-done/bin/lib/frontmatter.cjs` — YAML parser confirmed available for same-repo reuse
 
 ---
-*Research completed: 2026-03-11*
+*Research completed: 2026-03-12*
 *Ready for roadmap: yes*

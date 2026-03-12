@@ -1,257 +1,322 @@
-# Technology Stack
+# Stack Research: Module 1 — GSD Commands & Workflows
 
-**Project:** GSD Learn
-**Researched:** 2026-03-11
+**Domain:** Teaching module for GSD slash commands (.md) and workflows (.md)
+**Researched:** 2026-03-12
+**Confidence:** HIGH
 
-## Recommended Stack
+## Executive Summary
 
-The defining constraint is **zero runtime dependencies**, matching GSD's own philosophy. Every recommendation below uses only Node.js built-in modules. This is not a limitation -- Node.js 18+ provides everything needed for an interactive CLI learning tool.
+No new libraries or dependencies are needed. The existing zero-dependency stack is sufficient. The work is entirely about extending the current codebase with a **markdown parser** (new) alongside the existing **CJS parser**, new prompt templates for markdown-centric lessons, and new content artifacts. This research documents exactly what changes, what stays the same, and what to avoid adding.
 
-### Core Runtime
+## What Stays the Same (DO NOT CHANGE)
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Node.js | >= 18.0.0 | Runtime | Raises GSD's 16.7.0 floor to get `readline/promises`, stable `node:test`, and `util.styleText`. GSD Learn is an internal tool, not a published package -- it can require a modern Node. |
-| CommonJS (.cjs) | N/A | Module format | Matches GSD's existing module system. No ESM conversion needed; interoperability with all GSD source files being parsed. |
+The v1.0 stack research (previously in this file) documented the core foundation. All of it remains valid:
 
-**Why Node.js >= 18 instead of >= 16.7.0:** GSD's published package must support 16.7.0 for broad compatibility. GSD Learn is an internal development tool that only runs in the contributor's own environment. Node 18 is the oldest LTS still receiving security updates. The `readline/promises` API (stable in 18+) eliminates callback nesting in interactive prompts, and `node:test` is fully stable for testing.
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Node.js >= 18.0.0 | KEEP | No new Node APIs needed |
+| CommonJS (.cjs) | KEEP | All new modules use .cjs |
+| Zero runtime dependencies | KEEP | Hard constraint from PROJECT.md |
+| `readline` + raw mode | KEEP | Navigation unchanged |
+| ANSI escape codes via `terminal.cjs` | KEEP | Rendering unchanged |
+| JSON file progress in `.planning/learn/` | KEEP | Progress schema extends naturally |
+| `node:test` + `node:assert` | KEEP | Testing approach unchanged |
+| `c8` for coverage | KEEP | Dev dependency unchanged |
+| Regex-based source parsing | KEEP | Extended, not replaced |
 
-### Terminal UI (Built-in)
+**Confidence: HIGH** -- These are proven in production from v1.0.
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `readline` | Built-in | User input, navigation, keypress handling | GSD already uses this in `install.js`. Handles line-by-line input, question prompts, and raw keypress events. |
-| `readline/promises` | Built-in (18+) | Async prompt flow | Promise-based API avoids callback nesting for multi-step lesson interactions. Falls back to callback `readline` on older Node. |
-| ANSI escape codes | N/A | Colors, formatting, cursor control | GSD already uses raw ANSI in `install.js` (`\x1b[36m` etc.). No chalk/kleur needed. Wrap in a tiny utility module for reuse. |
-| `process.stdout` | Built-in | Screen rendering | Direct write for full terminal control. Supports `columns`/`rows` for layout, `isTTY` for capability detection. |
+## What's New for Module 1
 
-**Confidence: HIGH** -- These are the same APIs GSD already uses. No new concepts.
+### 1. Markdown File Parser (New Module)
 
-### Terminal Interaction Patterns
-
-| Pattern | Implementation | Purpose |
-|---------|---------------|---------|
-| Paged content | `process.stdout.rows` to calculate page size, keypress listener for navigation | Lessons longer than terminal height need pagination |
-| Progress indicators | ANSI cursor movement (`\x1b[A`, `\x1b[2K`) | Show lesson progress without full screen redraws |
-| Syntax highlighting | Regex-based ANSI coloring for JS keywords | Highlight code snippets in lesson content. Simple token matching, not full parsing. |
-| Raw mode | `process.stdin.setRawMode(true)` | Single-keypress navigation (Enter to continue, arrow keys for menus) |
-
-### Source File Parsing
+**Need:** The existing `parser.cjs` only handles `.cjs` files (extracting functions, requires, exports, constants). Module 1 teaches markdown files: slash commands (`commands/gsd/*.md`) and workflows (`get-shit-done/workflows/*.md`). These have fundamentally different structure.
 
 | Technology | Version | Purpose | Why |
 |------------|---------|---------|-----|
-| `fs.readFileSync` | Built-in | Read GSD source files | Synchronous matches GSD's patterns. Source files are small (<50KB each). |
-| Regex + string parsing | N/A | Extract code structure, comments, exports | GSD source is simple CommonJS. AST parsing (acorn, etc.) is overkill and would add a dependency. Regex reliably extracts: function names from `module.exports`, JSDoc comments, section separators (`// ---`), require statements. |
-| `path` | Built-in | Cross-platform file resolution | Already used throughout GSD. Essential for Windows compatibility. |
+| Regex + string parsing | N/A (built-in) | Parse markdown structure from command and workflow files | Same zero-dependency approach as CJS parser. Markdown files follow GSD conventions consistently (YAML frontmatter, XML-like section tags, bash code blocks). |
+| GSD's own `frontmatter.cjs` | Existing | Parse YAML frontmatter from command .md files | Already built and tested in `get-shit-done/bin/lib/frontmatter.cjs`. Can be required directly -- it's a CommonJS module in the same repo. |
 
-**Why NOT use an AST parser (acorn, babel, etc.):**
-1. Adds a runtime dependency, violating the zero-dependency constraint
-2. GSD's code follows consistent conventions (documented in CONVENTIONS.md) that make regex parsing reliable
-3. We're extracting structure (function names, exports, comments), not transforming code
-4. If parsing needs grow complex later, `node --experimental-vm-modules` or the built-in `vm` module can evaluate simple patterns
+**What the markdown parser needs to extract:**
 
-**Confidence: HIGH** -- Regex parsing of consistently-formatted CommonJS is a well-understood pattern.
+From **command files** (`commands/gsd/*.md`):
+- YAML frontmatter: `name`, `description`, `argument-hint`, `allowed-tools`
+- Section blocks: `<context>`, `<objective>`, `<execution_context>`, `<process>`
+- `@` file references (e.g., `@~/.claude/get-shit-done/workflows/new-project.md`)
+- Flag definitions from context blocks
 
-### Progress Persistence
+From **workflow files** (`get-shit-done/workflows/*.md`):
+- Section blocks: `<purpose>`, `<required_reading>`, `<process>`, `<auto_mode>`, etc.
+- Bash code blocks with `gsd-tools.cjs` calls
+- Agent spawn patterns (`/claude ...` or Task tool calls)
+- `@file:` references
+- Step numbering and structure (## 1. Setup, ## 2. Questioning, etc.)
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| JSON file | N/A | Progress state storage | GSD already stores all state as JSON files in `.planning/`. Same pattern: `fs.readFileSync` / `fs.writeFileSync` with `JSON.parse` / `JSON.stringify`. |
-| `.planning/learn/` | N/A | Progress directory | Follows GSD's convention of `.planning/` for project state. Git-tracked so progress is portable. |
+**Implementation approach:** A new `learn/lib/md-parser.cjs` module, parallel to the existing `parser.cjs`. Not a replacement -- CJS parser still needed for Module 2.
 
-**Progress file structure:**
+```javascript
+// learn/lib/md-parser.cjs -- structure sketch
+module.exports = {
+  parseCommandFile,   // Parse commands/gsd/*.md
+  parseWorkflowFile,  // Parse get-shit-done/workflows/*.md
+};
+```
+
+**Why NOT reuse GSD's `frontmatter.cjs` directly for everything:**
+GSD's frontmatter parser handles YAML header extraction. But lesson content needs more: section tags, code blocks, cross-references, step structure. The frontmatter parser is useful for the YAML portion only. The rest requires markdown-specific extraction that doesn't exist in GSD today.
+
+**Why regex is still the right choice for markdown:**
+1. GSD's markdown files follow strict conventions: XML-like tags (`<purpose>`, `<process>`), numbered step headers, fenced code blocks
+2. No nested markdown-in-markdown complexity
+3. We need structure extraction, not rendering
+4. A full markdown AST parser (remark, unified, markdown-it) would add dependencies and parse structure we don't need
+
+**Confidence: HIGH** -- Examined actual command and workflow files. Tags and structure are consistent and regex-parseable.
+
+### 2. New Prompt Templates (New Files)
+
+**Need:** The existing prompt templates (`overview.prompt.md`, `source-dive.prompt.md`) are designed for CJS source code lessons. Module 1 needs templates tuned for markdown file content.
+
+| Template | Purpose | Key Placeholders |
+|----------|---------|------------------|
+| `command-overview.prompt.md` | Lesson about what slash commands are and how they work | `{{COMMAND_LIST}}`, `{{EXAMPLE_COMMAND}}`, `{{FRONTMATTER_EXAMPLE}}` |
+| `command-dive.prompt.md` | Deep-dive into a specific command .md file | `{{COMMAND_NAME}}`, `{{FRONTMATTER}}`, `{{SECTIONS}}`, `{{FILE_REFERENCES}}`, `{{SOURCE_MARKDOWN}}` |
+| `workflow-dive.prompt.md` | Deep-dive into a workflow .md file | `{{WORKFLOW_NAME}}`, `{{PURPOSE}}`, `{{STEPS}}`, `{{TOOL_CALLS}}`, `{{AGENT_SPAWNS}}`, `{{SOURCE_MARKDOWN}}` |
+| `connection.prompt.md` | Lesson connecting command -> workflow -> tool chain | `{{COMMAND_FILE}}`, `{{WORKFLOW_FILE}}`, `{{TOOL_CALLS}}`, `{{DATA_FLOW}}` |
+
+**Implementation:** New files in `learn/content/prompts/`. The existing `prompt-templates.cjs` `assemblePrompt()` function already handles `{{PLACEHOLDER}}` replacement generically -- it just needs the new template files, not code changes.
+
+Wait -- re-examining `prompt-templates.cjs`, it actually hardcodes specific placeholder names in the replace chain. It does NOT do generic placeholder replacement. Each new placeholder needs a corresponding `.replace()` call.
+
+**Recommended change:** Refactor `assemblePrompt()` to accept a context object and do generic replacement:
+
+```javascript
+// Replace all {{KEY}} with context[KEY]
+for (const [key, value] of Object.entries(context)) {
+  const placeholder = '{{' + key.toUpperCase() + '}}';
+  template = template.replaceAll(placeholder, String(value || ''));
+}
+```
+
+This is a small, backward-compatible change (existing keys still work) that avoids adding a new `.replace()` line for every future placeholder.
+
+**Confidence: HIGH** -- Template system is simple; the change is mechanical.
+
+### 3. Updated Lesson Plan and Generation Script
+
+**Need:** `generate-lessons.cjs` currently has a hardcoded `LESSON_PLAN` array for the command-lifecycle module. Module 1 needs its own lesson plan.
+
+| Change | What | Why |
+|--------|------|-----|
+| New lesson plan constant | `LESSON_PLAN_COMMANDS_WORKFLOWS` array in generate-lessons.cjs | Defines the lesson sequence for Module 1 |
+| Module ID routing | `--module=gsd-commands` flag support | Generate prompts for the correct module |
+| Source paths for markdown | `sources: ['../../commands/gsd/new-project.md']` entries using relative-from-GSD-root paths | Points parser at .md files instead of .cjs files |
+| New lesson type | `type: 'command-dive'` and `type: 'workflow-dive'` alongside existing `'overview'` and `'source-dive'` | Routes to correct parser and template |
+
+**Lesson plan structure (recommended):**
+
+```
+Lesson 1: Overview -- What are slash commands and workflows?
+Lesson 2: Command Anatomy -- Deep-dive into a command .md file (new-project.md)
+Lesson 3: Workflow Anatomy -- Deep-dive into a workflow .md file (new-project.md)
+Lesson 4: The Connection -- How command -> workflow -> tools chain together
+Lesson 5: Mini-project -- Build a custom slash command + workflow
+```
+
+**Confidence: HIGH** -- Follows the exact pattern established in v1.0.
+
+### 4. New Content Directory Structure
+
+```
+learn/content/modules/gsd-commands/
+  module.json                    # Module metadata
+  lessons/                       # Generated lesson JSON files
+    01-overview.json
+    02-command-anatomy.json
+    03-workflow-anatomy.json
+    04-the-connection.json
+    05-mini-project.json
+  project/
+    spec.json                    # Mini-project verification spec
+    hints.json                   # Progressive hints
+```
+
+**No new libraries needed.** Same directory conventions, same JSON format, same verification system.
+
+### 5. Updated Mini-Project Spec
+
+**Need:** Module 1's mini-project should have the learner create a slash command (.md) and a workflow (.md). The existing `verifier.cjs` checks file existence and regex patterns -- this works for .md files identically to .cjs files.
+
 ```json
 {
-  "version": 1,
-  "currentModule": "command-lifecycle",
-  "modules": {
-    "command-lifecycle": {
-      "started": "2026-03-11T10:00:00Z",
-      "currentLesson": 3,
-      "completedLessons": [1, 2],
-      "miniProject": {
-        "status": "not-started"
-      }
+  "artifacts": [
+    {
+      "description": "Custom slash command file",
+      "path": "commands/gsd/my-command.md",
+      "checks": [
+        { "pattern": "^---", "description": "Has YAML frontmatter" },
+        { "pattern": "name:\\s*gsd:", "description": "Has gsd: prefixed name" },
+        { "pattern": "<execution_context>", "description": "References a workflow" }
+      ]
+    },
+    {
+      "description": "Custom workflow file",
+      "path": "get-shit-done/workflows/my-command.md",
+      "checks": [
+        { "pattern": "<purpose>", "description": "Has purpose section" },
+        { "pattern": "<process>", "description": "Has process section" },
+        { "pattern": "gsd-tools\\.cjs", "description": "Calls gsd-tools" }
+      ]
     }
-  }
+  ]
 }
 ```
 
-**Why NOT SQLite/LevelDB/etc.:**
-1. Runtime dependency
-2. Single user, small dataset (tens of lessons, not thousands of records)
-3. JSON is human-readable and git-diffable, matching GSD's transparency philosophy
-4. No concurrent writes to worry about
+**Confidence: HIGH** -- `verifier.cjs` is file-type agnostic. It reads any file and runs regex checks.
 
-**Confidence: HIGH** -- This is exactly how GSD stores config and state today.
+### 6. Module Renumbering Support
 
-### Testing
+**Need:** Current progress tracks `currentModule: "command-lifecycle"`. Module 1 becomes `gsd-commands`, Module 2 becomes `command-lifecycle`. Progress file needs a `moduleOrder` concept.
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `node:test` | Built-in (18+) | Test runner | GSD already uses this. Built-in, zero dependencies, adequate for unit and integration tests. |
-| `node:assert` | Built-in | Assertions | GSD already uses this. `assert.strictEqual`, `assert.deepStrictEqual`, `assert.throws` cover all needs. |
-| `c8` | ^11.0.0 | Coverage (dev only) | Already in GSD's devDependencies. Measures test coverage without adding runtime weight. |
+**Change:** Add a top-level `modules.json` or extend `gsd-learn.cjs` with module ordering:
 
-**Confidence: HIGH** -- Identical to GSD's existing test setup.
-
-### Content Generation
-
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Template strings | N/A | Lesson text generation | JavaScript template literals with embedded ANSI codes. No templating engine needed for single-format terminal output. |
-| Regex extractors | N/A | Pull content from source files | Module-specific regex patterns to extract: function signatures, JSDoc blocks, require graphs, export lists, inline comments. |
-
-## Alternatives Considered
-
-| Category | Recommended | Alternative | Why Not |
-|----------|-------------|-------------|---------|
-| Colors | Raw ANSI escape codes | chalk, kleur, picocolors | Runtime dependency. GSD already uses raw ANSI. Wrapping in a 20-line utility module gives the same DX. |
-| Prompts | readline (built-in) | inquirer, prompts, enquirer | Runtime dependency. Massive overkill for "press Enter to continue" and simple menu selection. |
-| Argument parsing | Manual `process.argv` parsing | yargs, commander, meow | Runtime dependency. GSD Learn has minimal CLI args (maybe `--module`, `--reset`). A 10-line parser suffices. |
-| Terminal UI | Raw ANSI + readline | blessed, ink, neo-blessed | Runtime dependency. Adds React-like complexity for what is essentially paginated text with navigation. |
-| Source parsing | Regex | acorn, @babel/parser, tree-sitter | Runtime dependency. GSD's consistent code style makes regex reliable for structural extraction. |
-| Data storage | JSON files | SQLite, lowdb, conf | Runtime dependency. Single-user, small dataset, human-readable state files. |
-| Markdown rendering | Custom ANSI renderer | marked-terminal, terminal-markdown | Runtime dependency. Lesson content is generated (not user-authored markdown), so we control the format. A simple renderer for headers, code blocks, and bold is ~50 lines. |
-| Testing | node:test | jest, vitest, mocha | Runtime dependency (dev). GSD already uses node:test successfully. Consistency matters more than features. |
-
-## Architecture-Relevant Stack Decisions
-
-### Lesson Content Pipeline
-
-```
-GSD Source Files (.cjs, .md)
-    |
-    v
-Regex Extractors (per-module patterns)
-    |
-    v
-Content Model (structured JS objects)
-    |
-    v
-Terminal Renderer (ANSI-formatted strings)
-    |
-    v
-Paged Display (readline keypress navigation)
+```json
+{
+  "modules": [
+    { "id": "gsd-commands", "number": 1, "title": "GSD Commands & Workflows" },
+    { "id": "command-lifecycle", "number": 2, "title": "Command Lifecycle" }
+  ]
+}
 ```
 
-**Why this pipeline matters for stack:** Every stage uses built-in Node.js. No compile step. No templating engine. Content regenerates on every run, so lessons always reflect current source code.
+This is a data file, not a library addition. The `--module` flag already exists in `gsd-learn.cjs`.
 
-### Terminal Rendering Utility Module
+**Confidence: HIGH** -- Minimal change, follows existing patterns.
 
-A small utility module (~100 lines) wrapping ANSI codes, following GSD's `install.js` pattern:
+## Reuse Opportunities (Existing Code That Serves Module 1)
+
+| Existing Module | Reuse for Module 1 | Notes |
+|-----------------|---------------------|-------|
+| `learn/lib/lessons.cjs` | Load gsd-commands module | Already generic: `loadModule(moduleId)` |
+| `learn/lib/renderer.cjs` | Render markdown-source lessons | Content format is the same JSON schema (text, code blocks) |
+| `learn/lib/navigator.cjs` | Lesson navigation | Fully module-agnostic |
+| `learn/lib/progress.cjs` | Track Module 1 progress | Already supports multiple modules by ID |
+| `learn/lib/verifier.cjs` | Verify mini-project | File-type agnostic regex checking |
+| `learn/lib/hints.cjs` | Progressive hints | Reads from any hints.json |
+| `learn/lib/feedback.cjs` | Track learning events | Module-agnostic event recording |
+| `learn/lib/terminal.cjs` | ANSI formatting | No changes needed |
+| `learn/lib/clipboard.cjs` | Copy lesson to clipboard | No changes needed |
+| `learn/lib/clipboard-formatter.cjs` | Format lesson for clipboard | No changes needed |
+| `learn/lib/errors.cjs` | Error formatting | No changes needed |
+| `learn/lib/evaluator.cjs` | Score lesson quality | No changes needed |
+
+**Key insight:** 10 of 12 existing lib modules need zero changes. Only `parser.cjs` gets a sibling (`md-parser.cjs`) and `prompt-templates.cjs` gets a small refactor.
+
+## What NOT to Add
+
+| Technology | Why Not | What to Do Instead |
+|------------|---------|-------------------|
+| markdown-it / remark / unified | Runtime dependency. We parse structure, not render markdown. GSD's markdown follows strict conventions that regex handles. | Write `md-parser.cjs` with targeted regex extractors |
+| gray-matter (YAML frontmatter lib) | Runtime dependency. GSD already has `frontmatter.cjs` that does this. | Require GSD's own `frontmatter.cjs` for YAML portions |
+| js-yaml | Runtime dependency. GSD's frontmatter parser handles the YAML subset used in command/workflow files. | Use GSD's `extractFrontmatter()` |
+| Any templating engine (handlebars, ejs, mustache) | Runtime dependency. The `{{PLACEHOLDER}}` replacement in prompt-templates.cjs is sufficient. | Extend existing `assemblePrompt()` with generic replacement |
+| glob / fast-glob | Runtime dependency for file discovery. | Use `fs.readdirSync` + `.filter()` -- already the pattern in `lessons.cjs` |
+| New test framework | Consistency matters more than features. | Keep `node:test` + `node:assert` |
+| Any AST parser for markdown | Overkill. Command files use XML-like tags (`<purpose>`, `<process>`), not complex nested markdown. | Regex extraction of tagged sections |
+
+## Integration Points
+
+### GSD's Own frontmatter.cjs
+
+The learn tool can `require()` GSD's frontmatter parser directly:
 
 ```javascript
-// learn/lib/terminal.cjs
-const COLORS = {
-  cyan: '\x1b[36m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  red: '\x1b[31m',
-  dim: '\x1b[2m',
-  bold: '\x1b[1m',
-  underline: '\x1b[4m',
-  reset: '\x1b[0m',
-};
-
-function colorize(text, color) {
-  return COLORS[color] + text + COLORS.reset;
-}
-
-function heading(text) {
-  return '\n' + COLORS.bold + COLORS.cyan + text + COLORS.reset + '\n';
-}
-
-function codeBlock(code, language) {
-  const lines = code.split('\n').map(l => COLORS.dim + '  ' + l + COLORS.reset);
-  return lines.join('\n');
-}
-
-module.exports = { COLORS, colorize, heading, codeBlock };
+// Path from learn/lib/ to GSD's lib/
+const { extractFrontmatter } = require('../../get-shit-done/bin/lib/frontmatter.cjs');
 ```
 
-### Argument Parsing
+This is an in-repo require, not an external dependency. It keeps YAML parsing DRY.
 
-A minimal parser matching GSD's own patterns:
+**Risk:** If GSD's frontmatter module changes API, the learn tool breaks. Mitigation: both are in the same repo and tested together.
+
+**Confidence: HIGH** -- Same-repo requires are standard practice.
+
+### Source File Locations
+
+The markdown parser needs to know where command and workflow files live. Two approaches:
+
+1. **Hardcoded relative paths** from repo root (simpler, matches existing CJS parser pattern)
+2. **Detect from installed location** via `os.homedir() + '/.claude/'` (matches `generate-lessons.cjs` which uses `GSD_ROOT`)
+
+**Recommendation:** Use approach 2 (homedir-based) to match the existing `GSD_ROOT` pattern in `generate-lessons.cjs`. This ensures lessons are generated from the actually-installed GSD files, not just the repo copy.
 
 ```javascript
-// learn/bin/gsd-learn.cjs
-const args = process.argv.slice(2);
-const flags = {};
-const positional = [];
-for (const arg of args) {
-  if (arg.startsWith('--')) {
-    const [key, val] = arg.slice(2).split('=');
-    flags[key] = val || true;
-  } else {
-    positional.push(arg);
-  }
+const GSD_ROOT = path.join(os.homedir(), '.claude', 'get-shit-done');
+const COMMANDS_DIR = path.join(os.homedir(), '.claude', 'commands', 'gsd');
+```
+
+### Updated Command Lifecycle Mini-Project (Module 2)
+
+Per PROJECT.md, the existing Module 2 mini-project expands to "full-stack (all 4 layers)." The spec.json grows from 2 artifacts to 4:
+
+```json
+{
+  "artifacts": [
+    { "path": "commands/gsd/echo.md", "checks": [...] },
+    { "path": "get-shit-done/workflows/echo.md", "checks": [...] },
+    { "path": "get-shit-done/bin/lib/echo.cjs", "checks": [...] },
+    { "path": "get-shit-done/bin/gsd-tools.cjs", "checks": [...] }
+  ]
 }
 ```
 
-Expected commands: `gsd-learn` (start/resume), `gsd-learn --module=command-lifecycle`, `gsd-learn --reset`, `gsd-learn --status`.
+No new libraries needed -- same `verifier.cjs` with more artifact entries.
 
 ## Installation
 
 ```bash
-# No runtime dependencies to install.
-
-# Dev dependencies (already present in GSD)
-npm install -D c8 esbuild
+# No new runtime dependencies.
+# No new dev dependencies.
+# No npm install changes.
 ```
 
-GSD Learn lives inside the GSD repo. No separate package.json. No additional npm install. The `bin` entry or a simple script alias launches it.
+All work is new .cjs modules, .json content files, and .prompt.md templates within the existing `learn/` directory.
 
-## Node.js Version Strategy
+## Version Compatibility
 
-| Feature Needed | Minimum Node Version | Used By |
-|----------------|---------------------|---------|
-| `readline` | 0.x | User prompts |
-| `fs.readFileSync` | 0.x | File reading |
-| `readline/promises` | 17.0 (stable 18.0) | Async prompts |
-| `node:test` | 18.0 (stable) | Testing |
-| `process.stdout.columns` | 0.x | Terminal width |
-| `process.stdin.setRawMode` | 0.x | Keypress handling |
-| `util.styleText` | 21.7 (stable) | Optional: built-in color API |
-
-**Recommendation:** Target Node.js >= 18.0.0. This is conservative (18 is a past LTS) while unlocking the async readline and stable test runner. Do NOT require Node 21+ just for `util.styleText` -- raw ANSI codes work everywhere and match GSD's existing patterns.
-
-**Confidence: MEDIUM** -- The Node 18 floor is opinionated. If the learner runs Node 16, they'll need to upgrade. This is acceptable for an internal dev tool.
-
-## What NOT to Use
-
-| Technology | Why Not |
-|------------|---------|
-| TypeScript | GSD is JavaScript. Adding a compile step for an internal tool creates friction and diverges from the codebase being taught. |
-| React/Ink | Terminal UI framework overkill. Adds React dependency tree for what is essentially paginated text. |
-| chalk/kleur/picocolors | Even "tiny" color libraries are unnecessary when raw ANSI codes work and GSD already uses them. |
-| inquirer/prompts | Interactive prompt libraries handle edge cases (autocomplete, validation) that GSD Learn doesn't need. Simple readline covers it. |
-| Any database | JSON files in `.planning/` are the right storage for single-user progress tracking. |
-| ESM modules | GSD is CommonJS. Teaching GSD with a different module system would be confusing. |
-| Any bundler for production | The tool runs from source. No build step needed for CommonJS. |
-| marked/markdown-it | Lesson content is generated, not parsed from markdown. Control the output format directly. |
+| Component | Compatible With | Notes |
+|-----------|-----------------|-------|
+| New `md-parser.cjs` | Node >= 18.0.0 | Uses only `fs`, `path`, `RegExp` -- works on any Node version, but project floor is 18 |
+| GSD `frontmatter.cjs` | Node >= 16.7.0 | GSD's own module, designed for broad compatibility |
+| New prompt templates | `prompt-templates.cjs` | Backward compatible if `assemblePrompt()` is refactored to generic replacement |
+| New `module.json` | `lessons.cjs` `loadModule()` | Existing loader is already generic by module ID |
 
 ## Confidence Assessment
 
 | Decision | Confidence | Rationale |
 |----------|------------|-----------|
-| Zero runtime dependencies | HIGH | Explicit constraint from PROJECT.md. GSD proves this works at scale. |
-| Node.js built-in readline | HIGH | GSD already uses this for interactive prompts in install.js. |
-| Raw ANSI escape codes | HIGH | GSD already uses this pattern. Well-understood, no abstraction needed. |
-| Regex source parsing | HIGH | GSD's consistent coding conventions (documented) make regex reliable. |
-| JSON file progress storage | HIGH | Matches GSD's existing state management pattern exactly. |
-| Node >= 18 floor | MEDIUM | Opinionated for an internal tool. Justified by readline/promises and node:test. |
-| No AST parser | MEDIUM | Correct for MVP. If lesson content needs deeper code analysis later, may revisit. |
+| No new dependencies | HIGH | PROJECT.md constraint + all needs met by built-in APIs |
+| New md-parser.cjs module | HIGH | Examined actual command/workflow files; tags are consistent and regex-parseable |
+| Reuse GSD's frontmatter.cjs | HIGH | Same repo, same runtime, tested module |
+| Generic prompt template refactor | HIGH | Small change, backward compatible, eliminates per-placeholder maintenance |
+| 10/12 existing modules unchanged | HIGH | Verified by reading every lib module -- they're content-agnostic |
+| Homedir-based source paths | MEDIUM | Matches existing pattern but requires GSD to be installed (not just cloned) |
+| Module ordering via modules.json | MEDIUM | Simple approach; could also hardcode in gsd-learn.cjs |
 
 ## Sources
 
-- GSD `package.json` -- zero production dependencies, Node >= 16.7.0 engine requirement
-- GSD `bin/install.js` -- existing readline and ANSI color patterns
-- GSD `.planning/codebase/STACK.md` -- built-in module usage documentation
-- GSD `.planning/codebase/CONVENTIONS.md` -- code style consistency that enables regex parsing
-- GSD `.planning/PROJECT.md` -- zero-dependency constraint, terminal-only requirement
-- Node.js documentation for `readline`, `readline/promises`, `node:test` (training data, MEDIUM confidence on exact version availability boundaries)
+- `learn/lib/parser.cjs` -- existing CJS parser, confirms what's missing for .md files
+- `learn/lib/prompt-templates.cjs` -- hardcoded placeholders, confirms refactor need
+- `learn/lib/lessons.cjs` -- generic `loadModule()`, confirms no changes needed
+- `learn/lib/verifier.cjs` -- file-agnostic regex checks, confirms no changes needed
+- `learn/bin/generate-lessons.cjs` -- hardcoded lesson plan, confirms extension pattern
+- `learn/bin/gsd-learn.cjs` -- module flag already exists, confirms routing support
+- `commands/gsd/new-project.md` -- actual command file structure (frontmatter + XML tags)
+- `get-shit-done/workflows/new-project.md` -- actual workflow file structure (XML tags + bash blocks)
+- `get-shit-done/bin/lib/frontmatter.cjs` -- YAML parser available for reuse
+- `.planning/codebase/CONVENTIONS.md` -- confirms consistent markdown conventions across GSD
 
 ---
 
-*Stack research: 2026-03-11*
+*Stack research for: GSD Commands & Workflows Module (v2.0)*
+*Researched: 2026-03-12*
