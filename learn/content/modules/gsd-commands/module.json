@@ -3,5 +3,11 @@
   "title": "GSD Commands & Workflows",
   "description": "Learn how GSD slash commands dispatch through command specs to workflow files.",
   "order": 1,
-  "sectionMap": {}
+  "sectionMap": {
+    "overview": "Overview",
+    "command-spec": "Command Spec",
+    "workflow": "Workflow",
+    "dispatch": "Dispatch Chain",
+    "bridge": "Bridge"
+  }
 }

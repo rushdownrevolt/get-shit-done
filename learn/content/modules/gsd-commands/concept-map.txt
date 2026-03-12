@@ -3,12 +3,35 @@
         |
         v
   +------------------+
-  | Command Spec     |
-  | (placeholder)    |
+  | Overview         |
+  | Two-layer arch:  |
+  | specs + workflows|
   +------------------+
         |
         v
   +------------------+
+  | Command Spec     |
+  | (.md frontmatter |
+  |  + XML sections) |
+  +------------------+
+        |
+        v  @file: reference
+  +------------------+
   | Workflow          |
-  | (placeholder)    |
+  | (steps, process, |
+  |  code blocks)    |
+  +------------------+
+        |
+        v
+  +------------------+
+  | Dispatch Chain   |
+  | spec -> workflow |
+  | wiring + routing |
+  +------------------+
+        |
+        v
+  +------------------+
+  | Bridge           |
+  | Node.js Layer    |
+  | (Module 2)       |
   +------------------+
