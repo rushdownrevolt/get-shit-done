@@ -107,4 +107,59 @@ function renderLesson(lesson, currentIndex, totalLessons) {
   return parts.join('');
 }
 
-module.exports = { renderLesson };
+/**
+ * Render progress dots showing current position within a lesson's parts.
+ *
+ * @param {number} currentPart - Zero-based index of current part.
+ * @param {number} totalParts - Total number of parts in the lesson.
+ * @returns {string} Formatted progress dots with "Part X of Y" label.
+ */
+function renderProgressDots(currentPart, totalParts) {
+  const filled = '\u25CF'; // ●
+  const empty = '\u25CB';  // ○
+  const dots = [];
+  for (let i = 0; i < totalParts; i++) {
+    if (i <= currentPart) {
+      dots.push(style(filled, 'cyan'));
+    } else {
+      dots.push(style(empty, 'dim'));
+    }
+  }
+  return '  ' + dots.join(' ') + '  Part ' + (currentPart + 1) + ' of ' + totalParts;
+}
+
+/**
+ * Render a celebratory module completion banner.
+ *
+ * @param {object} opts - Banner options.
+ * @param {string} opts.title - Module title.
+ * @param {number} opts.lessonCount - Number of lessons in the module.
+ * @param {number} opts.totalParts - Total parts across all lessons.
+ * @param {number} opts.miniProjectCount - Number of mini-projects.
+ * @returns {string} Formatted completion banner string.
+ */
+function renderCompletionBanner(opts) {
+  const parts = [];
+  const bar = '\u2588'.repeat(50);
+
+  parts.push(clearScreen());
+  parts.push('\n');
+  parts.push(style(bar, 'cyan'));
+  parts.push('\n\n');
+  parts.push(style('  MODULE COMPLETE!', 'bold', 'cyan'));
+  parts.push('\n\n');
+  parts.push(style('  ' + opts.title, 'bold'));
+  parts.push('\n\n');
+  parts.push('  Lessons: ' + opts.lessonCount);
+  parts.push('\n');
+  parts.push('  Parts: ' + opts.totalParts);
+  parts.push('\n');
+  parts.push('  Mini-projects: ' + opts.miniProjectCount);
+  parts.push('\n\n');
+  parts.push(style(bar, 'cyan'));
+  parts.push('\n');
+
+  return parts.join('');
+}
+
+module.exports = { renderLesson, renderProgressDots, renderCompletionBanner };
