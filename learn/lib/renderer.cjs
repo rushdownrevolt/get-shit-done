@@ -128,17 +128,23 @@ function renderSuccessCriteria(lesson, parts) {
 function getBlockHeader(section) {
   if (section.type === 'text') {
     const trimmed = section.value.replace(/\n/g, ' ').trim();
-    if (trimmed.length > 40) {
-      return trimmed.substring(0, 40) + '...';
+    // Extract first sentence as a meaningful summary
+    const sentenceEnd = trimmed.search(/[.!?]\s|[.!?]$/);
+    const firstSentence = sentenceEnd !== -1
+      ? trimmed.substring(0, sentenceEnd + 1)
+      : trimmed;
+    // Cap at 60 chars for display
+    if (firstSentence.length > 60) {
+      return firstSentence.substring(0, 57) + '...';
     }
-    return trimmed || 'Explanation';
+    return firstSentence || 'Explanation';
   } else if (section.type === 'code') {
     if (section.source) {
-      return section.source.file + ':' + (section.source.startLine || 1);
+      return 'Code — ' + section.source.file + ':' + (section.source.startLine || 1);
     }
     return 'Code Example';
   } else if (section.type === 'project') {
-    return 'Your Mission';
+    return 'Mini-Project';
   }
   return 'Content';
 }
@@ -169,17 +175,17 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
   parts.push(horizontalRule(60));
   parts.push('\n\n');
 
-  // 4. Pinned objective
-  parts.push(style('What you\'ll learn:', 'yellow', 'bold'));
-  parts.push('\n');
-  parts.push(lesson.objective);
-  parts.push('\n\n');
+  // 4. Objective — first part only
+  if (partIndex === 0) {
+    parts.push(style('What you\'ll learn:', 'yellow', 'bold'));
+    parts.push('\n');
+    parts.push(lesson.objective);
+    parts.push('\n\n');
+    parts.push(horizontalRule(60));
+    parts.push('\n\n');
+  }
 
-  // 5. Horizontal rule
-  parts.push(horizontalRule(60));
-  parts.push('\n\n');
-
-  // 6. Content section or concept map
+  // 5. Content section or concept map
   const isConceptMapPart = lesson.conceptMap && partIndex === lesson.content.length;
 
   if (isConceptMapPart) {
@@ -197,12 +203,14 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
     renderContentSection(section, parts);
   }
 
-  // 7. Horizontal rule
+  // 6. Horizontal rule
   parts.push(horizontalRule(60));
   parts.push('\n\n');
 
-  // 8. Pinned success criteria footer
-  renderSuccessCriteria(lesson, parts);
+  // 7. Success criteria — last part only
+  if (partIndex === totalParts - 1) {
+    renderSuccessCriteria(lesson, parts);
+  }
 
   // 9. Progress dots
   parts.push(renderProgressDots(partIndex, totalParts));

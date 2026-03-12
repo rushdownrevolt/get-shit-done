@@ -262,16 +262,20 @@ describe('renderPart', () => {
     assert.ok(output.includes('Lesson 2 of 5'), 'should contain position indicator');
   });
 
-  test('includes pinned objective on every part', () => {
-    const output = renderPart(lesson, 1, 3, 0, 5);
-    assert.ok(output.includes("What you'll learn:"), 'should contain objective header');
-    assert.ok(output.includes('Learn about testing renderers'), 'should contain objective text');
+  test('includes objective only on first part', () => {
+    const first = renderPart(lesson, 0, 3, 0, 5);
+    assert.ok(first.includes("What you'll learn:"), 'first part should contain objective header');
+    assert.ok(first.includes('Learn about testing renderers'), 'first part should contain objective text');
+    const middle = renderPart(lesson, 1, 3, 0, 5);
+    assert.ok(!middle.includes("What you'll learn:"), 'middle part should NOT contain objective header');
   });
 
-  test('includes pinned success criteria footer on every part', () => {
-    const output = renderPart(lesson, 2, 3, 0, 5);
-    assert.ok(output.includes("You'll know you've got it when:"), 'should contain criteria header');
-    assert.ok(output.includes('You can verify renderer output'), 'should contain criteria text');
+  test('includes success criteria only on last part', () => {
+    const last = renderPart(lesson, 2, 3, 0, 5);
+    assert.ok(last.includes("You'll know you've got it when:"), 'last part should contain criteria header');
+    assert.ok(last.includes('You can verify renderer output'), 'last part should contain criteria text');
+    const first = renderPart(lesson, 0, 3, 0, 5);
+    assert.ok(!first.includes("You'll know you've got it when:"), 'first part should NOT contain criteria header');
   });
 
   test('renders text section with text value', () => {
@@ -310,13 +314,10 @@ describe('renderPart', () => {
     assert.ok(output.includes('File B'), 'should contain second deliverable');
   });
 
-  test('includes dim block header for text type', () => {
+  test('includes dim block header showing first sentence for text type', () => {
     const output = renderPart(lesson, 0, 3, 0, 5);
-    // Block header should exist -- for text type, it uses first ~40 chars or "Explanation"
-    assert.ok(typeof output === 'string', 'should be a string');
-    // The block header for text should contain some portion of the text or "Explanation"
-    // We check that the output has content beyond just the section value
-    assert.ok(output.length > lesson.content[0].value.length, 'should have more than just the text value');
+    // Block header should be the first sentence of the text content
+    assert.ok(output.includes('This is the first text block.'), 'should contain first sentence as block header');
   });
 
   test('includes dim block header "Code Example" for code without source', () => {
@@ -352,12 +353,12 @@ describe('renderPart', () => {
     assert.ok(output.includes('Architecture Overview'), 'should contain concept map header');
   });
 
-  test('successCriteria with hint text still splits and styles hint as lightBlue', () => {
+  test('successCriteria with hint text still splits and styles hint as lightBlue on last part', () => {
     const lessonWithHint = {
       ...lesson,
       successCriteria: 'You can verify renderer output\n\nWant to go deeper? Press [c] to copy.',
     };
-    const output = renderPart(lessonWithHint, 0, 3, 0, 5);
+    const output = renderPart(lessonWithHint, 2, 3, 0, 5);
     assert.ok(output.includes('You can verify renderer output'), 'should contain main criteria');
     assert.ok(output.includes('Want to go deeper?'), 'should contain hint text');
     const mainIdx = output.indexOf('You can verify renderer output');
