@@ -73,5 +73,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Interactive Learning Shell | 2/2 | Complete | 2026-03-12 |
-| 2. Prompt-Driven Content Pipeline | 0/2 | Planned | - |
+| 2. Prompt-Driven Content Pipeline | 1/2 | In Progress|  |
 | 3. Mini-Project Validation | 0/0 | Not started | - |
