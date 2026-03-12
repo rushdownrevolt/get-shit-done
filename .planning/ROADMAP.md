@@ -69,11 +69,12 @@ Plans:
   2. Learner can request hints when stuck, receiving progressive nudges that guide without giving answers
   3. The Command Lifecycle module ends with a mini-project where the learner uses GSD to build something real
   4. Time-to-complete, hints used, and verification attempts are tracked to a local file for assessing lesson effectiveness
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [x] 03-01-PLAN.md — Core lib modules (verifier, hints, feedback) + tests + content files (completed 2026-03-12)
+- [x] 03-02-PLAN.md — CLI integration (--verify, --hint flags) + renderer project content type + feedback tracking (completed 2026-03-12)
+- [ ] 03-03-PLAN.md — Fix artifact paths to target live GSD install (~/.claude/get-shit-done/) + verifier HOME expansion
 
 ## Progress
 
@@ -85,4 +86,4 @@ Phases execute in numeric order: 1 → 2 → 3
 | 1. Interactive Learning Shell | 2/2 | Complete | 2026-03-12 |
 | 2. Prompt-Driven Content Pipeline | 1/2 | In Progress|  |
 | 02.1. Clipboard Copy | 1/1 | Complete | 2026-03-12 |
-| 3. Mini-Project Validation | 0/2 | Complete    | 2026-03-12 |
+| 3. Mini-Project Validation | 2/3 | In Progress |  |
