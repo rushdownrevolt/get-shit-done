@@ -6,43 +6,61 @@
   "content": [
     {
       "type": "text",
-      "value": "GSD (Get Shit Done) is a CLI toolkit that replaces repetitive inline bash patterns across ~50 command, workflow, and agent files with a single centralized tool. Instead of every agent re-implementing config parsing, state management, and git operations, GSD provides one entry point that handles all of it."
+      "value": "GSD (Get Shit Done) is a CLI toolkit that replaces repetitive inline bash patterns across ~50 command, workflow, and agent files with a single centralized tool. Instead of every agent re-implementing config parsing, state management, and git operations, GSD provides one entry point that handles all of it.",
+      "focus": "GSD as a centralized CLI toolkit",
+      "bridge": "But why a CLI tool instead of a shared library?"
     },
     {
       "type": "text",
-      "value": "Why a single tool instead of a library? Because GSD runs inside AI coding assistant sessions where each agent is spawned as an isolated process. A CLI tool is the universal interface: any agent, in any language, can shell out to `node gsd-tools.cjs <command>`. A library would require import paths, version management, and language compatibility -- none of which matter when your interface is stdin/stdout."
+      "value": "Why a single tool instead of a library? Because GSD runs inside AI coding assistant sessions where each agent is spawned as an isolated process. A CLI tool is the universal interface: any agent, in any language, can shell out to `node gsd-tools.cjs <command>`. A library would require import paths, version management, and language compatibility -- none of which matter when your interface is stdin/stdout.",
+      "focus": "CLI over library for agent isolation",
+      "bridge": "Let's look at what that single entry point actually looks like in code."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "// The heart of GSD: a single CLI entry point\n// Usage: node gsd-tools.cjs <command> [args] [--raw]\n\nconst fs = require('fs');\nconst path = require('path');\nconst { error } = require('./lib/core.cjs');\nconst state = require('./lib/state.cjs');\nconst phase = require('./lib/phase.cjs');",
-      "highlight": [2]
+      "highlight": [2],
+      "focus": "Entry point and module imports",
+      "bridge": "Notice there are no external packages -- only Node.js built-ins and local modules."
     },
     {
       "type": "text",
-      "value": "GSD is built with zero external dependencies -- only Node.js built-ins (fs, path, child_process). Why? Because GSD runs inside sandboxed agent environments where npm install may not be available. Zero dependencies means the tool works everywhere Node.js exists, with no setup step."
+      "value": "GSD is built with zero external dependencies -- only Node.js built-ins (fs, path, child_process). Why? Because GSD runs inside sandboxed agent environments where npm install may not be available. Zero dependencies means the tool works everywhere Node.js exists, with no setup step.",
+      "focus": "Zero-dependency design rationale",
+      "bridge": "With that constraint in mind, here is how a command flows through the system."
     },
     {
       "type": "text",
-      "value": "The command lifecycle follows a clear path through four layers:\n\n1. **Entry Point** (gsd-tools.cjs): Parses CLI arguments, handles --cwd and --raw flags\n2. **Command Router**: A switch statement dispatches to the right module based on the first argument\n3. **Tool Modules** (lib/*.cjs): Each module owns one domain -- state.cjs for STATE.md, config.cjs for config.json, phase.cjs for phase operations\n4. **Output**: Results are JSON-serialized to stdout (or raw text with --raw flag)"
+      "value": "The command lifecycle follows a clear path through four layers:\n\n1. **Entry Point** (gsd-tools.cjs): Parses CLI arguments, handles --cwd and --raw flags\n2. **Command Router**: A switch statement dispatches to the right module based on the first argument\n3. **Tool Modules** (lib/*.cjs): Each module owns one domain -- state.cjs for STATE.md, config.cjs for config.json, phase.cjs for phase operations\n4. **Output**: Results are JSON-serialized to stdout (or raw text with --raw flag)",
+      "focus": "Four-layer command lifecycle architecture",
+      "bridge": "The switch-based router is the heart of this architecture -- here is what it looks like."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "switch (command) {\n  case 'state': {\n    const subcommand = args[1];\n    if (subcommand === 'json') {\n      state.cmdStateJson(cwd, raw);\n    } else if (subcommand === 'update') {\n      state.cmdStateUpdate(cwd, args[2], args[3]);\n    }\n    break;\n  }\n  case 'commit': {\n    commands.cmdCommit(cwd, message, files, raw, amend);\n    break;\n  }\n}",
-      "highlight": [1, 3]
+      "highlight": [1, 3],
+      "focus": "Switch statement command routing",
+      "bridge": "This simple pattern raises a fair question: why not use a registry?"
     },
     {
       "type": "text",
-      "value": "Why a switch statement instead of a command registry pattern? Because GSD has a fixed, known set of commands. A registry adds indirection for extensibility that isn't needed -- the tool is maintained alongside the commands that use it. The switch statement makes it trivially easy to see every supported command in one place."
+      "value": "Why a switch statement instead of a command registry pattern? Because GSD has a fixed, known set of commands. A registry adds indirection for extensibility that isn't needed -- the tool is maintained alongside the commands that use it. The switch statement makes it trivially easy to see every supported command in one place.",
+      "focus": "Switch over registry trade-off",
+      "bridge": "Now that you see the big picture, here is the roadmap for the rest of this module."
     },
     {
       "type": "text",
-      "value": "In this module, you will trace this entire path across five lessons:\n1. This welcome and orientation [YOU ARE HERE] -- the big picture\n2. Where commands start -- entry point argument parsing (gsd-tools.cjs lines 145-176)\n3. Command dispatch -- the switch statement router (gsd-tools.cjs lines 178-589)\n4. Tool modules -- core.cjs, config.cjs, phase.cjs module patterns (lib/*.cjs)\n5. State and configuration -- STATE.md regex parsing and config CRUD (state.cjs, config.cjs)\n\nEach lesson builds on the previous one. By lesson 5, you will have traced a complete command from `node gsd-tools.cjs state advance-plan` all the way through to the STATE.md file being rewritten with updated frontmatter."
+      "value": "In this module, you will trace this entire path across five lessons:\n1. This welcome and orientation [YOU ARE HERE] -- the big picture\n2. Where commands start -- entry point argument parsing (gsd-tools.cjs lines 145-176)\n3. Command dispatch -- the switch statement router (gsd-tools.cjs lines 178-589)\n4. Tool modules -- core.cjs, config.cjs, phase.cjs module patterns (lib/*.cjs)\n5. State and configuration -- STATE.md regex parsing and config CRUD (state.cjs, config.cjs)\n\nEach lesson builds on the previous one. By lesson 5, you will have traced a complete command from `node gsd-tools.cjs state advance-plan` all the way through to the STATE.md file being rewritten with updated frontmatter.",
+      "focus": "Module roadmap and lesson sequence",
+      "bridge": "One more thing before you move on: how to navigate."
     },
     {
       "type": "text",
-      "value": "Navigation: Press [n] for next lesson, [p] for previous, [q] to quit. Your progress is saved automatically."
+      "value": "Navigation: Press [n] for next lesson, [p] for previous, [q] to quit. Your progress is saved automatically.",
+      "focus": "Navigation controls",
+      "bridge": "Next up: you will trace how CLI arguments are parsed in the entry point in Where Commands Start."
     }
   ],
   "conceptMap": "overview",

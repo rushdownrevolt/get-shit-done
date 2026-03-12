@@ -32,16 +32,16 @@ Generate a JSON lesson file with this EXACT schema:
   "lessonNumber": {{LESSON_NUMBER}},
   "objective": "One sentence: what the learner will understand after this lesson",
   "content": [
-    { "type": "text", "value": "Explanation text..." },
-    { "type": "code", "language": "javascript", "value": "short illustrative snippet", "highlight": [1, 3] },
-    { "type": "text", "value": "Why this pattern was chosen..." }
+    { "type": "text", "value": "Explanation text...", "focus": "Short phrase describing what this block teaches", "bridge": "One sentence connecting this block to the next block" },
+    { "type": "code", "language": "javascript", "value": "short illustrative snippet", "highlight": [1, 3], "focus": "What this code demonstrates", "bridge": "How this connects to what comes next" },
+    { "type": "text", "value": "Why this pattern was chosen...", "focus": "Design rationale summary", "bridge": "Transition to next topic" }
   ],
   "conceptMap": "section-name-for-you-are-here-marker",
   "successCriteria": "One sentence: what the learner can do/explain after this lesson"
 }
 ```
 
-**Required fields:** "id", "title", "lessonNumber", "objective", "content", "conceptMap", "successCriteria"
+**Required fields:** "id", "title", "lessonNumber", "objective", "content", "conceptMap", "successCriteria". Every content item must include `focus` and `bridge`.
 
 ## Content Guidelines
 
@@ -51,3 +51,4 @@ Generate a JSON lesson file with this EXACT schema:
 4. **Connect pieces together.** Show how modules relate, how data flows, how commands are dispatched.
 5. **Target audience:** A developer who uses GSD but has never read its source code.
 6. **Tone:** Direct, practical, no filler. Like a senior developer sketching architecture on a whiteboard.
+7. **Every content item must include `focus` and `bridge` fields.** `focus` is a short phrase (3-8 words) describing what this specific block teaches. `bridge` is one sentence connecting this block to the next. The last content item's bridge should reference the next lesson title: {{NEXT_LESSON_TITLE}}.

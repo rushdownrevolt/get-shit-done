@@ -6,66 +6,90 @@
   "content": [
     {
       "type": "text",
-      "value": "GSD needs to remember things between sessions: which phase you are on, what decisions were made, how the project is configured. Two files handle this:\n\n  .planning/config.json  - Project settings (model profile, feature flags, branching strategy)\n  .planning/STATE.md     - Current position, decisions, blockers, performance metrics, session continuity\n\nconfig.json is a simple JSON file. STATE.md is more interesting: it's a Markdown file that's both human-readable AND machine-parseable."
+      "value": "GSD needs to remember things between sessions: which phase you are on, what decisions were made, how the project is configured. Two files handle this:\n\n  .planning/config.json  - Project settings (model profile, feature flags, branching strategy)\n  .planning/STATE.md     - Current position, decisions, blockers, performance metrics, session continuity\n\nconfig.json is a simple JSON file. STATE.md is more interesting: it's a Markdown file that's both human-readable AND machine-parseable.",
+      "focus": "Two persistence files for state and config",
+      "bridge": "Let's start with how STATE.md is read -- using regex, not a parser."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "function stateExtractField(content, fieldName) {\n  const escaped = fieldName.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n  // Try **Field:** bold format first\n  const boldPattern = new RegExp(\n    `\\\\*\\\\*${escaped}:\\\\*\\\\*\\\\s*(.+)`, 'i'\n  );\n  const boldMatch = content.match(boldPattern);\n  if (boldMatch) return boldMatch[1].trim();\n  // Fall back to plain Field: format\n  const plainPattern = new RegExp(`^${escaped}:\\\\s*(.+)`, 'im');\n  const plainMatch = content.match(plainPattern);\n  return plainMatch ? plainMatch[1].trim() : null;\n}",
       "highlight": [1, 3, 4, 9, 10],
-      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 184 }
+      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 184 },
+      "focus": "Regex-based Markdown field extraction",
+      "bridge": "Three practical reasons drive this regex approach over a parser."
     },
     {
       "type": "text",
-      "value": "Why regex instead of a Markdown parser? Three reasons: (1) Zero dependencies -- no markdown-it, no remark, no unified. (2) STATE.md uses a predictable format with bold labels (`**Status:** Executing`) that regex handles perfectly. (3) The same regex approach handles both the bold Markdown format and plain-text format, making STATE.md flexible in how it's written. The regex is escaped to handle field names with special characters safely."
+      "value": "Why regex instead of a Markdown parser? Three reasons: (1) Zero dependencies -- no markdown-it, no remark, no unified. (2) STATE.md uses a predictable format with bold labels (`**Status:** Executing`) that regex handles perfectly. (3) The same regex approach handles both the bold Markdown format and plain-text format, making STATE.md flexible in how it's written. The regex is escaped to handle field names with special characters safely.",
+      "focus": "Zero-dependency parsing justification",
+      "bridge": "Extracting is half the story -- replacing fields must preserve formatting."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "function stateReplaceField(content, fieldName, newValue) {\n  const escaped = fieldName.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n  const boldPattern = new RegExp(\n    `(\\\\*\\\\*${escaped}:\\\\*\\\\*\\\\s*)(.*)`, 'i'\n  );\n  if (boldPattern.test(content)) {\n    return content.replace(boldPattern,\n      (_match, prefix) => `${prefix}${newValue}`);\n  }\n  const plainPattern = new RegExp(`(^${escaped}:\\\\s*)(.*)`, 'im');\n  if (plainPattern.test(content)) {\n    return content.replace(plainPattern,\n      (_match, prefix) => `${prefix}${newValue}`);\n  }\n  return null;\n}",
       "highlight": [1, 6, 7, 8, 15],
-      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 196 }
+      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 196 },
+      "focus": "Format-preserving field replacement",
+      "bridge": "This extract/replace pair is the foundation -- every state mutation uses them."
     },
     {
       "type": "text",
-      "value": "stateReplaceField preserves the field prefix (the bold markers and colon) while replacing only the value. This means editing STATE.md programmatically doesn't break its Markdown formatting. The function returns null if the field isn't found, letting callers handle missing fields gracefully. This extract/replace pair is the foundation of every state mutation in GSD."
+      "value": "stateReplaceField preserves the field prefix (the bold markers and colon) while replacing only the value. This means editing STATE.md programmatically doesn't break its Markdown formatting. The function returns null if the field isn't found, letting callers handle missing fields gracefully. This extract/replace pair is the foundation of every state mutation in GSD.",
+      "focus": "Null return for missing fields",
+      "bridge": "But STATE.md has a complication: it also has YAML frontmatter that must stay in sync."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "function writeStateMd(statePath, content, cwd) {\n  const synced = syncStateFrontmatter(content, cwd);\n  fs.writeFileSync(statePath, synced, 'utf-8');\n}\n\nfunction syncStateFrontmatter(content, cwd) {\n  const body = stripFrontmatter(content);\n  const fm = buildStateFrontmatter(body, cwd);\n  const yamlStr = reconstructFrontmatter(fm);\n  return `---\\n${yamlStr}\\n---\\n\\n${body}`;\n}",
       "highlight": [1, 2, 6, 7, 8],
-      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 679 }
+      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 679 },
+      "focus": "Frontmatter sync on every write",
+      "bridge": "This dual representation serves two different consumers."
     },
     {
       "type": "text",
-      "value": "Why does writeStateMd exist instead of raw writeFileSync? Because STATE.md has dual representations: the human-readable Markdown body AND a YAML frontmatter block at the top. Every time the body changes, the frontmatter must be regenerated to stay in sync. buildStateFrontmatter extracts machine-readable fields from the Markdown body (phase, plan, status, progress), and syncStateFrontmatter prepends the updated YAML. This means tools can read state via `gsd-tools state json` (fast YAML parse) while humans read the Markdown."
+      "value": "Why does writeStateMd exist instead of raw writeFileSync? Because STATE.md has dual representations: the human-readable Markdown body AND a YAML frontmatter block at the top. Every time the body changes, the frontmatter must be regenerated to stay in sync. buildStateFrontmatter extracts machine-readable fields from the Markdown body (phase, plan, status, progress), and syncStateFrontmatter prepends the updated YAML. This means tools can read state via `gsd-tools state json` (fast YAML parse) while humans read the Markdown.",
+      "focus": "Dual representation for tools and humans",
+      "bridge": "Now let's switch to config.json -- a simpler but equally important persistence layer."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "function cmdConfigSet(cwd, keyPath, value, raw) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n\n  // Parse value (handle booleans and numbers)\n  let parsedValue = value;\n  if (value === 'true') parsedValue = true;\n  else if (value === 'false') parsedValue = false;\n  else if (!isNaN(value) && value !== '') parsedValue = Number(value);\n\n  // Set nested value using dot notation (e.g., \"workflow.research\")\n  const keys = keyPath.split('.');\n  let current = config;\n  for (let i = 0; i < keys.length - 1; i++) {\n    const key = keys[i];\n    if (current[key] === undefined || typeof current[key] !== 'object') {\n      current[key] = {};\n    }\n    current = current[key];\n  }\n  current[keys[keys.length - 1]] = parsedValue;\n}",
       "highlight": [5, 6, 7, 8, 10, 11],
-      "source": { "file": "get-shit-done/bin/lib/config.cjs", "startLine": 84 }
+      "source": { "file": "get-shit-done/bin/lib/config.cjs", "startLine": 84 },
+      "focus": "Dot-notation config with type coercion",
+      "bridge": "Both type coercion and dot notation solve CLI-to-JSON translation problems."
     },
     {
       "type": "text",
-      "value": "config-set supports dot notation (workflow.research) for nested values. Why? Because config.json has nested sections (workflow, git, planning) and agents need to set individual fields without knowing the full config structure. The auto-parsing of 'true'/'false'/numbers from strings is necessary because CLI arguments are always strings -- without it, `config-set commit_docs true` would store the string \"true\" instead of the boolean true."
+      "value": "config-set supports dot notation (workflow.research) for nested values. Why? Because config.json has nested sections (workflow, git, planning) and agents need to set individual fields without knowing the full config structure. The auto-parsing of 'true'/'false'/numbers from strings is necessary because CLI arguments are always strings -- without it, `config-set commit_docs true` would store the string \"true\" instead of the boolean true.",
+      "focus": "CLI string-to-type translation",
+      "bridge": "Let's put it all together by tracing a full state mutation from start to finish."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "function cmdStateAdvancePlan(cwd, raw) {\n  let content = fs.readFileSync(statePath, 'utf-8');\n  const currentPlan = parseInt(\n    stateExtractField(content, 'Current Plan'), 10\n  );\n  const totalPlans = parseInt(\n    stateExtractField(content, 'Total Plans in Phase'), 10\n  );\n\n  if (currentPlan >= totalPlans) {\n    content = stateReplaceField(content, 'Status',\n      'Phase complete \\u2014 ready for verification') || content;\n  } else {\n    const newPlan = currentPlan + 1;\n    content = stateReplaceField(content, 'Current Plan',\n      String(newPlan)) || content;\n    content = stateReplaceField(content, 'Status',\n      'Ready to execute') || content;\n  }\n  writeStateMd(statePath, content, cwd);\n}",
       "highlight": [3, 4, 10, 11, 14, 15, 20],
-      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 210 }
+      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 210 },
+      "focus": "Full state mutation lifecycle",
+      "bridge": "The || content fallback is the defensive pattern that ties everything together."
     },
     {
       "type": "text",
-      "value": "cmdStateAdvancePlan shows the full state mutation lifecycle: extract fields from markdown, compute new values, replace fields in content, write through writeStateMd (which syncs frontmatter). The `|| content` fallback after stateReplaceField ensures that if a field doesn't exist, the original content is preserved rather than becoming null. Why this defensive pattern? Because STATE.md is both human-edited and machine-edited. A human might rename a section or delete a field -- the tool should gracefully skip the missing field rather than crash or silently discard the entire file."
+      "value": "cmdStateAdvancePlan shows the full state mutation lifecycle: extract fields from markdown, compute new values, replace fields in content, write through writeStateMd (which syncs frontmatter). The `|| content` fallback after stateReplaceField ensures that if a field doesn't exist, the original content is preserved rather than becoming null. Why this defensive pattern? Because STATE.md is both human-edited and machine-edited. A human might rename a section or delete a field -- the tool should gracefully skip the missing field rather than crash or silently discard the entire file.",
+      "focus": "Graceful degradation for human-edited files",
+      "bridge": "This wraps up the entire command lifecycle -- let's review the full picture."
     },
     {
       "type": "text",
-      "value": "You have now traced the complete command lifecycle across all five lessons:\n\n1. **Welcome**: The four-layer architecture (entry point -> router -> modules -> output)\n2. **Entry Point**: --cwd/--raw parsing, eager module loading, fail-fast error handling\n3. **Command Dispatch**: switch routing, two-level dispatch, cmd* naming convention\n4. **Tool Modules**: output/error exit pattern, cmd* vs internal functions, defensive defaults\n5. **State and Config** [YOU ARE HERE]: regex-based STATE.md parsing, frontmatter sync, config CRUD\n\nThe key design thread: every piece of GSD is built for reliability in automated environments. Zero dependencies, defensive defaults, fail-fast errors, dual-format output (JSON + raw), and the regex-based state engine all serve the same goal: a tool that works correctly even when called by agents with no human oversight."
+      "value": "You have now traced the complete command lifecycle across all five lessons:\n\n1. **Welcome**: The four-layer architecture (entry point -> router -> modules -> output)\n2. **Entry Point**: --cwd/--raw parsing, eager module loading, fail-fast error handling\n3. **Command Dispatch**: switch routing, two-level dispatch, cmd* naming convention\n4. **Tool Modules**: output/error exit pattern, cmd* vs internal functions, defensive defaults\n5. **State and Config** [YOU ARE HERE]: regex-based STATE.md parsing, frontmatter sync, config CRUD\n\nThe key design thread: every piece of GSD is built for reliability in automated environments. Zero dependencies, defensive defaults, fail-fast errors, dual-format output (JSON + raw), and the regex-based state engine all serve the same goal: a tool that works correctly even when called by agents with no human oversight.",
+      "focus": "Complete lifecycle design thread",
+      "bridge": "Next up: you will apply everything you have learned by building your own GSD command in Build Your Own Command."
     }
   ],
   "conceptMap": "state-and-config",

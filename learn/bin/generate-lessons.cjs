@@ -109,6 +109,10 @@ function generatePrompts() {
       }).join('\n\n');
     }
 
+    // Next lesson title for bridge context
+    const nextLesson = LESSON_PLAN.find(l => l.lessonNumber === lesson.lessonNumber + 1);
+    context.nextLessonTitle = nextLesson ? nextLesson.title : 'Module Completion';
+
     const prompt = assemblePrompt(lesson.template, context);
     const paddedNum = String(lesson.lessonNumber).padStart(2, '0');
     const slug = lesson.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');

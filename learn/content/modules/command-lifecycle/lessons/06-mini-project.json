@@ -6,11 +6,15 @@
   "content": [
     {
       "type": "text",
-      "value": "You have traced the full command lifecycle -- from CLI entry point through the switch router, into tool modules, and back out through the output layer. Now prove you understand it by building something real.\n\nYour task is to add a brand new command to GSD. This is not a quiz or a hypothetical exercise. You will create actual files in the GSD codebase, and a verifier will check your work structurally.\n\nIf you get stuck, use the hint command. Hints start vague and get more specific, but they never give you the code -- that part is yours."
+      "value": "You have traced the full command lifecycle -- from CLI entry point through the switch router, into tool modules, and back out through the output layer. Now prove you understand it by building something real.\n\nYour task is to add a brand new command to GSD. This is not a quiz or a hypothetical exercise. You will create actual files in the GSD codebase, and a verifier will check your work structurally.\n\nIf you get stuck, use the hint command. Hints start vague and get more specific, but they never give you the code -- that part is yours.",
+      "focus": "Hands-on command building challenge",
+      "bridge": "Before you start coding, here is how to check your progress."
     },
     {
       "type": "text",
-      "value": "When you are ready to check your work, run the verify command. When you want a nudge, run the hint command. You can run both as many times as you like.\n\nTip: if something goes wrong, remember that `git checkout` can undo your changes. You are working on the real codebase, but everything is recoverable."
+      "value": "When you are ready to check your work, run the verify command. When you want a nudge, run the hint command. You can run both as many times as you like.\n\nTip: if something goes wrong, remember that `git checkout` can undo your changes. You are working on the real codebase, but everything is recoverable.",
+      "focus": "Verify and hint workflow",
+      "bridge": "Here are the exact requirements for the command you will build."
     },
     {
       "type": "project",
@@ -21,7 +25,9 @@
         "Output that follows the GSD JSON/raw dual-output pattern"
       ],
       "verifyCommand": "node learn/bin/gsd-learn.cjs --verify",
-      "hintCommand": "node learn/bin/gsd-learn.cjs --hint"
+      "hintCommand": "node learn/bin/gsd-learn.cjs --hint",
+      "focus": "Echo command implementation spec",
+      "bridge": "Complete all three deliverables and run verify to confirm your module mastery."
     }
   ],
   "conceptMap": "mini-project",

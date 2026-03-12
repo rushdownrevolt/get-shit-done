@@ -6,63 +6,87 @@
   "content": [
     {
       "type": "text",
-      "value": "GSD's real work happens in library modules under get-shit-done/bin/lib/. Each module owns one domain:\n\n  core.cjs      - Shared utilities: output/error, path helpers, config loading, git operations\n  config.cjs    - Config file CRUD (config-ensure-section, config-set, config-get)\n  state.cjs     - STATE.md reading, writing, and progression engine\n  phase.cjs     - Phase directory lifecycle (add, insert, remove, complete)\n  roadmap.cjs   - ROADMAP.md parsing and progress updates\n  verify.cjs    - Verification and validation suite\n  commands.cjs  - Git commits, slugs, timestamps, scaffolding\n  init.cjs      - Compound initialization commands for workflows\n  frontmatter.cjs - YAML frontmatter CRUD operations"
+      "value": "GSD's real work happens in library modules under get-shit-done/bin/lib/. Each module owns one domain:\n\n  core.cjs      - Shared utilities: output/error, path helpers, config loading, git operations\n  config.cjs    - Config file CRUD (config-ensure-section, config-set, config-get)\n  state.cjs     - STATE.md reading, writing, and progression engine\n  phase.cjs     - Phase directory lifecycle (add, insert, remove, complete)\n  roadmap.cjs   - ROADMAP.md parsing and progress updates\n  verify.cjs    - Verification and validation suite\n  commands.cjs  - Git commits, slugs, timestamps, scaffolding\n  init.cjs      - Compound initialization commands for workflows\n  frontmatter.cjs - YAML frontmatter CRUD operations",
+      "focus": "Module-per-domain architecture",
+      "bridge": "This one-module-per-domain split is not arbitrary -- it mirrors the command structure."
     },
     {
       "type": "text",
-      "value": "Why this many small modules instead of fewer large ones? Because each module maps to a command namespace. When the switch statement dispatches `phase add`, it calls `phase.cmdPhaseAdd()`. The module boundary matches the user's mental model of the command structure. You never need to guess which file handles a command -- it's always `lib/{namespace}.cjs`."
+      "value": "Why this many small modules instead of fewer large ones? Because each module maps to a command namespace. When the switch statement dispatches `phase add`, it calls `phase.cmdPhaseAdd()`. The module boundary matches the user's mental model of the command structure. You never need to guess which file handles a command -- it's always `lib/{namespace}.cjs`.",
+      "focus": "Module boundaries match command namespaces",
+      "bridge": "Let's see what a typical module looks like inside, starting with config.cjs."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "/**\n * Config - Planning config CRUD operations\n */\n\nconst fs = require('fs');\nconst path = require('path');\nconst { output, error } = require('./core.cjs');\n\nfunction cmdConfigEnsureSection(cwd, raw) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n  const planningDir = path.join(cwd, '.planning');\n\n  try {\n    if (!fs.existsSync(planningDir)) {\n      fs.mkdirSync(planningDir, { recursive: true });\n    }\n  } catch (err) {\n    error('Failed to create .planning directory: ' + err.message);\n  }\n\n  if (fs.existsSync(configPath)) {\n    const result = { created: false, reason: 'already_exists' };\n    output(result, raw, 'exists');\n    return;\n  }",
       "highlight": [7, 9, 18, 22, 23],
-      "source": { "file": "get-shit-done/bin/lib/config.cjs", "startLine": 9 }
+      "source": { "file": "get-shit-done/bin/lib/config.cjs", "startLine": 9 },
+      "focus": "Standard module structure pattern",
+      "bridge": "Every module follows this same skeleton -- the key import is output and error from core."
     },
     {
       "type": "text",
-      "value": "Every module follows the same structure: JSDoc module comment, require Node built-ins, require core.cjs for shared utilities, define functions, export at the bottom. The key import is `{ output, error }` from core.cjs -- these are the only two ways a cmd* function can end. This constraint makes every command predictable: it either succeeds (output + exit 0) or fails (error + exit 1)."
+      "value": "Every module follows the same structure: JSDoc module comment, require Node built-ins, require core.cjs for shared utilities, define functions, export at the bottom. The key import is `{ output, error }` from core.cjs -- these are the only two ways a cmd* function can end. This constraint makes every command predictable: it either succeeds (output + exit 0) or fails (error + exit 1).",
+      "focus": "Binary outcome: output or error",
+      "bridge": "Let's look at how output and error actually work inside core.cjs."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "function output(result, raw, rawValue) {\n  if (raw && rawValue !== undefined) {\n    process.stdout.write(String(rawValue));\n  } else {\n    const json = JSON.stringify(result, null, 2);\n    // Large payloads exceed Claude Code's Bash tool buffer (~50KB).\n    // Write to tmpfile and output the path prefixed with @file:\n    if (json.length > 50000) {\n      const tmpPath = path.join(require('os').tmpdir(),\n        `gsd-${Date.now()}.json`);\n      fs.writeFileSync(tmpPath, json, 'utf-8');\n      process.stdout.write('@file:' + tmpPath);\n    } else {\n      process.stdout.write(json);\n    }\n  }\n  process.exit(0);\n}\n\nfunction error(message) {\n  process.stderr.write('Error: ' + message + '\\n');\n  process.exit(1);\n}",
       "highlight": [1, 2, 3, 8, 12, 17, 20, 21],
-      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 35 }
+      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 35 },
+      "focus": "Output/error with buffer overflow handling",
+      "bridge": "The 50KB buffer check is a real-world adaptation to the execution environment."
     },
     {
       "type": "text",
-      "value": "Why does output() have a 50KB buffer check? Because GSD runs inside AI agent sessions where stdout is captured into a buffer. Large JSON payloads (like full roadmap analysis) can exceed this buffer. The solution: write to a temp file and return `@file:/path` so the caller can read it. This is a real-world constraint that shaped the architecture -- the tool had to adapt to its execution environment."
+      "value": "Why does output() have a 50KB buffer check? Because GSD runs inside AI agent sessions where stdout is captured into a buffer. Large JSON payloads (like full roadmap analysis) can exceed this buffer. The solution: write to a temp file and return `@file:/path` so the caller can read it. This is a real-world constraint that shaped the architecture -- the tool had to adapt to its execution environment.",
+      "focus": "Environment-driven buffer workaround",
+      "bridge": "Beyond output and error, modules have a second kind of function."
     },
     {
       "type": "text",
-      "value": "There are two kinds of functions in every module:\n\n1. **cmd* functions** (cmdConfigSet, cmdPhaseAdd) -- Called from the switch dispatch. They parse arguments, do work, and call output() or error(). They always exit the process.\n\n2. **Internal functions** (loadConfig, findPhaseInternal, resolveModelInternal) -- Called by other modules. They return values normally and never call output() or error(). Some use the 'Internal' suffix to signal they are not dispatch targets."
+      "value": "There are two kinds of functions in every module:\n\n1. **cmd* functions** (cmdConfigSet, cmdPhaseAdd) -- Called from the switch dispatch. They parse arguments, do work, and call output() or error(). They always exit the process.\n\n2. **Internal functions** (loadConfig, findPhaseInternal, resolveModelInternal) -- Called by other modules. They return values normally and never call output() or error(). Some use the 'Internal' suffix to signal they are not dispatch targets.",
+      "focus": "cmd* versus internal function distinction",
+      "bridge": "The most important internal function is loadConfig -- here is why."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "function loadConfig(cwd) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n  const defaults = {\n    model_profile: 'balanced',\n    commit_docs: true,\n    search_gitignored: false,\n    branching_strategy: 'none',\n    parallelization: true,\n    brave_search: false,\n  };\n\n  try {\n    const raw = fs.readFileSync(configPath, 'utf-8');\n    const parsed = JSON.parse(raw);\n    return {\n      model_profile: get('model_profile') ?? defaults.model_profile,\n      commit_docs: get('commit_docs') ?? defaults.commit_docs,\n      // ... more fields with ?? fallbacks\n    };\n  } catch {\n    return defaults;\n  }\n}",
       "highlight": [3, 12, 13, 20, 21],
-      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 68 }
+      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 68 },
+      "focus": "Defensive defaults with nullish coalescing",
+      "bridge": "This always-returns-valid pattern ensures GSD works before initialization."
     },
     {
       "type": "text",
-      "value": "The loadConfig pattern is core.cjs's most important internal function. It always returns a valid object -- if the file is missing, corrupted, or partially filled, every field falls back to a sensible default via the ?? (nullish coalescing) operator. Why? Because GSD must work even before a project is initialized. An agent calling `gsd-tools resolve-model gsd-executor` before running `config-ensure-section` should get a reasonable answer, not a crash."
+      "value": "The loadConfig pattern is core.cjs's most important internal function. It always returns a valid object -- if the file is missing, corrupted, or partially filled, every field falls back to a sensible default via the ?? (nullish coalescing) operator. Why? Because GSD must work even before a project is initialized. An agent calling `gsd-tools resolve-model gsd-executor` before running `config-ensure-section` should get a reasonable answer, not a crash.",
+      "focus": "Pre-initialization resilience",
+      "bridge": "Finally, let's see how modules declare their public API."
     },
     {
       "type": "code",
       "language": "javascript",
       "value": "module.exports = {\n  MODEL_PROFILES,\n  output,\n  error,\n  safeReadFile,\n  loadConfig,\n  isGitIgnored,\n  execGit,\n  escapeRegex,\n  normalizePhaseName,\n  comparePhaseNum,\n  findPhaseInternal,\n  getRoadmapPhaseInternal,\n  resolveModelInternal,\n  generateSlugInternal,\n  getMilestoneInfo,\n  getMilestonePhaseFilter,\n  toPosixPath,\n};",
       "highlight": [1],
-      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 471 }
+      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 471 },
+      "focus": "Bottom-of-file exports pattern",
+      "bridge": "This pattern gives you the full API at a glance."
     },
     {
       "type": "text",
-      "value": "Why a single module.exports object at the bottom instead of inline exports? CommonJS allows both patterns, but GSD consistently uses the bottom-of-file approach. This makes the module's public API visible in one glance -- you can scroll to the end of any file to see what it exports. It also prevents accidental early exports and makes it clear that all exports are intentional."
+      "value": "Why a single module.exports object at the bottom instead of inline exports? CommonJS allows both patterns, but GSD consistently uses the bottom-of-file approach. This makes the module's public API visible in one glance -- you can scroll to the end of any file to see what it exports. It also prevents accidental early exports and makes it clear that all exports are intentional.",
+      "focus": "Intentional export declaration",
+      "bridge": "You have now seen the tool module layer -- the third of four layers."
     },
     {
       "type": "text",
-      "value": "You have now seen how the four-layer architecture from Lesson 1 is implemented: the entry point (Lesson 2) feeds args to the router (Lesson 3), which calls cmd* functions in these tool modules. The key patterns to carry forward: output/error as the only exit paths, cmd* vs internal function distinction, defensive defaults in loadConfig, and the 50KB buffer workaround for large payloads. In the final lesson, you will see how state.cjs and config.cjs actually read and write their files -- completing the lifecycle from CLI input to persistent state."
+      "value": "You have now seen how the four-layer architecture from Lesson 1 is implemented: the entry point (Lesson 2) feeds args to the router (Lesson 3), which calls cmd* functions in these tool modules. The key patterns to carry forward: output/error as the only exit paths, cmd* vs internal function distinction, defensive defaults in loadConfig, and the 50KB buffer workaround for large payloads. In the final lesson, you will see how state.cjs and config.cjs actually read and write their files -- completing the lifecycle from CLI input to persistent state.",
+      "focus": "Tool module patterns summary",
+      "bridge": "Next up: you will trace file I/O and state persistence in State and Configuration."
     }
   ],
   "conceptMap": "tool-modules",
