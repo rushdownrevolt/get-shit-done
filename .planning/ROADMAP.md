@@ -44,11 +44,11 @@ Plans:
   3. An evaluation rubric exists that scores prompt outputs on criteria like accuracy, clarity, appropriate depth, and connection to the concept map
   4. At least one round of prompt iteration has occurred where evaluation results drove specific prompt changes that measurably improved output
   5. The Command Lifecycle module has a conceptual overview lesson and source-code deep-dive lessons, all generated through the prompt pipeline
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — Source parser and prompt templates: TDD-built parser for GSD CommonJS files and two prompt template types (overview, source-dive)
+- [ ] 02-02-PLAN.md — Evaluator, pipeline, and lesson generation: rubric scoring module, pipeline script, and generation of all 5 Command Lifecycle lessons with quality evaluation
 
 ### Phase 3: Mini-Project Validation
 **Goal**: Learner completes a capstone mini-project that proves real capability, with progressive hints when stuck and feedback data that measures lesson quality
@@ -72,6 +72,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Interactive Learning Shell | 0/2 | Planned | - |
-| 2. Prompt-Driven Content Pipeline | 0/0 | Not started | - |
+| 1. Interactive Learning Shell | 2/2 | Complete | 2026-03-12 |
+| 2. Prompt-Driven Content Pipeline | 0/2 | Planned | - |
 | 3. Mini-Project Validation | 0/0 | Not started | - |
