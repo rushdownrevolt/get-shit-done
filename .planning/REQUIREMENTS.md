@@ -8,8 +8,8 @@
 ### Display
 
 - [x] **DISP-01**: Terminal output uses ANSI formatting for colors, spacing, and code blocks
-- [ ] **DISP-02**: Relevant GSD source code is displayed inline within lessons with line highlighting
-- [ ] **DISP-03**: Current position indicator shows "Lesson N of M" and module progress
+- [x] **DISP-02**: Relevant GSD source code is displayed inline within lessons with line highlighting
+- [x] **DISP-03**: Current position indicator shows "Lesson N of M" and module progress
 
 ### Content
 
@@ -22,7 +22,7 @@
 ### Progress
 
 - [x] **PROG-01**: Learning progress persists across terminal sessions via local JSON storage
-- [ ] **PROG-02**: Graceful error handling with helpful messages for common mistakes (wrong directory, missing files, etc.)
+- [x] **PROG-02**: Graceful error handling with helpful messages for common mistakes (wrong directory, missing files, etc.)
 - [x] **PROG-03**: ASCII concept map shows where current lesson fits in overall GSD architecture ("you are HERE")
 
 ### Validation
@@ -75,15 +75,15 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | DISP-01 | Phase 1 | Complete |
-| DISP-02 | Phase 1 | Pending |
-| DISP-03 | Phase 1 | Pending |
+| DISP-02 | Phase 1 | Complete |
+| DISP-03 | Phase 1 | Complete |
 | CONT-01 | Phase 1 | Complete |
 | CONT-02 | Phase 1 | Complete |
 | CONT-03 | Phase 2 | Pending |
 | CONT-04 | Phase 2 | Pending |
 | CONT-05 | Phase 2 | Pending |
 | PROG-01 | Phase 1 | Complete |
-| PROG-02 | Phase 1 | Pending |
+| PROG-02 | Phase 1 | Complete |
 | PROG-03 | Phase 1 | Complete |
 | VALD-01 | Phase 3 | Pending |
 | VALD-02 | Phase 3 | Pending |
