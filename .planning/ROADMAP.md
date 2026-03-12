@@ -48,24 +48,14 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2/2 complete
 
 ### Phase 01.2: Adaptive per-part lesson structure with progressive content accumulation (INSERTED)
-
-**Goal:** [Urgent work - to be planned]
-**Requirements**: TBD
-**Depends on:** Phase 1
-**Plans:** 0 plans
-
-Plans:
-- [ ] TBD (run /gsd:plan-phase 01.2 to break down)
-
-### Phase 01.2: Fix part-based renderer and navigation from phase 1.1 (INSERTED)
-
-**Goal:** [Urgent work - to be planned]
-**Requirements**: TBD
-**Depends on:** Phase 1
-**Plans:** 0 plans
+**Goal:** Renderer uses progressive accumulation (blocks grow on each press), with per-block focus lines replacing extracted headers and bridge teasers connecting blocks narratively
+**Depends on:** Phase 01.1
+**Requirements**: ACC-01, ACC-02, ACC-03, ACC-04, VAL-01, GEN-01, GEN-02
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 01.2 to break down)
+- [ ] 01.2-01-PLAN.md — Renderer accumulation refactor + focus/bridge rendering + load-time validation
+- [ ] 01.2-02-PLAN.md — Prompt template updates + lesson regeneration with focus/bridge fields
 
 ### Phase 01.1: Block-based Display (INSERTED)
 **Goal**: Learner navigates lessons one part at a time with progress dots, pinned objective/criteria, and module completion banner
@@ -143,9 +133,10 @@ Phases execute in numeric order: 4 -> 5 -> 6
 |-------|-----------|----------------|--------|-----------|
 | 1. Interactive Learning Shell | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 01.1. Block-based Display | v1.0 | 2/2 | Complete | 2026-03-12 |
+| 01.2. Progressive Accumulation | v1.0 | 0/2 | In progress | - |
 | 2. Prompt-Driven Content Pipeline | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 02.1. Clipboard Copy | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 3. Mini-Project Validation | v1.0 | 3/3 | Complete | 2026-03-12 |
-| 4. Multi-Module Infrastructure | v2.0 | 0/3 | In progress | - |
+| 4. Multi-Module Infrastructure | v2.0 | 0/3 | Not started | - |
 | 5. Module 1 Lessons | v2.0 | 0/? | Not started | - |
 | 6. Module 1 Mini-Project | v2.0 | 0/? | Not started | - |
