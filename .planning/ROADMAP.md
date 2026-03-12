@@ -111,7 +111,11 @@ Plans:
   2. Learner can navigate through anatomy lessons that show real command.md and workflow.md source with highlighted sections (frontmatter, XML, process steps, code blocks)
   3. Learner can see how a `/gsd:X` command dispatches through the full chain from command spec to workflow execution
   4. Learner sees a bridge lesson at the end that previews Module 2's Node.js layer, connecting what they learned to what comes next
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Module infrastructure, concept map, generation script, overview + bridge lessons
+- [ ] 05-02-PLAN.md — Command spec, workflow, and dispatch chain anatomy lessons
 
 ### Phase 6: Module 1 Mini-Project
 **Goal**: Learner completes a capstone project building a custom command.md + workflow.md pair, with structural verification and progressive hints
@@ -138,5 +142,5 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 02.1. Clipboard Copy | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 3. Mini-Project Validation | v1.0 | 3/3 | Complete | 2026-03-12 |
 | 4. Multi-Module Infrastructure | v2.0 | 0/3 | Not started | - |
-| 5. Module 1 Lessons | v2.0 | 0/? | Not started | - |
+| 5. Module 1 Lessons | v2.0 | 0/2 | Not started | - |
 | 6. Module 1 Mini-Project | v2.0 | 0/? | Not started | - |
