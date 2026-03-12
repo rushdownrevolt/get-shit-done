@@ -1,0 +1,70 @@
+{
+  "id": "dispatch-chain",
+  "title": "Command to Workflow Wiring",
+  "lessonNumber": 4,
+  "objective": "Trace the full dispatch chain from typing /gsd:quick to workflow execution, understanding how the command spec's @file reference loads the workflow and how each layer contributes to the final result.",
+  "content": [
+    {
+      "type": "text",
+      "value": "You now know the anatomy of both file types: command specs declare a command's identity and intent with YAML frontmatter and XML sections. Workflow files contain the execution instructions with purpose, process steps, bash commands, and agent spawning. But how do these two files actually connect at runtime? This lesson traces the full dispatch chain -- the path from typing /gsd:quick to the workflow running its first bash command.",
+      "focus": "Connecting the two file types at runtime",
+      "bridge": "The chain starts the moment you type a slash command."
+    },
+    {
+      "type": "text",
+      "value": "Step 1: You type /gsd:quick in Claude Code. Claude recognizes the gsd: prefix and looks in ~/.claude/commands/gsd/ for a file named quick.md. Step 2: Claude reads the command spec file top to bottom. It parses the YAML frontmatter to learn the command's name, description, and allowed tools. Step 3: Claude reaches the <execution_context> section and finds the @file reference. This triggers the critical handoff.",
+      "focus": "Three steps: type, read spec, find @file",
+      "bridge": "Let's see exactly what that @file reference looks like."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<execution_context>\n@C:/Users/18182/.claude/get-shit-done/workflows/quick.md\n</execution_context>",
+      "highlight": [2],
+      "focus": "The @file reference is the dispatch wire",
+      "bridge": "This single line triggers Claude to load an entire workflow."
+    },
+    {
+      "type": "text",
+      "value": "Step 4: When Claude encounters the @file path, it loads the workflow file at that location as additional context. The entire 585-line workflow becomes available. Step 5: Claude reads the workflow's <purpose> section to understand the execution goal. Step 6: Claude begins executing the <process> steps sequentially -- parsing arguments, initializing tools, creating directories, spawning sub-agents. Each step may contain bash commands that Claude runs.",
+      "focus": "Steps 4-6: load workflow, then execute steps",
+      "bridge": "The command spec also controls what the workflow is allowed to do."
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "value": "allowed-tools:\n  - Read\n  - Write\n  - Edit\n  - Glob\n  - Grep\n  - Bash\n  - Task\n  - AskUserQuestion",
+      "highlight": [1, 7, 8],
+      "focus": "Allowed-tools restricts workflow capabilities",
+      "bridge": "The workflow operates within these tool boundaries."
+    },
+    {
+      "type": "text",
+      "value": "The allowed-tools list in the command spec acts as a permission boundary for the entire execution. Even though the workflow file might describe complex operations, Claude can only use the tools listed in the spec. The Task tool is what enables the workflow to spawn sub-agents (planner, executor, checker). AskUserQuestion lets it prompt for input. If a tool isn't in this list, the workflow cannot use it -- this is a security guardrail built into the dispatch chain.",
+      "focus": "Specs set permissions, workflows use them",
+      "bridge": "Let's see a workflow step that exercises these permissions."
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "value": "INIT=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" \\\n  init quick \"$DESCRIPTION\")\nif [[ \"$INIT\" == @file:* ]]; then\n  INIT=$(cat \"${INIT#@file:}\")\nfi\n\n# Parse JSON for: planner_model, executor_model,\n# commit_docs, next_num, slug, quick_dir, task_dir",
+      "highlight": [1, 2, 8],
+      "focus": "Workflow step runs Node.js via Bash tool",
+      "bridge": "This connects back to the command spec's allowed-tools list."
+    },
+    {
+      "type": "text",
+      "value": "This bash block from the workflow's Step 2 shows the full chain in action. The command spec granted Bash tool access, so the workflow can run node commands. The gsd-tools.cjs script initializes the quick task and returns JSON configuration. Claude parses that JSON and uses the values in subsequent steps. The same pattern repeats for every GSD command: /gsd:new-project has its own spec and workflow, /gsd:execute-phase has its own pair, and each follows the same dispatch chain.",
+      "focus": "Every GSD command uses the same two-file pattern",
+      "bridge": "Understanding this pattern means you can read any GSD command."
+    },
+    {
+      "type": "text",
+      "value": "Here's the complete dispatch chain in one view: (1) user types /gsd:quick, (2) Claude reads the command spec at commands/gsd/quick.md, (3) frontmatter sets permissions and identity, (4) execution_context's @file loads the workflow, (5) workflow's purpose and process define what to execute, (6) bash code blocks call Node.js tools, (7) sub-agents are spawned via Task calls. Every GSD command you'll encounter follows this exact chain. The two-file architecture keeps declarations separate from execution, making each piece independently readable and modifiable.",
+      "focus": "The full chain from slash command to execution",
+      "bridge": "In the next lesson, we'll look ahead to where execution meets code -- starting with Bridge to Node.js."
+    }
+  ],
+  "conceptMap": "dispatch",
+  "successCriteria": "You can trace the full dispatch chain from /gsd:quick through command spec to workflow execution, explain the role of the @file reference in execution_context, and describe how allowed-tools creates a permission boundary between the command spec and workflow."
+}
