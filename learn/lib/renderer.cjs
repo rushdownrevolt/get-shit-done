@@ -40,6 +40,24 @@ function renderLesson(lesson, currentIndex, totalLessons) {
     if (section.type === 'text') {
       parts.push(section.value);
       parts.push('\n\n');
+    } else if (section.type === 'project') {
+      parts.push(style('Your Mission:', 'yellow', 'bold'));
+      parts.push('\n');
+      parts.push(section.task);
+      parts.push('\n\n');
+      if (section.deliverables && section.deliverables.length > 0) {
+        parts.push(style('Deliverables:', 'bold'));
+        parts.push('\n');
+        section.deliverables.forEach((d, i) => {
+          parts.push('  ' + (i + 1) + '. ' + d);
+          parts.push('\n');
+        });
+        parts.push('\n');
+      }
+      parts.push(style('Verify: ', 'green') + section.verifyCommand);
+      parts.push('\n');
+      parts.push(style('Stuck? ', 'cyan') + section.hintCommand);
+      parts.push('\n\n');
     } else if (section.type === 'code') {
       parts.push(style('    \u2502 ', 'dim'));
       const highlighted = highlightJS(section.value);

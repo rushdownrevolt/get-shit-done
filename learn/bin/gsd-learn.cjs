@@ -8,6 +8,10 @@ const { loadProgress, saveProgress } = require('../lib/progress.cjs');
 const { loadModule } = require('../lib/lessons.cjs');
 const { renderLesson } = require('../lib/renderer.cjs');
 const { runNavigationLoop } = require('../lib/navigator.cjs');
+const { runVerification } = require('../lib/verifier.cjs');
+const { getNextHint } = require('../lib/hints.cjs');
+const { recordEvent, loadFeedback } = require('../lib/feedback.cjs');
+const { style } = require('../lib/terminal.cjs');
 
 const cwd = process.cwd();
 
@@ -57,6 +61,76 @@ async function main() {
     process.exit(0);
   }
 
+  // --verify: run structural verification
+  if (flags.verify) {
+    const specPath = path.join(__dirname, '..', 'content', 'modules', moduleId, 'project', 'spec.json');
+    const result = runVerification(cwd, specPath);
+    const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
+    const projectId = spec.id || moduleId + '-project';
+
+    recordEvent(cwd, projectId, 'verify_attempt', { passed: result.passed, artifactCount: result.artifacts.length });
+    if (result.passed) {
+      recordEvent(cwd, projectId, 'project_completed', {});
+    }
+
+    // Format output
+    const lines = [];
+    lines.push(style('Verification Results', 'bold', 'cyan'));
+    lines.push('');
+    for (const artifact of result.artifacts) {
+      const icon = artifact.passed ? style('[PASS]', 'green') : style('[FAIL]', 'red');
+      lines.push(icon + ' ' + style(artifact.description, 'bold'));
+      for (const check of artifact.results) {
+        const checkIcon = check.passed ? style('  [PASS]', 'green') : style('  [FAIL]', 'red');
+        lines.push(checkIcon + ' ' + check.check);
+      }
+      lines.push('');
+    }
+
+    if (result.passed) {
+      lines.push(style('All checks passed! Well done.', 'green', 'bold'));
+    } else {
+      lines.push(style('Some checks failed.', 'red', 'bold'));
+      lines.push('Use --hint for guidance.');
+    }
+    lines.push('');
+
+    process.stdout.write(lines.join('\n'));
+    process.exit(result.passed ? 0 : 1);
+  }
+
+  // --hint: show next progressive hint
+  if (flags.hint) {
+    const hintsPath = path.join(__dirname, '..', 'content', 'modules', moduleId, 'project', 'hints.json');
+    const hints = JSON.parse(fs.readFileSync(hintsPath, 'utf-8'));
+    const specPath = path.join(__dirname, '..', 'content', 'modules', moduleId, 'project', 'spec.json');
+    const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
+    const projectId = spec.id || moduleId + '-project';
+
+    // Count previous hint_requested events
+    const feedback = loadFeedback(cwd);
+    const project = feedback.projects[projectId];
+    let hintsUsed = 0;
+    if (project) {
+      hintsUsed = project.events.filter(e => e.type === 'hint_requested').length;
+    }
+
+    const result = getNextHint(hints, hintsUsed);
+
+    if (result.hint === null) {
+      process.stdout.write('No more hints available. You\'ve seen all ' + hints.length + ' hints.\n');
+    } else {
+      process.stdout.write(style('Hint ' + result.hintsUsed + ' of ' + hints.length + ':', 'yellow', 'bold') + '\n');
+      process.stdout.write(result.hint + '\n');
+      if (result.remaining > 0) {
+        process.stdout.write(style(result.remaining + ' hint(s) remaining.', 'dim') + '\n');
+      }
+    }
+
+    recordEvent(cwd, projectId, 'hint_requested', { hintIndex: result.hintsUsed - 1 });
+    process.exit(0);
+  }
+
   // Default: start/resume learning
   const progress = loadProgress(cwd);
   const mod = loadModule(moduleId, contentDir);
@@ -72,6 +146,27 @@ async function main() {
   const progressFn = (idx) => {
     progress.currentLesson = idx;
     saveProgress(cwd, progress);
+
+    // Track project_started when learner views a lesson with project content
+    const lesson = mod.lessons[idx];
+    if (lesson && lesson.content) {
+      const hasProject = lesson.content.some(s => s.type === 'project');
+      if (hasProject) {
+        const specPath = path.join(__dirname, '..', 'content', 'modules', moduleId, 'project', 'spec.json');
+        try {
+          const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
+          const projectId = spec.id || moduleId + '-project';
+          const feedback = loadFeedback(cwd);
+          const proj = feedback.projects[projectId];
+          const alreadyStarted = proj && proj.events.some(e => e.type === 'project_started');
+          if (!alreadyStarted) {
+            recordEvent(cwd, projectId, 'project_started', {});
+          }
+        } catch {
+          // spec.json not found -- skip tracking
+        }
+      }
+    }
   };
 
   await runNavigationLoop(mod.lessons, startIndex, renderFn, progressFn);
