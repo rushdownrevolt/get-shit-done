@@ -55,7 +55,7 @@ Plans:
 **Goal:** Learner can press 'c' during any lesson to copy LLM-friendly markdown to the clipboard for pasting into an LLM to ask follow-up questions
 **Requirements**: CP-01, CP-02, CP-03, CP-04, CP-05, CP-06
 **Depends on:** Phase 2
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [x] 02.1-01-PLAN.md — Clipboard and formatter modules, navigator/renderer integration, full test coverage (completed 2026-03-12)
@@ -85,5 +85,5 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Interactive Learning Shell | 2/2 | Complete | 2026-03-12 |
 | 2. Prompt-Driven Content Pipeline | 1/2 | In Progress|  |
-| 02.1. Clipboard Copy | 1/1 | Complete | 2026-03-12 |
+| 02.1. Clipboard Copy | 1/1 | Complete    | 2026-03-12 |
 | 3. Mini-Project Validation | 2/3 | In Progress |  |
