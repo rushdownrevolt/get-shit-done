@@ -60,10 +60,10 @@
 - [x] **MOD1-02**: Lesson 2 — Command.md anatomy (frontmatter, XML sections, @file: references)
 - [x] **MOD1-03**: Lesson 3 — Workflow.md anatomy (purpose, process steps, bash code blocks)
 - [x] **MOD1-04**: Lesson 4 — Command-to-workflow wiring (dispatch chain from /gsd:X to execution)
-- [ ] **MOD1-05**: Lesson 5 — Mini-project: build a custom command.md + workflow.md pair, verified structurally
+- [x] **MOD1-05**: Lesson 5 — Mini-project: build a custom command.md + workflow.md pair, verified structurally
 - [x] **MOD1-06**: Bridge lesson previewing Module 2's Node.js layer
-- [ ] **MOD1-07**: spec.json with markdown artifact checks for mini-project verification
-- [ ] **MOD1-08**: hints.json with 5 progressive hints for mini-project
+- [x] **MOD1-07**: spec.json with markdown artifact checks for mini-project verification
+- [x] **MOD1-08**: hints.json with 5 progressive hints for mini-project
 
 ### Module 2 Updates
 
@@ -152,10 +152,10 @@
 | MOD1-02 | Phase 5 | Complete |
 | MOD1-03 | Phase 5 | Complete |
 | MOD1-04 | Phase 5 | Complete |
-| MOD1-05 | Phase 6 | Pending |
+| MOD1-05 | Phase 6 | Complete |
 | MOD1-06 | Phase 5 | Complete |
-| MOD1-07 | Phase 6 | Pending |
-| MOD1-08 | Phase 6 | Pending |
+| MOD1-07 | Phase 6 | Complete |
+| MOD1-08 | Phase 6 | Complete |
 | MOD2-01 | Phase 4 | Pending |
 
 **Coverage:**
