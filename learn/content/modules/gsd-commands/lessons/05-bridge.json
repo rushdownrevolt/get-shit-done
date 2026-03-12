@@ -1,0 +1,46 @@
+{
+  "id": "bridge",
+  "title": "Bridge to Node.js",
+  "lessonNumber": 5,
+  "objective": "Understand how the markdown layer (command specs and workflows) connects to the Node.js layer that actually executes CLI commands, previewing what Module 2 covers.",
+  "content": [
+    {
+      "type": "text",
+      "value": "You now know that GSD slash commands are defined by two types of markdown files. Command specs declare what a command is -- its name, permissions, and structure. Workflows define how it executes -- step-by-step processes with bash code blocks. You've seen how @file references wire specs to workflows, and how the dispatch chain routes /gsd:quick through the whole system. But there's a question we haven't answered yet.",
+      "focus": "Recap of the markdown layer knowledge",
+      "bridge": "That question is about who actually runs the commands."
+    },
+    {
+      "type": "text",
+      "value": "When a workflow says 'run node gsd-tools.cjs state advance-plan', who executes that? The markdown files are instructions for Claude, but the actual state management, file operations, and configuration updates happen in Node.js code. There's an entire layer beneath the markdown -- a CommonJS toolkit that does the real work. This is the Node.js layer, and it's what Module 2 is all about.",
+      "focus": "The question: who runs the commands?",
+      "bridge": "Let's peek at where that Node.js layer starts."
+    },
+    {
+      "type": "text",
+      "value": "The entry point is gsd-tools.cjs -- a single Node.js script that acts as the CLI router. When Claude runs a bash command like 'node gsd-tools.cjs state advance-plan', the script parses the arguments and routes them through a switch statement. The first argument (like 'state' or 'config') selects which tool module to call. The remaining arguments become the specific operation and its parameters.",
+      "focus": "gsd-tools.cjs is the CLI entry point",
+      "bridge": "That switch statement dispatches to specialized tool modules."
+    },
+    {
+      "type": "text",
+      "value": "Behind the switch statement are the tool modules: core.cjs handles project initialization and plan management. config.cjs reads and writes the configuration JSON. phase.cjs manages phase transitions and plan counting. state.cjs updates STATE.md -- the living document that tracks where you are in a project. Each module exports functions that the CLI router calls. Module 2 walks through each of these files, showing you exactly how they work.",
+      "focus": "Tool modules: core, config, phase, state",
+      "bridge": "You've already seen these modules referenced in the markdown layer."
+    },
+    {
+      "type": "text",
+      "value": "Remember the <process> sections in workflow files? They contain bash commands like 'node gsd-tools.cjs state advance-plan' and 'node gsd-tools.cjs roadmap update-plan-progress'. These are the connection points between the two layers. The markdown layer tells Claude what to run; the Node.js layer makes it happen. When you read Module 2, you'll recognize every CLI command from the workflows you've already studied.",
+      "focus": "Process sections reference Node.js CLI commands",
+      "bridge": "This two-layer design is what makes GSD extensible."
+    },
+    {
+      "type": "text",
+      "value": "The design is intentional: markdown files are easy to read, edit, and version control. They're the interface between humans and Claude. The Node.js layer handles the mechanical work -- parsing files, updating state, managing configuration -- that would be tedious and error-prone to describe in natural language. Understanding both layers means you can modify GSD at any level: tweak a workflow's instructions, add a new command spec, or extend a tool module with new functionality.",
+      "focus": "Why two layers: readability meets reliability",
+      "bridge": "Next up: the Command Lifecycle module dives into the Node.js code that powers it all."
+    }
+  ],
+  "conceptMap": "bridge",
+  "successCriteria": "You can explain that workflow bash commands like 'node gsd-tools.cjs state advance-plan' are executed by Node.js tool modules, and name the key modules (gsd-tools.cjs, core.cjs, config.cjs, phase.cjs, state.cjs) that Module 2 will cover."
+}

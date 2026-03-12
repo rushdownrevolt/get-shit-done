@@ -1,0 +1,64 @@
+{
+  "id": "overview",
+  "title": "The Two-Layer Architecture",
+  "lessonNumber": 1,
+  "objective": "Understand that every GSD slash command is defined by two markdown files: a command spec that declares what the command does and a workflow that contains the execution instructions.",
+  "content": [
+    {
+      "type": "text",
+      "value": "When you type /gsd:quick in Claude, something interesting happens behind the scenes. Claude doesn't execute a compiled program or run a binary. Instead, it reads two plain markdown files. The first file is a command spec -- it declares what the command is, what arguments it takes, and what tools it needs. The second file is a workflow -- it contains the actual step-by-step instructions for execution. This two-layer architecture is the foundation of everything in GSD.",
+      "focus": "Two markdown files power every command",
+      "bridge": "Let's look at what a command spec actually contains."
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "value": "---\nname: gsd:quick\ndescription: Execute a quick task with GSD guarantees\nargument-hint: \"[--full] [--discuss]\"\nallowed-tools:\n  - Read\n  - Write\n  - Edit\n  - Glob\n  - Grep\n  - Bash\n  - Task\n  - AskUserQuestion\n---",
+      "highlight": [2, 3, 5],
+      "focus": "Command spec YAML frontmatter fields",
+      "bridge": "The frontmatter declares the command's identity, but the body defines its behavior."
+    },
+    {
+      "type": "text",
+      "value": "That YAML frontmatter is the command's identity card. The name field tells Claude which slash command triggers this file. The description appears in help text. The allowed-tools array is a security boundary -- it controls exactly which tools Claude can use during execution. Notice there's no actual logic here, just declarations.",
+      "focus": "Frontmatter declares identity and permissions",
+      "bridge": "Below the frontmatter, XML sections structure the command's behavior."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<objective>\nExecute small, ad-hoc tasks with GSD guarantees\n(atomic commits, STATE.md tracking).\n</objective>\n\n<execution_context>\n@C:/Users/18182/.claude/get-shit-done/workflows/quick.md\n</execution_context>",
+      "highlight": [1, 7],
+      "focus": "XML sections and @file workflow reference",
+      "bridge": "That @file reference is the bridge between the two layers."
+    },
+    {
+      "type": "text",
+      "value": "The command spec uses XML tags like <objective>, <context>, and <process> to organize its instructions. But the most important line is the @file reference inside <execution_context>. This is the wiring -- it tells Claude to load the workflow file at that path. The command spec says what; the workflow says how.",
+      "focus": "The @file reference wires spec to workflow",
+      "bridge": "Now let's see what lives on the other end of that reference."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<purpose>\nQuick mode is the same system with a shorter path:\n- Spawns gsd-planner (quick mode) + gsd-executor(s)\n- Quick tasks live in .planning/quick/\n- Updates STATE.md \"Quick Tasks Completed\" table\n</purpose>\n\n<process>\n<step name=\"validate\">\nRun init quick to get task context...\n</step>\n</process>",
+      "highlight": [1, 8, 9],
+      "focus": "Workflow structure with purpose and steps",
+      "bridge": "This pattern repeats across every GSD command."
+    },
+    {
+      "type": "text",
+      "value": "Workflow files have no YAML frontmatter. They jump straight into XML sections: <purpose> explains the workflow's goal, and <process> contains named <step> tags that define execution order. The workflow also contains bash code blocks with the actual CLI commands to run. While command specs are short declarations (typically 20-50 lines), workflows can be hundreds of lines of detailed instructions.",
+      "focus": "Workflows contain the execution logic",
+      "bridge": "Understanding this split is the key to reading any GSD command."
+    },
+    {
+      "type": "text",
+      "value": "Here's the mental model: command specs are like function signatures -- they declare the interface. Workflows are like function bodies -- they contain the implementation. When you run /gsd:quick, Claude reads the command spec to understand what tools and context it needs, then follows the workflow's step-by-step process to actually do the work. Every GSD command follows this exact pattern.",
+      "focus": "Specs are signatures, workflows are bodies",
+      "bridge": "In the next lesson, we'll open up a real command spec and examine every section in detail -- starting with Command Spec Anatomy."
+    }
+  ],
+  "conceptMap": "overview",
+  "successCriteria": "You can explain that GSD commands are defined by two markdown files (command spec + workflow) connected by an @file reference, and describe what each layer is responsible for."
+}
