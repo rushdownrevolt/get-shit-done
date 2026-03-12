@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Interactive Learning Shell** - Working CLI with terminal rendering, progress tracking, and hand-written lesson content
 - [ ] **Phase 2: Prompt-Driven Content Pipeline** - Prompt engineering loop that generates quality lessons from GSD source, with evaluation criteria to measure and iterate on output quality
-- [x] **Phase 3: Mini-Project Validation** - Capstone project runner, hint system, feedback loop, and complete first module (completed 2026-03-12)
+- [x] **Phase 3: Mini-Project Validation** - Capstone project runner, hint system, feedback loop, and complete first module (completed 2026-03-12)
 
 ## Phase Details
 
@@ -49,6 +49,16 @@ Plans:
 Plans:
 - [ ] 02-01-PLAN.md — Source parser and prompt templates: TDD-built parser for GSD CommonJS files and two prompt template types (overview, source-dive)
 - [ ] 02-02-PLAN.md — Evaluator, pipeline, and lesson generation: rubric scoring module, pipeline script, and generation of all 5 Command Lifecycle lessons with quality evaluation
+
+### Phase 02.1: Add command c to copy current lesson to clipboard for LLM follow-up (INSERTED)
+
+**Goal:** Learner can press 'c' during any lesson to copy LLM-friendly markdown to the clipboard for pasting into an LLM to ask follow-up questions
+**Requirements**: CP-01, CP-02, CP-03, CP-04, CP-05, CP-06
+**Depends on:** Phase 2
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02.1-01-PLAN.md — Clipboard and formatter modules, navigator/renderer integration, full test coverage
 
 ### Phase 3: Mini-Project Validation
 **Goal**: Learner completes a capstone mini-project that proves real capability, with progressive hints when stuck and feedback data that measures lesson quality
