@@ -2,6 +2,7 @@
 'use strict';
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { parseSourceFile } = require('../lib/parser.cjs');
 const { assemblePrompt } = require('../lib/prompt-templates.cjs');
@@ -9,7 +10,7 @@ const { evaluateLesson, recordIteration } = require('../lib/evaluator.cjs');
 
 // ─── Lesson Plan ─────────────────────────────────────────────────────────────
 
-const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
+const GSD_ROOT = path.join(os.homedir(), '.claude', 'get-shit-done');
 const CONTENT_DIR = path.join(__dirname, '..', 'content');
 
 const LESSON_PLAN = [
@@ -28,7 +29,7 @@ const LESSON_PLAN = [
     type: 'source-dive',
     title: 'Where Commands Start',
     template: 'source-dive',
-    sources: ['get-shit-done/bin/gsd-tools.cjs'],
+    sources: ['bin/gsd-tools.cjs'],
     focus: 'entry point, require() imports, cwd/args setup',
   },
   {
@@ -37,7 +38,7 @@ const LESSON_PLAN = [
     type: 'source-dive',
     title: 'Command Dispatch',
     template: 'source-dive',
-    sources: ['get-shit-done/bin/gsd-tools.cjs'],
+    sources: ['bin/gsd-tools.cjs'],
     focus: 'switch statement routing, sub-command dispatch',
   },
   {
@@ -47,9 +48,9 @@ const LESSON_PLAN = [
     title: 'Tool Modules',
     template: 'source-dive',
     sources: [
-      'get-shit-done/bin/lib/core.cjs',
-      'get-shit-done/bin/lib/config.cjs',
-      'get-shit-done/bin/lib/phase.cjs',
+      'bin/lib/core.cjs',
+      'bin/lib/config.cjs',
+      'bin/lib/phase.cjs',
     ],
     focus: 'module boundaries, export patterns',
   },
@@ -60,8 +61,8 @@ const LESSON_PLAN = [
     title: 'State and Configuration',
     template: 'source-dive',
     sources: [
-      'get-shit-done/bin/lib/state.cjs',
-      'get-shit-done/bin/lib/config.cjs',
+      'bin/lib/state.cjs',
+      'bin/lib/config.cjs',
     ],
     focus: 'STATE.md operations, config CRUD, persistence',
   },
@@ -94,7 +95,7 @@ function generatePrompts() {
     } else {
       // Source-dive: parse all sources and merge context
       const parsed = lesson.sources.map(function (src) {
-        return parseSourceFile(path.join(PROJECT_ROOT, src));
+        return parseSourceFile(path.join(GSD_ROOT, src));
       });
 
       const primary = parsed[0];

@@ -522,7 +522,9 @@ function getMilestoneInfo(cwd) {
 ```
 
 ### `getMilestonePhaseFilter`
-Returns a filter function that checks whether a phase directory belongsto the current milestone based on ROADMAP.md phase headings.If no ROADMAP exists or no phases are listed, returns a pass-all filter.
+Returns a filter function that checks whether a phase directory belongs
+to the current milestone based on ROADMAP.md phase headings.
+If no ROADMAP exists or no phases are listed, returns a pass-all filter.
 Lines 441-469
 ```javascript
 function getMilestonePhaseFilter(cwd) {
@@ -3406,7 +3408,9 @@ function getMilestoneInfo(cwd) {
 ```
 
 ### `getMilestonePhaseFilter`
-Returns a filter function that checks whether a phase directory belongsto the current milestone based on ROADMAP.md phase headings.If no ROADMAP exists or no phases are listed, returns a pass-all filter.
+Returns a filter function that checks whether a phase directory belongs
+to the current milestone based on ROADMAP.md phase headings.
+If no ROADMAP exists or no phases are listed, returns a pass-all filter.
 Lines 441-469
 ```javascript
 function getMilestonePhaseFilter(cwd) {

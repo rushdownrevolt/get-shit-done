@@ -641,7 +641,9 @@ function cmdStateSnapshot(cwd, raw) {
 ```
 
 ### `buildStateFrontmatter`
-Extract machine-readable fields from STATE.md markdown body and builda YAML frontmatter object. Allows hooks and scripts to read statereliably via `state json` instead of fragile regex parsing.
+Extract machine-readable fields from STATE.md markdown body and build
+a YAML frontmatter object. Allows hooks and scripts to read state
+reliably via `state json` instead of fragile regex parsing.
 Lines 558-662
 ```javascript
 function buildStateFrontmatter(bodyContent, cwd) {
@@ -771,7 +773,8 @@ function syncStateFrontmatter(content, cwd) {
 ```
 
 ### `writeStateMd`
-Write STATE.md with synchronized YAML frontmatter.All STATE.md writes should use this instead of raw writeFileSync.
+Write STATE.md with synchronized YAML frontmatter.
+All STATE.md writes should use this instead of raw writeFileSync.
 Lines 679-682
 ```javascript
 function writeStateMd(statePath, content, cwd) {

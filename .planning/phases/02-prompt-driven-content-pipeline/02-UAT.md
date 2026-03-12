@@ -1,5 +1,5 @@
 ---
-status: diagnosed
+status: resolved
 phase: 02-prompt-driven-content-pipeline
 source: [02-01-SUMMARY.md, 02-02-SUMMARY.md]
 started: 2026-03-12T13:00:00Z
@@ -65,7 +65,7 @@ skipped: 0
 ## Gaps
 
 - truth: "Pipeline resolves GSD source file paths correctly and produces prompts with populated source context"
-  status: failed
+  status: resolved
   reason: "User reported: Pipeline uses PROJECT_ROOT + 'get-shit-done/bin/...' which resolves to a nested copy of the repo instead of the GSD installation at ~/.claude/get-shit-done/. Generated prompts have empty exports/functions sections because the wrong files are parsed."
   severity: major
   test: 9
