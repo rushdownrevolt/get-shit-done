@@ -3,7 +3,7 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert');
 
-const { renderLesson } = require('../lib/renderer.cjs');
+const { renderLesson, renderProgressDots, renderCompletionBanner } = require('../lib/renderer.cjs');
 const { COLORS, _styleWithColor } = require('../lib/terminal.cjs');
 
 describe('renderLesson', () => {
@@ -157,5 +157,76 @@ describe('renderLesson', () => {
     const output = renderLesson(lessonMultiline, 0, 1);
     assert.ok(output.includes('1'), 'output should contain line number 1');
     assert.ok(output.includes('|'), 'output should contain gutter separator');
+  });
+});
+
+// ─── renderProgressDots ──────────────────────────────────────────────
+
+describe('renderProgressDots', () => {
+  test('renderProgressDots(2, 9) returns 3 filled dots, 6 empty dots, and "Part 3 of 9"', () => {
+    const output = renderProgressDots(2, 9);
+    assert.ok(typeof output === 'string', 'should return a string');
+    const filled = (output.match(/\u25CF/g) || []).length;
+    const empty = (output.match(/\u25CB/g) || []).length;
+    assert.strictEqual(filled, 3, 'should have 3 filled dots');
+    assert.strictEqual(empty, 6, 'should have 6 empty dots');
+    assert.ok(output.includes('Part 3 of 9'), 'should contain "Part 3 of 9"');
+  });
+
+  test('renderProgressDots(0, 5) returns 1 filled dot, 4 empty dots, and "Part 1 of 5"', () => {
+    const output = renderProgressDots(0, 5);
+    const filled = (output.match(/\u25CF/g) || []).length;
+    const empty = (output.match(/\u25CB/g) || []).length;
+    assert.strictEqual(filled, 1, 'should have 1 filled dot');
+    assert.strictEqual(empty, 4, 'should have 4 empty dots');
+    assert.ok(output.includes('Part 1 of 5'), 'should contain "Part 1 of 5"');
+  });
+
+  test('renderProgressDots(4, 5) returns 5 filled dots, 0 empty dots, and "Part 5 of 5"', () => {
+    const output = renderProgressDots(4, 5);
+    const filled = (output.match(/\u25CF/g) || []).length;
+    const empty = (output.match(/\u25CB/g) || []).length;
+    assert.strictEqual(filled, 5, 'should have 5 filled dots');
+    assert.strictEqual(empty, 0, 'should have 0 empty dots');
+    assert.ok(output.includes('Part 5 of 5'), 'should contain "Part 5 of 5"');
+  });
+});
+
+// ─── renderCompletionBanner ──────────────────────────────────────────
+
+describe('renderCompletionBanner', () => {
+  test('banner contains MODULE COMPLETE!, title, and stats', () => {
+    const output = renderCompletionBanner({
+      title: 'Command Lifecycle',
+      lessonCount: 6,
+      totalParts: 58,
+      miniProjectCount: 1,
+    });
+    assert.ok(typeof output === 'string', 'should return a string');
+    assert.ok(output.includes('MODULE COMPLETE!'), 'should contain "MODULE COMPLETE!"');
+    assert.ok(output.includes('Command Lifecycle'), 'should contain module title');
+    assert.ok(output.includes('Lessons: 6'), 'should contain lesson count');
+    assert.ok(output.includes('Parts: 58'), 'should contain parts count');
+    assert.ok(output.includes('Mini-projects: 1'), 'should contain mini-project count');
+  });
+
+  test('banner starts with clearScreen', () => {
+    const output = renderCompletionBanner({
+      title: 'Test Module',
+      lessonCount: 3,
+      totalParts: 20,
+      miniProjectCount: 0,
+    });
+    assert.ok(output.startsWith('\x1b[2J\x1b[H'), 'should start with clearScreen escape');
+  });
+
+  test('banner contains solid color bar characters (U+2588)', () => {
+    const output = renderCompletionBanner({
+      title: 'Test Module',
+      lessonCount: 3,
+      totalParts: 20,
+      miniProjectCount: 0,
+    });
+    assert.ok(output.includes('\u2588'), 'should contain solid block characters');
   });
 });
