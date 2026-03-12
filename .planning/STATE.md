@@ -36,16 +36,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-12)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Phase 01.2 — Adaptive Per-Part Lesson Structure
+**Current focus:** Phase 05 — Module 1 Lessons
 
 ## Current Position
 
-Phase: 01.2 of 6 (Adaptive Per-Part Lesson Structure)
-Plan: 2 of 2 in current phase
-Status: Phase complete — ready for next phase
-Last activity: 2026-03-12 — Completed 01.2-02 Prompt Templates and Lesson Regeneration
+Phase: 05 of 6 (Module 1 Lessons)
+Plan: 1 of 2 in current phase
+Status: In progress — Plan 01 complete
+Last activity: 2026-03-12 — Completed 05-01 Module 1 Infrastructure & Bookend Lessons
 
-Progress: [████████████████░░░░] 80%
+Progress: [██████████████████░░] 93%
 
 ## Performance Metrics
 
@@ -75,6 +75,7 @@ Progress: [████████████████░░░░] 80%
 | Phase 04 | P02 | 3min | 1 | 3 |
 | Phase 01.2 | P01 | 5min | 2 | 4 |
 | Phase 01.2 | P02 | 6min | 2 | 9 |
+| Phase 05 | P01 | 4min | 2 | 6 |
 
 ## Accumulated Context
 
@@ -95,6 +96,8 @@ Recent decisions affecting current work:
 - [Phase 01.2]: Validation uses strict truthy+typeof check for focus/bridge fields
 - [Phase 01.2]: Focus phrases 3-8 words; bridge sentences connect blocks and reference next lesson title
 - [Phase 01.2]: Lesson 6 mini-project last bridge references module completion
+- [Phase 05]: Used real quick.md content in overview lesson code blocks for authenticity
+- [Phase 05]: Wave 0 tests use graceful degradation -- pass with partial content, validate fully after Plan 02
 
 ### Pending Todos
 
@@ -110,6 +113,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-12T18:17:07Z
-Stopped at: Completed 01.2-02-PLAN.md
-Resume file: .planning/phases/01.2-adaptive-per-part-lesson-structure-with-progressive-content-accumulation/01.2-02-SUMMARY.md
+Last session: 2026-03-12T19:20:00Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: .planning/phases/05-module-1-lessons/05-01-SUMMARY.md
