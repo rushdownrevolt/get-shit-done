@@ -69,5 +69,5 @@
     }
   ],
   "conceptMap": "state-and-config",
-  "successCriteria": "You can explain the stateExtractField/stateReplaceField regex pattern, why writeStateMd syncs YAML frontmatter on every write, and how config-set handles dot notation with type coercion"
+  "successCriteria": "You can explain the stateExtractField/stateReplaceField regex pattern, why writeStateMd syncs YAML frontmatter on every write, and how config-set handles dot notation with type coercion\n\nWant to go deeper? Press [c] to copy this lesson to your clipboard and paste it into your favorite LLM for follow-up questions."
 }

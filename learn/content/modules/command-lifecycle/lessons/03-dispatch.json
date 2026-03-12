@@ -62,5 +62,5 @@
     }
   ],
   "conceptMap": "command-dispatch",
-  "successCriteria": "You can trace how a command string like 'state advance-plan' flows through the two-level dispatch, and explain why GSD uses a switch statement instead of a command registry"
+  "successCriteria": "You can trace how a command string like 'state advance-plan' flows through the two-level dispatch, and explain why GSD uses a switch statement instead of a command registry\n\nWant to go deeper? Press [c] to copy this lesson to your clipboard and paste it into your favorite LLM for follow-up questions."
 }

@@ -66,5 +66,5 @@
     }
   ],
   "conceptMap": "tool-modules",
-  "successCriteria": "You can explain the cmd* vs internal function distinction, the output/error exit pattern, the 50KB buffer workaround, and why loadConfig always returns a valid object with defaults"
+  "successCriteria": "You can explain the cmd* vs internal function distinction, the output/error exit pattern, the 50KB buffer workaround, and why loadConfig always returns a valid object with defaults\n\nWant to go deeper? Press [c] to copy this lesson to your clipboard and paste it into your favorite LLM for follow-up questions."
 }

@@ -25,5 +25,5 @@
     }
   ],
   "conceptMap": "mini-project",
-  "successCriteria": "Running --verify shows all checks passing: file exists, function exported, switch case added, output follows GSD pattern"
+  "successCriteria": "Running --verify shows all checks passing: file exists, function exported, switch case added, output follows GSD pattern\n\nWant to go deeper? Press [c] to copy this lesson to your clipboard and paste it into your favorite LLM for follow-up questions."
 }

@@ -46,5 +46,5 @@
     }
   ],
   "conceptMap": "overview",
-  "successCriteria": "You can describe GSD's four-layer architecture (entry point, router, tool modules, output) and explain why it uses zero dependencies and a CLI interface instead of a library"
+  "successCriteria": "You can describe GSD's four-layer architecture (entry point, router, tool modules, output) and explain why it uses zero dependencies and a CLI interface instead of a library\n\nWant to go deeper? Press [c] to copy this lesson to your clipboard and paste it into your favorite LLM for follow-up questions."
 }

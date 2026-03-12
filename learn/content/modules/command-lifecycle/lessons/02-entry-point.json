@@ -62,5 +62,5 @@
     }
   ],
   "conceptMap": "entry-point",
-  "successCriteria": "You can explain how --cwd and --raw flags are parsed and spliced from args, why eager module loading is used, and how the error function provides fail-fast behavior"
+  "successCriteria": "You can explain how --cwd and --raw flags are parsed and spliced from args, why eager module loading is used, and how the error function provides fail-fast behavior\n\nWant to go deeper? Press [c] to copy this lesson to your clipboard and paste it into your favorite LLM for follow-up questions."
 }
