@@ -14,9 +14,12 @@
       "type": "code",
       "language": "yaml",
       "value": "---\nname: gsd:quick\ndescription: Execute a quick task with GSD guarantees\n  (atomic commits, state tracking) but skip optional agents\nargument-hint: \"[--full] [--discuss]\"\nallowed-tools:\n  - Read\n  - Write\n  - Edit\n  - Glob\n  - Grep\n  - Bash\n  - Task\n  - AskUserQuestion\n---",
-      "highlight": [2, 3, 5, 6],
-      "focus": "Four frontmatter fields define the command",
-      "bridge": "Each field serves a specific purpose in the dispatch system."
+      "highlight": [
+        2,
+        3,
+        5,
+        6
+      ]
     },
     {
       "type": "text",
@@ -28,9 +31,12 @@
       "type": "code",
       "language": "markdown",
       "value": "<objective>\nExecute small, ad-hoc tasks with GSD guarantees\n(atomic commits, STATE.md tracking).\n\nQuick mode is the same system with a shorter path:\n- Spawns gsd-planner (quick mode) + gsd-executor(s)\n- Quick tasks live in `.planning/quick/`\n- Updates STATE.md \"Quick Tasks Completed\" table\n</objective>",
-      "highlight": [1, 5, 6, 7],
-      "focus": "Objective section defines the command's goal",
-      "bridge": "The objective tells Claude what to accomplish, but not how."
+      "highlight": [
+        1,
+        5,
+        6,
+        7
+      ]
     },
     {
       "type": "text",
@@ -42,9 +48,9 @@
       "type": "code",
       "language": "markdown",
       "value": "<execution_context>\n@C:/Users/18182/.claude/get-shit-done/workflows/quick.md\n</execution_context>",
-      "highlight": [2],
-      "focus": "The @file reference wires spec to workflow",
-      "bridge": "This single line is the most important part of any command spec."
+      "highlight": [
+        2
+      ]
     },
     {
       "type": "text",
@@ -56,9 +62,11 @@
       "type": "code",
       "language": "markdown",
       "value": "<context>\n$ARGUMENTS\n\nContext files are resolved inside the workflow\n(init quick) and delegated via <files_to_read> blocks.\n</context>\n\n<process>\nExecute the quick workflow from\n@C:/.../workflows/quick.md end-to-end.\nPreserve all workflow gates (validation,\ntask description, planning, execution,\nstate updates, commits).\n</process>",
-      "highlight": [2, 8, 11],
-      "focus": "Context passes arguments, process gives direction",
-      "bridge": "Together, these four XML sections form the complete command spec."
+      "highlight": [
+        2,
+        8,
+        11
+      ]
     },
     {
       "type": "text",

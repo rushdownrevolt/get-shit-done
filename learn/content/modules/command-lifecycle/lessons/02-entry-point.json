@@ -14,10 +14,14 @@
       "type": "code",
       "language": "javascript",
       "value": "async function main() {\n  const args = process.argv.slice(2);\n\n  // Optional cwd override for sandboxed subagents running outside project root.\n  let cwd = process.cwd();\n  const cwdEqArg = args.find(arg => arg.startsWith('--cwd='));\n  const cwdIdx = args.indexOf('--cwd');\n  if (cwdEqArg) {\n    const value = cwdEqArg.slice('--cwd='.length).trim();\n    if (!value) error('Missing value for --cwd');\n    args.splice(args.indexOf(cwdEqArg), 1);\n    cwd = path.resolve(value);\n  }",
-      "highlight": [4, 5],
-      "source": { "file": "get-shit-done/bin/gsd-tools.cjs", "startLine": 145 },
-      "focus": "Working directory override parsing",
-      "bridge": "Why does this flag exist at all? Because of sandboxed agent environments."
+      "highlight": [
+        4,
+        5
+      ],
+      "source": {
+        "file": "get-shit-done/bin/gsd-tools.cjs",
+        "startLine": 145
+      }
     },
     {
       "type": "text",
@@ -29,10 +33,15 @@
       "type": "code",
       "language": "javascript",
       "value": "  if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {\n    error(`Invalid --cwd: ${cwd}`);\n  }\n\n  const rawIndex = args.indexOf('--raw');\n  const raw = rawIndex !== -1;\n  if (rawIndex !== -1) args.splice(rawIndex, 1);\n\n  const command = args[0];",
-      "highlight": [5, 6, 7],
-      "source": { "file": "get-shit-done/bin/gsd-tools.cjs", "startLine": 164 },
-      "focus": "Raw flag and command extraction",
-      "bridge": "The --raw flag controls a dual-output design that serves both agents and humans."
+      "highlight": [
+        5,
+        6,
+        7
+      ],
+      "source": {
+        "file": "get-shit-done/bin/gsd-tools.cjs",
+        "startLine": 164
+      }
     },
     {
       "type": "text",
@@ -44,10 +53,15 @@
       "type": "code",
       "language": "javascript",
       "value": "const fs = require('fs');\nconst path = require('path');\nconst { error } = require('./lib/core.cjs');\nconst state = require('./lib/state.cjs');\nconst phase = require('./lib/phase.cjs');\nconst roadmap = require('./lib/roadmap.cjs');\nconst verify = require('./lib/verify.cjs');\nconst config = require('./lib/config.cjs');\nconst template = require('./lib/template.cjs');\nconst milestone = require('./lib/milestone.cjs');\nconst commands = require('./lib/commands.cjs');\nconst init = require('./lib/init.cjs');\nconst frontmatter = require('./lib/frontmatter.cjs');",
-      "highlight": [3, 4, 5],
-      "source": { "file": "get-shit-done/bin/gsd-tools.cjs", "startLine": 129 },
-      "focus": "Eager module loading pattern",
-      "bridge": "This eager approach is a deliberate choice -- here is why."
+      "highlight": [
+        3,
+        4,
+        5
+      ],
+      "source": {
+        "file": "get-shit-done/bin/gsd-tools.cjs",
+        "startLine": 129
+      }
     },
     {
       "type": "text",
@@ -65,10 +79,14 @@
       "type": "code",
       "language": "javascript",
       "value": "  if (!command) {\n    error('Usage: gsd-tools <command> [args] [--raw] [--cwd <path>]\\n' +\n      'Commands: state, resolve-model, find-phase, commit, ' +\n      'verify-summary, verify, frontmatter, template, ...');\n  }",
-      "highlight": [1, 2],
-      "source": { "file": "get-shit-done/bin/gsd-tools.cjs", "startLine": 174 },
-      "focus": "Fail-fast error handling",
-      "bridge": "This fail-fast pattern reflects a deeper design principle."
+      "highlight": [
+        1,
+        2
+      ],
+      "source": {
+        "file": "get-shit-done/bin/gsd-tools.cjs",
+        "startLine": 174
+      }
     },
     {
       "type": "text",

@@ -20,9 +20,9 @@
       "type": "code",
       "language": "javascript",
       "value": "// The heart of GSD: a single CLI entry point\n// Usage: node gsd-tools.cjs <command> [args] [--raw]\n\nconst fs = require('fs');\nconst path = require('path');\nconst { error } = require('./lib/core.cjs');\nconst state = require('./lib/state.cjs');\nconst phase = require('./lib/phase.cjs');",
-      "highlight": [2],
-      "focus": "Entry point and module imports",
-      "bridge": "Notice there are no external packages -- only Node.js built-ins and local modules."
+      "highlight": [
+        2
+      ]
     },
     {
       "type": "text",
@@ -40,9 +40,10 @@
       "type": "code",
       "language": "javascript",
       "value": "switch (command) {\n  case 'state': {\n    const subcommand = args[1];\n    if (subcommand === 'json') {\n      state.cmdStateJson(cwd, raw);\n    } else if (subcommand === 'update') {\n      state.cmdStateUpdate(cwd, args[2], args[3]);\n    }\n    break;\n  }\n  case 'commit': {\n    commands.cmdCommit(cwd, message, files, raw, amend);\n    break;\n  }\n}",
-      "highlight": [1, 3],
-      "focus": "Switch statement command routing",
-      "bridge": "This simple pattern raises a fair question: why not use a registry?"
+      "highlight": [
+        1,
+        3
+      ]
     },
     {
       "type": "text",

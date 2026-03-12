@@ -14,9 +14,12 @@
       "type": "code",
       "language": "markdown",
       "value": "<purpose>\nExecute small, ad-hoc tasks with GSD guarantees\n(atomic commits, STATE.md tracking). Quick mode\nspawns gsd-planner (quick mode) + gsd-executor(s),\ntracks tasks in `.planning/quick/`, and updates\nSTATE.md's \"Quick Tasks Completed\" table.\n\nWith `--discuss` flag: lightweight discussion phase\nbefore planning.\n\nWith `--full` flag: enables plan-checking\n(max 2 iterations) and post-execution verification.\n</purpose>",
-      "highlight": [1, 2, 8, 11],
-      "focus": "Purpose section describes the workflow's goal",
-      "bridge": "After purpose, the process section contains the actual steps."
+      "highlight": [
+        1,
+        2,
+        8,
+        11
+      ]
     },
     {
       "type": "text",
@@ -28,9 +31,13 @@
       "type": "code",
       "language": "markdown",
       "value": "<process>\n**Step 1: Parse arguments and get task description**\n\nParse `$ARGUMENTS` for:\n- `--full` flag -> store as `$FULL_MODE` (true/false)\n- `--discuss` flag -> store as `$DISCUSS_MODE` (true/false)\n- Remaining text -> use as `$DESCRIPTION` if non-empty\n\nIf `$DESCRIPTION` is empty after parsing, prompt user\ninteractively.",
-      "highlight": [1, 2, 4, 5, 6],
-      "focus": "Steps are numbered with clear instructions",
-      "bridge": "Steps often contain embedded bash commands that Claude executes."
+      "highlight": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ]
     },
     {
       "type": "text",
@@ -42,9 +49,10 @@
       "type": "code",
       "language": "bash",
       "value": "INIT=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" \\\n  init quick \"$DESCRIPTION\")\nif [[ \"$INIT\" == @file:* ]]; then\n  INIT=$(cat \"${INIT#@file:}\")\nfi",
-      "highlight": [1, 2],
-      "focus": "Bash blocks are real commands Claude runs",
-      "bridge": "These bash commands connect the markdown layer to the Node.js layer."
+      "highlight": [
+        1,
+        2
+      ]
     },
     {
       "type": "text",
@@ -56,9 +64,12 @@
       "type": "code",
       "language": "markdown",
       "value": "**Step 5: Spawn planner (quick mode)**\n\nTask(\n  prompt=\"\n<planning_context>\n\n**Mode:** ${FULL_MODE ? 'quick-full' : 'quick'}\n**Directory:** ${QUICK_DIR}\n**Description:** ${DESCRIPTION}\n\n<files_to_read>\n- .planning/STATE.md (Project State)\n</files_to_read>\n\n</planning_context>\n\",\n  subagent_type=\"gsd-planner\",\n  model=\"{planner_model}\"\n)",
-      "highlight": [3, 5, 11, 17],
-      "focus": "Workflows spawn sub-agents with Task calls",
-      "bridge": "This spawning pattern is how GSD orchestrates multiple AI agents."
+      "highlight": [
+        3,
+        5,
+        11,
+        17
+      ]
     },
     {
       "type": "text",

@@ -14,9 +14,11 @@
       "type": "code",
       "language": "yaml",
       "value": "---\nname: gsd:quick\ndescription: Execute a quick task with GSD guarantees\nargument-hint: \"[--full] [--discuss]\"\nallowed-tools:\n  - Read\n  - Write\n  - Edit\n  - Glob\n  - Grep\n  - Bash\n  - Task\n  - AskUserQuestion\n---",
-      "highlight": [2, 3, 5],
-      "focus": "Command spec YAML frontmatter fields",
-      "bridge": "The frontmatter declares the command's identity, but the body defines its behavior."
+      "highlight": [
+        2,
+        3,
+        5
+      ]
     },
     {
       "type": "text",
@@ -28,9 +30,10 @@
       "type": "code",
       "language": "markdown",
       "value": "<objective>\nExecute small, ad-hoc tasks with GSD guarantees\n(atomic commits, STATE.md tracking).\n</objective>\n\n<execution_context>\n@C:/Users/18182/.claude/get-shit-done/workflows/quick.md\n</execution_context>",
-      "highlight": [1, 7],
-      "focus": "XML sections and @file workflow reference",
-      "bridge": "That @file reference is the bridge between the two layers."
+      "highlight": [
+        1,
+        7
+      ]
     },
     {
       "type": "text",
@@ -42,9 +45,11 @@
       "type": "code",
       "language": "markdown",
       "value": "<purpose>\nQuick mode is the same system with a shorter path:\n- Spawns gsd-planner (quick mode) + gsd-executor(s)\n- Quick tasks live in .planning/quick/\n- Updates STATE.md \"Quick Tasks Completed\" table\n</purpose>\n\n<process>\n<step name=\"validate\">\nRun init quick to get task context...\n</step>\n</process>",
-      "highlight": [1, 8, 9],
-      "focus": "Workflow structure with purpose and steps",
-      "bridge": "This pattern repeats across every GSD command."
+      "highlight": [
+        1,
+        8,
+        9
+      ]
     },
     {
       "type": "text",

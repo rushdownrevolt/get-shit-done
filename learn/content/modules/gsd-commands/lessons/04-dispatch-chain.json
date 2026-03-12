@@ -20,9 +20,9 @@
       "type": "code",
       "language": "markdown",
       "value": "<execution_context>\n@C:/Users/18182/.claude/get-shit-done/workflows/quick.md\n</execution_context>",
-      "highlight": [2],
-      "focus": "The @file reference is the dispatch wire",
-      "bridge": "This single line triggers Claude to load an entire workflow."
+      "highlight": [
+        2
+      ]
     },
     {
       "type": "text",
@@ -34,9 +34,11 @@
       "type": "code",
       "language": "yaml",
       "value": "allowed-tools:\n  - Read\n  - Write\n  - Edit\n  - Glob\n  - Grep\n  - Bash\n  - Task\n  - AskUserQuestion",
-      "highlight": [1, 7, 8],
-      "focus": "Allowed-tools restricts workflow capabilities",
-      "bridge": "The workflow operates within these tool boundaries."
+      "highlight": [
+        1,
+        7,
+        8
+      ]
     },
     {
       "type": "text",
@@ -48,9 +50,11 @@
       "type": "code",
       "language": "bash",
       "value": "INIT=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" \\\n  init quick \"$DESCRIPTION\")\nif [[ \"$INIT\" == @file:* ]]; then\n  INIT=$(cat \"${INIT#@file:}\")\nfi\n\n# Parse JSON for: planner_model, executor_model,\n# commit_docs, next_num, slug, quick_dir, task_dir",
-      "highlight": [1, 2, 8],
-      "focus": "Workflow step runs Node.js via Bash tool",
-      "bridge": "This connects back to the command spec's allowed-tools list."
+      "highlight": [
+        1,
+        2,
+        8
+      ]
     },
     {
       "type": "text",
