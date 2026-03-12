@@ -62,4 +62,43 @@ function formatRequires(requires) {
   }).join('\n');
 }
 
-module.exports = { assemblePrompt };
+/**
+ * Resolve a dotted key path against an object.
+ * e.g., resolveDottedKey({ a: { b: 'c' } }, 'a.b') => 'c'
+ */
+function resolveDottedKey(obj, key) {
+  const parts = key.split('.');
+  let current = obj;
+  for (const part of parts) {
+    if (current == null || typeof current !== 'object') return undefined;
+    current = current[part];
+  }
+  return current;
+}
+
+/**
+ * Assemble a markdown prompt template with generic {{KEY}} replacement.
+ * Fails loudly on missing keys (unlike assemblePrompt which uses defaults).
+ *
+ * @param {string} templateName - Template file name (without .prompt.md extension).
+ * @param {object} context - Key-value pairs for placeholder replacement.
+ * @returns {string} Assembled prompt text.
+ */
+function assembleMarkdownPrompt(templateName, context) {
+  const templateDir = path.join(__dirname, '..', 'content', 'prompts');
+  const templatePath = path.join(templateDir, templateName + '.prompt.md');
+  const template = fs.readFileSync(templatePath, 'utf-8');
+
+  return template.replace(/\{\{(\w+(?:\.\w+)*)\}\}/g, function (match, key) {
+    // 1. Check flat key (e.g., context['frontmatter.description'])
+    if (key in context) return String(context[key]);
+    // 2. Try dot-path traversal (e.g., context.frontmatter.description)
+    if (key.includes('.')) {
+      const resolved = resolveDottedKey(context, key);
+      if (resolved !== undefined) return String(resolved);
+    }
+    throw new Error('Missing template key: ' + key + ' in template: ' + templateName);
+  });
+}
+
+module.exports = { assemblePrompt, assembleMarkdownPrompt };
