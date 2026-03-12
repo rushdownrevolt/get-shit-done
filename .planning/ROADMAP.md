@@ -51,7 +51,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Goal:** Renderer uses progressive accumulation (blocks grow on each press), with per-block focus lines replacing extracted headers and bridge teasers connecting blocks narratively
 **Depends on:** Phase 01.1
 **Requirements**: ACC-01, ACC-02, ACC-03, ACC-04, VAL-01, GEN-01, GEN-02
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 01.2-01-PLAN.md — Renderer accumulation refactor + focus/bridge rendering + load-time validation
@@ -133,7 +133,7 @@ Phases execute in numeric order: 4 -> 5 -> 6
 |-------|-----------|----------------|--------|-----------|
 | 1. Interactive Learning Shell | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 01.1. Block-based Display | v1.0 | 2/2 | Complete | 2026-03-12 |
-| 01.2. Progressive Accumulation | v1.0 | 0/2 | In progress | - |
+| 01.2. Progressive Accumulation | 1/2 | In Progress|  | - |
 | 2. Prompt-Driven Content Pipeline | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 02.1. Clipboard Copy | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 3. Mini-Project Validation | v1.0 | 3/3 | Complete | 2026-03-12 |
