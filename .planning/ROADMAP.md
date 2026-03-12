@@ -39,7 +39,7 @@ Plans:
 **Goal:** Learner navigates lessons one part at a time (one content section per screen) with progress dots, pinned objective/criteria, and a module completion banner
 **Requirements**: P01.1-PART, P01.1-NAV, P01.1-DOTS, P01.1-HDR, P01.1-LABEL, P01.1-COMPLETE, P01.1-COMPAT
 **Depends on:** Phase 1
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 01.1-01-PLAN.md — Renderer refactor: renderPart, progress dots, completion banner, block headers, and pinned header/footer
@@ -95,7 +95,7 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Interactive Learning Shell | 2/2 | Complete | 2026-03-12 |
-| 01.1. Block-based Display | 0/2 | Planned | |
+| 01.1. Block-based Display | 1/2 | In Progress|  |
 | 2. Prompt-Driven Content Pipeline | 1/2 | In Progress| |
 | 02.1. Clipboard Copy | 1/1 | Complete    | 2026-03-12 |
 | 3. Mini-Project Validation | 2/3 | In Progress | |

@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
+milestone: v2.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 01.1 context gathered
-last_updated: "2026-03-12T16:16:57.570Z"
-last_activity: 2026-03-12 — Milestone v2.0 started
+status: in-progress
+stopped_at: Completed 01.1-01-PLAN.md
+last_updated: "2026-03-12T16:42:32Z"
+last_activity: 2026-03-12 — Completed Phase 01.1 Plan 01 renderer refactor
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 ---
@@ -85,10 +85,10 @@ See: .planning/PROJECT.md (updated 2026-03-12)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-12 — Milestone v2.0 started
+Phase: 01.1-block-based-lesson-display
+Plan: 01 of 2 complete
+Status: In progress
+Last activity: 2026-03-12 — Completed Phase 01.1 Plan 01 renderer refactor
 
 ## Performance Metrics
 
@@ -117,6 +117,7 @@ Last activity: 2026-03-12 — Milestone v2.0 started
 | Phase 03 P01 | 4min | 2 tasks | 10 files |
 | Phase 03 P02 | 3min | 2 tasks | 2 files |
 | Phase 02.1 P01 | 3min | 2 tasks | 7 files |
+| Phase 01.1 P01 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -144,6 +145,9 @@ Recent decisions affecting current work:
 - [Phase 02.1]: Formatter builds markdown from lesson JSON directly, not from ANSI-rendered output
 - [Phase 02.1]: Clipboard 'c' handler checks !key.ctrl to avoid conflict with Ctrl+C quit
 - [Phase 02.1]: fallbackToFile accepts skipOpen option for testability
+- [Phase 01.1]: Extracted renderContentSection and renderSuccessCriteria as shared helpers
+- [Phase 01.1]: Concept map rendered as synthetic final part at partIndex === content.length
+- [Phase 01.1]: Block headers use text excerpt, source file:line, 'Code Example', or 'Your Mission'
 
 ### Roadmap Evolution
 
@@ -168,6 +172,6 @@ None -- Phase 3 mini-project design validated during 03-01 execution.
 
 ## Session Continuity
 
-Last session: 2026-03-12T16:16:57.568Z
-Stopped at: Phase 01.1 context gathered
-Resume file: .planning/phases/01.1-block-based-lesson-display-with-per-block-navigation-and-module-progress-tracker/01.1-CONTEXT.md
+Last session: 2026-03-12T16:42:32Z
+Stopped at: Completed 01.1-01-PLAN.md
+Resume file: .planning/phases/01.1-block-based-lesson-display-with-per-block-navigation-and-module-progress-tracker/01.1-02-PLAN.md
