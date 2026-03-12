@@ -63,19 +63,17 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-11)
+See: .planning/PROJECT.md (updated 2026-03-12)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Phase 02.1 clipboard copy complete
+**Current focus:** Milestone v2.0 — defining requirements
 
 ## Current Position
 
-Phase: 02.1 (Add command 'c' to copy lesson to clipboard)
-Plan: 1 of 1 in current phase -- complete
-Status: Phase 02.1 complete
-Last activity: 2026-03-12 - Completed Phase 02.1 Plan 01: Clipboard copy feature
-
-Progress: [██████████] 100%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-12 — Milestone v2.0 started
 
 ## Performance Metrics
 
