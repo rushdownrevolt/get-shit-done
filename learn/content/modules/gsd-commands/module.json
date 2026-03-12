@@ -8,6 +8,7 @@
     "command-spec": "Command Spec",
     "workflow": "Workflow",
     "dispatch": "Dispatch Chain",
-    "bridge": "Bridge"
+    "bridge": "Bridge",
+    "mini-project": "Mini-Project"
   }
 }

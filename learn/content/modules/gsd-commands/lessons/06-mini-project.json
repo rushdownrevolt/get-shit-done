@@ -1,0 +1,41 @@
+{
+  "id": "mini-project",
+  "title": "Mini-Project: Build /gsd:skeptic",
+  "lessonNumber": 6,
+  "objective": "Apply everything from Lessons 1-5 to build a real GSD command that critiques phases",
+  "content": [
+    {
+      "type": "text",
+      "value": "You have traced the two-layer architecture, studied the anatomy of command specs and workflows, and followed the dispatch chain that wires them together. Now you build something real.\n\nYour task is to create /gsd:skeptic -- a command that takes a phase number and critiques that phase's plan and progress. This is not hypothetical. You will create two markdown files in your live GSD install, and the command will actually work in Claude Code when you are done.\n\nIf you get stuck, use the hint command. Hints start conceptual and get progressively more specific, but they never write the files for you -- the critique logic is your creative contribution.",
+      "focus": "Build a real working GSD command",
+      "bridge": "Before you start writing, here is how to check your progress and get help."
+    },
+    {
+      "type": "text",
+      "value": "Run the verify command any time to check your structural progress. Run the hint command when you need a nudge. You can use both as many times as you like.\n\nUnlike Module 2's echo command (which created Node.js files in the codebase), this project creates markdown files in your GSD install directory. If something goes wrong, you can simply delete the files and start over -- there is nothing to git-checkout here.",
+      "focus": "Verify and hint workflow for markdown",
+      "bridge": "Here is exactly what you need to build."
+    },
+    {
+      "type": "project",
+      "task": "Build /gsd:skeptic -- a command that takes a phase number argument and critiques that phase's plan and progress. Create two files: a command spec at ~/.claude/commands/gsd/skeptic.md and a workflow at ~/.claude/get-shit-done/workflows/skeptic.md. The command spec must wire to the workflow via an @file reference in execution_context. The critique content is yours to design -- verification only checks structure.",
+      "deliverables": [
+        "Command spec at ~/.claude/commands/gsd/skeptic.md with frontmatter (name, description, allowed-tools) and XML sections (objective, execution_context, context, process)",
+        "Workflow at ~/.claude/get-shit-done/workflows/skeptic.md with purpose and process sections",
+        "Cross-file wiring: the command spec's execution_context must contain an @file reference to the workflow path"
+      ],
+      "verifyCommand": "node learn/bin/gsd-learn.cjs --verify",
+      "hintCommand": "node learn/bin/gsd-learn.cjs --hint",
+      "focus": "Skeptic command structure requirements",
+      "bridge": "Complete all three deliverables and run verify to confirm your module mastery."
+    },
+    {
+      "type": "text",
+      "value": "Going Further: your base skeptic command requires a phase number argument. But what if it could auto-detect the current phase? STATE.md tracks the current phase in its frontmatter. Your workflow could use the Read tool to check .planning/STATE.md and extract the phase number automatically. No separate verification for this -- it is an optional enhancement to make your command smarter.\n\nWith /gsd:skeptic working, you have completed Module 1. You can build GSD commands from pure markdown -- no Node.js required. Module 2 takes you deeper: into the Node.js layer that makes the dispatch chain actually work.",
+      "focus": "Optional auto-detect and module completion",
+      "bridge": "You have completed Module 1: GSD Commands and Workflows. Module 2 explores the Node.js machinery underneath."
+    }
+  ],
+  "conceptMap": "mini-project",
+  "successCriteria": "Running --verify shows all checks passing for both files: frontmatter fields present, all XML sections found, cross-file @file wiring confirmed. Then try running /gsd:skeptic in Claude Code to see your critique command in action."
+}

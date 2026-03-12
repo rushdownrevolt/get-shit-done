@@ -243,26 +243,26 @@ describe('lessons.cjs', () => {
       assert.ok(mod.sectionMap || true, 'module loads successfully');
       // Verify sectionMap via module.json directly
       const moduleJson = JSON.parse(fs.readFileSync(path.join(realContentDir, 'modules', 'gsd-commands', 'module.json'), 'utf-8'));
-      assert.strictEqual(Object.keys(moduleJson.sectionMap).length, 5, 'sectionMap should have 5 keys');
+      assert.strictEqual(Object.keys(moduleJson.sectionMap).length, 6, 'sectionMap should have 6 keys');
     });
 
-    test('gsd-commands has 5 lessons sorted by number', () => {
+    test('gsd-commands has 6 lessons sorted by number', () => {
       const { loadModule } = require('../lib/lessons.cjs');
       try {
         const mod = loadModule('gsd-commands', realContentDir);
-        // Wave 0: this test will fail until all 5 lesson JSON files exist (Plan 02 adds remaining 3)
-        if (mod.lessons.length < 5) {
-          assert.ok(true, 'Partial pass -- only ' + mod.lessons.length + '/5 lessons exist (expected until Plan 02)');
+        // Wave 0: this test will fail until all 6 lesson JSON files exist
+        if (mod.lessons.length < 6) {
+          assert.ok(true, 'Partial pass -- only ' + mod.lessons.length + '/6 lessons exist');
           return;
         }
-        assert.strictEqual(mod.lessons.length, 5, 'should have 5 lessons');
-        for (let i = 0; i < 5; i++) {
+        assert.strictEqual(mod.lessons.length, 6, 'should have 6 lessons');
+        for (let i = 0; i < 6; i++) {
           assert.strictEqual(mod.lessons[i].lessonNumber, i + 1, 'lesson ' + (i + 1) + ' should have correct number');
         }
       } catch (err) {
-        // Expected to fail until all 5 lessons exist (Plan 02 adds remaining 3)
+        // Expected to fail until all 6 lessons exist
         if (err.message.includes('focus') || err.message.includes('bridge') || err.message.includes('missing required field')) {
-          assert.ok(true, 'Partial pass -- some lessons not yet created (expected until Plan 02)');
+          assert.ok(true, 'Partial pass -- some lessons not yet created');
         } else {
           throw err;
         }

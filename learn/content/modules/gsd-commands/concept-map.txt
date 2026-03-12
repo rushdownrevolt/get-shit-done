@@ -35,3 +35,10 @@
   | Node.js Layer    |
   | (Module 2)       |
   +------------------+
+        |
+        v
+  +-------------------+
+  | Mini-Project      |
+  | Build /gsd:skeptic|
+  | (apply all)       |
+  +-------------------+
