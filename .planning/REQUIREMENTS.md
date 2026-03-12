@@ -43,20 +43,45 @@
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Progress tracking supports multiple modules with per-module lesson state (v2 schema migration preserves existing data)
-- [ ] **INFR-02**: Module discovery via listModules() scans content directories and sorts by order field
-- [ ] **INFR-03**: Markdown parser extracts YAML frontmatter, XML sections, code blocks, and @file references from .md files
-- [ ] **INFR-04**: Concept map is parameterized per module (not hardcoded to Command Lifecycle)
-- [ ] **INFR-05**: CLI entry point supports multi-module selection with smart defaults (first incomplete module)
+- [ ] **INFRA-01**: Progress tracking supports per-module state with v1-to-v2 auto-migration (no data loss)
+- [ ] **INFRA-02**: Concept map loads from module-owned definitions instead of hardcoded constant
+- [ ] **INFRA-03**: Verifier resolves `~/` paths for home-directory artifact verification
+- [ ] **INFRA-04**: gsd-learn starts in Module 1, Lesson 1 by default (hardcoded, no module selection UI)
 
-### Module 1 Content
+### Content Pipeline
 
-- [ ] **MOD1-01**: Module 1 overview lesson explains the two-layer architecture (command.md dispatches to workflow.md)
-- [ ] **MOD1-02**: Command.md anatomy lesson teaches frontmatter fields, XML sections, and @file references
-- [ ] **MOD1-03**: Workflow.md anatomy lesson teaches purpose, process steps, and bash code blocks
-- [ ] **MOD1-04**: Wiring lesson traces the dispatch chain from /gsd:X through command.md to workflow execution
-- [ ] **MOD1-05**: Mini-project: learner builds a working /gsd:greet command (command.md + workflow.md pair)
-- [ ] **MOD1-06**: Module ordering: GSD Commands = Module 1, Command Lifecycle = Module 2
+- [ ] **PIPE-01**: Markdown parser extracts frontmatter, XML sections, code blocks, and file references from .md files
+- [ ] **PIPE-02**: Prompt templates use generic `{{KEY}}` replacement instead of hardcoded per-placeholder chains
+- [ ] **PIPE-03**: Markdown-specific prompt template exists for teaching .md source files
+
+### Module 1: GSD Commands & Workflows
+
+- [ ] **MOD1-01**: Lesson 1 — Conceptual overview of two-layer architecture (command.md dispatches to workflow.md)
+- [ ] **MOD1-02**: Lesson 2 — Command.md anatomy (frontmatter, XML sections, @file: references)
+- [ ] **MOD1-03**: Lesson 3 — Workflow.md anatomy (purpose, process steps, bash code blocks)
+- [ ] **MOD1-04**: Lesson 4 — Command-to-workflow wiring (dispatch chain from /gsd:X to execution)
+- [ ] **MOD1-05**: Lesson 5 — Mini-project: build a custom command.md + workflow.md pair, verified structurally
+- [ ] **MOD1-06**: Bridge lesson previewing Module 2's Node.js layer
+- [ ] **MOD1-07**: spec.json with markdown artifact checks for mini-project verification
+- [ ] **MOD1-08**: hints.json with 5 progressive hints for mini-project
+
+### Module 2 Updates
+
+- [ ] **MOD2-01**: Command Lifecycle module renumbered to Module 2 via `order: 2` in module.json (ID unchanged)
+
+## v2.1 Requirements
+
+### Module 2 Update
+
+- **MOD2-02**: Command Lifecycle mini-project updated to full-stack (command.md + workflow.md + echo.cjs + switch case)
+
+## v2.2 Requirements
+
+### Module Discovery
+
+- **DISC-01**: Module discovery via listModules() scans content directories and sorts by order field
+- **DISC-02**: CLI entry point supports multi-module selection with smart defaults (first incomplete module)
+- **DISC-03**: generate-lessons.cjs refactored for --module flag
 
 ## v3+ Requirements
 
@@ -119,10 +144,10 @@
 
 **Coverage:**
 - v1 requirements: 19 total — all complete
-- v2.0 requirements: 11 total
+- v2.0 requirements: 16 total
 - Mapped to phases: 0 (pending roadmap)
-- Unmapped: 11
+- Unmapped: 16
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-12 after v2.0 milestone start*
+*Last updated: 2026-03-12 after v2.0 requirements scoped*

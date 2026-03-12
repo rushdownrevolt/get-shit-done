@@ -6,7 +6,7 @@ const path = require('path');
 const { validateEnvironment, formatError } = require('../lib/errors.cjs');
 const { loadProgress, saveProgress } = require('../lib/progress.cjs');
 const { loadModule } = require('../lib/lessons.cjs');
-const { renderLesson } = require('../lib/renderer.cjs');
+const { renderLesson, renderPart, renderCompletionBanner } = require('../lib/renderer.cjs');
 const { runNavigationLoop } = require('../lib/navigator.cjs');
 const { runVerification } = require('../lib/verifier.cjs');
 const { getNextHint } = require('../lib/hints.cjs');
@@ -139,8 +139,8 @@ async function main() {
   // Update progress with current module
   progress.currentModule = moduleId;
 
-  const renderFn = (lesson, idx, total) => {
-    process.stdout.write(renderLesson(lesson, idx, total));
+  const renderFn = (lesson, partIndex, totalParts, currentLessonIdx, totalLessons) => {
+    process.stdout.write(renderPart(lesson, partIndex, totalParts, currentLessonIdx, totalLessons));
   };
 
   const progressFn = (idx) => {
@@ -169,7 +169,10 @@ async function main() {
     }
   };
 
-  await runNavigationLoop(mod.lessons, startIndex, renderFn, progressFn);
+  await runNavigationLoop(mod.lessons, startIndex, renderFn, progressFn, {
+    moduleMeta: { title: mod.title, lessonCount: mod.lessons.length },
+    completionBannerFn: renderCompletionBanner,
+  });
   process.stdout.write('\nGoodbye! Your progress has been saved.\n');
 }
 

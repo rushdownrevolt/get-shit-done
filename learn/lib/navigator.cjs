@@ -19,7 +19,17 @@ function setupCleanExit() {
 /**
  * Wait for a single keypress and resolve with action name.
  *
- * @returns {Promise<'next'|'prev'|'copy'|'quit'>}
+ * Key mappings:
+ *   w       -> 'next'   (advance to next part)
+ *   q       -> 'prev'   (go back one part)
+ *   e       -> 'skip'   (skip to next lesson)
+ *   c       -> 'copy'   (copy full lesson to clipboard)
+ *   escape  -> 'quit'   (quit and save progress)
+ *   Ctrl+C  -> 'quit'   (quit and save progress)
+ *
+ * Arrow keys and old n/p bindings are removed.
+ *
+ * @returns {Promise<'next'|'prev'|'skip'|'copy'|'quit'>}
  */
 function waitForKey() {
   return new Promise((resolve) => {
@@ -28,13 +38,15 @@ function waitForKey() {
 
     const handler = (str, key) => {
       if (!key) return;
-      if (key.name === 'n' || key.name === 'right') {
+      if (key.name === 'w') {
         cleanup(); resolve('next');
-      } else if (key.name === 'p' || key.name === 'left') {
+      } else if (key.name === 'q') {
         cleanup(); resolve('prev');
+      } else if (key.name === 'e') {
+        cleanup(); resolve('skip');
       } else if (key.name === 'c' && !key.ctrl) {
         cleanup(); resolve('copy');
-      } else if (key.name === 'q' || (key.ctrl && key.name === 'c')) {
+      } else if (key.name === 'escape' || (key.ctrl && key.name === 'c')) {
         cleanup(); resolve('quit');
       }
     };
@@ -51,42 +63,89 @@ function waitForKey() {
 }
 
 /**
- * Main navigation loop.
+ * Main navigation loop with two-level part navigation.
+ *
+ * Outer loop: iterates over lessons.
+ * Inner loop: iterates over parts within each lesson.
  *
  * @param {Array} lessons - Array of lesson objects.
- * @param {number} startIndex - Index to start at.
- * @param {function} renderFn - Called with (lesson, currentIndex, totalLessons).
- * @param {function} progressFn - Called with (currentIndex) to save progress.
+ * @param {number} startIndex - Lesson index to start at.
+ * @param {function} renderFn - Called with (lesson, partIndex, totalParts, currentLessonIndex, totalLessons).
+ * @param {function} progressFn - Called with (currentLessonIndex) to save progress.
+ * @param {object} [opts] - Optional settings.
+ * @param {object} [opts.moduleMeta] - { title, lessonCount } for completion banner.
+ * @param {function} [opts.completionBannerFn] - renderCompletionBanner function.
  */
-async function runNavigationLoop(lessons, startIndex, renderFn, progressFn) {
+async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts) {
   setupCleanExit();
-  let current = startIndex;
+  const totalLessons = lessons.length;
+  let currentLesson = startIndex;
 
-  while (true) {
-    renderFn(lessons[current], current, lessons.length);
-    const action = await waitForKey();
+  outer:
+  while (currentLesson < totalLessons) {
+    const lesson = lessons[currentLesson];
+    const totalParts = lesson.content.length + (lesson.conceptMap ? 1 : 0);
+    let currentPart = 0;
 
-    if (action === 'copy') {
-      const { formatLessonForClipboard } = require('./clipboard-formatter.cjs');
-      const { copyToClipboard } = require('./clipboard.cjs');
-      const markdown = formatLessonForClipboard(lessons[current], current, lessons.length);
-      const result = copyToClipboard(markdown);
-      process.stdout.write('\x1b[2J\x1b[H'); // clear screen
-      if (result.success) {
-        process.stdout.write('\n  \x1b[32m\x1b[1m  Copied to clipboard\x1b[0m\n');
-      } else {
-        process.stdout.write('\n  \x1b[33m  Saved to: ' + result.fallbackPath + '\x1b[0m\n');
+    while (true) {
+      renderFn(lesson, currentPart, totalParts, currentLesson, totalLessons);
+      const action = await waitForKey();
+
+      if (action === 'next') {
+        if (currentPart < totalParts - 1) {
+          // Advance to next part within lesson
+          currentPart++;
+        } else if (currentLesson < totalLessons - 1) {
+          // Advance to next lesson (part 0)
+          currentLesson++;
+          progressFn(currentLesson);
+          continue outer;
+        } else {
+          // Last part of last lesson -- show completion banner
+          if (opts && opts.completionBannerFn && opts.moduleMeta) {
+            const totalPartsAll = lessons.reduce((sum, l) => sum + l.content.length + (l.conceptMap ? 1 : 0), 0);
+            const miniProjectCount = lessons.filter(l => l.content.some(s => s.type === 'project')).length;
+            const banner = opts.completionBannerFn({
+              title: opts.moduleMeta.title,
+              lessonCount: opts.moduleMeta.lessonCount,
+              totalParts: totalPartsAll,
+              miniProjectCount: miniProjectCount,
+            });
+            process.stdout.write(banner);
+            await waitForKey(); // Any key quits after banner
+          }
+          progressFn(currentLesson);
+          return;
+        }
+      } else if (action === 'prev') {
+        if (currentPart > 0) {
+          currentPart--;
+        }
+        // If currentPart === 0, do nothing (stay on first part)
+      } else if (action === 'skip') {
+        if (currentLesson < totalLessons - 1) {
+          currentLesson++;
+          progressFn(currentLesson);
+          continue outer;
+        }
+        // If last lesson, do nothing
+      } else if (action === 'copy') {
+        const { formatLessonForClipboard } = require('./clipboard-formatter.cjs');
+        const { copyToClipboard } = require('./clipboard.cjs');
+        const markdown = formatLessonForClipboard(lesson, currentLesson, totalLessons);
+        const result = copyToClipboard(markdown);
+        process.stdout.write('\x1b[2J\x1b[H'); // clear screen
+        if (result.success) {
+          process.stdout.write('\n  \x1b[32m\x1b[1m  Copied to clipboard\x1b[0m\n');
+        } else {
+          process.stdout.write('\n  \x1b[33m  Saved to: ' + result.fallbackPath + '\x1b[0m\n');
+        }
+        await new Promise(r => setTimeout(r, 1500));
+        continue;
+      } else if (action === 'quit') {
+        progressFn(currentLesson);
+        return;
       }
-      await new Promise(r => setTimeout(r, 1500));
-      continue;
-    } else if (action === 'next' && current < lessons.length - 1) {
-      current++;
-      progressFn(current);
-    } else if (action === 'prev' && current > 0) {
-      current--;
-    } else if (action === 'quit') {
-      progressFn(current);
-      break;
     }
   }
 }

@@ -25,8 +25,27 @@ describe('navigator module exports', () => {
     });
   });
 
+  // Key mappings (verified via human-verify checkpoint in Task 2):
+  //   w       -> 'next'   (advance to next part within lesson)
+  //   q       -> 'prev'   (go back one part within lesson)
+  //   e       -> 'skip'   (skip to first part of next lesson)
+  //   c       -> 'copy'   (copy full lesson to clipboard)
+  //   escape  -> 'quit'   (quit and save progress)
+  //   Ctrl+C  -> 'quit'   (quit and save progress)
+  //
+  // Arrow keys removed. Old n/p bindings removed.
+  //
+  // Navigation is two-level:
+  //   Outer loop: lessons (currentLesson index)
+  //   Inner loop: parts within each lesson (currentPart index)
+  //   totalParts = lesson.content.length + (lesson.conceptMap ? 1 : 0)
+  //
+  // runNavigationLoop accepts opts: { moduleMeta, completionBannerFn }
+  //   moduleMeta: { title, lessonCount }
+  //   completionBannerFn: renderCompletionBanner from renderer.cjs
+
   // Note: Full keypress testing for waitForKey requires a TTY which is
-  // unavailable in automated test environments. The function's behavior
-  // (resolving with 'next'/'prev'/'quit' on n/p/q keys) is verified
-  // via the human-verify checkpoint in Task 3.
+  // unavailable in automated test environments. The two-level navigation
+  // and key mapping behavior is verified via the human-verify checkpoint
+  // in Task 2.
 });
