@@ -1,63 +1,52 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const { style } = require('./terminal.cjs');
 
-const CONCEPT_MAP = `
-  User types /gsd:quick
-        |
-        v
-  +------------------+     +------------------+
-  | Command Spec     |---->| Workflow          |
-  | commands/gsd/    |     | workflows/*.md    |
-  +------------------+     +--------+---------+
-                                    |
-                                    v
-                           +------------------+
-                           | Tool Dispatch    |
-                           | gsd-tools.cjs    |
-                           +--------+---------+
-                                    |
-                       +------------+------------+
-                       |            |            |
-                       v            v            v
-                 +---------+  +---------+  +---------+
-                 | State   |  | Config  |  | Phase   |
-                 | state   |  | config  |  | phase   |
-                 | .cjs    |  | .cjs    |  | .cjs    |
-                 +---------+  +---------+  +---------+
-`;
-
 /**
- * Render the concept map with an optional YOU ARE HERE marker.
+ * Render the concept map for a module with an optional YOU ARE HERE marker.
  *
+ * Loads ASCII art from concept-map.txt in the module directory and
+ * sectionMap from module.json in the same directory.
+ *
+ * @param {string} moduleDir - Absolute path to the module directory.
  * @param {string|null} currentSection - Section to highlight, or null for no marker.
  * @returns {string} Rendered concept map string.
  */
-function renderConceptMap(currentSection) {
+function renderConceptMap(moduleDir, currentSection) {
   const marker = ' <-- YOU ARE HERE';
-  let map = CONCEPT_MAP;
 
-  if (currentSection) {
-    // Map section names to labels in the diagram
-    const sectionMap = {
-      'entry-point': 'Command Spec',
-      'command-spec': 'Command Spec',
-      'workflow': 'Workflow',
-      'tool-dispatch': 'Tool Dispatch',
-      'state': 'State',
-      'config': 'Config',
-      'phase': 'Phase',
-    };
+  // Load ASCII art from concept-map.txt
+  const mapPath = path.join(moduleDir, 'concept-map.txt');
+  let map;
+  try {
+    map = fs.readFileSync(mapPath, 'utf-8');
+  } catch {
+    return style('Architecture Overview:', 'bold', 'cyan') + '\n\n  No concept map available\n\n';
+  }
 
+  // Load sectionMap from module.json
+  let sectionMap = null;
+  try {
+    const moduleJson = JSON.parse(fs.readFileSync(path.join(moduleDir, 'module.json'), 'utf-8'));
+    sectionMap = moduleJson.sectionMap || null;
+  } catch {
+    // No module.json or no sectionMap — skip marker
+  }
+
+  if (currentSection && sectionMap) {
     const label = sectionMap[currentSection] || currentSection;
-    // Find the label in the map and append marker
-    map = map.replace(
-      new RegExp('(\\|\\s*' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*)'),
-      '$1' + marker
-    );
+    if (label && sectionMap[currentSection]) {
+      // Find the label in the map and append marker
+      map = map.replace(
+        new RegExp('(\\|\\s*' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*)'),
+        '$1' + marker
+      );
+    }
   }
 
   return style('Architecture Overview:', 'bold', 'cyan') + '\n' + map + '\n';
 }
 
-module.exports = { renderConceptMap, CONCEPT_MAP };
+module.exports = { renderConceptMap };

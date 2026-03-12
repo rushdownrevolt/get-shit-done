@@ -1,0 +1,7 @@
+{
+  "id": "gsd-commands",
+  "title": "GSD Commands & Workflows",
+  "description": "Learn how GSD slash commands dispatch through command specs to workflow files.",
+  "order": 1,
+  "sectionMap": {}
+}

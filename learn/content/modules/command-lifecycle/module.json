@@ -1,5 +1,15 @@
 {
   "id": "command-lifecycle",
   "title": "Command Lifecycle",
-  "description": "Follow a GSD command from user input to execution, understanding how each piece connects."
+  "description": "Follow a GSD command from user input to execution, understanding how each piece connects.",
+  "order": 2,
+  "sectionMap": {
+    "entry-point": "Command Spec",
+    "command-spec": "Command Spec",
+    "workflow": "Workflow",
+    "tool-dispatch": "Tool Dispatch",
+    "state": "State",
+    "config": "Config",
+    "phase": "Phase"
+  }
 }

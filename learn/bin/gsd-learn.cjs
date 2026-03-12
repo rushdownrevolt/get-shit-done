@@ -40,7 +40,7 @@ async function main() {
     process.exit(1);
   }
 
-  const moduleId = flags.module || 'command-lifecycle';
+  const moduleId = flags.module || 'gsd-commands';
   const contentDir = path.join(__dirname, '..', 'content');
 
   // --reset: clear progress
@@ -139,8 +139,10 @@ async function main() {
   // Update progress with current module
   progress.currentModule = moduleId;
 
+  const moduleDir = path.join(contentDir, 'modules', moduleId);
+
   const renderFn = (lesson, partIndex, totalParts, currentLessonIdx, totalLessons) => {
-    process.stdout.write(renderPart(lesson, partIndex, totalParts, currentLessonIdx, totalLessons));
+    process.stdout.write(renderPart(lesson, partIndex, totalParts, currentLessonIdx, totalLessons, moduleDir));
   };
 
   const progressFn = (idx) => {
