@@ -47,6 +47,26 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. Learner sees a helpful error message (not a stack trace) when running from the wrong directory or with missing files
 **Plans**: 2/2 complete
 
+### Phase 01.2: Adaptive per-part lesson structure with progressive content accumulation (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 1
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 01.2 to break down)
+
+### Phase 01.2: Fix part-based renderer and navigation from phase 1.1 (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 1
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 01.2 to break down)
+
 ### Phase 01.1: Block-based Display (INSERTED)
 **Goal**: Learner navigates lessons one part at a time with progress dots, pinned objective/criteria, and module completion banner
 **Depends on**: Phase 1
@@ -85,7 +105,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Concept map loads its diagram from module-owned definitions — each module defines its own concept map content
   4. Verifier correctly resolves `~/` paths to the user's home directory for artifact checks
   5. Markdown parser extracts frontmatter, XML sections, code blocks, and file references from real GSD .md files — and prompt templates use generic `{{KEY}}` replacement
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Infrastructure: progress migration, concept maps, verifier tilde expansion, module ordering
+- [ ] 04-02-PLAN.md — Markdown parser for command specs and workflows
+- [ ] 04-03-PLAN.md — Generic template system and markdown-anatomy prompt
 
 ### Phase 5: Module 1 Lessons
 **Goal**: Learner can navigate through 5 teaching lessons (overview + 4 dives + bridge) that explain how GSD slash commands and workflows work, built from parsed markdown source files
@@ -121,6 +146,6 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 2. Prompt-Driven Content Pipeline | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 02.1. Clipboard Copy | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 3. Mini-Project Validation | v1.0 | 3/3 | Complete | 2026-03-12 |
-| 4. Multi-Module Infrastructure | v2.0 | 0/? | Not started | - |
+| 4. Multi-Module Infrastructure | v2.0 | 0/3 | In progress | - |
 | 5. Module 1 Lessons | v2.0 | 0/? | Not started | - |
 | 6. Module 1 Mini-Project | v2.0 | 0/? | Not started | - |
