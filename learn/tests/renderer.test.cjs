@@ -13,8 +13,8 @@ describe('renderLesson', () => {
     lessonNumber: 2,
     objective: 'Learn about testing renderers',
     content: [
-      { type: 'text', value: 'This is a text block.' },
-      { type: 'code', language: 'javascript', value: 'const x = 1;', highlight: [1] },
+      { type: 'text', value: 'This is a text block.', focus: 'Text block basics', bridge: 'Next we look at code.' },
+      { type: 'code', language: 'javascript', value: 'const x = 1;', highlight: [1], focus: 'Variable declaration', bridge: 'Now you know variables.' },
     ],
     conceptMap: null,
     successCriteria: 'You can verify renderer output',
@@ -75,6 +75,8 @@ describe('renderLesson', () => {
           language: 'javascript',
           value: 'const x = 1;',
           source: { file: 'bin/gsd-tools.cjs', startLine: 10 },
+          focus: 'Source code example',
+          bridge: 'See the file link above.',
         },
       ],
     };
@@ -87,7 +89,7 @@ describe('renderLesson', () => {
     const lessonNoSource = {
       ...lesson,
       content: [
-        { type: 'code', language: 'javascript', value: 'const y = 2;' },
+        { type: 'code', language: 'javascript', value: 'const y = 2;', focus: 'Simple code', bridge: 'Moving on.' },
       ],
     };
     const output = renderLesson(lessonNoSource, 0, 1);
@@ -151,7 +153,7 @@ describe('renderLesson', () => {
     const lessonMultiline = {
       ...lesson,
       content: [
-        { type: 'code', language: 'javascript', value: 'line one\nline two\nline three' },
+        { type: 'code', language: 'javascript', value: 'line one\nline two\nline three', focus: 'Multiline code', bridge: 'Done with code.' },
       ],
     };
     const output = renderLesson(lessonMultiline, 0, 1);
@@ -240,19 +242,18 @@ describe('renderPart', () => {
     lessonNumber: 2,
     objective: 'Learn about testing renderers',
     content: [
-      { type: 'text', value: 'This is the first text block.' },
-      { type: 'code', language: 'javascript', value: 'const x = 1;', highlight: [1] },
-      { type: 'text', value: 'This is the third text block.' },
+      { type: 'text', value: 'This is the first text block.', focus: 'First block focus', bridge: 'Bridge to second block.' },
+      { type: 'code', language: 'javascript', value: 'const x = 1;', highlight: [1], focus: 'Code block focus', bridge: 'Bridge to third block.' },
+      { type: 'text', value: 'This is the third text block.', focus: 'Third block focus', bridge: 'Bridge to conclusion.' },
     ],
     conceptMap: null,
     successCriteria: 'You can verify renderer output',
   };
 
   // totalParts = 3 (no concept map)
-  test('renders only content[0] when partIndex is 0', () => {
+  test('renders content[0] when partIndex is 0', () => {
     const output = renderPart(lesson, 0, 3, 1, 5);
     assert.ok(output.includes('This is the first text block.'), 'should contain first text block');
-    assert.ok(!output.includes('const x = 1'), 'should NOT contain second content section');
     assert.ok(!output.includes('This is the third text block.'), 'should NOT contain third content section');
   });
 
@@ -287,7 +288,7 @@ describe('renderPart', () => {
     const lessonWithSource = {
       ...lesson,
       content: [
-        { type: 'code', value: 'const x = 1;', source: { file: 'bin/gsd-tools.cjs', startLine: 10 } },
+        { type: 'code', value: 'const x = 1;', source: { file: 'bin/gsd-tools.cjs', startLine: 10 }, focus: 'Source code', bridge: 'See the source.' },
       ],
     };
     const output = renderPart(lessonWithSource, 0, 1, 0, 5);
@@ -305,6 +306,8 @@ describe('renderPart', () => {
           deliverables: ['File A', 'File B'],
           verifyCommand: 'node verify.cjs',
           hintCommand: 'node hint.cjs',
+          focus: 'Project task',
+          bridge: 'Complete and move on.',
         },
       ],
     };
@@ -312,23 +315,6 @@ describe('renderPart', () => {
     assert.ok(output.includes('Your Mission:'), 'should contain Your Mission header');
     assert.ok(output.includes('File A'), 'should contain first deliverable');
     assert.ok(output.includes('File B'), 'should contain second deliverable');
-  });
-
-  test('includes dim block header showing first sentence for text type', () => {
-    const output = renderPart(lesson, 0, 3, 0, 5);
-    // Block header should be the first sentence of the text content
-    assert.ok(output.includes('This is the first text block.'), 'should contain first sentence as block header');
-  });
-
-  test('includes dim block header "Code Example" for code without source', () => {
-    const lessonCodeNoSource = {
-      ...lesson,
-      content: [
-        { type: 'code', value: 'const x = 1;' },
-      ],
-    };
-    const output = renderPart(lessonCodeNoSource, 0, 1, 0, 5);
-    assert.ok(output.includes('Code Example'), 'should contain "Code Example" block header');
   });
 
   test('includes progress dots from renderProgressDots', () => {
@@ -370,5 +356,95 @@ describe('renderPart', () => {
     const output = renderLesson(lesson, 1, 5);
     assert.ok(output.includes('Test Lesson Title'), 'renderLesson should still work');
     assert.ok(output.includes('[n]'), 'renderLesson should still have old nav footer');
+  });
+
+  // ─── NEW: Progressive Accumulation Tests ──────────────────────────
+
+  // 4-block lesson fixture for accumulation tests
+  const accLesson = {
+    id: 'acc-lesson',
+    title: 'Accumulation Test Lesson',
+    lessonNumber: 1,
+    objective: 'Test progressive accumulation',
+    content: [
+      { type: 'text', value: 'Block zero content here.', focus: 'Introduction to concepts', bridge: 'Next we explore variables.' },
+      { type: 'text', value: 'Block one content here.', focus: 'Variable fundamentals', bridge: 'Now onto functions.' },
+      { type: 'text', value: 'Block two content here.', focus: 'Function patterns', bridge: 'Time for modules.' },
+      { type: 'text', value: 'Block three content here.', focus: 'Module system', bridge: 'Wrapping up the lesson.' },
+    ],
+    conceptMap: null,
+    successCriteria: 'You understand accumulation',
+  };
+
+  test('ACC-01: renderPart at partIndex=2 shows content from blocks 0, 1, AND 2', () => {
+    const output = renderPart(accLesson, 2, 4, 0, 5);
+    assert.ok(output.includes('Block zero content here.'), 'should contain block 0 content');
+    assert.ok(output.includes('Block one content here.'), 'should contain block 1 content');
+    assert.ok(output.includes('Block two content here.'), 'should contain block 2 content');
+    assert.ok(!output.includes('Block three content here.'), 'should NOT contain block 3 content');
+  });
+
+  test('ACC-01: renderPart at partIndex=0 shows only block 0 content', () => {
+    const output = renderPart(accLesson, 0, 4, 0, 5);
+    assert.ok(output.includes('Block zero content here.'), 'should contain block 0 content');
+    assert.ok(!output.includes('Block one content here.'), 'should NOT contain block 1 content');
+    assert.ok(!output.includes('Block two content here.'), 'should NOT contain block 2 content');
+  });
+
+  test('ACC-02: each accumulated block displays its focus field text', () => {
+    const output = renderPart(accLesson, 2, 4, 0, 5);
+    assert.ok(output.includes('Introduction to concepts'), 'should contain block 0 focus');
+    assert.ok(output.includes('Variable fundamentals'), 'should contain block 1 focus');
+    assert.ok(output.includes('Function patterns'), 'should contain block 2 focus');
+  });
+
+  test('ACC-02: triangle-right marker appears exactly once (current block only)', () => {
+    const output = renderPart(accLesson, 2, 4, 0, 5);
+    const triangleCount = (output.match(/\u25B6/g) || []).length;
+    assert.strictEqual(triangleCount, 1, 'should have exactly one triangle-right marker');
+  });
+
+  test('ACC-03: each block bridge text appears in bordered section', () => {
+    const output = renderPart(accLesson, 2, 4, 0, 5);
+    assert.ok(output.includes('Next we explore variables.'), 'should contain block 0 bridge');
+    assert.ok(output.includes('Now onto functions.'), 'should contain block 1 bridge');
+    assert.ok(output.includes('Time for modules.'), 'should contain block 2 bridge');
+    // Check for bordered section characters
+    assert.ok(output.includes('\u250C') || output.includes('\u2514'), 'should contain box-drawing border characters');
+  });
+
+  test('block separator: dim horizontal rule appears between accumulated blocks', () => {
+    const output = renderPart(accLesson, 2, 4, 0, 5);
+    // When partIndex > 0, there should be horizontal rule separators between blocks
+    // horizontalRule uses \u2500 characters
+    const hrCount = (output.match(/\u2500{10,}/g) || []).length;
+    // At least the standard header HR plus separators between blocks
+    assert.ok(hrCount >= 3, 'should have horizontal rule separators between accumulated blocks (got ' + hrCount + ')');
+  });
+
+  test('ACC-04: objective on partIndex=0 only; criteria on last part only (with accumulation)', () => {
+    const first = renderPart(accLesson, 0, 4, 0, 5);
+    assert.ok(first.includes("What you'll learn:"), 'first part should have objective');
+    assert.ok(!first.includes("You'll know you've got it when:"), 'first part should NOT have criteria');
+
+    const middle = renderPart(accLesson, 2, 4, 0, 5);
+    assert.ok(!middle.includes("What you'll learn:"), 'middle part should NOT have objective');
+    assert.ok(!middle.includes("You'll know you've got it when:"), 'middle part should NOT have criteria');
+
+    const last = renderPart(accLesson, 3, 4, 0, 5);
+    assert.ok(!last.includes("What you'll learn:"), 'last part should NOT have objective');
+    assert.ok(last.includes("You'll know you've got it when:"), 'last part should have criteria');
+  });
+
+  test('concept map as synthetic final part still works with accumulation', () => {
+    const accLessonWithMap = { ...accLesson, conceptMap: 'tool-dispatch' };
+    // totalParts = 4 content + 1 concept map = 5
+    const output = renderPart(accLessonWithMap, 4, 5, 0, 5);
+    assert.ok(output.includes('Architecture Overview'), 'should contain concept map header');
+    // All 4 content blocks should be accumulated before concept map
+    assert.ok(output.includes('Block zero content here.'), 'should accumulate block 0');
+    assert.ok(output.includes('Block one content here.'), 'should accumulate block 1');
+    assert.ok(output.includes('Block two content here.'), 'should accumulate block 2');
+    assert.ok(output.includes('Block three content here.'), 'should accumulate block 3');
   });
 });
