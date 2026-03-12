@@ -76,4 +76,90 @@ describe('terminal.cjs', () => {
       assert.strictEqual(typeof useColor, 'boolean');
     });
   });
+
+  describe('oscLink()', () => {
+    test('_oscLinkWithColor returns OSC 8 escaped string', () => {
+      const { _oscLinkWithColor } = require('../lib/terminal.cjs');
+      const result = _oscLinkWithColor('https://example.com', 'click me');
+      assert.strictEqual(result, '\x1b]8;;https://example.com\x1b\\click me\x1b]8;;\x1b\\');
+    });
+
+    test('_oscLinkNoColor returns plain display text', () => {
+      const { _oscLinkNoColor } = require('../lib/terminal.cjs');
+      const result = _oscLinkNoColor('https://example.com', 'click me');
+      assert.strictEqual(result, 'click me');
+    });
+
+    test('oscLink with vscode:// URI returns correct sequence', () => {
+      const { _oscLinkWithColor } = require('../lib/terminal.cjs');
+      const uri = 'vscode://file/C:/project/file.js:10';
+      const result = _oscLinkWithColor(uri, 'file.js:10');
+      assert.ok(result.includes(uri), 'should contain the URI');
+      assert.ok(result.includes('file.js:10'), 'should contain display text');
+    });
+  });
+
+  describe('renderCodeBlock()', () => {
+    test('_renderCodeBlockWithColor produces line-numbered output', () => {
+      const { _renderCodeBlockWithColor } = require('../lib/terminal.cjs');
+      const result = _renderCodeBlockWithColor('line one\nline two\nline three', {});
+      assert.ok(result.includes('1'), 'should contain line number 1');
+      assert.ok(result.includes('2'), 'should contain line number 2');
+      assert.ok(result.includes('3'), 'should contain line number 3');
+      assert.ok(result.includes('line one'), 'should contain line content');
+      assert.ok(result.includes('|'), 'should contain gutter separator');
+    });
+
+    test('_renderCodeBlockWithColor highlights specified lines with yellow background', () => {
+      const { _renderCodeBlockWithColor, COLORS } = require('../lib/terminal.cjs');
+      const result = _renderCodeBlockWithColor('aaa\nbbb\nccc', { highlight: [2] });
+      const lines = result.split('\n');
+      // Line 2 (index 1) should have bgYellow
+      assert.ok(lines[1].includes('\x1b[43m'), 'highlighted line should have yellow background');
+      // Line 1 (index 0) should NOT have bgYellow
+      assert.ok(!lines[0].includes('\x1b[43m'), 'non-highlighted line should not have yellow bg');
+    });
+
+    test('_renderCodeBlockWithColor respects startLine option', () => {
+      const { _renderCodeBlockWithColor } = require('../lib/terminal.cjs');
+      const result = _renderCodeBlockWithColor('first\nsecond', { startLine: 10 });
+      assert.ok(result.includes('10'), 'should start numbering at 10');
+      assert.ok(result.includes('11'), 'second line should be 11');
+      assert.ok(!result.includes(' 1 '), 'should not contain line number 1');
+    });
+
+    test('_renderCodeBlockNoColor produces plain line-numbered output without ANSI', () => {
+      const { _renderCodeBlockNoColor } = require('../lib/terminal.cjs');
+      const result = _renderCodeBlockNoColor('hello\nworld', {});
+      assert.ok(!result.includes('\x1b['), 'should not contain ANSI escape codes');
+      assert.ok(result.includes('1'), 'should contain line number 1');
+      assert.ok(result.includes('2'), 'should contain line number 2');
+      assert.ok(result.includes('hello'), 'should contain code content');
+    });
+
+    test('_renderCodeBlockNoColor ignores highlight (no ANSI available)', () => {
+      const { _renderCodeBlockNoColor } = require('../lib/terminal.cjs');
+      const result = _renderCodeBlockNoColor('aaa\nbbb', { highlight: [1] });
+      assert.ok(!result.includes('\x1b['), 'should not contain ANSI codes even with highlight');
+    });
+
+    test('line numbers are right-aligned in gutter', () => {
+      const { _renderCodeBlockWithColor } = require('../lib/terminal.cjs');
+      // 10+ lines to test alignment
+      const code = Array.from({ length: 12 }, (_, i) => `line ${i + 1}`).join('\n');
+      const result = _renderCodeBlockWithColor(code, {});
+      const lines = result.split('\n');
+      // Line 1 should have padding (e.g., " 1") while line 12 has "12"
+      // Both should have the same gutter width
+      assert.ok(lines[0].includes(' 1'), 'single digit should be padded');
+      assert.ok(lines[11].includes('12'), 'double digit should not be padded');
+    });
+  });
+
+  describe('COLORS.bgYellow', () => {
+    test('exports bgYellow color code', () => {
+      const { COLORS } = require('../lib/terminal.cjs');
+      assert.strictEqual(COLORS.bgYellow, '\x1b[43m');
+    });
+  });
 });
