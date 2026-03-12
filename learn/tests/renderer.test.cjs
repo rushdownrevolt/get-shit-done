@@ -238,7 +238,7 @@ describe('renderCompletionBanner', () => {
 // ─── renderPart ──────────────────────────────────────────────────────
 
 describe('renderPart', () => {
-  // This lesson has [text, code, text] which groups into 2 groups: [text,code] and [text]
+  // This lesson has [text, code, text] which groups into 2 groups: [text] and [code+text]
   const lesson = {
     id: 'test-lesson',
     title: 'Test Lesson Title',
@@ -253,11 +253,11 @@ describe('renderPart', () => {
     successCriteria: 'You can verify renderer output',
   };
 
-  // Groups: [text,code], [text] -> totalParts = 2
-  test('renders group 0 (text+code) when partIndex is 0', () => {
+  // Groups: [text], [code+text] -> totalParts = 2
+  test('renders group 0 (standalone text) when partIndex is 0', () => {
     const output = renderPart(lesson, 0, 2, 1, 5);
     assert.ok(output.includes('This is the first text block.'), 'should contain first text block');
-    assert.ok(output.includes('const x = 1'), 'should contain code from same group');
+    assert.ok(!output.includes('const x = 1'), 'should NOT contain code (belongs to group 1)');
     assert.ok(!output.includes('This is the third text block.'), 'should NOT contain third content section');
   });
 
@@ -292,10 +292,11 @@ describe('renderPart', () => {
     const lessonWithSource = {
       ...lesson,
       content: [
-        { type: 'text', value: 'Lead-in text.', focus: 'Source intro', bridge: 'See the source.' },
         { type: 'code', value: 'const x = 1;', source: { file: 'bin/gsd-tools.cjs', startLine: 10 } },
+        { type: 'text', value: 'Explanation text.', focus: 'Source explanation', bridge: 'See the source.' },
       ],
     };
+    // Groups: [code+text] -> 1 group
     const output = renderPart(lessonWithSource, 0, 1, 0, 5);
     assert.ok(output.includes('const'), 'should contain code');
     assert.ok(output.includes('bin/gsd-tools.cjs'), 'should contain source file');
@@ -339,7 +340,7 @@ describe('renderPart', () => {
 
   test('concept map renders as synthetic final part', () => {
     const lessonWithMap = { ...lesson, conceptMap: 'tool-dispatch' };
-    // Groups: [text,code], [text] -> 2 groups + 1 concept map = 3 totalParts
+    // Groups: [text], [code+text] -> 2 groups + 1 concept map = 3 totalParts
     const output = renderPart(lessonWithMap, 2, 3, 0, 5);
     assert.ok(output.includes('Architecture Overview'), 'should contain concept map header');
   });
@@ -459,6 +460,7 @@ describe('renderPart', () => {
   // ─── NEW: Group-based rendering tests ──────────────────────────────
 
   // Lesson with mixed text+code for group-based tests
+  // [text, code, text, code, text] -> [text] [code+text] [code+text] = 3 groups
   const groupedLesson = {
     id: 'grouped-lesson',
     title: 'Grouped Lesson',
@@ -467,43 +469,42 @@ describe('renderPart', () => {
     content: [
       { type: 'text', value: 'Lead-in text for code.', focus: 'Code context', bridge: 'Now see the code in action.' },
       { type: 'code', language: 'javascript', value: 'const x = 1;', highlight: [1] },
-      { type: 'text', value: 'Standalone explanation.', focus: 'Explanation details', bridge: 'Moving to next code.' },
+      { type: 'text', value: 'Explanation of first code.', focus: 'First code explanation', bridge: 'Moving to next code.' },
       { type: 'code', language: 'javascript', value: 'const y = 2;' },
-      { type: 'text', value: 'Final standalone text.', focus: 'Summary focus', bridge: 'Lesson complete.' },
+      { type: 'text', value: 'Explanation of second code.', focus: 'Second code explanation', bridge: 'Lesson complete.' },
     ],
     conceptMap: null,
     successCriteria: 'You understand grouping',
   };
 
-  test('GROUP: renderPart at partIndex=0 shows BOTH text AND code from group 0', () => {
+  test('GROUP: renderPart at partIndex=0 shows standalone text from group 0', () => {
     const groups = groupContentItems(groupedLesson.content);
     const totalParts = groups.length;
     const output = renderPart(groupedLesson, 0, totalParts, 0, 5);
     assert.ok(output.includes('Lead-in text for code.'), 'should contain group 0 text');
-    assert.ok(output.includes('const x = 1'), 'should contain group 0 code');
-    assert.ok(!output.includes('Standalone explanation.'), 'should NOT contain group 1 text');
+    assert.ok(!output.includes('const x = 1'), 'should NOT contain code (belongs to group 1)');
+    assert.ok(!output.includes('Explanation of first code.'), 'should NOT contain group 1 text');
   });
 
-  test('GROUP: renderPart at partIndex=1 shows group 0 (text+code) AND group 1 (text+code)', () => {
+  test('GROUP: renderPart at partIndex=1 shows group 0 (text) AND group 1 (code+text)', () => {
     const groups = groupContentItems(groupedLesson.content);
     const totalParts = groups.length;
     const output = renderPart(groupedLesson, 1, totalParts, 0, 5);
     assert.ok(output.includes('Lead-in text for code.'), 'should contain group 0 text');
-    assert.ok(output.includes('const x = 1'), 'should contain group 0 code');
-    assert.ok(output.includes('Standalone explanation.'), 'should contain group 1 text');
-    assert.ok(output.includes('const y = 2'), 'should contain group 1 code');
-    assert.ok(!output.includes('Final standalone text.'), 'should NOT contain group 2 text');
+    assert.ok(output.includes('const x = 1'), 'should contain group 1 code');
+    assert.ok(output.includes('Explanation of first code.'), 'should contain group 1 explanation');
+    assert.ok(!output.includes('const y = 2'), 'should NOT contain group 2 code');
+    assert.ok(!output.includes('Explanation of second code.'), 'should NOT contain group 2 text');
   });
 
   test('GROUP: focus/bridge displayed per-group, not per block within group', () => {
     const groups = groupContentItems(groupedLesson.content);
     const totalParts = groups.length;
-    const output = renderPart(groupedLesson, 0, totalParts, 0, 5);
-    // Group 0 has focus 'Code context' from the text block anchor
-    assert.ok(output.includes('Code context'), 'should contain group focus from text anchor');
-    // Code block within group should NOT have its own separate focus line
-    // Count focus lines: only 1 for the current group
-    const focusCount = (output.match(/Code context/g) || []).length;
+    // Group 1 is [code+text], rendered at partIndex=1
+    const output = renderPart(groupedLesson, 1, totalParts, 0, 5);
+    // Group 1 focus comes from the explanation text 'First code explanation'
+    assert.ok(output.includes('First code explanation'), 'should contain group focus from explanation text');
+    const focusCount = (output.match(/First code explanation/g) || []).length;
     assert.strictEqual(focusCount, 1, 'focus should appear exactly once for the group');
   });
 
@@ -520,22 +521,21 @@ describe('renderPart', () => {
     const totalParts = groups.length;
     // Render partIndex=1 (groups 0 and 1 visible)
     const output = renderPart(groupedLesson, 1, totalParts, 0, 5);
-    // Split by group 0 code and group 1 text - no HR between text and code within a group
+    // Within group 1 (code+text), no HR between code and its explanation
+    const codeIdx = output.indexOf('const x = 1');
+    const explIdx = output.indexOf('Explanation of first code.');
+    const betweenCodeAndText = output.substring(codeIdx, explIdx);
+    const hrInGroup = (betweenCodeAndText.match(/\u2500{10,}/g) || []).length;
+    assert.strictEqual(hrInGroup, 0, 'should NOT have HR between code and explanation within a group');
+    // Between group 0 and group 1, there should be an HR separator
     const group0TextIdx = output.indexOf('Lead-in text for code.');
-    const group0CodeIdx = output.indexOf('const x = 1');
-    const betweenTextAndCode = output.substring(group0TextIdx, group0CodeIdx);
-    // Should NOT have a full horizontal rule between text and code within group 0
-    const hrInGroup = (betweenTextAndCode.match(/\u2500{10,}/g) || []).length;
-    // There may be HRs from the header, but not between the text and code of the same group
-    // The separator HR count between groups should exist
-    const group1TextIdx = output.indexOf('Standalone explanation.');
-    const betweenGroups = output.substring(group0CodeIdx, group1TextIdx);
+    const betweenGroups = output.substring(group0TextIdx, codeIdx);
     const hrBetweenGroups = (betweenGroups.match(/\u2500{10,}/g) || []).length;
     assert.ok(hrBetweenGroups >= 1, 'should have HR separator between groups');
   });
 
   test('GROUP: progress dots count reflects group count', () => {
-    // groupedLesson has [text, code, text, code, text] -> 3 groups, not 5
+    // groupedLesson has [text, code, text, code, text] -> 3 groups
     const groups = groupContentItems(groupedLesson.content);
     assert.strictEqual(groups.length, 3, 'should produce 3 groups');
     const totalParts = groups.length;
@@ -547,7 +547,7 @@ describe('renderPart', () => {
 // ─── groupContentItems ──────────────────────────────────────────────
 
 describe('groupContentItems', () => {
-  test('[text, code, text] produces 2 groups: [text,code] and [text]', () => {
+  test('[text, code, text] produces 2 groups: [text] and [code+text]', () => {
     const content = [
       { type: 'text', value: 'a', focus: 'f1', bridge: 'b1' },
       { type: 'code', value: 'x' },
@@ -555,14 +555,16 @@ describe('groupContentItems', () => {
     ];
     const groups = groupContentItems(content);
     assert.strictEqual(groups.length, 2);
-    assert.strictEqual(groups[0].items.length, 2);
+    // Group 0: standalone text (not following code)
+    assert.strictEqual(groups[0].items.length, 1);
     assert.strictEqual(groups[0].items[0].type, 'text');
-    assert.strictEqual(groups[0].items[1].type, 'code');
-    assert.strictEqual(groups[1].items.length, 1);
-    assert.strictEqual(groups[1].items[0].type, 'text');
+    // Group 1: code + following text
+    assert.strictEqual(groups[1].items.length, 2);
+    assert.strictEqual(groups[1].items[0].type, 'code');
+    assert.strictEqual(groups[1].items[1].type, 'text');
   });
 
-  test('[text, code, text, code, text] produces 3 groups', () => {
+  test('[text, code, text, code, text] produces 3 groups: [text] [code+text] [code+text]', () => {
     const content = [
       { type: 'text', value: 'a', focus: 'f1', bridge: 'b1' },
       { type: 'code', value: 'x' },
@@ -572,9 +574,9 @@ describe('groupContentItems', () => {
     ];
     const groups = groupContentItems(content);
     assert.strictEqual(groups.length, 3);
-    assert.strictEqual(groups[0].items.length, 2);
-    assert.strictEqual(groups[1].items.length, 2);
-    assert.strictEqual(groups[2].items.length, 1);
+    assert.strictEqual(groups[0].items.length, 1, 'first group is standalone text');
+    assert.strictEqual(groups[1].items.length, 2, 'second group is code+text');
+    assert.strictEqual(groups[2].items.length, 2, 'third group is code+text');
   });
 
   test('[text, text, text] produces 3 groups (no text+text merging)', () => {
@@ -587,26 +589,16 @@ describe('groupContentItems', () => {
     assert.strictEqual(groups.length, 3);
   });
 
-  test('[code, text] produces 1 group (code at start wraps with following text)', () => {
+  test('[code, text] produces 1 group: [code+text]', () => {
     const content = [
       { type: 'code', value: 'x', focus: 'cf', bridge: 'cb' },
       { type: 'text', value: 'a', focus: 'f1', bridge: 'b1' },
     ];
     const groups = groupContentItems(content);
-    // Code at start: starts its own group, then text starts a new group
-    // Per plan: "code at start gets wrapped with following text" -> 1 group
-    // BUT plan also says text/project start new groups. Let's check:
-    // Actually plan says [code, text] -> 1 group. The text finalizes the code group? No.
-    // Plan: "Code block: attach to current group if one exists, otherwise start a new group"
-    // Then: "Text or project block: finalize previous group (if any), start new group"
-    // So: code starts group -> text finalizes code group, starts new -> 2 groups
-    // But the plan test says 1 group. Let me re-read...
-    // Plan <behavior>: "Test: groupContentItems([code, text]) produces 1 group: [code, text]"
-    // This contradicts the algorithm. The algorithm produces 2 groups.
-    // Let me follow the plan's behavior spec: 1 group.
-    // We need a post-process step or different logic for leading code blocks.
-    assert.strictEqual(groups.length, 1, 'code at start should merge with following text');
+    assert.strictEqual(groups.length, 1, 'code + following text = 1 group');
     assert.strictEqual(groups[0].items.length, 2);
+    assert.strictEqual(groups[0].items[0].type, 'code');
+    assert.strictEqual(groups[0].items[1].type, 'text');
   });
 
   test('[text] produces 1 group', () => {
@@ -618,13 +610,34 @@ describe('groupContentItems', () => {
     assert.strictEqual(groups[0].items.length, 1);
   });
 
-  test('group focus/bridge come from anchor text block', () => {
+  test('[code] produces 1 standalone group', () => {
+    const content = [
+      { type: 'code', value: 'x', focus: 'cf', bridge: 'cb' },
+    ];
+    const groups = groupContentItems(content);
+    assert.strictEqual(groups.length, 1);
+    assert.strictEqual(groups[0].items.length, 1);
+    assert.strictEqual(groups[0].focus, 'cf');
+  });
+
+  test('group focus/bridge come from FOLLOWING text block (explanation)', () => {
+    const content = [
+      { type: 'code', value: 'x', focus: 'code-focus', bridge: 'code-bridge' },
+      { type: 'text', value: 'a', focus: 'text-focus', bridge: 'text-bridge' },
+    ];
+    const groups = groupContentItems(content);
+    assert.strictEqual(groups[0].focus, 'text-focus', 'focus comes from following text');
+    assert.strictEqual(groups[0].bridge, 'text-bridge', 'bridge comes from following text');
+  });
+
+  test('standalone text group uses its own focus/bridge', () => {
     const content = [
       { type: 'text', value: 'a', focus: 'text-focus', bridge: 'text-bridge' },
       { type: 'code', value: 'x' },
+      { type: 'text', value: 'b', focus: 'explanation-focus', bridge: 'explanation-bridge' },
     ];
     const groups = groupContentItems(content);
-    assert.strictEqual(groups[0].focus, 'text-focus');
-    assert.strictEqual(groups[0].bridge, 'text-bridge');
+    assert.strictEqual(groups[0].focus, 'text-focus', 'standalone text keeps its own focus');
+    assert.strictEqual(groups[1].focus, 'explanation-focus', 'code+text group gets text focus');
   });
 });

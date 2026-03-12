@@ -313,53 +313,51 @@ function renderCompletionBanner(opts) {
 
 /**
  * Group a flat content array into logical groups where code/diagram blocks
- * merge with adjacent text into single rendered "parts".
+ * merge with FOLLOWING text into single rendered "parts".
  *
  * Rules:
- * - Text/project blocks start new groups (they are "anchors")
- * - Code blocks attach to the current group
+ * - Code blocks start new groups (they are "anchors")
+ * - The NEXT text block after a code block attaches to that code's group
+ *   (the explanation after the snippet gives it context)
+ * - A text block NOT following a code block is its own standalone group
  * - Text+text blocks remain separate (no aggressive merging)
- * - A leading code block (no preceding text) merges with the following text
+ * - A trailing code block with no following text is a standalone group
+ *
+ * Example: [text, code, text, code, text] -> [text] [code+text] [code+text]
  *
  * @param {Array} content - Flat array of content items.
  * @returns {Array<{items: Array, focus: string, bridge: string}>} Array of groups.
  */
 function groupContentItems(content) {
   const groups = [];
-  let current = null;
+  let pendingCode = null; // a code group waiting for its following text
 
   for (const item of content) {
     if (item.type === 'code') {
-      // Code block: attach to current group if one exists, otherwise start a new group
-      if (current) {
-        current.items.push(item);
-      } else {
-        // Code block at start with no preceding text -- start a new group
-        current = { items: [item], focus: item.focus || '', bridge: item.bridge || '' };
+      // Finalize any previous pending code group (code with no following text)
+      if (pendingCode) {
+        groups.push(pendingCode);
       }
+      // Start a new pending code group
+      pendingCode = { items: [item], focus: item.focus || '', bridge: item.bridge || '' };
     } else {
-      // Text or project block: finalize previous group (if any), start new group
-      if (current) {
-        groups.push(current);
+      // Text or project block
+      if (pendingCode) {
+        // This text follows a code block -- attach to code's group
+        // Use the text block's focus/bridge (the explanation carries the semantics)
+        pendingCode.items.push(item);
+        pendingCode.focus = item.focus || pendingCode.focus;
+        pendingCode.bridge = item.bridge || pendingCode.bridge;
+        groups.push(pendingCode);
+        pendingCode = null;
+      } else {
+        // Standalone text/project block (not following a code block)
+        groups.push({ items: [item], focus: item.focus, bridge: item.bridge });
       }
-      current = { items: [item], focus: item.focus, bridge: item.bridge };
     }
   }
-  if (current) groups.push(current);
-
-  // Post-process: if the first group is code-only and a text group follows,
-  // merge them (leading code absorbs following text)
-  if (groups.length >= 2 && groups[0].items.every(i => i.type === 'code')) {
-    const codeGroup = groups[0];
-    const textGroup = groups[1];
-    // Merge: code items + text group items, use text group's focus/bridge
-    const merged = {
-      items: [...codeGroup.items, ...textGroup.items],
-      focus: textGroup.focus,
-      bridge: textGroup.bridge,
-    };
-    groups.splice(0, 2, merged);
-  }
+  // Finalize any trailing code group with no following text
+  if (pendingCode) groups.push(pendingCode);
 
   return groups;
 }
