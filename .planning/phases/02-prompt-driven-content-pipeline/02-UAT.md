@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 02-prompt-driven-content-pipeline
 source: [02-01-SUMMARY.md, 02-02-SUMMARY.md]
 started: 2026-03-12T13:00:00Z
@@ -69,7 +69,10 @@ skipped: 0
   reason: "User reported: Pipeline uses PROJECT_ROOT + 'get-shit-done/bin/...' which resolves to a nested copy of the repo instead of the GSD installation at ~/.claude/get-shit-done/. Generated prompts have empty exports/functions sections because the wrong files are parsed."
   severity: major
   test: 9
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "generate-lessons.cjs line 12 sets PROJECT_ROOT to the gsd-learn project root, then line 97 joins PROJECT_ROOT with source paths like 'get-shit-done/bin/lib/core.cjs'. This creates a doubled path (project/get-shit-done/bin/...) that hits a nested repo copy instead of the GSD installation at ~/.claude/get-shit-done/. The nested copy has different/empty files, so parsed context is empty."
+  artifacts:
+    - path: "learn/bin/generate-lessons.cjs"
+      issue: "PROJECT_ROOT resolves to project dir, but source paths assume parent of GSD installation"
+  missing:
+    - "Change source paths in LESSON_PLAN to use absolute paths via path.join(os.homedir(), '.claude', 'get-shit-done', 'bin', ...) or add a GSD_ROOT constant"
   debug_session: ""
