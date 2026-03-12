@@ -1,0 +1,42 @@
+{
+  "id": "state-and-config",
+  "title": "State and Configuration",
+  "lessonNumber": 5,
+  "objective": "Understand how STATE.md and config.json track project state and settings across sessions",
+  "content": [
+    {
+      "type": "text",
+      "value": "GSD needs to remember things between sessions: which phase you are on, what decisions were made, how the project is configured. Two files handle this:\n\n  .planning/config.json — Project settings (model profile, granularity, feature flags)\n  .planning/STATE.md    — Current position, decisions, blockers, session continuity"
+    },
+    {
+      "type": "text",
+      "value": "config.json is a simple JSON file with flat key-value pairs. GSD reads it with loadConfig(), which always returns a valid object — if the file is missing or corrupted, it falls back to sensible defaults. This defensive pattern appears throughout GSD."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// loadConfig pattern from config.cjs\nfunction loadConfig(cwd) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n  try {\n    const raw = fs.readFileSync(configPath, 'utf-8');\n    const parsed = JSON.parse(raw);\n    return {\n      mode: parsed.mode || 'yolo',\n      granularity: parsed.granularity || 'standard',\n      model_profile: parsed.model_profile || 'balanced',\n      commit_docs: parsed.commit_docs !== false,\n    };\n  } catch {\n    return { mode: 'yolo', granularity: 'standard',\n             model_profile: 'balanced', commit_docs: true };\n  }\n}",
+      "highlight": [4, 5, 6, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "The try/catch with silent fallback is GSD's standard pattern for loading persisted state. You will see it in loadProgress() (the progress tracker), loadConfig(), and state parsing. The principle: never crash on bad data, always have a safe default."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// STATE.md is Markdown with structured sections\n// state.cjs parses it with regex, not a Markdown library\n\nfunction parseStateMd(content) {\n  // Extract 'Current Position' section\n  const posMatch = content.match(\n    /## Current Position([\\s\\S]*?)(?=\\n## |$)/\n  );\n  // Extract phase, plan numbers from the text\n  const phaseMatch = posMatch[1].match(\n    /Phase:\\s*(\\d+)/\n  );\n  return { phase: phaseMatch[1] };\n}",
+      "highlight": [4, 6, 7, 10, 11]
+    },
+    {
+      "type": "text",
+      "value": "STATE.md is a Markdown file parsed with regular expressions — no YAML frontmatter, no Markdown parser dependency. GSD reads it as a string and uses regex to find sections. This is intentional: STATE.md is human-readable and human-editable, while still machine-parseable."
+    },
+    {
+      "type": "text",
+      "value": "This completes the command lifecycle. You have traced a GSD command from user input (gsd-tools.cjs) through dispatch (switch statement) to handler functions (lib/*.cjs) that read and write state (config.json, STATE.md). Every GSD command follows this exact path."
+    }
+  ],
+  "conceptMap": "state",
+  "successCriteria": "You can explain the loadConfig defensive pattern and how STATE.md is parsed with regex instead of a Markdown library"
+}

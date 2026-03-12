@@ -1,0 +1,38 @@
+{
+  "id": "entry-point",
+  "title": "Where Commands Start",
+  "lessonNumber": 2,
+  "objective": "Understand how gsd-tools.cjs receives commands and begins processing them",
+  "content": [
+    {
+      "type": "text",
+      "value": "Every GSD command enters through a single file: get-shit-done/bin/gsd-tools.cjs. This is the entry point. When a workflow or agent needs to interact with GSD, it runs:\n\n  node gsd-tools.cjs <command> [args] [--raw]"
+    },
+    {
+      "type": "text",
+      "value": "The entry point does three things:\n1. Requires all the library modules (state, phase, roadmap, config, etc.)\n2. Determines the current working directory (cwd)\n3. Reads the command from process.argv and dispatches it"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// gsd-tools.cjs — the single entry point\nconst fs = require('fs');\nconst path = require('path');\nconst { error } = require('./lib/core.cjs');\nconst state = require('./lib/state.cjs');\nconst phase = require('./lib/phase.cjs');\nconst roadmap = require('./lib/roadmap.cjs');\nconst config = require('./lib/config.cjs');\nconst commands = require('./lib/commands.cjs');",
+      "highlight": [4, 5, 6, 7, 8, 9]
+    },
+    {
+      "type": "text",
+      "value": "Notice how each require() loads a specific domain module. This is GSD's module boundary pattern: each .cjs file owns one area of functionality. There are no barrel files or index.cjs re-exports — each module explicitly requires what it needs."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// Working directory detection\nconst cwd = process.cwd();\nconst args = process.argv.slice(2);\nconst raw = args.includes('--raw');\nconst cmd = args[0];",
+      "highlight": [1, 3]
+    },
+    {
+      "type": "text",
+      "value": "The --raw flag controls output format: without it, GSD outputs JSON; with it, GSD outputs plain text. This dual-mode output lets both machines (JSON parsing) and humans (readable text) use the same commands."
+    }
+  ],
+  "conceptMap": "entry-point",
+  "successCriteria": "You can identify gsd-tools.cjs as the single entry point and explain the role of cwd, args, and the --raw flag"
+}

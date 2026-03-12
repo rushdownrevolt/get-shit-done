@@ -1,0 +1,5 @@
+{
+  "id": "command-lifecycle",
+  "title": "Command Lifecycle",
+  "description": "Follow a GSD command from user input to execution, understanding how each piece connects."
+}

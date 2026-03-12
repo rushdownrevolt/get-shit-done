@@ -1,0 +1,38 @@
+{
+  "id": "dispatch",
+  "title": "Command Dispatch",
+  "lessonNumber": 3,
+  "objective": "Understand how GSD routes commands to the correct handler function",
+  "content": [
+    {
+      "type": "text",
+      "value": "Once gsd-tools.cjs has the command name from process.argv, it needs to route it to the right handler. GSD uses a straightforward switch statement for this — no dynamic routing, no plugin system, just explicit cases."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// Command dispatch in gsd-tools.cjs\nswitch (cmd) {\n  case 'state':\n    // Routes to state module functions\n    break;\n  case 'find-phase':\n    phase.cmdFindPhase(cwd, args[1], raw);\n    break;\n  case 'resolve-model':\n    config.cmdResolveModel(cwd, args[1], raw);\n    break;\n  case 'commit':\n    commands.cmdCommit(cwd, args.slice(1), raw);\n    break;\n  default:\n    error('Unknown command: ' + cmd);\n}",
+      "highlight": [2, 6, 9, 12]
+    },
+    {
+      "type": "text",
+      "value": "Each case maps a command string to a function call. The naming convention is consistent: command functions start with 'cmd' followed by the operation name in camelCase. For example:\n\n  find-phase  -> phase.cmdFindPhase()\n  resolve-model -> config.cmdResolveModel()\n  commit -> commands.cmdCommit()"
+    },
+    {
+      "type": "text",
+      "value": "Some commands have sub-commands. The 'state' command, for instance, dispatches further based on args[1]:\n\n  state load -> state.cmdStateLoad()\n  state advance-plan -> state.cmdAdvancePlan()\n  state add-decision -> state.cmdAddDecision()"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// Sub-command dispatch for 'state'\ncase 'state': {\n  const sub = args[1];\n  switch (sub) {\n    case 'load':\n      state.cmdStateLoad(cwd, raw);\n      break;\n    case 'advance-plan':\n      state.cmdAdvancePlan(cwd, raw);\n      break;\n    case 'add-decision':\n      state.cmdAddDecision(cwd, args.slice(2), raw);\n      break;\n  }\n  break;\n}",
+      "highlight": [3, 4, 8, 11]
+    },
+    {
+      "type": "text",
+      "value": "This two-level dispatch (command -> sub-command) keeps the routing flat and readable. Every command path is visible by scanning the switch statement — no indirection, no dynamic lookups."
+    }
+  ],
+  "conceptMap": "tool-dispatch",
+  "successCriteria": "You can trace how a command string like 'find-phase' maps to phase.cmdFindPhase() through the switch dispatch"
+}

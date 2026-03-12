@@ -1,0 +1,32 @@
+{
+  "id": "welcome",
+  "title": "Welcome to GSD",
+  "lessonNumber": 1,
+  "objective": "Understand what GSD is, what this module covers, and how to navigate lessons",
+  "content": [
+    {
+      "type": "text",
+      "value": "GSD (Get Shit Done) is a CLI toolkit that helps AI coding assistants plan and execute software projects methodically. It replaces repetitive inline bash patterns across ~50 command, workflow, and agent files with a centralized tool."
+    },
+    {
+      "type": "text",
+      "value": "In this module, you will trace the path of a single GSD command from the moment a user types it to the moment it produces output. By the end, you will understand GSD's architecture well enough to add your own commands."
+    },
+    {
+      "type": "text",
+      "value": "The five lessons in this module cover:\n1. This welcome and orientation\n2. Where commands start (the entry point)\n3. How commands get dispatched to the right handler\n4. The tool modules that do the real work\n5. How state and configuration are managed"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// The heart of GSD: a single CLI entry point\n// Usage: node gsd-tools.cjs <command> [args] [--raw]\n\nconst fs = require('fs');\nconst path = require('path');\nconst { error } = require('./lib/core.cjs');",
+      "highlight": [2]
+    },
+    {
+      "type": "text",
+      "value": "Navigation: Press [n] for next lesson, [p] for previous, [q] to quit. Your progress is saved automatically."
+    }
+  ],
+  "conceptMap": null,
+  "successCriteria": "You can describe GSD's purpose and know what the five lessons in this module will cover"
+}
