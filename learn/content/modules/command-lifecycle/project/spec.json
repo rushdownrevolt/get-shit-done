@@ -1,0 +1,24 @@
+{
+  "id": "command-lifecycle-project",
+  "moduleId": "command-lifecycle",
+  "title": "Build a GSD Echo Command",
+  "description": "Add a new 'echo' command to gsd-tools.cjs that outputs a message using the standard GSD output pattern",
+  "artifacts": [
+    {
+      "description": "Echo handler module",
+      "path": "get-shit-done/bin/lib/echo.cjs",
+      "checks": [
+        { "pattern": "module\\.exports", "description": "File exports a module" },
+        { "pattern": "function\\s+cmd", "description": "Follows the cmd* function naming convention" },
+        { "pattern": "process\\.stdout\\.write|output\\(", "description": "Uses GSD output pattern" }
+      ]
+    },
+    {
+      "description": "Switch case for echo command",
+      "path": "get-shit-done/bin/gsd-tools.cjs",
+      "checks": [
+        { "pattern": "case\\s+['\"]echo['\"]", "description": "Echo case exists in switch statement" }
+      ]
+    }
+  ]
+}

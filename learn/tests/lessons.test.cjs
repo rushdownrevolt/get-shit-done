@@ -110,14 +110,14 @@ describe('lessons.cjs', () => {
   });
 
   describe('real content files', () => {
-    test('loads the actual command-lifecycle module with 5 lessons', () => {
+    test('loads the actual command-lifecycle module with 6 lessons', () => {
       const { loadModule } = require('../lib/lessons.cjs');
       const realContentDir = path.join(__dirname, '..', 'content');
       const mod = loadModule('command-lifecycle', realContentDir);
       assert.strictEqual(mod.id, 'command-lifecycle');
-      assert.strictEqual(mod.lessons.length, 5, 'should have 5 lessons');
+      assert.strictEqual(mod.lessons.length, 6, 'should have 6 lessons');
       assert.strictEqual(mod.lessons[0].lessonNumber, 1);
-      assert.strictEqual(mod.lessons[4].lessonNumber, 5);
+      assert.strictEqual(mod.lessons[5].lessonNumber, 6);
     });
   });
 });
