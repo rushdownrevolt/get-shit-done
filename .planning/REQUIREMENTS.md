@@ -50,7 +50,7 @@
 
 ### Content Pipeline
 
-- [ ] **PIPE-01**: Markdown parser extracts frontmatter, XML sections, code blocks, and file references from .md files
+- [x] **PIPE-01**: Markdown parser extracts frontmatter, XML sections, code blocks, and file references from .md files
 - [ ] **PIPE-02**: Prompt templates use generic `{{KEY}}` replacement instead of hardcoded per-placeholder chains
 - [ ] **PIPE-03**: Markdown-specific prompt template exists for teaching .md source files
 
@@ -145,7 +145,7 @@
 | INFRA-02 | Phase 4 | Pending |
 | INFRA-03 | Phase 4 | Pending |
 | INFRA-04 | Phase 4 | Pending |
-| PIPE-01 | Phase 4 | Pending |
+| PIPE-01 | Phase 4 | Complete |
 | PIPE-02 | Phase 4 | Pending |
 | PIPE-03 | Phase 4 | Pending |
 | MOD1-01 | Phase 5 | Pending |
