@@ -1,0 +1,72 @@
+{
+  "id": "command-anatomy",
+  "title": "Command Spec Anatomy",
+  "lessonNumber": 2,
+  "objective": "Understand the structure of a GSD command spec file by examining each section of the real quick.md command spec -- frontmatter, objective, execution_context, context, and process.",
+  "content": [
+    {
+      "type": "text",
+      "value": "A command spec is a markdown file that lives in ~/.claude/commands/gsd/ and defines a slash command. When you type /gsd:quick, Claude looks for a file called quick.md in that directory. The file has two parts: YAML frontmatter at the top that declares metadata, and XML sections below that define the command's behavior. Let's open the real quick.md and walk through every section.",
+      "focus": "Command specs are markdown files",
+      "bridge": "The file starts with YAML frontmatter between triple-dash fences."
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "value": "---\nname: gsd:quick\ndescription: Execute a quick task with GSD guarantees\n  (atomic commits, state tracking) but skip optional agents\nargument-hint: \"[--full] [--discuss]\"\nallowed-tools:\n  - Read\n  - Write\n  - Edit\n  - Glob\n  - Grep\n  - Bash\n  - Task\n  - AskUserQuestion\n---",
+      "highlight": [2, 3, 5, 6],
+      "focus": "Four frontmatter fields define the command",
+      "bridge": "Each field serves a specific purpose in the dispatch system."
+    },
+    {
+      "type": "text",
+      "value": "The name field (gsd:quick) is the slash command identifier -- it's what you type after the forward slash. The description appears in help text and tells both humans and Claude what this command does. The argument-hint shows what flags are available. The allowed-tools array is a security boundary: it restricts which Claude Code tools this command can use during execution. If a tool isn't listed here, the command cannot use it.",
+      "focus": "Frontmatter declares identity and permissions",
+      "bridge": "Below the frontmatter, XML sections structure the command's behavior."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<objective>\nExecute small, ad-hoc tasks with GSD guarantees\n(atomic commits, STATE.md tracking).\n\nQuick mode is the same system with a shorter path:\n- Spawns gsd-planner (quick mode) + gsd-executor(s)\n- Quick tasks live in `.planning/quick/`\n- Updates STATE.md \"Quick Tasks Completed\" table\n</objective>",
+      "highlight": [1, 5, 6, 7],
+      "focus": "Objective section defines the command's goal",
+      "bridge": "The objective tells Claude what to accomplish, but not how."
+    },
+    {
+      "type": "text",
+      "value": "The <objective> section is the command's mission statement. It tells Claude what the command should accomplish in plain English. Notice it describes outcomes (atomic commits, state tracking) and architecture (spawns planner + executor). Claude reads this first to understand the overall intent before looking at execution details. Think of it as the 'what' -- it scopes the command without dictating implementation steps.",
+      "focus": "Objectives describe outcomes, not steps",
+      "bridge": "The next section is where the command spec connects to its workflow."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<execution_context>\n@C:/Users/18182/.claude/get-shit-done/workflows/quick.md\n</execution_context>",
+      "highlight": [2],
+      "focus": "The @file reference wires spec to workflow",
+      "bridge": "This single line is the most important part of any command spec."
+    },
+    {
+      "type": "text",
+      "value": "The <execution_context> section contains an @file reference -- a path prefixed with @ that tells Claude Code to load that file as additional context. This is the critical wiring between the two layers. When Claude processes quick.md, it sees @C:/Users/18182/.claude/get-shit-done/workflows/quick.md and loads the entire workflow file. Without this line, the command spec would be a description with no instructions to follow.",
+      "focus": "@file references load external files as context",
+      "bridge": "The remaining sections provide additional context and process guidance."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<context>\n$ARGUMENTS\n\nContext files are resolved inside the workflow\n(init quick) and delegated via <files_to_read> blocks.\n</context>\n\n<process>\nExecute the quick workflow from\n@C:/.../workflows/quick.md end-to-end.\nPreserve all workflow gates (validation,\ntask description, planning, execution,\nstate updates, commits).\n</process>",
+      "highlight": [2, 8, 11],
+      "focus": "Context passes arguments, process gives direction",
+      "bridge": "Together, these four XML sections form the complete command spec."
+    },
+    {
+      "type": "text",
+      "value": "The <context> section passes runtime data to the command -- here $ARGUMENTS captures whatever the user typed after the slash command. The <process> section provides high-level execution guidance, pointing Claude back to the workflow file for detailed steps. Notice how lean this command spec is: about 45 lines total. It declares identity (frontmatter), intent (objective), wiring (execution_context), input (context), and guidance (process). The heavy lifting lives in the workflow file.",
+      "focus": "Command specs are lean declarations",
+      "bridge": "In the next lesson, we'll open that workflow file and see what 585 lines of execution instructions look like -- starting with Workflow File Anatomy."
+    }
+  ],
+  "conceptMap": "command-spec",
+  "successCriteria": "You can identify the four XML sections of a command spec (objective, execution_context, context, process), explain what YAML frontmatter fields do, and describe how the @file reference in execution_context wires the command spec to its workflow."
+}

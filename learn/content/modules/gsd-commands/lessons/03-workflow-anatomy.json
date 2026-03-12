@@ -1,0 +1,72 @@
+{
+  "id": "workflow-anatomy",
+  "title": "Workflow File Anatomy",
+  "lessonNumber": 3,
+  "objective": "Understand the structure of a GSD workflow file by examining the real quick.md workflow -- its purpose section, process steps, embedded bash commands, and nested XML patterns.",
+  "content": [
+    {
+      "type": "text",
+      "value": "A workflow file is a markdown file that contains step-by-step execution instructions. Unlike command specs, workflows have no YAML frontmatter -- they jump straight into XML sections. The quick.md workflow is 585 lines long and defines everything Claude does when you run /gsd:quick. Let's examine its key sections to understand the pattern that every GSD workflow follows.",
+      "focus": "Workflows have no frontmatter, just XML",
+      "bridge": "Every workflow starts with a purpose section."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<purpose>\nExecute small, ad-hoc tasks with GSD guarantees\n(atomic commits, STATE.md tracking). Quick mode\nspawns gsd-planner (quick mode) + gsd-executor(s),\ntracks tasks in `.planning/quick/`, and updates\nSTATE.md's \"Quick Tasks Completed\" table.\n\nWith `--discuss` flag: lightweight discussion phase\nbefore planning.\n\nWith `--full` flag: enables plan-checking\n(max 2 iterations) and post-execution verification.\n</purpose>",
+      "highlight": [1, 2, 8, 11],
+      "focus": "Purpose section describes the workflow's goal",
+      "bridge": "After purpose, the process section contains the actual steps."
+    },
+    {
+      "type": "text",
+      "value": "The <purpose> section mirrors the command spec's <objective> but with more implementation detail. It explains not just what the workflow does, but how it achieves it -- spawning sub-agents, tracking in specific directories, updating specific files. Claude reads this to understand the overall flow before diving into individual steps. Notice how it documents the flag variants: each flag changes the workflow's behavior.",
+      "focus": "Purpose explains the how, not just the what",
+      "bridge": "The process section organizes execution into named steps."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<process>\n**Step 1: Parse arguments and get task description**\n\nParse `$ARGUMENTS` for:\n- `--full` flag -> store as `$FULL_MODE` (true/false)\n- `--discuss` flag -> store as `$DISCUSS_MODE` (true/false)\n- Remaining text -> use as `$DESCRIPTION` if non-empty\n\nIf `$DESCRIPTION` is empty after parsing, prompt user\ninteractively.",
+      "highlight": [1, 2, 4, 5, 6],
+      "focus": "Steps are numbered with clear instructions",
+      "bridge": "Steps often contain embedded bash commands that Claude executes."
+    },
+    {
+      "type": "text",
+      "value": "Each step in the <process> section is a named unit of work. Step 1 parses arguments, Step 2 initializes, Step 3 creates directories, and so on. The naming is intentional: Claude processes steps sequentially and can report exactly where it is in the workflow. Steps use markdown formatting (bold headers, bullet lists, code blocks) to structure instructions clearly.",
+      "focus": "Sequential named steps define execution order",
+      "bridge": "The most powerful feature of workflows is embedded CLI commands."
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "value": "INIT=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" \\\n  init quick \"$DESCRIPTION\")\nif [[ \"$INIT\" == @file:* ]]; then\n  INIT=$(cat \"${INIT#@file:}\")\nfi",
+      "highlight": [1, 2],
+      "focus": "Bash blocks are real commands Claude runs",
+      "bridge": "These bash commands connect the markdown layer to the Node.js layer."
+    },
+    {
+      "type": "text",
+      "value": "Workflows embed real bash code blocks that Claude executes during the workflow. This example from Step 2 runs gsd-tools.cjs to initialize a quick task. The command returns JSON that Claude parses for configuration values. This is where the markdown layer meets the Node.js layer: the workflow tells Claude what to run, and the Node.js tools do the actual file system work, state management, and configuration updates.",
+      "focus": "Workflows bridge markdown to Node.js execution",
+      "bridge": "Workflows also use nested XML for complex sub-processes."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "**Step 5: Spawn planner (quick mode)**\n\nTask(\n  prompt=\"\n<planning_context>\n\n**Mode:** ${FULL_MODE ? 'quick-full' : 'quick'}\n**Directory:** ${QUICK_DIR}\n**Description:** ${DESCRIPTION}\n\n<files_to_read>\n- .planning/STATE.md (Project State)\n</files_to_read>\n\n</planning_context>\n\",\n  subagent_type=\"gsd-planner\",\n  model=\"{planner_model}\"\n)",
+      "highlight": [3, 5, 11, 17],
+      "focus": "Workflows spawn sub-agents with Task calls",
+      "bridge": "This spawning pattern is how GSD orchestrates multiple AI agents."
+    },
+    {
+      "type": "text",
+      "value": "Step 5 shows a pattern unique to GSD workflows: spawning sub-agents. The Task() call creates a new Claude instance with its own prompt, context files, and role. The workflow defines the prompt template inline, including nested XML tags like <planning_context> and <files_to_read>. This is how a single /gsd:quick command orchestrates a planner agent, an executor agent, and optionally a checker and verifier -- all described in plain markdown.",
+      "focus": "Agent orchestration lives in workflow markdown",
+      "bridge": "Now that you know both file types, the next lesson shows how they connect -- starting with Command to Workflow Wiring."
+    }
+  ],
+  "conceptMap": "workflow",
+  "successCriteria": "You can describe a workflow's structure (purpose, process with named steps, embedded bash commands, Task calls for sub-agents) and explain how workflows differ from command specs (no frontmatter, execution-focused, may spawn sub-agents)."
+}
