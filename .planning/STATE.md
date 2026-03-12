@@ -3,6 +3,21 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
+stopped_at: Phase 01.1 context gathered
+last_updated: "2026-03-12T16:16:57.570Z"
+last_activity: 2026-03-12 — Milestone v2.0 started
+progress:
+  total_phases: 5
+  completed_phases: 3
+  total_plans: 8
+  completed_plans: 7
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
 stopped_at: Phase 3 context updated
 last_updated: "2026-03-12T15:46:15.205Z"
 last_activity: "2026-03-12 - Completed Phase 02.1 Plan 01: Clipboard copy feature"
@@ -133,6 +148,7 @@ Recent decisions affecting current work:
 ### Roadmap Evolution
 
 - Phase 02.1 inserted after Phase 02: Add command 'c' to copy current lesson to clipboard for LLM follow-up (URGENT)
+- Phase 01.1 inserted after Phase 01: Block-based lesson display with per-block navigation and module progress tracker (URGENT)
 
 ### Pending Todos
 
@@ -152,6 +168,6 @@ None -- Phase 3 mini-project design validated during 03-01 execution.
 
 ## Session Continuity
 
-Last session: 2026-03-12T15:58:31Z
-Stopped at: Completed quick task 3
-Resume file: .planning/quick/3-make-clipboard-copy-hint-text-light-blue/3-SUMMARY.md
+Last session: 2026-03-12T16:16:57.568Z
+Stopped at: Phase 01.1 context gathered
+Resume file: .planning/phases/01.1-block-based-lesson-display-with-per-block-navigation-and-module-progress-tracker/01.1-CONTEXT.md
