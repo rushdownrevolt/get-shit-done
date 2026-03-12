@@ -12,7 +12,8 @@
       "type": "code",
       "language": "javascript",
       "value": "  const command = args[0];\n\n  if (!command) {\n    error('Usage: gsd-tools <command> [args] [--raw] [--cwd <path>]\\n' +\n      'Commands: state, resolve-model, find-phase, commit, ...');\n  }\n\n  switch (command) {\n    case 'state': {\n      const subcommand = args[1];\n      if (subcommand === 'json') {\n        state.cmdStateJson(cwd, raw);\n      } else if (subcommand === 'update') {\n        state.cmdStateUpdate(cwd, args[2], args[3]);\n      }\n      break;\n    }",
-      "highlight": [1, 8, 9, 10]
+      "highlight": [1, 8, 9, 10],
+      "source": { "file": "get-shit-done/bin/gsd-tools.cjs", "startLine": 172 }
     },
     {
       "type": "text",
@@ -22,7 +23,8 @@
       "type": "code",
       "language": "javascript",
       "value": "    case 'resolve-model': {\n      commands.cmdResolveModel(cwd, args[1], raw);\n      break;\n    }\n\n    case 'find-phase': {\n      phase.cmdFindPhase(cwd, args[1], raw);\n      break;\n    }\n\n    case 'commit': {\n      const amend = args.includes('--amend');\n      const filesIndex = args.indexOf('--files');\n      const endIndex = filesIndex !== -1 ? filesIndex : args.length;\n      const messageArgs = args.slice(1, endIndex).filter(a => !a.startsWith('--'));\n      const message = messageArgs.join(' ') || undefined;\n      const files = filesIndex !== -1 ? args.slice(filesIndex + 1).filter(a => !a.startsWith('--')) : [];\n      commands.cmdCommit(cwd, message, files, raw, amend);\n      break;\n    }",
-      "highlight": [2, 7, 11, 12, 13, 14, 15]
+      "highlight": [2, 7, 11, 12, 13, 14, 15],
+      "source": { "file": "get-shit-done/bin/gsd-tools.cjs", "startLine": 250 }
     },
     {
       "type": "text",
@@ -36,7 +38,8 @@
       "type": "code",
       "language": "javascript",
       "value": "    case 'state': {\n      const subcommand = args[1];\n      if (subcommand === 'json') {\n        state.cmdStateJson(cwd, raw);\n      } else if (subcommand === 'update') {\n        state.cmdStateUpdate(cwd, args[2], args[3]);\n      } else if (subcommand === 'patch') {\n        const patches = {};\n        for (let i = 2; i < args.length; i += 2) {\n          const key = args[i].replace(/^--/, '');\n          const value = args[i + 1];\n          if (key && value !== undefined) {\n            patches[key] = value;\n          }\n        }\n        state.cmdStatePatch(cwd, patches, raw);\n      } else if (subcommand === 'advance-plan') {\n        state.cmdStateAdvancePlan(cwd, raw);\n      } else {\n        state.cmdStateLoad(cwd, raw);\n      }\n      break;\n    }",
-      "highlight": [2, 7, 8, 9, 17, 19, 20]
+      "highlight": [2, 7, 8, 9, 17, 19, 20],
+      "source": { "file": "get-shit-done/bin/gsd-tools.cjs", "startLine": 179 }
     },
     {
       "type": "text",
@@ -46,7 +49,8 @@
       "type": "code",
       "language": "javascript",
       "value": "    case 'init': {\n      const workflow = args[1];\n      switch (workflow) {\n        case 'execute-phase':\n          init.cmdInitExecutePhase(cwd, args[2], raw);\n          break;\n        case 'plan-phase':\n          init.cmdInitPlanPhase(cwd, args[2], raw);\n          break;\n        case 'resume':\n          init.cmdInitResume(cwd, raw);\n          break;\n        default:\n          error(`Unknown init workflow: ${workflow}`);\n      }\n      break;\n    }",
-      "highlight": [2, 3, 4, 13, 14]
+      "highlight": [2, 3, 4, 13, 14],
+      "source": { "file": "get-shit-done/bin/gsd-tools.cjs", "startLine": 513 }
     },
     {
       "type": "text",

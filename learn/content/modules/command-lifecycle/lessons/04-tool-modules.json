@@ -16,7 +16,8 @@
       "type": "code",
       "language": "javascript",
       "value": "/**\n * Config - Planning config CRUD operations\n */\n\nconst fs = require('fs');\nconst path = require('path');\nconst { output, error } = require('./core.cjs');\n\nfunction cmdConfigEnsureSection(cwd, raw) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n  const planningDir = path.join(cwd, '.planning');\n\n  try {\n    if (!fs.existsSync(planningDir)) {\n      fs.mkdirSync(planningDir, { recursive: true });\n    }\n  } catch (err) {\n    error('Failed to create .planning directory: ' + err.message);\n  }\n\n  if (fs.existsSync(configPath)) {\n    const result = { created: false, reason: 'already_exists' };\n    output(result, raw, 'exists');\n    return;\n  }",
-      "highlight": [7, 9, 18, 22, 23]
+      "highlight": [7, 9, 18, 22, 23],
+      "source": { "file": "get-shit-done/bin/lib/config.cjs", "startLine": 9 }
     },
     {
       "type": "text",
@@ -26,7 +27,8 @@
       "type": "code",
       "language": "javascript",
       "value": "function output(result, raw, rawValue) {\n  if (raw && rawValue !== undefined) {\n    process.stdout.write(String(rawValue));\n  } else {\n    const json = JSON.stringify(result, null, 2);\n    // Large payloads exceed Claude Code's Bash tool buffer (~50KB).\n    // Write to tmpfile and output the path prefixed with @file:\n    if (json.length > 50000) {\n      const tmpPath = path.join(require('os').tmpdir(),\n        `gsd-${Date.now()}.json`);\n      fs.writeFileSync(tmpPath, json, 'utf-8');\n      process.stdout.write('@file:' + tmpPath);\n    } else {\n      process.stdout.write(json);\n    }\n  }\n  process.exit(0);\n}\n\nfunction error(message) {\n  process.stderr.write('Error: ' + message + '\\n');\n  process.exit(1);\n}",
-      "highlight": [1, 2, 3, 8, 12, 17, 20, 21]
+      "highlight": [1, 2, 3, 8, 12, 17, 20, 21],
+      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 35 }
     },
     {
       "type": "text",
@@ -40,7 +42,8 @@
       "type": "code",
       "language": "javascript",
       "value": "function loadConfig(cwd) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n  const defaults = {\n    model_profile: 'balanced',\n    commit_docs: true,\n    search_gitignored: false,\n    branching_strategy: 'none',\n    parallelization: true,\n    brave_search: false,\n  };\n\n  try {\n    const raw = fs.readFileSync(configPath, 'utf-8');\n    const parsed = JSON.parse(raw);\n    return {\n      model_profile: get('model_profile') ?? defaults.model_profile,\n      commit_docs: get('commit_docs') ?? defaults.commit_docs,\n      // ... more fields with ?? fallbacks\n    };\n  } catch {\n    return defaults;\n  }\n}",
-      "highlight": [3, 12, 13, 20, 21]
+      "highlight": [3, 12, 13, 20, 21],
+      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 68 }
     },
     {
       "type": "text",
@@ -50,7 +53,8 @@
       "type": "code",
       "language": "javascript",
       "value": "module.exports = {\n  MODEL_PROFILES,\n  output,\n  error,\n  safeReadFile,\n  loadConfig,\n  isGitIgnored,\n  execGit,\n  escapeRegex,\n  normalizePhaseName,\n  comparePhaseNum,\n  findPhaseInternal,\n  getRoadmapPhaseInternal,\n  resolveModelInternal,\n  generateSlugInternal,\n  getMilestoneInfo,\n  getMilestonePhaseFilter,\n  toPosixPath,\n};",
-      "highlight": [1]
+      "highlight": [1],
+      "source": { "file": "get-shit-done/bin/lib/core.cjs", "startLine": 471 }
     },
     {
       "type": "text",

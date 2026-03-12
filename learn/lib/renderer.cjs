@@ -1,6 +1,7 @@
 'use strict';
 
-const { style, clearScreen, horizontalRule, highlightJS } = require('./terminal.cjs');
+const path = require('path');
+const { style, clearScreen, horizontalRule, highlightJS, oscLink, renderCodeBlock } = require('./terminal.cjs');
 const { renderConceptMap } = require('./concept-map.cjs');
 
 /**
@@ -59,10 +60,19 @@ function renderLesson(lesson, currentIndex, totalLessons) {
       parts.push(style('Stuck? ', 'cyan') + section.hintCommand);
       parts.push('\n\n');
     } else if (section.type === 'code') {
-      parts.push(style('    \u2502 ', 'dim'));
-      const highlighted = highlightJS(section.value);
-      const lines = highlighted.split('\n');
-      parts.push(lines.join('\n' + style('    \u2502 ', 'dim')));
+      if (section.source) {
+        const absPath = path.resolve(process.cwd(), section.source.file);
+        const startLine = section.source.startLine || 1;
+        const uri = 'vscode://file/' + absPath + ':' + startLine;
+        const displayText = section.source.file + ':' + startLine;
+        parts.push(style(oscLink(uri, displayText), 'dim', 'underline'));
+        parts.push('\n');
+      }
+      const codeOpts = {
+        highlight: section.highlight,
+        startLine: section.source ? (section.source.startLine || 1) : 1,
+      };
+      parts.push(renderCodeBlock(section.value, codeOpts));
       parts.push('\n\n');
     }
   }

@@ -12,7 +12,8 @@
       "type": "code",
       "language": "javascript",
       "value": "function stateExtractField(content, fieldName) {\n  const escaped = fieldName.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n  // Try **Field:** bold format first\n  const boldPattern = new RegExp(\n    `\\\\*\\\\*${escaped}:\\\\*\\\\*\\\\s*(.+)`, 'i'\n  );\n  const boldMatch = content.match(boldPattern);\n  if (boldMatch) return boldMatch[1].trim();\n  // Fall back to plain Field: format\n  const plainPattern = new RegExp(`^${escaped}:\\\\s*(.+)`, 'im');\n  const plainMatch = content.match(plainPattern);\n  return plainMatch ? plainMatch[1].trim() : null;\n}",
-      "highlight": [1, 3, 4, 9, 10]
+      "highlight": [1, 3, 4, 9, 10],
+      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 184 }
     },
     {
       "type": "text",
@@ -22,7 +23,8 @@
       "type": "code",
       "language": "javascript",
       "value": "function stateReplaceField(content, fieldName, newValue) {\n  const escaped = fieldName.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n  const boldPattern = new RegExp(\n    `(\\\\*\\\\*${escaped}:\\\\*\\\\*\\\\s*)(.*)`, 'i'\n  );\n  if (boldPattern.test(content)) {\n    return content.replace(boldPattern,\n      (_match, prefix) => `${prefix}${newValue}`);\n  }\n  const plainPattern = new RegExp(`(^${escaped}:\\\\s*)(.*)`, 'im');\n  if (plainPattern.test(content)) {\n    return content.replace(plainPattern,\n      (_match, prefix) => `${prefix}${newValue}`);\n  }\n  return null;\n}",
-      "highlight": [1, 6, 7, 8, 15]
+      "highlight": [1, 6, 7, 8, 15],
+      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 196 }
     },
     {
       "type": "text",
@@ -32,7 +34,8 @@
       "type": "code",
       "language": "javascript",
       "value": "function writeStateMd(statePath, content, cwd) {\n  const synced = syncStateFrontmatter(content, cwd);\n  fs.writeFileSync(statePath, synced, 'utf-8');\n}\n\nfunction syncStateFrontmatter(content, cwd) {\n  const body = stripFrontmatter(content);\n  const fm = buildStateFrontmatter(body, cwd);\n  const yamlStr = reconstructFrontmatter(fm);\n  return `---\\n${yamlStr}\\n---\\n\\n${body}`;\n}",
-      "highlight": [1, 2, 6, 7, 8]
+      "highlight": [1, 2, 6, 7, 8],
+      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 679 }
     },
     {
       "type": "text",
@@ -42,7 +45,8 @@
       "type": "code",
       "language": "javascript",
       "value": "function cmdConfigSet(cwd, keyPath, value, raw) {\n  const configPath = path.join(cwd, '.planning', 'config.json');\n\n  // Parse value (handle booleans and numbers)\n  let parsedValue = value;\n  if (value === 'true') parsedValue = true;\n  else if (value === 'false') parsedValue = false;\n  else if (!isNaN(value) && value !== '') parsedValue = Number(value);\n\n  // Set nested value using dot notation (e.g., \"workflow.research\")\n  const keys = keyPath.split('.');\n  let current = config;\n  for (let i = 0; i < keys.length - 1; i++) {\n    const key = keys[i];\n    if (current[key] === undefined || typeof current[key] !== 'object') {\n      current[key] = {};\n    }\n    current = current[key];\n  }\n  current[keys[keys.length - 1]] = parsedValue;\n}",
-      "highlight": [5, 6, 7, 8, 10, 11]
+      "highlight": [5, 6, 7, 8, 10, 11],
+      "source": { "file": "get-shit-done/bin/lib/config.cjs", "startLine": 84 }
     },
     {
       "type": "text",
@@ -52,7 +56,8 @@
       "type": "code",
       "language": "javascript",
       "value": "function cmdStateAdvancePlan(cwd, raw) {\n  let content = fs.readFileSync(statePath, 'utf-8');\n  const currentPlan = parseInt(\n    stateExtractField(content, 'Current Plan'), 10\n  );\n  const totalPlans = parseInt(\n    stateExtractField(content, 'Total Plans in Phase'), 10\n  );\n\n  if (currentPlan >= totalPlans) {\n    content = stateReplaceField(content, 'Status',\n      'Phase complete \\u2014 ready for verification') || content;\n  } else {\n    const newPlan = currentPlan + 1;\n    content = stateReplaceField(content, 'Current Plan',\n      String(newPlan)) || content;\n    content = stateReplaceField(content, 'Status',\n      'Ready to execute') || content;\n  }\n  writeStateMd(statePath, content, cwd);\n}",
-      "highlight": [3, 4, 10, 11, 14, 15, 20]
+      "highlight": [3, 4, 10, 11, 14, 15, 20],
+      "source": { "file": "get-shit-done/bin/lib/state.cjs", "startLine": 210 }
     },
     {
       "type": "text",
