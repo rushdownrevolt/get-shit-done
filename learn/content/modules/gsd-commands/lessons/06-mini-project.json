@@ -12,7 +12,7 @@
     },
     {
       "type": "text",
-      "value": "Run the verify command any time to check your structural progress. Run the hint command when you need a nudge. You can use both as many times as you like.\n\nUnlike Module 2's echo command (which created Node.js files in the codebase), this project creates markdown files in your GSD install directory. If something goes wrong, you can simply delete the files and start over -- there is nothing to git-checkout here.",
+      "value": "Run the verify command any time to check your structural progress. Run the hint command when you need a nudge. You can use both as many times as you like.\n\nThis project creates markdown files in your GSD install directory. If something goes wrong, you can simply delete the files and start over -- there is nothing to git-checkout here.",
       "focus": "Verify and hint workflow for markdown",
       "bridge": "Here is exactly what you need to build."
     },
@@ -31,9 +31,9 @@
     },
     {
       "type": "text",
-      "value": "Going Further: your base skeptic command requires a phase number argument. But what if it could auto-detect the current phase? STATE.md tracks the current phase in its frontmatter. Your workflow could use the Read tool to check .planning/STATE.md and extract the phase number automatically. No separate verification for this -- it is an optional enhancement to make your command smarter.\n\nWith /gsd:skeptic working, you have completed Module 1. You can build GSD commands from pure markdown -- no Node.js required. Module 2 takes you deeper: into the Node.js layer that makes the dispatch chain actually work.",
+      "value": "Going Further: your base skeptic command requires a phase number argument. But what if it could auto-detect the current phase? STATE.md tracks the current phase in its frontmatter. Your workflow could use the Read tool to check .planning/STATE.md and extract the phase number automatically. No separate verification for this -- it is an optional enhancement to make your command smarter.\n\nWith /gsd:skeptic working, you have completed Module 1. You can build GSD commands from pure markdown -- no Node.js required.",
       "focus": "Optional auto-detect and module completion",
-      "bridge": "You have completed Module 1: GSD Commands and Workflows. Module 2 explores the Node.js machinery underneath."
+      "bridge": "You have completed Module 1: GSD Commands and Workflows. You now know how to build real commands from pure markdown."
     }
   ],
   "conceptMap": "mini-project",

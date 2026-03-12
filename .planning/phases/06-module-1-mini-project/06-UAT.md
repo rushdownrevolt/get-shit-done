@@ -48,11 +48,13 @@ skipped: 0
 ## Gaps
 
 - truth: "Lesson 6 content should not reference future modules that don't exist yet"
-  status: failed
+  status: resolved
   reason: "User reported: refers to module 2 from the future which shouldn't be there"
   severity: minor
   test: 2
-  root_cause: ""
-  artifacts: []
+  root_cause: "06-mini-project.json contained two references to Module 2 (lines 15 and 34-36) which doesn't exist yet"
+  artifacts:
+    - path: "learn/content/modules/gsd-commands/lessons/06-mini-project.json"
+      issue: "Forward references to Module 2 removed"
   missing: []
   debug_session: ""
