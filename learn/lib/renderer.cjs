@@ -10,9 +10,10 @@ const { renderConceptMap } = require('./concept-map.cjs');
  * @param {object} lesson - Lesson data object.
  * @param {number} currentIndex - Zero-based index of current lesson.
  * @param {number} totalLessons - Total number of lessons in module.
+ * @param {string} [moduleDir] - Absolute path to the module directory (for concept map).
  * @returns {string} Formatted lesson string with ANSI codes.
  */
-function renderLesson(lesson, currentIndex, totalLessons) {
+function renderLesson(lesson, currentIndex, totalLessons, moduleDir) {
   const parts = [];
 
   // 1. Clear screen
@@ -43,7 +44,11 @@ function renderLesson(lesson, currentIndex, totalLessons) {
 
   // 7. Concept map
   if (lesson.conceptMap) {
-    parts.push(renderConceptMap(lesson.conceptMap));
+    if (moduleDir) {
+      parts.push(renderConceptMap(moduleDir, lesson.conceptMap));
+    } else {
+      parts.push(style('Architecture Overview:', 'bold', 'cyan') + '\n\n  No concept map available\n\n');
+    }
     parts.push('\n');
   }
 
@@ -123,30 +128,27 @@ function renderSuccessCriteria(lesson, parts) {
 }
 
 /**
- * Get a dim block header label for a content section.
+ * Render bridge text in a Unicode box-drawing bordered section (dim styled).
  */
-function getBlockHeader(section) {
-  if (section.type === 'text') {
-    const trimmed = section.value.replace(/\n/g, ' ').trim();
-    // Extract first sentence as a meaningful summary
-    const sentenceEnd = trimmed.search(/[.!?]\s|[.!?]$/);
-    const firstSentence = sentenceEnd !== -1
-      ? trimmed.substring(0, sentenceEnd + 1)
-      : trimmed;
-    // Cap at 60 chars for display
-    if (firstSentence.length > 60) {
-      return firstSentence.substring(0, 57) + '...';
+function renderBridgeSection(bridgeText) {
+  const maxWidth = 56;
+  const top = '\u250C' + '\u2500'.repeat(maxWidth + 2) + '\u2510';
+  const bot = '\u2514' + '\u2500'.repeat(maxWidth + 2) + '\u2518';
+  // Wrap bridge text to fit within the box
+  const words = bridgeText.split(' ');
+  const lines = [];
+  let current = '';
+  for (const word of words) {
+    if (current.length + word.length + 1 > maxWidth) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = current ? current + ' ' + word : word;
     }
-    return firstSentence || 'Explanation';
-  } else if (section.type === 'code') {
-    if (section.source) {
-      return 'Code — ' + section.source.file + ':' + (section.source.startLine || 1);
-    }
-    return 'Code Example';
-  } else if (section.type === 'project') {
-    return 'Mini-Project';
   }
-  return 'Content';
+  if (current) lines.push(current);
+  const body = lines.map(line => '\u2502 ' + line.padEnd(maxWidth) + ' \u2502').join('\n');
+  return style(top + '\n' + body + '\n' + bot, 'dim');
 }
 
 /**
@@ -157,9 +159,10 @@ function getBlockHeader(section) {
  * @param {number} totalParts - Total number of parts (content.length + concept map if present).
  * @param {number} currentLessonIndex - Zero-based index of current lesson.
  * @param {number} totalLessons - Total number of lessons in module.
+ * @param {string} [moduleDir] - Absolute path to the module directory (for concept map).
  * @returns {string} Formatted part string with ANSI codes.
  */
-function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLessons) {
+function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLessons, moduleDir) {
   const parts = [];
 
   // 1. Clear screen
@@ -185,22 +188,49 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
     parts.push('\n\n');
   }
 
-  // 5. Content section or concept map
+  // 5. Progressive accumulation: render blocks 0..partIndex
+  const lastContentIndex = Math.min(partIndex, lesson.content.length - 1);
   const isConceptMapPart = lesson.conceptMap && partIndex === lesson.content.length;
 
+  // Render all accumulated content blocks
+  for (let i = 0; i <= lastContentIndex; i++) {
+    const section = lesson.content[i];
+    const isCurrent = (i === partIndex);
+
+    // Focus line: current block gets triangle-right marker
+    if (isCurrent) {
+      parts.push(style('\u25B6 ', 'cyan') + style(section.focus, 'dim'));
+    } else {
+      parts.push(style('  ' + section.focus, 'dim'));
+    }
+    parts.push('\n\n');
+
+    // Render content
+    renderContentSection(section, parts);
+
+    // Bridge section
+    parts.push(renderBridgeSection(section.bridge));
+    parts.push('\n\n');
+
+    // Separator between accumulated blocks
+    if (i < partIndex) {
+      parts.push(horizontalRule(60));
+      parts.push('\n\n');
+    }
+  }
+
+  // Concept map as synthetic final part (accumulates all content blocks first)
   if (isConceptMapPart) {
-    // Synthetic concept map part
+    parts.push(horizontalRule(60));
+    parts.push('\n\n');
     parts.push(style('Architecture Overview', 'dim'));
     parts.push('\n\n');
-    parts.push(renderConceptMap(lesson.conceptMap));
+    if (moduleDir) {
+      parts.push(renderConceptMap(moduleDir, lesson.conceptMap));
+    } else {
+      parts.push(style('Architecture Overview:', 'bold', 'cyan') + '\n\n  No concept map available\n\n');
+    }
     parts.push('\n');
-  } else {
-    const section = lesson.content[partIndex];
-    // Block header (dim)
-    parts.push(style(getBlockHeader(section), 'dim'));
-    parts.push('\n\n');
-    // Render the content section
-    renderContentSection(section, parts);
   }
 
   // 6. Horizontal rule
