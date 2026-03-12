@@ -1,0 +1,61 @@
+{
+  "passThreshold": 3.5,
+  "minimumPerDimension": 2,
+  "dimensions": {
+    "accuracy": {
+      "weight": 0.25,
+      "description": "Technical correctness of code snippets, API descriptions, and architecture explanations",
+      "scale": {
+        "1": "Multiple factual errors or fabricated code",
+        "2": "Some inaccuracies in code or explanations",
+        "3": "Mostly accurate with minor issues",
+        "4": "Accurate with only trivial imprecisions",
+        "5": "Completely accurate, matches actual source"
+      }
+    },
+    "clarity": {
+      "weight": 0.20,
+      "description": "How clearly concepts are explained, logical flow of content, appropriate complexity for audience",
+      "scale": {
+        "1": "Confusing, disorganized, or inappropriate complexity",
+        "2": "Somewhat unclear or poorly structured",
+        "3": "Understandable but could be clearer",
+        "4": "Clear and well-structured",
+        "5": "Exceptionally clear, builds understanding incrementally"
+      }
+    },
+    "depth": {
+      "weight": 0.20,
+      "description": "Level of detail in code walkthroughs, coverage of edge cases, and completeness of explanations",
+      "scale": {
+        "1": "Surface-level only, no meaningful detail",
+        "2": "Shallow coverage, missing key details",
+        "3": "Adequate depth for basic understanding",
+        "4": "Good depth with meaningful details",
+        "5": "Deep exploration with insights beyond the obvious"
+      }
+    },
+    "whyExplanations": {
+      "weight": 0.20,
+      "description": "Quality and frequency of explaining WHY design decisions were made, not just WHAT the code does",
+      "scale": {
+        "1": "No why explanations, just describes what",
+        "2": "Rare or superficial why explanations",
+        "3": "Some why explanations but inconsistent",
+        "4": "Good why explanations for most design choices",
+        "5": "Every design choice explained with clear rationale"
+      }
+    },
+    "conceptMapConnection": {
+      "weight": 0.15,
+      "description": "How well the lesson connects to the broader module architecture and references related concepts",
+      "scale": {
+        "1": "No connection to broader architecture",
+        "2": "Weak or missing cross-references",
+        "3": "Some connection to module context",
+        "4": "Good integration with module concepts",
+        "5": "Strong conceptual threading throughout"
+      }
+    }
+  }
+}
