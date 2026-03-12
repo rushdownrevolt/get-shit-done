@@ -1,4 +1,32 @@
 # Milestones: GSD Learn
+## v2.0 — GSD Commands & Workflows Module (Shipped: 2026-03-12)
+
+**Completed:** 2026-03-12
+**Phases:** 4, 5, 6 (3 phases, 6 plans)
+**Last phase number:** 6
+
+**What shipped:**
+- Multi-module infrastructure with v1-to-v2 progress auto-migration (zero data loss)
+- GSD markdown parser for command specs and workflow files (nested XML extraction)
+- Generic `{{KEY}}` template system with fail-loud replacement for lesson generation
+- 6-lesson GSD Commands & Workflows module using real source code content
+- Structural mini-project verification (11 checks) with 5 progressive hints
+- Module renumbering — GSD Commands is Module 1, Command Lifecycle becomes Module 2
+
+**Requirements completed:** INFRA-01 through INFRA-04, PIPE-01 through PIPE-03, MOD1-01 through MOD1-08, MOD2-01
+
+**Key learnings:**
+- Markdown parser with nested XML extraction handles GSD's workflow format cleanly
+- Hand-authored lessons with real source snippets produce high-quality content
+- Wave 0 test pattern enables incremental delivery with graceful degradation
+- Average plan execution: ~4 min; total milestone execution: ~25 min
+
+**Tech debt carried forward:**
+- 13 pre-existing clipboard-formatter.test.cjs failures (from v1.0 Phase 02.1)
+- 3 Nyquist VALIDATION.md files in draft state (process gap, not code gap)
+
+---
+
 
 ## v1.0 — Command Lifecycle Module (Complete)
 

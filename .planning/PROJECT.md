@@ -2,26 +2,17 @@
 
 ## What This Is
 
-A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Built for a single user who wants to go from using GSD to confidently modifying it.
+A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Currently ships two modules: GSD Commands & Workflows (markdown layer) and Command Lifecycle (Node.js layer).
 
 ## Core Value
 
 The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
 
-## Current Milestone: v2.0 GSD Commands & Workflows Module
-
-**Goal:** Add a new Module 1 that teaches the GSD slash command and workflow layer (the markdown files that make `/gsd:*` commands work). The existing Command Lifecycle module becomes Module 2.
-
-**Target features:**
-- New module teaching slash commands (`~/.claude/commands/gsd/*.md`) and workflows (`~/.claude/get-shit-done/workflows/*.md`)
-- Module restructuring: new module becomes Module 1, existing Command Lifecycle becomes Module 2
-- Update Command Lifecycle mini-project to be full-stack (all 4 layers: command.md, workflow.md, echo.cjs, gsd-tools.cjs switch)
-
 ## Requirements
 
 ### Validated
 
-<!-- Shipped and confirmed valuable in v1.0 -->
+<!-- Shipped and confirmed valuable -->
 
 - ✓ CLI launches interactive lesson experience in terminal — v1.0
 - ✓ Lessons are parsed/generated from GSD's actual source files — v1.0
@@ -30,14 +21,18 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ Mini-project at end of each module — v1.0
 - ✓ Mini-project results double as lesson quality measurement — v1.0
 - ✓ MVP: single module (Command Lifecycle) working completely — v1.0
+- ✓ New Module 1: GSD Commands & Workflows (6 lessons + mini-project) — v2.0
+- ✓ Module renumbering: GSD Commands is Module 1, Command Lifecycle is Module 2 — v2.0
+- ✓ Multi-module infrastructure with per-module progress and v1-to-v2 migration — v2.0
+- ✓ GSD markdown parser for command specs and workflow files — v2.0
+- ✓ Generic {{KEY}} template system for markdown-based lesson generation — v2.0
+- ✓ Structural mini-project verification with progressive hints — v2.0
 
 ### Active
 
-<!-- Current scope for v2.0 -->
+<!-- Next milestone scope — to be defined by /gsd:new-milestone -->
 
-- [ ] New Module 1: GSD Commands & Workflows (slash commands + workflow markdown files)
-- [ ] Module renumbering: Command Lifecycle becomes Module 2
-- [ ] Command Lifecycle mini-project updated to full-stack (all 4 layers)
+(None — define with next milestone)
 
 ### Out of Scope
 
@@ -47,6 +42,7 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - Video or multimedia content — text and code only
 - Teaching other tools — GSD only
 - Lesson content auto-updates when GSD source changes — deferred to future milestone
+- Module discovery UI — hardcoded Module 1 start for now (deferred to v2.2+)
 
 ## Context
 
@@ -54,8 +50,10 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - GSD is a zero-dependency Node.js project using CommonJS modules
 - GSD's architecture has TWO layers: (1) markdown layer (slash commands + workflows) and (2) Node.js layer (gsd-tools.cjs + lib modules)
 - The codebase map at `.planning/codebase/` provides detailed architecture, stack, conventions, and structure docs
-- v1.0 proved the teaching model works with the Command Lifecycle module — now expanding
-- The new module teaches the simpler markdown layer first, so learners understand how `/gsd:*` commands work before diving into the Node.js implementation
+- v1.0 proved the teaching model works with Command Lifecycle module
+- v2.0 added GSD Commands & Workflows as Module 1, teaching the simpler markdown layer first
+- Shipped: ~6,885 LOC (Node.js/JSON), 2 modules, 12 lessons total, 2 mini-projects
+- 13 pre-existing clipboard-formatter test failures carried from v1.0 (non-blocking)
 
 ## Constraints
 
@@ -73,8 +71,11 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Command Lifecycle as first module | Touches all major GSD concepts (state, agents, orchestration); concrete and traceable | ✓ Good |
 | Mini-projects over quizzes | Measures real capability, not recall; also measures lesson quality | ✓ Good |
 | MVP-first with feedback loop | De-risks lesson design before investing in full course; lessons learned inform module 2+ | ✓ Good |
-| New Module 1 for slash commands | Teaches simpler markdown layer before Node.js internals; natural learning progression | — Pending |
-| Full-stack mini-project for Module 2 | Learner builds all 4 layers (command.md, workflow.md, echo.cjs, switch case); proves complete understanding | — Pending |
+| New Module 1 for slash commands | Teaches simpler markdown layer before Node.js internals; natural learning progression | ✓ Good |
+| Hand-authored lessons with real snippets | Real source code content produces high-quality authentic lessons | ✓ Good |
+| Wave 0 test pattern | Graceful degradation enables incremental delivery without blocking CI | ✓ Good |
+| Nested XML extraction in parser | Recursive regex handles GSD workflow format cleanly without DOM parser | ✓ Good |
+| Full-stack mini-project for Module 2 | Learner builds all 4 layers (command.md, workflow.md, echo.cjs, switch case) | — Deferred to v2.1 |
 
 ---
-*Last updated: 2026-03-12 after v2.0 milestone start*
+*Last updated: 2026-03-12 after v2.0 milestone*
