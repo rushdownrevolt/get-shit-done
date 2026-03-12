@@ -17,7 +17,7 @@
 - [x] **CONT-02**: Lessons are numbered and ordered within modules with defined progression
 - [x] **CONT-03**: Lesson content is generated via prompts that use parsed GSD source files as input (source goes into prompts, prompts produce lesson content)
 - [x] **CONT-04**: Lessons include contextual "why" explanations covering design decisions and rationale, not just code
-- [ ] **CONT-05**: An evaluation rubric scores prompt-generated lessons on accuracy, clarity, depth, and pedagogical quality -- used to iterate prompts until output is good enough
+- [x] **CONT-05**: An evaluation rubric scores prompt-generated lessons on accuracy, clarity, depth, and pedagogical quality -- used to iterate prompts until output is good enough
 
 ### Progress
 
@@ -34,7 +34,7 @@
 
 ### Module
 
-- [ ] **MODL-01**: MVP includes one complete module: Command Lifecycle (follow `/gsd:quick` end-to-end)
+- [x] **MODL-01**: MVP includes one complete module: Command Lifecycle (follow `/gsd:quick` end-to-end)
 - [x] **MODL-02**: Module starts with conceptual overview, then drills into GSD source code
 - [ ] **MODL-03**: Module ends with a mini-project where learner uses GSD to build something real
 - [ ] **MODL-04**: Mini-project results serve as lesson quality measurement — assess before building module 2
@@ -81,7 +81,7 @@
 | CONT-02 | Phase 1 | Complete |
 | CONT-03 | Phase 2 | Complete |
 | CONT-04 | Phase 2 | Complete |
-| CONT-05 | Phase 2 | Pending |
+| CONT-05 | Phase 2 | Complete |
 | PROG-01 | Phase 1 | Complete |
 | PROG-02 | Phase 1 | Complete |
 | PROG-03 | Phase 1 | Complete |
@@ -89,7 +89,7 @@
 | VALD-02 | Phase 3 | Pending |
 | VALD-03 | Phase 3 | Pending |
 | VALD-04 | Phase 3 | Pending |
-| MODL-01 | Phase 2 | Pending |
+| MODL-01 | Phase 2 | Complete |
 | MODL-02 | Phase 2 | Complete |
 | MODL-03 | Phase 3 | Pending |
 | MODL-04 | Phase 3 | Pending |
