@@ -177,6 +177,52 @@ describe('lessons.cjs', () => {
       const mod = loadModule('command-lifecycle', contentDir);
       assert.strictEqual(mod.lessons.length, 2, 'should load both lessons successfully');
     });
+
+    test('VAL-01: code block without focus/bridge does NOT throw (group anchor provides them)', () => {
+      const { loadModule } = require('../lib/lessons.cjs');
+      const moduleDir = path.join(contentDir, 'modules', 'code-no-focus');
+      const lessonsDir = path.join(moduleDir, 'lessons');
+      fs.mkdirSync(lessonsDir, { recursive: true });
+      fs.writeFileSync(path.join(moduleDir, 'module.json'), JSON.stringify({
+        id: 'code-no-focus', title: 'Code No Focus', description: 'Test', order: 1,
+      }));
+      fs.writeFileSync(path.join(lessonsDir, '01-test.json'), JSON.stringify({
+        id: 'test', title: 'Test', lessonNumber: 1, objective: 'Test',
+        content: [
+          { type: 'text', value: 'Lead-in.', focus: 'Text focus', bridge: 'Text bridge.' },
+          { type: 'code', language: 'javascript', value: 'const x = 1;' },
+        ],
+        conceptMap: null, successCriteria: 'Done',
+      }));
+      // Should NOT throw -- code blocks don't need focus/bridge
+      const mod = loadModule('code-no-focus', contentDir);
+      assert.strictEqual(mod.lessons.length, 1, 'should load lesson with code block lacking focus/bridge');
+    });
+
+    test('VAL-01: text block without focus still throws even when preceded by code', () => {
+      const { loadModule } = require('../lib/lessons.cjs');
+      const moduleDir = path.join(contentDir, 'modules', 'text-no-focus');
+      const lessonsDir = path.join(moduleDir, 'lessons');
+      fs.mkdirSync(lessonsDir, { recursive: true });
+      fs.writeFileSync(path.join(moduleDir, 'module.json'), JSON.stringify({
+        id: 'text-no-focus', title: 'Text No Focus', description: 'Test', order: 1,
+      }));
+      fs.writeFileSync(path.join(lessonsDir, '01-test.json'), JSON.stringify({
+        id: 'test', title: 'Test', lessonNumber: 1, objective: 'Test',
+        content: [
+          { type: 'code', language: 'javascript', value: 'const x = 1;' },
+          { type: 'text', value: 'Missing focus.', bridge: 'Has bridge.' },
+        ],
+        conceptMap: null, successCriteria: 'Done',
+      }));
+      assert.throws(
+        () => loadModule('text-no-focus', contentDir),
+        (err) => {
+          assert.ok(err.message.includes('focus'), 'error should mention focus');
+          return true;
+        }
+      );
+    });
   });
 
   describe('listModules()', () => {
@@ -287,15 +333,17 @@ describe('lessons.cjs', () => {
       }
     });
 
-    test('each lesson content items have focus and bridge', () => {
+    test('each lesson text/project content items have focus and bridge (code blocks exempt)', () => {
       const { loadModule } = require('../lib/lessons.cjs');
       try {
         const mod = loadModule('gsd-commands', realContentDir);
         for (const lesson of mod.lessons) {
           for (let i = 0; i < lesson.content.length; i++) {
             const item = lesson.content[i];
-            assert.ok(item.focus && typeof item.focus === 'string', 'lesson ' + lesson.id + ' content[' + i + '] should have focus');
-            assert.ok(item.bridge && typeof item.bridge === 'string', 'lesson ' + lesson.id + ' content[' + i + '] should have bridge');
+            if (item.type !== 'code') {
+              assert.ok(item.focus && typeof item.focus === 'string', 'lesson ' + lesson.id + ' content[' + i + '] should have focus');
+              assert.ok(item.bridge && typeof item.bridge === 'string', 'lesson ' + lesson.id + ' content[' + i + '] should have bridge');
+            }
           }
         }
       } catch (err) {

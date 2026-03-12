@@ -1,6 +1,7 @@
 'use strict';
 
 const readline = require('readline');
+const { groupContentItems } = require('./renderer.cjs');
 
 /**
  * Register process exit handlers to restore stdin raw mode.
@@ -84,7 +85,8 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
   outer:
   while (currentLesson < totalLessons) {
     const lesson = lessons[currentLesson];
-    const totalParts = lesson.content.length + (lesson.conceptMap ? 1 : 0);
+    const groups = groupContentItems(lesson.content);
+    const totalParts = groups.length + (lesson.conceptMap ? 1 : 0);
     let currentPart = 0;
 
     while (true) {
@@ -103,7 +105,7 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
         } else {
           // Last part of last lesson -- show completion banner
           if (opts && opts.completionBannerFn && opts.moduleMeta) {
-            const totalPartsAll = lessons.reduce((sum, l) => sum + l.content.length + (l.conceptMap ? 1 : 0), 0);
+            const totalPartsAll = lessons.reduce((sum, l) => sum + groupContentItems(l.content).length + (l.conceptMap ? 1 : 0), 0);
             const miniProjectCount = lessons.filter(l => l.content.some(s => s.type === 'project')).length;
             const banner = opts.completionBannerFn({
               title: opts.moduleMeta.title,

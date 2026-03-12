@@ -188,38 +188,41 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
     parts.push('\n\n');
   }
 
-  // 5. Progressive accumulation: render blocks 0..partIndex
-  const lastContentIndex = Math.min(partIndex, lesson.content.length - 1);
-  const isConceptMapPart = lesson.conceptMap && partIndex === lesson.content.length;
+  // 5. Progressive accumulation: render groups 0..partIndex
+  const groups = groupContentItems(lesson.content);
+  const lastGroupIndex = Math.min(partIndex, groups.length - 1);
+  const isConceptMapPart = lesson.conceptMap && partIndex === groups.length;
 
-  // Render all accumulated content blocks
-  for (let i = 0; i <= lastContentIndex; i++) {
-    const section = lesson.content[i];
+  // Render all accumulated groups
+  for (let i = 0; i <= lastGroupIndex; i++) {
+    const group = groups[i];
     const isCurrent = (i === partIndex);
 
-    // Focus line: current block gets triangle-right marker
+    // Focus line: current group gets triangle-right marker
     if (isCurrent) {
-      parts.push(style('\u25B6 ', 'cyan') + style(section.focus, 'dim'));
+      parts.push(style('\u25B6 ', 'cyan') + style(group.focus, 'dim'));
     } else {
-      parts.push(style('  ' + section.focus, 'dim'));
+      parts.push(style('  ' + group.focus, 'dim'));
     }
     parts.push('\n\n');
 
-    // Render content
-    renderContentSection(section, parts);
+    // Render ALL items within the group together (text + code as one unit)
+    for (const item of group.items) {
+      renderContentSection(item, parts);
+    }
 
-    // Bridge section
-    parts.push(renderBridgeSection(section.bridge));
+    // Bridge section (per-group, not per-item)
+    parts.push(renderBridgeSection(group.bridge));
     parts.push('\n\n');
 
-    // Separator between accumulated blocks
+    // Separator between accumulated groups (not between items within a group)
     if (i < partIndex) {
       parts.push(horizontalRule(60));
       parts.push('\n\n');
     }
   }
 
-  // Concept map as synthetic final part (accumulates all content blocks first)
+  // Concept map as synthetic final part (accumulates all content groups first)
   if (isConceptMapPart) {
     parts.push(horizontalRule(60));
     parts.push('\n\n');
@@ -308,4 +311,57 @@ function renderCompletionBanner(opts) {
   return parts.join('');
 }
 
-module.exports = { renderLesson, renderPart, renderProgressDots, renderCompletionBanner };
+/**
+ * Group a flat content array into logical groups where code/diagram blocks
+ * merge with adjacent text into single rendered "parts".
+ *
+ * Rules:
+ * - Text/project blocks start new groups (they are "anchors")
+ * - Code blocks attach to the current group
+ * - Text+text blocks remain separate (no aggressive merging)
+ * - A leading code block (no preceding text) merges with the following text
+ *
+ * @param {Array} content - Flat array of content items.
+ * @returns {Array<{items: Array, focus: string, bridge: string}>} Array of groups.
+ */
+function groupContentItems(content) {
+  const groups = [];
+  let current = null;
+
+  for (const item of content) {
+    if (item.type === 'code') {
+      // Code block: attach to current group if one exists, otherwise start a new group
+      if (current) {
+        current.items.push(item);
+      } else {
+        // Code block at start with no preceding text -- start a new group
+        current = { items: [item], focus: item.focus || '', bridge: item.bridge || '' };
+      }
+    } else {
+      // Text or project block: finalize previous group (if any), start new group
+      if (current) {
+        groups.push(current);
+      }
+      current = { items: [item], focus: item.focus, bridge: item.bridge };
+    }
+  }
+  if (current) groups.push(current);
+
+  // Post-process: if the first group is code-only and a text group follows,
+  // merge them (leading code absorbs following text)
+  if (groups.length >= 2 && groups[0].items.every(i => i.type === 'code')) {
+    const codeGroup = groups[0];
+    const textGroup = groups[1];
+    // Merge: code items + text group items, use text group's focus/bridge
+    const merged = {
+      items: [...codeGroup.items, ...textGroup.items],
+      focus: textGroup.focus,
+      bridge: textGroup.bridge,
+    };
+    groups.splice(0, 2, merged);
+  }
+
+  return groups;
+}
+
+module.exports = { renderLesson, renderPart, renderProgressDots, renderCompletionBanner, groupContentItems };

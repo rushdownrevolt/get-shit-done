@@ -49,13 +49,17 @@ function loadModule(moduleId, contentDir) {
     }
 
     // Validate per-content-item required fields: focus and bridge
+    // Text and project blocks are group anchors -- require focus/bridge
+    // Code blocks: focus/bridge optional (group anchor provides them)
     for (let i = 0; i < lesson.content.length; i++) {
       const item = lesson.content[i];
-      if (!item.focus || typeof item.focus !== 'string') {
-        throw new Error('Lesson ' + filename + ' content[' + i + '] missing required field: focus');
-      }
-      if (!item.bridge || typeof item.bridge !== 'string') {
-        throw new Error('Lesson ' + filename + ' content[' + i + '] missing required field: bridge');
+      if (item.type !== 'code') {
+        if (!item.focus || typeof item.focus !== 'string') {
+          throw new Error('Lesson ' + filename + ' content[' + i + '] missing required field: focus');
+        }
+        if (!item.bridge || typeof item.bridge !== 'string') {
+          throw new Error('Lesson ' + filename + ' content[' + i + '] missing required field: bridge');
+        }
       }
     }
 
