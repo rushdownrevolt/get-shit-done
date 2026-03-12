@@ -8,7 +8,7 @@ const path = require('path');
  *
  * @param {string} moduleId - Module identifier (directory name).
  * @param {string} [contentDir] - Path to the content directory.
- * @returns {{ id: string, title: string, description: string, lessons: Array }}
+ * @returns {{ id: string, title: string, description: string, order: number, lessons: Array }}
  */
 function loadModule(moduleId, contentDir) {
   const baseDir = contentDir || path.join(__dirname, '..', 'content');
@@ -55,8 +55,45 @@ function loadModule(moduleId, contentDir) {
     id: moduleMeta.id,
     title: moduleMeta.title,
     description: moduleMeta.description,
+    order: moduleMeta.order !== undefined ? moduleMeta.order : 999,
     lessons,
   };
 }
 
-module.exports = { loadModule };
+/**
+ * List all modules in the content directory, sorted by order field.
+ *
+ * @param {string} [contentDir] - Path to the content directory.
+ * @returns {Array<{ id: string, title: string, description: string, order: number }>}
+ */
+function listModules(contentDir) {
+  const baseDir = contentDir || path.join(__dirname, '..', 'content');
+  const modulesDir = path.join(baseDir, 'modules');
+
+  if (!fs.existsSync(modulesDir)) {
+    return [];
+  }
+
+  const dirs = fs.readdirSync(modulesDir, { withFileTypes: true })
+    .filter(d => d.isDirectory());
+
+  const modules = [];
+  for (const dir of dirs) {
+    const moduleJsonPath = path.join(modulesDir, dir.name, 'module.json');
+    if (!fs.existsSync(moduleJsonPath)) {
+      continue;
+    }
+    const meta = JSON.parse(fs.readFileSync(moduleJsonPath, 'utf-8'));
+    modules.push({
+      id: meta.id,
+      title: meta.title,
+      description: meta.description,
+      order: meta.order !== undefined ? meta.order : 999,
+    });
+  }
+
+  modules.sort((a, b) => a.order - b.order);
+  return modules;
+}
+
+module.exports = { loadModule, listModules };

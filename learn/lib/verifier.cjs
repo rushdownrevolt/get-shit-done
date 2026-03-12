@@ -2,6 +2,21 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+
+/**
+ * Resolve an artifact path, expanding tilde to home directory.
+ *
+ * @param {string} cwd - Working directory for relative paths.
+ * @param {string} artifactPath - Path to resolve (may start with ~/ or ~\).
+ * @returns {string} Absolute resolved path.
+ */
+function resolvePath(cwd, artifactPath) {
+  if (artifactPath.startsWith('~/') || artifactPath.startsWith('~\\')) {
+    return path.join(os.homedir(), artifactPath.slice(2));
+  }
+  return path.join(cwd, artifactPath);
+}
 
 /**
  * Check if a file exists and contains expected structural patterns.
@@ -41,7 +56,7 @@ function runVerification(cwd, specPath) {
   const artifacts = [];
 
   for (const artifact of spec.artifacts) {
-    const filePath = path.join(cwd, artifact.path);
+    const filePath = resolvePath(cwd, artifact.path);
     const checks = (artifact.checks || []).map(c => ({
       pattern: new RegExp(c.pattern),
       description: c.description,
@@ -60,4 +75,4 @@ function runVerification(cwd, specPath) {
   };
 }
 
-module.exports = { verifyArtifact, runVerification };
+module.exports = { verifyArtifact, runVerification, resolvePath };
