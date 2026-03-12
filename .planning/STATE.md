@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 02.1 context gathered
-last_updated: "2026-03-12T14:35:30.549Z"
-last_activity: "2026-03-12 - Completed quick task 1: Clickable file names and code snippets with line references"
+stopped_at: Completed 02.1-01-PLAN.md
+last_updated: "2026-03-12T15:12:00.000Z"
+last_activity: "2026-03-12 - Completed Phase 02.1 Plan 01: Clipboard copy feature"
 progress:
   total_phases: 4
-  completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 4
+  total_plans: 7
+  completed_plans: 7
 ---
 
 ---
@@ -51,14 +51,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** All phases complete
+**Current focus:** Phase 02.1 clipboard copy complete
 
 ## Current Position
 
-Phase: 3 of 3 (Mini-Project Validation)
-Plan: 2 of 2 in current phase
-Status: All plans complete -- milestone v1.0 finished
-Last activity: 2026-03-12 - Completed quick task 1: Clickable file names and code snippets with line references
+Phase: 02.1 (Add command 'c' to copy lesson to clipboard)
+Plan: 1 of 1 in current phase -- complete
+Status: Phase 02.1 complete
+Last activity: 2026-03-12 - Completed Phase 02.1 Plan 01: Clipboard copy feature
 
 Progress: [██████████] 100%
 
@@ -88,6 +88,7 @@ Progress: [██████████] 100%
 | Phase 02 P02 | 9min | 3 tasks | 18 files |
 | Phase 03 P01 | 4min | 2 tasks | 10 files |
 | Phase 03 P02 | 3min | 2 tasks | 2 files |
+| Phase 02.1 P01 | 3min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,9 @@ Recent decisions affecting current work:
 - [Phase 03]: Verifier uses RegExp.test on file content for structural checks -- no AST parsing needed
 - [Phase 03]: Feedback stored in separate feedback.json, not merged into progress.json
 - [Phase 03]: Hints array has 5 entries escalating from conceptual reframe to step-by-step (no code)
+- [Phase 02.1]: Formatter builds markdown from lesson JSON directly, not from ANSI-rendered output
+- [Phase 02.1]: Clipboard 'c' handler checks !key.ctrl to avoid conflict with Ctrl+C quit
+- [Phase 02.1]: fallbackToFile accepts skipOpen option for testability
 
 ### Roadmap Evolution
 
@@ -133,6 +137,6 @@ None -- Phase 3 mini-project design validated during 03-01 execution.
 
 ## Session Continuity
 
-Last session: 2026-03-12T14:35:30.546Z
-Stopped at: Phase 02.1 context gathered
-Resume file: .planning/phases/02.1-add-command-c-to-copy-current-lesson-to-clipboard-for-llm-follow-up/02.1-CONTEXT.md
+Last session: 2026-03-12T15:12:00.000Z
+Stopped at: Completed 02.1-01-PLAN.md
+Resume file: .planning/phases/02.1-add-command-c-to-copy-current-lesson-to-clipboard-for-llm-follow-up/02.1-01-SUMMARY.md

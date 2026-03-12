@@ -58,7 +58,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 02.1-01-PLAN.md — Clipboard and formatter modules, navigator/renderer integration, full test coverage
+- [x] 02.1-01-PLAN.md — Clipboard and formatter modules, navigator/renderer integration, full test coverage (completed 2026-03-12)
 
 ### Phase 3: Mini-Project Validation
 **Goal**: Learner completes a capstone mini-project that proves real capability, with progressive hints when stuck and feedback data that measures lesson quality
@@ -84,4 +84,5 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Interactive Learning Shell | 2/2 | Complete | 2026-03-12 |
 | 2. Prompt-Driven Content Pipeline | 1/2 | In Progress|  |
+| 02.1. Clipboard Copy | 1/1 | Complete | 2026-03-12 |
 | 3. Mini-Project Validation | 0/2 | Complete    | 2026-03-12 |
