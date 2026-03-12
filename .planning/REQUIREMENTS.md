@@ -7,23 +7,23 @@
 
 ### Display
 
-- [ ] **DISP-01**: Terminal output uses ANSI formatting for colors, spacing, and code blocks
+- [x] **DISP-01**: Terminal output uses ANSI formatting for colors, spacing, and code blocks
 - [ ] **DISP-02**: Relevant GSD source code is displayed inline within lessons with line highlighting
 - [ ] **DISP-03**: Current position indicator shows "Lesson N of M" and module progress
 
 ### Content
 
-- [ ] **CONT-01**: Each lesson has clear instructions: what you'll learn, what to do, what success looks like
-- [ ] **CONT-02**: Lessons are numbered and ordered within modules with defined progression
+- [x] **CONT-01**: Each lesson has clear instructions: what you'll learn, what to do, what success looks like
+- [x] **CONT-02**: Lessons are numbered and ordered within modules with defined progression
 - [ ] **CONT-03**: Lesson content is generated via prompts that use parsed GSD source files as input (source goes into prompts, prompts produce lesson content)
 - [ ] **CONT-04**: Lessons include contextual "why" explanations covering design decisions and rationale, not just code
 - [ ] **CONT-05**: An evaluation rubric scores prompt-generated lessons on accuracy, clarity, depth, and pedagogical quality -- used to iterate prompts until output is good enough
 
 ### Progress
 
-- [ ] **PROG-01**: Learning progress persists across terminal sessions via local JSON storage
+- [x] **PROG-01**: Learning progress persists across terminal sessions via local JSON storage
 - [ ] **PROG-02**: Graceful error handling with helpful messages for common mistakes (wrong directory, missing files, etc.)
-- [ ] **PROG-03**: ASCII concept map shows where current lesson fits in overall GSD architecture ("you are HERE")
+- [x] **PROG-03**: ASCII concept map shows where current lesson fits in overall GSD architecture ("you are HERE")
 
 ### Validation
 
@@ -74,17 +74,17 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DISP-01 | Phase 1 | Pending |
+| DISP-01 | Phase 1 | Complete |
 | DISP-02 | Phase 1 | Pending |
 | DISP-03 | Phase 1 | Pending |
-| CONT-01 | Phase 1 | Pending |
-| CONT-02 | Phase 1 | Pending |
+| CONT-01 | Phase 1 | Complete |
+| CONT-02 | Phase 1 | Complete |
 | CONT-03 | Phase 2 | Pending |
 | CONT-04 | Phase 2 | Pending |
 | CONT-05 | Phase 2 | Pending |
-| PROG-01 | Phase 1 | Pending |
+| PROG-01 | Phase 1 | Complete |
 | PROG-02 | Phase 1 | Pending |
-| PROG-03 | Phase 1 | Pending |
+| PROG-03 | Phase 1 | Complete |
 | VALD-01 | Phase 3 | Pending |
 | VALD-02 | Phase 3 | Pending |
 | VALD-03 | Phase 3 | Pending |
