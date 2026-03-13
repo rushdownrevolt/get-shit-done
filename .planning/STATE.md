@@ -2,25 +2,10 @@
 gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Full-Stack Mini-Project
-status: completed
-stopped_at: Completed quick-5 (lesson progress footer)
-last_updated: "2026-03-13T02:46:01.254Z"
-last_activity: 2026-03-13 - Completed 08-01 (full-stack hints)
-progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
----
-
----
-gsd_state_version: 1.0
-milestone: v2.1
-milestone_name: Full-Stack Mini-Project
 status: complete
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-03-13T02:42:00Z"
-last_activity: 2026-03-13 - Completed quick-5 (lesson progress footer)
+stopped_at: Completed quick-6 (remove duplicated footer)
+last_updated: "2026-03-13T02:46:01.254Z"
+last_activity: 2026-03-13 - Completed quick-6 (fix duplicated footer)
 progress:
   total_phases: 2
   completed_phases: 2
