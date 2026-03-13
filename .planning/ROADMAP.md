@@ -58,7 +58,9 @@ Plans:
   1. hints.json references Module 1 output as the starting point (learner knows they are extending, not starting fresh)
   2. Hints provide progressive guidance for both Node.js artifacts (echo.cjs handler creation, then switch case wiring)
   3. Hints follow the existing progressive disclosure pattern (general direction first, specific code guidance later)
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 08-01-PLAN.md — Rewrite hints.json with full-stack skeptic progressive guidance
 
 ## Progress
 
@@ -74,7 +76,7 @@ Plans:
 | 5. Module 1 Lessons | v2.0 | 2/2 | Complete | 2026-03-12 |
 | 6. Module 1 Mini-Project | v2.0 | 1/1 | Complete | 2026-03-12 |
 | 7. Full-Stack Lesson and Verification | v2.1 | 1/1 | Complete | 2026-03-13 |
-| 8. Full-Stack Hints | v2.1 | 0/? | Not started | - |
+| 8. Full-Stack Hints | v2.1 | 0/1 | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md (if archived)*
