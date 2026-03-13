@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.2
 milestone_name: Module Discovery & Welcome
 status: active
-stopped_at: Phase 10 context gathered
-last_updated: "2026-03-13T13:54:09.054Z"
+stopped_at: Completed 10-01-PLAN.md
+last_updated: "2026-03-13T15:09:41.764Z"
 last_activity: 2026-03-13 — Completed 09-02 dispatch loop and return contract
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
 ---
 
 ---
@@ -69,6 +69,7 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - 09-01: isFirstRun is pure function, chained migrations persist to disk immediately
 - 09-02: progressFn updates both top-level and per-module currentLesson for backward compatibility
 - 09-02: Dispatch loop uses action variable pattern for future extensibility
+- [Phase 10]: renderModuleList shared between welcome and picker via isFirstRun parameter (DISC-04)
 
 ### Pending Todos
 
@@ -87,9 +88,10 @@ None.
 | 5 | Update footer to show module name and lesson progress | 2026-03-13 | 1aa3f53 | [5-update-footer-to-show-module-name-lesson](./quick/5-update-footer-to-show-module-name-lesson/) |
 | 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
+| Phase 10 P01 | 2min | 2 tasks | 3 files |
 
 ## Session Continuity
 
-Last session: 2026-03-13T13:54:09.052Z
-Stopped at: Phase 10 context gathered
+Last session: 2026-03-13T15:09:41.762Z
+Stopped at: Completed 10-01-PLAN.md
 Next action: Execute Phase 10 plans

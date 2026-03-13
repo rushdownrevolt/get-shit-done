@@ -9,16 +9,16 @@ Requirements for Module Discovery & Welcome milestone. Each maps to roadmap phas
 
 ### Welcome & Onboarding
 
-- [ ] **WELC-01**: User sees a welcome screen with GSD pitch on first launch
+- [x] **WELC-01**: User sees a welcome screen with GSD pitch on first launch
 - [x] **WELC-02**: System detects first-run vs returning user
-- [ ] **WELC-03**: Welcome copy communicates what the learner will be able to do after completing modules
+- [x] **WELC-03**: Welcome copy communicates what the learner will be able to do after completing modules
 
 ### Module Discovery
 
-- [ ] **DISC-01**: User can select a module from a picker showing all modules with progress indicators
-- [ ] **DISC-02**: Module 1 is flagged as recommended for new users
-- [ ] **DISC-03**: Returning users see a slimmer welcome-back message on module page
-- [ ] **DISC-04**: Welcome and module picker share a single module list renderer
+- [x] **DISC-01**: User can select a module from a picker showing all modules with progress indicators
+- [x] **DISC-02**: Module 1 is flagged as recommended for new users
+- [x] **DISC-03**: Returning users see a slimmer welcome-back message on module page
+- [x] **DISC-04**: Welcome and module picker share a single module list renderer
 
 ### Navigation & Resume
 
@@ -53,13 +53,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WELC-01 | Phase 10 | Pending |
+| WELC-01 | Phase 10 | Complete |
 | WELC-02 | Phase 9 | Complete |
-| WELC-03 | Phase 10 | Pending |
-| DISC-01 | Phase 10 | Pending |
-| DISC-02 | Phase 10 | Pending |
-| DISC-03 | Phase 10 | Pending |
-| DISC-04 | Phase 10 | Pending |
+| WELC-03 | Phase 10 | Complete |
+| DISC-01 | Phase 10 | Complete |
+| DISC-02 | Phase 10 | Complete |
+| DISC-03 | Phase 10 | Complete |
+| DISC-04 | Phase 10 | Complete |
 | NAV-01 | Phase 9 | Complete |
 | NAV-02 | Phase 11 | Pending |
 | NAV-03 | Phase 11 | Pending |
