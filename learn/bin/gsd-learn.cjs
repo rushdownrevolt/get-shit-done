@@ -5,9 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const { validateEnvironment, formatError } = require('../lib/errors.cjs');
 const { loadProgress, saveProgress, isFirstRun } = require('../lib/progress.cjs');
-const { loadModule } = require('../lib/lessons.cjs');
-const { renderLesson, renderPart, renderCompletionBanner } = require('../lib/renderer.cjs');
-const { runNavigationLoop, waitForKey } = require('../lib/navigator.cjs');
+const { loadModule, listModules } = require('../lib/lessons.cjs');
+const { renderLesson, renderPart, renderCompletionBanner, renderWelcomeScreen, renderModulePicker } = require('../lib/renderer.cjs');
+const { runNavigationLoop, waitForKey, waitForPickerKey } = require('../lib/navigator.cjs');
 const { runVerification } = require('../lib/verifier.cjs');
 const { getNextHint } = require('../lib/hints.cjs');
 const { recordEvent, loadFeedback } = require('../lib/feedback.cjs');
@@ -140,10 +140,41 @@ async function main() {
   // Determine starting module from saved progress or CLI flag
   let activeModuleId = flags.module || progress.currentModule || 'gsd-commands';
 
-  let action = 'navigate'; // Future: 'welcome', 'picker'
+  let action = firstRun ? 'welcome' : 'navigate';
 
   while (true) {
-    if (action === 'navigate') {
+    if (action === 'welcome') {
+      const modules = listModules(contentDir);
+      // Enrich modules with lessonCount
+      for (const mod of modules) {
+        const loaded = loadModule(mod.id, contentDir);
+        mod.lessonCount = loaded.lessons.length;
+      }
+      process.stdout.write(renderWelcomeScreen(modules, progress));
+      const selected = await waitForPickerKey(modules.length);
+      if (selected.action === 'quit') break;
+      activeModuleId = modules[selected.index].id;
+      action = 'navigate';
+      continue;
+    } else if (action === 'picker') {
+      const modules = listModules(contentDir);
+      // Enrich modules with lessonCount
+      for (const mod of modules) {
+        const loaded = loadModule(mod.id, contentDir);
+        mod.lessonCount = loaded.lessons.length;
+      }
+      process.stdout.write(renderModulePicker(modules, progress));
+      const selected = await waitForPickerKey(modules.length);
+      if (selected.action === 'quit') break;
+      activeModuleId = modules[selected.index].id;
+      // If selected module is completed, reset for review mode
+      if (progress.modules[activeModuleId] && progress.modules[activeModuleId].completed) {
+        progress.modules[activeModuleId].currentLesson = 0;
+        saveProgress(cwd, progress);
+      }
+      action = 'navigate';
+      continue;
+    } else if (action === 'navigate') {
       const mod = loadModule(activeModuleId, contentDir);
       const moduleProgress = progress.modules[activeModuleId] || { currentLesson: 0, started: false, completed: false };
       const startIndex = Math.min(moduleProgress.currentLesson || 0, mod.lessons.length - 1);
@@ -213,11 +244,10 @@ async function main() {
       } else if (result.reason === 'completed') {
         progress.modules[activeModuleId].completed = true;
         saveProgress(cwd, progress);
-        break; // Phase 10 will change this to go to picker
+        action = 'picker';
+        continue;
       }
     }
-    // Future: action === 'welcome', action === 'picker'
-    break;
   }
 
   process.stdout.write('\nGoodbye! Your progress has been saved.\n');
