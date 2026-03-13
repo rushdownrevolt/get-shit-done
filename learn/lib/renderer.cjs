@@ -61,7 +61,7 @@ function renderLesson(lesson, currentIndex, totalLessons, moduleDir, moduleTitle
 
   // 9b. Lesson progress footer (module context)
   if (moduleTitle) {
-    parts.push(renderLessonProgressFooter(moduleTitle, lesson.title, currentIndex, totalLessons, 0, 1));
+    parts.push(renderLessonProgressFooter(moduleTitle, lesson.title, currentIndex, totalLessons));
     parts.push('\n\n');
   }
 
@@ -253,7 +253,8 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
 
   // 9. Lesson progress footer (module context)
   if (moduleTitle) {
-    parts.push(renderLessonProgressFooter(moduleTitle, lesson.title, currentLessonIndex, totalLessons, partIndex, totalParts));
+    const blockSummary = isConceptMapPart ? 'Architecture Overview' : (groups[partIndex] ? groups[partIndex].focus : undefined);
+    parts.push(renderLessonProgressFooter(moduleTitle, lesson.title, currentLessonIndex, totalLessons, blockSummary));
     parts.push('\n\n');
   }
 
@@ -267,18 +268,18 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
 /**
  * Render a lesson-level progress footer showing module context.
  *
- * Format: `  <Module Name>  ● ● ○ ○ ○  <Lesson Name> (X / Y)`
+ * Format: `  <Module Name>  ● ● ○ ○ ○  <Lesson Name>:`
+ * Optional subtitle: blockSummary text aligned under lesson title (dim styled).
  * Filled dots = lessons 0..currentLessonIndex, empty dots = remaining.
  *
  * @param {string} moduleTitle - Name of the current module.
  * @param {string} lessonTitle - Name of the current lesson.
  * @param {number} currentLessonIndex - Zero-based index of current lesson.
  * @param {number} totalLessons - Total number of lessons in module.
- * @param {number} currentPart - Zero-based index of current part.
- * @param {number} totalParts - Total number of parts in current lesson.
- * @returns {string} Formatted footer string.
+ * @param {string} [blockSummary] - Optional focus text for the current content block.
+ * @returns {string} Formatted footer string (one or two lines).
  */
-function renderLessonProgressFooter(moduleTitle, lessonTitle, currentLessonIndex, totalLessons, currentPart, totalParts) {
+function renderLessonProgressFooter(moduleTitle, lessonTitle, currentLessonIndex, totalLessons, blockSummary) {
   const filled = '\u25CF'; // ●
   const empty = '\u25CB';  // ○
   const dots = [];
@@ -289,7 +290,15 @@ function renderLessonProgressFooter(moduleTitle, lessonTitle, currentLessonIndex
       dots.push(style(empty, 'dim'));
     }
   }
-  return '  ' + moduleTitle + '  ' + dots.join(' ') + '  ' + lessonTitle + ' (' + (currentPart + 1) + ' / ' + totalParts + ')';
+  const firstLine = '  ' + moduleTitle + '  ' + dots.join(' ') + '  ' + lessonTitle + ':';
+  if (!blockSummary) {
+    return firstLine;
+  }
+  // Calculate visual prefix length (before lesson title) for alignment
+  // 2 (leading spaces) + moduleTitle.length + 2 (spaces) + (totalLessons * 2 - 1) (dots with spaces) + 2 (trailing spaces)
+  const prefixLen = 2 + moduleTitle.length + 2 + (totalLessons * 2 - 1) + 2;
+  const subtitleLine = ' '.repeat(prefixLen) + style(blockSummary, 'dim');
+  return firstLine + '\n' + subtitleLine;
 }
 
 /**
