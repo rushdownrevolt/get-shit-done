@@ -4,10 +4,10 @@
 const fs = require('fs');
 const path = require('path');
 const { validateEnvironment, formatError } = require('../lib/errors.cjs');
-const { loadProgress, saveProgress } = require('../lib/progress.cjs');
+const { loadProgress, saveProgress, isFirstRun } = require('../lib/progress.cjs');
 const { loadModule } = require('../lib/lessons.cjs');
 const { renderLesson, renderPart, renderCompletionBanner } = require('../lib/renderer.cjs');
-const { runNavigationLoop } = require('../lib/navigator.cjs');
+const { runNavigationLoop, waitForKey } = require('../lib/navigator.cjs');
 const { runVerification } = require('../lib/verifier.cjs');
 const { getNextHint } = require('../lib/hints.cjs');
 const { recordEvent, loadFeedback } = require('../lib/feedback.cjs');
@@ -40,9 +40,6 @@ async function main() {
     process.exit(1);
   }
 
-  const moduleId = flags.module || 'gsd-commands';
-  const contentDir = path.join(__dirname, '..', 'content');
-
   // --reset: clear progress
   if (flags.reset) {
     const progressPath = path.join(cwd, '.planning', 'learn', 'progress.json');
@@ -54,7 +51,7 @@ async function main() {
   // --status: show progress summary
   if (flags.status) {
     const progress = loadProgress(cwd);
-    const mod = progress.currentModule || moduleId;
+    const mod = progress.currentModule || flags.module || 'gsd-commands';
     const lesson = progress.currentLesson || 0;
     process.stdout.write('Module: ' + mod + '\n');
     process.stdout.write('Current lesson: ' + (lesson + 1) + '\n');
@@ -63,10 +60,11 @@ async function main() {
 
   // --verify: run structural verification
   if (flags.verify) {
-    const specPath = path.join(__dirname, '..', 'content', 'modules', moduleId, 'project', 'spec.json');
+    const verifyModuleId = flags.module || 'gsd-commands';
+    const specPath = path.join(__dirname, '..', 'content', 'modules', verifyModuleId, 'project', 'spec.json');
     const result = runVerification(cwd, specPath);
     const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
-    const projectId = spec.id || moduleId + '-project';
+    const projectId = spec.id || verifyModuleId + '-project';
 
     recordEvent(cwd, projectId, 'verify_attempt', { passed: result.passed, artifactCount: result.artifacts.length });
     if (result.passed) {
@@ -101,11 +99,12 @@ async function main() {
 
   // --hint: show next progressive hint
   if (flags.hint) {
-    const hintsPath = path.join(__dirname, '..', 'content', 'modules', moduleId, 'project', 'hints.json');
+    const hintModuleId = flags.module || 'gsd-commands';
+    const hintsPath = path.join(__dirname, '..', 'content', 'modules', hintModuleId, 'project', 'hints.json');
     const hints = JSON.parse(fs.readFileSync(hintsPath, 'utf-8'));
-    const specPath = path.join(__dirname, '..', 'content', 'modules', moduleId, 'project', 'spec.json');
+    const specPath = path.join(__dirname, '..', 'content', 'modules', hintModuleId, 'project', 'spec.json');
     const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
-    const projectId = spec.id || moduleId + '-project';
+    const projectId = spec.id || hintModuleId + '-project';
 
     // Count previous hint_requested events
     const feedback = loadFeedback(cwd);
@@ -133,48 +132,94 @@ async function main() {
 
   // Default: start/resume learning
   const progress = loadProgress(cwd);
-  const mod = loadModule(moduleId, contentDir);
-  const startIndex = Math.min(progress.currentLesson || 0, mod.lessons.length - 1);
+  const contentDir = path.join(__dirname, '..', 'content');
 
-  // Update progress with current module
-  progress.currentModule = moduleId;
+  // Detect first-run (Phase 10 will use this for welcome screen)
+  const firstRun = isFirstRun(progress);
 
-  const moduleDir = path.join(contentDir, 'modules', moduleId);
+  // Determine starting module from saved progress or CLI flag
+  let activeModuleId = flags.module || progress.currentModule || 'gsd-commands';
 
-  const renderFn = (lesson, partIndex, totalParts, currentLessonIdx, totalLessons) => {
-    process.stdout.write(renderPart(lesson, partIndex, totalParts, currentLessonIdx, totalLessons, moduleDir, mod.title));
-  };
+  let action = 'navigate'; // Future: 'welcome', 'picker'
 
-  const progressFn = (idx) => {
-    progress.currentLesson = idx;
-    saveProgress(cwd, progress);
+  while (true) {
+    if (action === 'navigate') {
+      const mod = loadModule(activeModuleId, contentDir);
+      const moduleProgress = progress.modules[activeModuleId] || { currentLesson: 0, started: false, completed: false };
+      const startIndex = Math.min(moduleProgress.currentLesson || 0, mod.lessons.length - 1);
 
-    // Track project_started when learner views a lesson with project content
-    const lesson = mod.lessons[idx];
-    if (lesson && lesson.content) {
-      const hasProject = lesson.content.some(s => s.type === 'project');
-      if (hasProject) {
-        const specPath = path.join(__dirname, '..', 'content', 'modules', moduleId, 'project', 'spec.json');
-        try {
-          const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
-          const projectId = spec.id || moduleId + '-project';
-          const feedback = loadFeedback(cwd);
-          const proj = feedback.projects[projectId];
-          const alreadyStarted = proj && proj.events.some(e => e.type === 'project_started');
-          if (!alreadyStarted) {
-            recordEvent(cwd, projectId, 'project_started', {});
+      // Show module intro for unstarted modules (per user decision)
+      if (!moduleProgress.started) {
+        process.stdout.write('\n');
+        process.stdout.write(`  ${mod.title}\n`);
+        process.stdout.write(`  ${mod.description}\n\n`);
+        process.stdout.write('  Press any key to begin\n');
+        await waitForKey();
+      }
+
+      // Mark module as started, update top-level tracking
+      progress.currentModule = activeModuleId;
+      progress.currentLesson = moduleProgress.currentLesson || 0;
+      if (!progress.modules[activeModuleId]) {
+        progress.modules[activeModuleId] = { currentLesson: 0, started: true, completed: false };
+      }
+      progress.modules[activeModuleId].started = true;
+      saveProgress(cwd, progress);
+
+      const moduleDir = path.join(contentDir, 'modules', activeModuleId);
+
+      const renderFn = (lesson, partIndex, totalParts, currentLessonIdx, totalLessons) => {
+        process.stdout.write(renderPart(lesson, partIndex, totalParts, currentLessonIdx, totalLessons, moduleDir, mod.title));
+      };
+
+      const progressFn = (idx) => {
+        // Update BOTH top-level and per-module position (per user decision)
+        progress.currentLesson = idx;
+        progress.modules[activeModuleId].currentLesson = idx;
+        saveProgress(cwd, progress);
+
+        // Track project_started when learner views a lesson with project content
+        const lesson = mod.lessons[idx];
+        if (lesson && lesson.content) {
+          const hasProject = lesson.content.some(s => s.type === 'project');
+          if (hasProject) {
+            const specPath = path.join(__dirname, '..', 'content', 'modules', activeModuleId, 'project', 'spec.json');
+            try {
+              const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
+              const projectId = spec.id || activeModuleId + '-project';
+              const feedback = loadFeedback(cwd);
+              const proj = feedback.projects[projectId];
+              const alreadyStarted = proj && proj.events.some(e => e.type === 'project_started');
+              if (!alreadyStarted) {
+                recordEvent(cwd, projectId, 'project_started', {});
+              }
+            } catch {
+              // spec.json not found -- skip tracking
+            }
           }
-        } catch {
-          // spec.json not found -- skip tracking
         }
+      };
+
+      const result = await runNavigationLoop(mod.lessons, startIndex, renderFn, progressFn, {
+        moduleMeta: { title: mod.title, lessonCount: mod.lessons.length },
+        completionBannerFn: renderCompletionBanner,
+      });
+
+      if (result.reason === 'quit') {
+        break;
+      } else if (result.reason === 'modules') {
+        action = 'picker'; // Phase 10 will handle this
+        continue;
+      } else if (result.reason === 'completed') {
+        progress.modules[activeModuleId].completed = true;
+        saveProgress(cwd, progress);
+        break; // Phase 10 will change this to go to picker
       }
     }
-  };
+    // Future: action === 'welcome', action === 'picker'
+    break;
+  }
 
-  await runNavigationLoop(mod.lessons, startIndex, renderFn, progressFn, {
-    moduleMeta: { title: mod.title, lessonCount: mod.lessons.length },
-    completionBannerFn: renderCompletionBanner,
-  });
   process.stdout.write('\nGoodbye! Your progress has been saved.\n');
 }
 
