@@ -42,7 +42,7 @@ See: .planning/PROJECT.md (updated 2026-03-12)
 Phase: 7 of 8 (Full-Stack Lesson and Verification) -- COMPLETE
 Plan: 1 of 1 (complete)
 Status: Phase 7 complete, Phase 8 next
-Last activity: 2026-03-13 — Completed 07-01-PLAN.md
+Last activity: 2026-03-13 - Completed quick task 4: Fix backward navigation at lesson start to go to end of previous lesson
 
 Progress: [#####░░░░░] 50%
 
@@ -69,6 +69,13 @@ None.
 ### Blockers/Concerns
 
 None.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Clickable file names and code snippets | 2026-03-12 | — | [1-clickable-file-names-and-code-snippets-w](./quick/1-clickable-file-names-and-code-snippets-w/) |
+| 4 | Fix backward navigation at lesson start to go to end of previous lesson | 2026-03-13 | 26c3859 | [4-fix-backward-navigation-at-lesson-start-](./quick/4-fix-backward-navigation-at-lesson-start-/) |
 
 ## Session Continuity
 
