@@ -8,10 +8,16 @@ A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, in
 
 The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
 
-## Current State
+## Current Milestone: v2.2 Module Discovery & Welcome
 
-**Latest shipped:** v2.1 Full-Stack Mini-Project (2026-03-13)
-**Next milestone:** TBD — run `/gsd:new-milestone` to plan
+**Goal:** Give learners a proper introduction to GSD Learn and let them navigate between modules
+
+**Target features:**
+- Welcome experience pitching GSD and what the learner will achieve
+- Module picker with progress indicators and recommended starting point
+- Resume-where-you-left-off for returning users
+- "M" key to navigate to module page from anywhere
+- "H" key for hints on mini-project step
 
 ## Requirements
 
@@ -40,6 +46,13 @@ The learner can confidently modify and extend GSD for their own needs, validated
 
 <!-- Next milestone scope -->
 
+- [ ] Welcome screen with GSD pitch for first-time users
+- [ ] Module picker with per-module progress and recommended flag
+- [ ] Resume-to-last-position for returning users
+- [ ] "M" key binding to navigate to module page from any lesson
+- [ ] "H" key binding for hints on mini-project step
+- [ ] Slimmer return-user message on module page
+
 ### Out of Scope
 
 - Web UI or browser-based experience — terminal only
@@ -48,7 +61,7 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - Video or multimedia content — text and code only
 - Teaching other tools — GSD only
 - Lesson content auto-updates when GSD source changes — deferred to future milestone
-- Module discovery UI — hardcoded Module 1 start for now (deferred to v2.2+)
+- Module discovery UI — being built in v2.2
 
 ## Context
 
@@ -86,4 +99,4 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Cross-module spec carry-forward | Module 2 spec carries all Module 1 checks verbatim for continuity | ✓ Good |
 
 ---
-*Last updated: 2026-03-13 after v2.1 milestone*
+*Last updated: 2026-03-12 after v2.2 milestone start*
