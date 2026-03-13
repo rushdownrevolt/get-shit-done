@@ -8,6 +8,17 @@ A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, in
 
 The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
 
+## Current Milestone: v2.1 Full-Stack Mini-Project
+
+**Goal:** Update Module 2's mini-project so the learner extends their `/gsd:skeptic` command from Module 1 by adding the Node.js backend (echo.cjs handler + gsd-tools.cjs switch case), proving full-stack understanding across both layers.
+
+**Target features:**
+- Module 2 mini-project updated to build on Module 1's skeptic command
+- Learner adds echo.cjs handler function for skeptic
+- Learner adds gsd-tools.cjs switch case to wire skeptic into the CLI
+- Updated spec.json with Node.js artifact checks (beyond markdown-only)
+- Updated hints.json for full-stack guidance
+
 ## Requirements
 
 ### Validated
@@ -30,9 +41,10 @@ The learner can confidently modify and extend GSD for their own needs, validated
 
 ### Active
 
-<!-- Next milestone scope — to be defined by /gsd:new-milestone -->
+<!-- Current scope for v2.1 -->
 
-(None — define with next milestone)
+- [ ] Module 2 mini-project upgraded to full-stack skeptic build
+- [ ] Node.js artifact verification (echo.cjs + switch case checks)
 
 ### Out of Scope
 
@@ -75,7 +87,7 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Hand-authored lessons with real snippets | Real source code content produces high-quality authentic lessons | ✓ Good |
 | Wave 0 test pattern | Graceful degradation enables incremental delivery without blocking CI | ✓ Good |
 | Nested XML extraction in parser | Recursive regex handles GSD workflow format cleanly without DOM parser | ✓ Good |
-| Full-stack mini-project for Module 2 | Learner builds all 4 layers (command.md, workflow.md, echo.cjs, switch case) | — Deferred to v2.1 |
+| Full-stack mini-project for Module 2 | Learner builds all 4 layers (command.md, workflow.md, echo.cjs, switch case) | ◆ In progress (v2.1) |
 
 ---
-*Last updated: 2026-03-12 after v2.0 milestone*
+*Last updated: 2026-03-12 after v2.1 milestone start*

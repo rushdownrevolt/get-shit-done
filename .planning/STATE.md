@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: GSD Commands & Workflows Module
-status: milestone-complete
-stopped_at: Milestone v2.0 archived
-last_updated: "2026-03-12T22:15:00Z"
-last_activity: 2026-03-12 — Milestone v2.0 complete and archived
+milestone: v2.1
+milestone_name: Full-Stack Mini-Project
+status: defining-requirements
+stopped_at: Defining requirements
+last_updated: "2026-03-12T22:30:00Z"
+last_activity: 2026-03-12 — Milestone v2.1 started
 progress:
-  total_phases: 9
-  completed_phases: 9
-  total_plans: 19
-  completed_plans: 19
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,15 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-12)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Planning next milestone
+**Current focus:** Defining v2.1 requirements
 
 ## Current Position
 
-Milestone: v2.0 GSD Commands & Workflows Module — COMPLETE
-Status: Milestone archived
-Last activity: 2026-03-12 — Milestone v2.0 complete and archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-12 — Milestone v2.1 started
 
-Progress: [██████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -42,7 +43,6 @@ Progress: [██████████] 100%
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-All v2.0 decisions archived with milestone.
 
 ### Pending Todos
 
@@ -55,5 +55,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Milestone v2.0 archived
-Next action: `/gsd:new-milestone` to start next milestone
+Stopped at: Defining v2.1 requirements
+Next action: Define requirements and create roadmap
