@@ -3,7 +3,7 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert');
 
-const { renderLesson, renderProgressDots, renderCompletionBanner, renderPart, groupContentItems, renderLessonProgressFooter } = require('../lib/renderer.cjs');
+const { renderLesson, renderProgressDots, renderCompletionBanner, renderPart, groupContentItems, renderLessonProgressFooter, renderModuleList, renderWelcomeScreen, renderModulePicker } = require('../lib/renderer.cjs');
 const { COLORS, _styleWithColor } = require('../lib/terminal.cjs');
 
 describe('renderLesson', () => {

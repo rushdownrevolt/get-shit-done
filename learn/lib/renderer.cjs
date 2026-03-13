@@ -350,6 +350,7 @@ function renderCompletionBanner(opts) {
   parts.push('\n');
   parts.push('  Mini-projects: ' + opts.miniProjectCount);
   parts.push('\n\n');
+  parts.push('  Press any key to continue\n\n');
   parts.push(style(bar, 'cyan'));
   parts.push('\n');
 
@@ -407,4 +408,89 @@ function groupContentItems(content) {
   return groups;
 }
 
-module.exports = { renderLesson, renderPart, renderProgressDots, renderCompletionBanner, groupContentItems, renderLessonProgressFooter };
+/**
+ * Render the shared module list used by both welcome screen and picker.
+ *
+ * @param {Array} modules - Array of module objects with id, title, description, order, lessonCount.
+ * @param {object} progressData - Progress object with modules map.
+ * @param {boolean} isFirstRun - Whether this is the user's first run.
+ * @returns {string} Formatted module list string.
+ */
+function renderModuleList(modules, progressData, isFirstRun) {
+  const parts = [];
+
+  for (let i = 0; i < modules.length; i++) {
+    const mod = modules[i];
+    const modProgress = progressData.modules && progressData.modules[mod.id];
+    const num = i + 1;
+
+    // Build status indicator
+    let status = '';
+    if (modProgress && modProgress.completed) {
+      status = style(' Completed \u2713', 'green');
+    } else if (modProgress && modProgress.started && modProgress.currentLesson > 0) {
+      const lessonNum = modProgress.currentLesson + 1;
+      const total = mod.lessonCount || '?';
+      status = style(' Lesson ' + lessonNum + ' of ' + total, 'yellow');
+    } else if (i === 0 && (isFirstRun || !modProgress || !modProgress.started)) {
+      status = style(' Start here', 'cyan');
+    }
+
+    parts.push('  [' + num + '] ' + style(mod.title, 'bold') + status + '\n');
+    parts.push('      ' + style(mod.description, 'dim') + '\n\n');
+  }
+
+  return parts.join('');
+}
+
+/**
+ * Render the welcome screen for first-time users.
+ *
+ * @param {Array} modules - Array of module objects.
+ * @param {object} progressData - Progress object.
+ * @returns {string} Formatted welcome screen string.
+ */
+function renderWelcomeScreen(modules, progressData) {
+  const parts = [];
+
+  parts.push(clearScreen());
+  parts.push('\n');
+  parts.push(style('  GSD Learn', 'bold', 'cyan'));
+  parts.push('\n\n');
+  parts.push(horizontalRule(60));
+  parts.push('\n\n');
+  parts.push('  Learn to build your own AI workflows.\n');
+  parts.push('  Two modules. Real GSD source code.\n');
+  parts.push('  By the end, you\'ll ship a custom command from scratch.\n');
+  parts.push('\n');
+  parts.push(horizontalRule(60));
+  parts.push('\n\n');
+  parts.push(renderModuleList(modules, progressData, true));
+  parts.push('  Press a number to begin\n');
+
+  return parts.join('');
+}
+
+/**
+ * Render the module picker for returning users.
+ *
+ * @param {Array} modules - Array of module objects.
+ * @param {object} progressData - Progress object.
+ * @returns {string} Formatted module picker string.
+ */
+function renderModulePicker(modules, progressData) {
+  const parts = [];
+
+  parts.push(clearScreen());
+  parts.push('\n');
+  parts.push(style('  Pick up where you left off.', 'dim'));
+  parts.push('\n\n');
+  parts.push(horizontalRule(60));
+  parts.push('\n\n');
+  parts.push(renderModuleList(modules, progressData, false));
+  parts.push('  Press a number to begin  [q] Quit\n');
+
+  return parts.join('');
+}
+
+module.exports = { renderLesson, renderPart, renderProgressDots, renderCompletionBanner, groupContentItems, renderLessonProgressFooter, renderModuleList, renderWelcomeScreen, renderModulePicker };
