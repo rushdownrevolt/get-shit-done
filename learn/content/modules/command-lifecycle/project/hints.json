@@ -1,7 +1,7 @@
 [
-  "Think about the journey a command takes. You traced it in lessons 1-5. Your echo command follows the same path.",
-  "Lesson 4 (Tool Modules) showed you exactly how existing commands are structured. Re-read it and pay attention to the function signatures and export patterns.",
-  "Look at get-shit-done/bin/lib/ -- each command domain has its own .cjs file. Your echo command needs one too.",
-  "Your module needs to export a function that follows the cmd* naming convention. Check how cmdConfigSet or cmdPhasesList are structured -- your function receives similar arguments.",
-  "Create lib/echo.cjs with a cmdEcho function that uses process.stdout.write for output. Then add a case 'echo': block in the switch statement in gsd-tools.cjs to call it. Follow the JSON/raw dual-output pattern you saw in lesson 4."
+  "You already built the markdown layer in Module 1 -- the command spec and workflow are done. Now think about what makes a command actually run. Your skeptic command needs a Node.js backend: a handler module and a way for the dispatcher to find it.",
+  "Lessons 4 (Tool Modules) and 5 (State and Configuration) showed you exactly how existing handlers work. Re-read them and pay attention to how each command gets its own module file and how the switch statement in gsd-tools.cjs routes commands to handlers.",
+  "Look at get-shit-done/bin/lib/ -- each command domain has its own .cjs file. Your skeptic command needs one too. Then look at the switch statement in get-shit-done/bin/gsd-tools.cjs to see how existing commands are wired up.",
+  "Your handler module needs to export a function following the cmd* naming convention (like cmdSkeptic). Check how existing handlers like cmdConfigSet or cmdPhasesList are structured -- they use process.stdout.write or the output() pattern. The switch case in gsd-tools.cjs needs a case 'skeptic' entry that imports and calls your handler.",
+  "Create get-shit-done/bin/lib/skeptic.cjs with a cmdSkeptic function that uses process.stdout.write for output, then export it via module.exports. Next, add case 'skeptic': in the switch statement in gsd-tools.cjs to import your module and call the handler. Follow the same import-and-call pattern you see in the existing switch cases."
 ]
