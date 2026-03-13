@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1-3 + 01.1, 02.1 (shipped 2026-03-12)
 - ✅ **v2.0 GSD Commands & Workflows Module** — Phases 4-6 (shipped 2026-03-12)
-- **v2.1 Full-Stack Mini-Project** — Phases 7-8 (shipped 2026-03-13)
+- ✅ **v2.1 Full-Stack Mini-Project** — Phases 7-8 (shipped 2026-03-13)
 
 ## Phases
 
@@ -29,38 +29,13 @@
 
 </details>
 
-### v2.1 Full-Stack Mini-Project (Phases 7-8)
+<details>
+<summary>v2.1 Full-Stack Mini-Project (Phases 7-8) — SHIPPED 2026-03-13</summary>
 
-- [x] **Phase 7: Full-Stack Lesson and Verification** - Update Module 2 lesson 6 content and spec.json to cover all 4 skeptic layers
-- [x] **Phase 8: Full-Stack Hints** - Update hints.json with guidance connecting markdown and Node.js layers
+- [x] Phase 7: Full-Stack Lesson and Verification (1/1 plan) — completed 2026-03-13
+- [x] Phase 8: Full-Stack Hints (1/1 plan) — completed 2026-03-13
 
-## Phase Details
-
-### Phase 7: Full-Stack Lesson and Verification
-**Goal**: Learner receives a mini-project that builds on their Module 1 skeptic command by adding the Node.js backend
-**Depends on**: Phase 6 (Module 1 mini-project must exist as the foundation)
-**Requirements**: MP-01, MP-02, VER-01, VER-02
-**Success Criteria** (what must be TRUE):
-  1. Module 2 Lesson 6 references /gsd:skeptic from Module 1 as the starting point (not a standalone echo command)
-  2. Lesson 6 deliverables list all 4 layers: command.md, workflow.md, lib/skeptic.cjs handler, gsd-tools.cjs switch case
-  3. spec.json verifies Node.js artifacts exist (lib/skeptic.cjs handler function and gsd-tools.cjs switch case)
-  4. spec.json verifies Module 1 markdown artifacts remain present and valid (command.md and workflow.md)
-  5. Running the verifier against a complete skeptic implementation reports all checks passing
-**Plans:** 1 plan
-Plans:
-- [x] 07-01-PLAN.md — Update lesson 6 content and spec.json from echo to full-stack skeptic
-
-### Phase 8: Full-Stack Hints
-**Goal**: Learner gets progressive guidance that connects their existing markdown-layer work to the new Node.js-layer work
-**Depends on**: Phase 7 (hints must match the updated lesson content and spec checks)
-**Requirements**: HNT-01
-**Success Criteria** (what must be TRUE):
-  1. hints.json references Module 1 output as the starting point (learner knows they are extending, not starting fresh)
-  2. Hints provide progressive guidance for both Node.js artifacts (echo.cjs handler creation, then switch case wiring)
-  3. Hints follow the existing progressive disclosure pattern (general direction first, specific code guidance later)
-**Plans:** 1 plan
-Plans:
-- [x] 08-01-PLAN.md — Rewrite hints.json with full-stack skeptic progressive guidance
+</details>
 
 ## Progress
 
@@ -79,5 +54,6 @@ Plans:
 | 8. Full-Stack Hints | v2.1 | 1/1 | Complete | 2026-03-13 |
 
 ---
-*For v1.0 phase details, see: milestones/v1.0-ROADMAP.md (if archived)*
+*For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
 *For v2.0 phase details, see: milestones/v2.0-ROADMAP.md*
+*For v2.1 phase details, see: milestones/v2.1-ROADMAP.md*

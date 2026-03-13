@@ -2,6 +2,21 @@
 gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Full-Stack Mini-Project
+status: completed
+stopped_at: Completed quick-5 (lesson progress footer)
+last_updated: "2026-03-13T02:46:01.254Z"
+last_activity: 2026-03-13 - Completed 08-01 (full-stack hints)
+progress:
+  total_phases: 2
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 2
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.1
+milestone_name: Full-Stack Mini-Project
 status: complete
 stopped_at: Completed 08-01-PLAN.md
 last_updated: "2026-03-13T02:42:00Z"
@@ -18,10 +33,10 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-12)
+See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Milestone v2.1 complete
+**Current focus:** Planning next milestone
 
 ## Current Position
 
@@ -68,6 +83,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-13T02:42:00Z
-Stopped at: Completed quick-5 (lesson progress footer)
-Next action: Milestone v2.1 complete
+Last session: 2026-03-13
+Stopped at: Milestone v2.1 archived
+Next action: `/gsd:new-milestone`

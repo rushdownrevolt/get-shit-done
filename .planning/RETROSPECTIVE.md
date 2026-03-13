@@ -2,6 +2,40 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v2.1 — Full-Stack Mini-Project
+
+**Shipped:** 2026-03-13
+**Phases:** 2 | **Plans:** 2 | **Sessions:** 1
+
+### What Was Built
+- Module 2 mini-project rewritten from echo to full-stack skeptic (all 4 GSD command layers)
+- 4-artifact verification spec with cross-module check carry-forward from Module 1
+- 5 progressive hints rewritten for full-stack skeptic guidance
+
+### What Worked
+- Small focused milestone (2 phases, 2 plans) executed extremely fast (~5 min total)
+- Clean phase separation: lesson+spec in Phase 7, hints in Phase 8 — no coupling issues
+- Cross-module spec carry-forward kept all Module 1 checks intact automatically
+
+### What Was Inefficient
+- Discuss-phase for Phase 8 added little value — all decisions were Claude's discretion for a simple content update
+- Research was disabled but would have been overkill for a 1-file hints rewrite
+
+### Patterns Established
+- Cross-module verification continuity: when updating Module N, carry forward Module N-1 checks verbatim
+- Hint rewriting as separate phase from lesson content — keeps concerns clean
+
+### Key Lessons
+1. For small content-only milestones, skip discuss-phase and go straight to plan — the overhead isn't justified
+2. The progressive hint pattern (5 hints, vague→specific) scales well across different project types
+
+### Cost Observations
+- Model mix: ~70% opus (executor), ~30% sonnet (verifier, checker)
+- Sessions: 1
+- Notable: Fastest milestone yet — 2 plans in ~5 min avg
+
+---
+
 ## Milestone: v2.0 — GSD Commands & Workflows Module
 
 **Shipped:** 2026-03-12
@@ -95,6 +129,7 @@
 |-----------|----------|--------|-------|------------|
 | v1.0 | ~5 | 6 | 13 | Established TDD, atomic commits, SUMMARY.md pattern |
 | v2.0 | ~3 | 3 | 6 | Coarse granularity, infrastructure-first, milestone audit |
+| v2.1 | 1 | 2 | 2 | Focused content update, cross-module verification |
 
 ### Cumulative Quality
 
@@ -102,9 +137,11 @@
 |-----------|-------|----------------|-------------------|
 | v1.0 | ~50 | 13 (clipboard) | 0 |
 | v2.0 | ~71 | 13 (clipboard, carried) | 0 |
+| v2.1 | ~71 | 13 (clipboard, carried) | 0 |
 
 ### Top Lessons (Verified Across Milestones)
 
 1. Infrastructure phases that produce clean APIs make all subsequent phases faster — validated in both v1.0 (Phase 1 → Phase 2-3) and v2.0 (Phase 4 → Phase 5-6)
 2. Real source code in lessons is essential for authenticity — both modules use actual GSD source snippets
 3. Stale bookkeeping is the #1 process gap — milestone audits catch what execution misses
+4. Small focused milestones execute faster per-plan than large ones (v2.1: 2.5min/plan vs v1.0: 3.5min/plan)

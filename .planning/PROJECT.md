@@ -8,16 +8,10 @@ A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, in
 
 The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
 
-## Current Milestone: v2.1 Full-Stack Mini-Project
+## Current State
 
-**Goal:** Update Module 2's mini-project so the learner extends their `/gsd:skeptic` command from Module 1 by adding the Node.js backend (echo.cjs handler + gsd-tools.cjs switch case), proving full-stack understanding across both layers.
-
-**Target features:**
-- Module 2 mini-project updated to build on Module 1's skeptic command
-- Learner adds echo.cjs handler function for skeptic
-- Learner adds gsd-tools.cjs switch case to wire skeptic into the CLI
-- Updated spec.json with Node.js artifact checks (beyond markdown-only)
-- Updated hints.json for full-stack guidance
+**Latest shipped:** v2.1 Full-Stack Mini-Project (2026-03-13)
+**Next milestone:** TBD — run `/gsd:new-milestone` to plan
 
 ## Requirements
 
@@ -38,13 +32,13 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ GSD markdown parser for command specs and workflow files — v2.0
 - ✓ Generic {{KEY}} template system for markdown-based lesson generation — v2.0
 - ✓ Structural mini-project verification with progressive hints — v2.0
+- ✓ Module 2 mini-project upgraded to full-stack skeptic build — v2.1
+- ✓ Node.js artifact verification (skeptic.cjs handler + switch case checks) — v2.1
+- ✓ Full-stack progressive hints connecting both layers — v2.1
 
 ### Active
 
-<!-- Current scope for v2.1 -->
-
-- [ ] Module 2 mini-project upgraded to full-stack skeptic build
-- [ ] Node.js artifact verification (echo.cjs + switch case checks)
+<!-- Next milestone scope -->
 
 ### Out of Scope
 
@@ -64,7 +58,8 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - The codebase map at `.planning/codebase/` provides detailed architecture, stack, conventions, and structure docs
 - v1.0 proved the teaching model works with Command Lifecycle module
 - v2.0 added GSD Commands & Workflows as Module 1, teaching the simpler markdown layer first
-- Shipped: ~6,885 LOC (Node.js/JSON), 2 modules, 12 lessons total, 2 mini-projects
+- Shipped: ~6,885 LOC (Node.js/JSON), 2 modules, 12 lessons total, 2 full-stack mini-projects
+- Both mini-projects now validate real artifacts (Module 1: markdown layer, Module 2: full-stack 4-layer)
 - 13 pre-existing clipboard-formatter test failures carried from v1.0 (non-blocking)
 
 ## Constraints
@@ -87,7 +82,8 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Hand-authored lessons with real snippets | Real source code content produces high-quality authentic lessons | ✓ Good |
 | Wave 0 test pattern | Graceful degradation enables incremental delivery without blocking CI | ✓ Good |
 | Nested XML extraction in parser | Recursive regex handles GSD workflow format cleanly without DOM parser | ✓ Good |
-| Full-stack mini-project for Module 2 | Learner builds all 4 layers (command.md, workflow.md, echo.cjs, switch case) | ◆ In progress (v2.1) |
+| Full-stack mini-project for Module 2 | Learner builds all 4 layers (command.md, workflow.md, skeptic.cjs, switch case) | ✓ Good |
+| Cross-module spec carry-forward | Module 2 spec carries all Module 1 checks verbatim for continuity | ✓ Good |
 
 ---
-*Last updated: 2026-03-12 after v2.1 milestone start*
+*Last updated: 2026-03-13 after v2.1 milestone*

@@ -1,4 +1,28 @@
 # Milestones: GSD Learn
+## v2.1 — Full-Stack Mini-Project (Shipped: 2026-03-13)
+
+**Completed:** 2026-03-13
+**Phases:** 7, 8 (2 phases, 2 plans)
+**Last phase number:** 8
+
+**What shipped:**
+- Module 2 mini-project rewritten from standalone echo to full-stack skeptic command extending Module 1
+- 4-layer verification spec (command.md, workflow.md, skeptic.cjs handler, gsd-tools.cjs switch case)
+- All 9 Module 1 spec checks carried forward verbatim into Module 2 for cross-module continuity
+- Progressive hints rewritten to acknowledge Module 1 work and guide Node.js backend creation
+
+**Requirements completed:** MP-01, MP-02, VER-01, VER-02, HNT-01
+
+**Key learnings:**
+- Small focused milestones (2 phases) execute very efficiently (~5 min total)
+- Cross-module verification continuity (carrying forward checks) prevents regression
+- Hint rewriting is a separate concern from lesson content — clean phase separation works
+
+**Tech debt carried forward:**
+- 13 pre-existing clipboard-formatter.test.cjs failures (from v1.0 Phase 02.1)
+
+---
+
 ## v2.0 — GSD Commands & Workflows Module (Shipped: 2026-03-12)
 
 **Completed:** 2026-03-12
