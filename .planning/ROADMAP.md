@@ -73,11 +73,11 @@ Plans:
   3. Module 1 is visually flagged as recommended for new users
   4. Returning user sees a slim welcome-back message (not the full welcome pitch) when entering the module picker
   5. Welcome screen and module picker share a single module list renderer (no duplicated rendering logic)
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 10-01: TBD
-- [ ] 10-02: TBD
+- [ ] 10-01-PLAN.md — Render functions (renderModuleList, renderWelcomeScreen, renderModulePicker) and picker key handler with tests
+- [ ] 10-02-PLAN.md — Wire dispatch loop with welcome/picker actions, completion flow, and end-to-end verification
 
 ### Phase 11: Key Bindings & Navigation Footer
 **Goal**: Learner can navigate to modules and access hints without leaving the lesson flow
@@ -111,8 +111,8 @@ Phases execute in numeric order: 9 -> 10 -> 11
 | 6. Module 1 Mini-Project | v2.0 | 1/1 | Complete | 2026-03-12 |
 | 7. Full-Stack Lesson and Verification | v2.1 | 1/1 | Complete | 2026-03-13 |
 | 8. Full-Stack Hints | v2.1 | 1/1 | Complete | 2026-03-13 |
-| 9. Navigation Architecture & Progress Foundation | 2/2 | Complete   | 2026-03-13 | - |
-| 10. Welcome Screen & Module Picker | v2.2 | 0/? | Not started | - |
+| 9. Navigation Architecture & Progress Foundation | v2.2 | 2/2 | Complete | 2026-03-13 |
+| 10. Welcome Screen & Module Picker | v2.2 | 0/2 | Not started | - |
 | 11. Key Bindings & Navigation Footer | v2.2 | 0/? | Not started | - |
 
 ---
