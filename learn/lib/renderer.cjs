@@ -13,7 +13,7 @@ const { renderConceptMap } = require('./concept-map.cjs');
  * @param {string} [moduleDir] - Absolute path to the module directory (for concept map).
  * @returns {string} Formatted lesson string with ANSI codes.
  */
-function renderLesson(lesson, currentIndex, totalLessons, moduleDir) {
+function renderLesson(lesson, currentIndex, totalLessons, moduleDir, moduleTitle) {
   const parts = [];
 
   // 1. Clear screen
@@ -58,6 +58,12 @@ function renderLesson(lesson, currentIndex, totalLessons, moduleDir) {
   // 9. Horizontal rule
   parts.push(horizontalRule(60));
   parts.push('\n\n');
+
+  // 9b. Lesson progress footer (module context)
+  if (moduleTitle) {
+    parts.push(renderLessonProgressFooter(moduleTitle, lesson.title, currentIndex, totalLessons, 0, 1));
+    parts.push('\n\n');
+  }
 
   // 10. Navigation footer
   parts.push('  [n] Next  [p] Previous  [c] Copy  [q] Quit');
@@ -162,7 +168,7 @@ function renderBridgeSection(bridgeText) {
  * @param {string} [moduleDir] - Absolute path to the module directory (for concept map).
  * @returns {string} Formatted part string with ANSI codes.
  */
-function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLessons, moduleDir) {
+function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLessons, moduleDir, moduleTitle) {
   const parts = [];
 
   // 1. Clear screen
@@ -249,11 +255,45 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
   parts.push(renderProgressDots(partIndex, totalParts));
   parts.push('\n\n');
 
+  // 9b. Lesson progress footer (module context)
+  if (moduleTitle) {
+    parts.push(renderLessonProgressFooter(moduleTitle, lesson.title, currentLessonIndex, totalLessons, partIndex, totalParts));
+    parts.push('\n\n');
+  }
+
   // 10. Navigation footer
   parts.push('  [w] Next  [q] Back  [e] Skip lesson  [c] Copy  [esc] Quit');
   parts.push('\n');
 
   return parts.join('');
+}
+
+/**
+ * Render a lesson-level progress footer showing module context.
+ *
+ * Format: `  <Module Name>  ● ● ○ ○ ○  <Lesson Name> (X / Y)`
+ * Filled dots = lessons 0..currentLessonIndex, empty dots = remaining.
+ *
+ * @param {string} moduleTitle - Name of the current module.
+ * @param {string} lessonTitle - Name of the current lesson.
+ * @param {number} currentLessonIndex - Zero-based index of current lesson.
+ * @param {number} totalLessons - Total number of lessons in module.
+ * @param {number} currentPart - Zero-based index of current part.
+ * @param {number} totalParts - Total number of parts in current lesson.
+ * @returns {string} Formatted footer string.
+ */
+function renderLessonProgressFooter(moduleTitle, lessonTitle, currentLessonIndex, totalLessons, currentPart, totalParts) {
+  const filled = '\u25CF'; // ●
+  const empty = '\u25CB';  // ○
+  const dots = [];
+  for (let i = 0; i < totalLessons; i++) {
+    if (i <= currentLessonIndex) {
+      dots.push(style(filled, 'cyan'));
+    } else {
+      dots.push(style(empty, 'dim'));
+    }
+  }
+  return '  ' + moduleTitle + '  ' + dots.join(' ') + '  ' + lessonTitle + ' (' + (currentPart + 1) + ' / ' + totalParts + ')';
 }
 
 /**
@@ -362,4 +402,4 @@ function groupContentItems(content) {
   return groups;
 }
 
-module.exports = { renderLesson, renderPart, renderProgressDots, renderCompletionBanner, groupContentItems };
+module.exports = { renderLesson, renderPart, renderProgressDots, renderCompletionBanner, groupContentItems, renderLessonProgressFooter };

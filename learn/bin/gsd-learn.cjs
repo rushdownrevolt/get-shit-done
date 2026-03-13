@@ -142,7 +142,7 @@ async function main() {
   const moduleDir = path.join(contentDir, 'modules', moduleId);
 
   const renderFn = (lesson, partIndex, totalParts, currentLessonIdx, totalLessons) => {
-    process.stdout.write(renderPart(lesson, partIndex, totalParts, currentLessonIdx, totalLessons, moduleDir));
+    process.stdout.write(renderPart(lesson, partIndex, totalParts, currentLessonIdx, totalLessons, moduleDir, mod.title));
   };
 
   const progressFn = (idx) => {
