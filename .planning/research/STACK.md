@@ -1,303 +1,241 @@
-# Stack Research: Module 1 — GSD Commands & Workflows
+# Stack Research: v2.2 Module Discovery & Welcome
 
-**Domain:** Teaching module for GSD slash commands (.md) and workflows (.md)
+**Domain:** CLI learning tool -- module discovery UI, welcome screen, resume behavior, new key bindings
 **Researched:** 2026-03-12
 **Confidence:** HIGH
 
-## Executive Summary
+## Executive Decision
 
-No new libraries or dependencies are needed. The existing zero-dependency stack is sufficient. The work is entirely about extending the current codebase with a **markdown parser** (new) alongside the existing **CJS parser**, new prompt templates for markdown-centric lessons, and new content artifacts. This research documents exactly what changes, what stays the same, and what to avoid adding.
+**No new dependencies needed.** Every feature in v2.2 is buildable with the Node.js built-in modules already in use. This is not a hedge -- the codebase already has all the primitives: raw terminal input (`readline`), ANSI rendering (`terminal.cjs`), JSON progress persistence (`progress.cjs`), and module listing (`lessons.cjs` `listModules()`). The work is UI composition and control flow, not capability gaps.
 
-## What Stays the Same (DO NOT CHANGE)
+## Existing Stack (No Changes)
 
-The v1.0 stack research (previously in this file) documented the core foundation. All of it remains valid:
+### Core Technologies
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| Node.js >= 18.0.0 | KEEP | No new Node APIs needed |
-| CommonJS (.cjs) | KEEP | All new modules use .cjs |
-| Zero runtime dependencies | KEEP | Hard constraint from PROJECT.md |
-| `readline` + raw mode | KEEP | Navigation unchanged |
-| ANSI escape codes via `terminal.cjs` | KEEP | Rendering unchanged |
-| JSON file progress in `.planning/learn/` | KEEP | Progress schema extends naturally |
-| `node:test` + `node:assert` | KEEP | Testing approach unchanged |
-| `c8` for coverage | KEEP | Dev dependency unchanged |
-| Regex-based source parsing | KEEP | Extended, not replaced |
+| Technology | Version | Purpose | Status for v2.2 |
+|------------|---------|---------|------------------|
+| Node.js | >= 16.7.0 | Runtime | Sufficient -- all needed APIs available |
+| `fs` | built-in | Progress persistence, module discovery | Already used in `progress.cjs`, `lessons.cjs` |
+| `path` | built-in | Cross-platform path resolution | Already used everywhere |
+| `readline` | built-in | Raw keypress events via `emitKeypressEvents` | Already used in `navigator.cjs` |
+| `process.stdout` | built-in | ANSI terminal rendering | Already used in `renderer.cjs`, `terminal.cjs` |
 
-**Confidence: HIGH** -- These are proven in production from v1.0.
+### Rendering Primitives Already Available
 
-## What's New for Module 1
+| Primitive | Location | Reusable For |
+|-----------|----------|-------------|
+| `style(text, ...styles)` | `terminal.cjs` | Welcome screen text, module picker styling |
+| `clearScreen()` | `terminal.cjs` | Welcome/module picker screen transitions |
+| `horizontalRule(width)` | `terminal.cjs` | Section dividers in new screens |
+| `COLORS` object | `terminal.cjs` | All new UI elements (cyan, green, yellow, dim, bold, etc.) |
+| `renderCompletionBanner()` | `renderer.cjs` | Pattern to follow for welcome/picker screens |
+| `renderBridgeSection()` | `renderer.cjs` | Box-drawing pattern if needed for module cards |
 
-### 1. Markdown File Parser (New Module)
+### Navigation Primitives Already Available
 
-**Need:** The existing `parser.cjs` only handles `.cjs` files (extracting functions, requires, exports, constants). Module 1 teaches markdown files: slash commands (`commands/gsd/*.md`) and workflows (`get-shit-done/workflows/*.md`). These have fundamentally different structure.
+| Primitive | Location | Reusable For |
+|-----------|----------|-------------|
+| `waitForKey()` | `navigator.cjs` | Adding M and H key handlers |
+| `setupCleanExit()` | `navigator.cjs` | Already handles stdin raw mode cleanup |
+| `runNavigationLoop()` | `navigator.cjs` | Needs modification for M/H exit actions |
+| `computePrevPosition()` | `navigator.cjs` | No changes needed |
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Regex + string parsing | N/A (built-in) | Parse markdown structure from command and workflow files | Same zero-dependency approach as CJS parser. Markdown files follow GSD conventions consistently (YAML frontmatter, XML-like section tags, bash code blocks). |
-| GSD's own `frontmatter.cjs` | Existing | Parse YAML frontmatter from command .md files | Already built and tested in `get-shit-done/bin/lib/frontmatter.cjs`. Can be required directly -- it's a CommonJS module in the same repo. |
+### Data Primitives Already Available
 
-**What the markdown parser needs to extract:**
+| Primitive | Location | Reusable For |
+|-----------|----------|-------------|
+| `loadProgress()` / `saveProgress()` | `progress.cjs` | Resume-to-last-position (already stores `currentModule` + `currentLesson` + per-module `modules` map) |
+| `listModules()` | `lessons.cjs` | Module picker -- already reads all `module.json` files, returns `{id, title, description, order}`, sorts by order |
+| `loadModule()` | `lessons.cjs` | Loading selected module after picker |
+| `getNextHint()` | `hints.cjs` | H key hint display |
+| `loadFeedback()` | `feedback.cjs` | Counting hints used for H key context |
 
-From **command files** (`commands/gsd/*.md`):
-- YAML frontmatter: `name`, `description`, `argument-hint`, `allowed-tools`
-- Section blocks: `<context>`, `<objective>`, `<execution_context>`, `<process>`
-- `@` file references (e.g., `@~/.claude/get-shit-done/workflows/new-project.md`)
-- Flag definitions from context blocks
+## What Needs to Be Built (Not Installed)
 
-From **workflow files** (`get-shit-done/workflows/*.md`):
-- Section blocks: `<purpose>`, `<required_reading>`, `<process>`, `<auto_mode>`, etc.
-- Bash code blocks with `gsd-tools.cjs` calls
-- Agent spawn patterns (`/claude ...` or Task tool calls)
-- `@file:` references
-- Step numbering and structure (## 1. Setup, ## 2. Questioning, etc.)
+### 1. Welcome Screen Renderer
 
-**Implementation approach:** A new `learn/lib/md-parser.cjs` module, parallel to the existing `parser.cjs`. Not a replacement -- CJS parser still needed for Module 2.
+**New function -- either in `renderer.cjs` or a new `welcome.cjs`**
 
-```javascript
-// learn/lib/md-parser.cjs -- structure sketch
-module.exports = {
-  parseCommandFile,   // Parse commands/gsd/*.md
-  parseWorkflowFile,  // Parse get-shit-done/workflows/*.md
-};
+Uses existing: `style()`, `clearScreen()`, `horizontalRule()`, `COLORS`
+
+This is a pure render function that returns a string, same pattern as `renderCompletionBanner()`. No new primitives needed. Content is a static pitch for GSD Learn: what you will achieve, how it works, press any key to continue.
+
+**Recommendation:** Put in a new `welcome.cjs` to keep `renderer.cjs` focused on lesson rendering. Welcome screen is a distinct concern.
+
+### 2. Module Picker Renderer + Selection
+
+**New `module-picker.cjs` module**
+
+Uses existing: `style()`, `clearScreen()`, `horizontalRule()`, `listModules()`, `loadProgress()`
+
+Renders a list of modules with:
+- Module number, title, and description (from `module.json` via `listModules()`)
+- Progress indicator per module (from `progress.modules[moduleId]`)
+- Recommended flag on first incomplete module
+- Number-key selection (press 1, 2, etc.)
+
+**Key decision: Number keys (1-9) for selection, not arrow keys.**
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| Number keys | Matches single-keypress pattern (w/q/e/c), no cursor state, instant selection, works in all terminals | Limited to 9 modules |
+| Arrow keys + Enter | Familiar UI pattern | Requires tracking selected index across re-renders, adds state machine complexity, needs Enter confirmation |
+
+**Use number keys.** Two modules now, scales to 9 before needing redesign. The entire codebase uses single-keypress-resolves-action pattern. Arrow key selection would be the only stateful UI element.
+
+### 3. Resume Logic
+
+**Modification to `gsd-learn.cjs` main()**
+
+Uses existing: `loadProgress()` returns `{ currentModule, currentLesson, modules }` -- all data needed for resume detection.
+
+Decision tree:
+- `progress.currentModule === null` -> first-time user -> show welcome screen -> module picker
+- `progress.currentModule !== null` and has lesson progress -> returning user -> slim "Welcome back" banner -> auto-resume to saved position
+- User presses M during navigation -> save progress -> show module picker -> restart with selected module
+
+The progress schema already supports this. The `currentModule` field plus `modules[id].currentLesson` gives exact resume position. No schema migration needed.
+
+### 4. Key Binding Extensions
+
+**Modification to `navigator.cjs` `waitForKey()`**
+
+Current key map:
+```
+w -> 'next'    (advance to next part)
+q -> 'prev'    (go back one part)
+e -> 'skip'    (skip to next lesson)
+c -> 'copy'    (copy full lesson to clipboard)
+escape/Ctrl+C -> 'quit'
 ```
 
-**Why NOT reuse GSD's `frontmatter.cjs` directly for everything:**
-GSD's frontmatter parser handles YAML header extraction. But lesson content needs more: section tags, code blocks, cross-references, step structure. The frontmatter parser is useful for the YAML portion only. The rest requires markdown-specific extraction that doesn't exist in GSD today.
+Add:
+```
+m -> 'modules'  (navigate to module picker)
+h -> 'hints'    (show next hint on mini-project step)
+```
 
-**Why regex is still the right choice for markdown:**
-1. GSD's markdown files follow strict conventions: XML-like tags (`<purpose>`, `<process>`), numbered step headers, fenced code blocks
-2. No nested markdown-in-markdown complexity
-3. We need structure extraction, not rendering
-4. A full markdown AST parser (remark, unified, markdown-it) would add dependencies and parse structure we don't need
+This is two new `else if` branches in the keypress handler. The action strings flow through `runNavigationLoop()` which needs two new handlers:
 
-**Confidence: HIGH** -- Examined actual command and workflow files. Tags and structure are consistent and regex-parseable.
+**`'modules'` handler:** Save progress, return from `runNavigationLoop()` with an exit reason so `gsd-learn.cjs` knows to show module picker instead of exiting.
 
-### 2. New Prompt Templates (New Files)
+**`'hints'` handler:** Load hints for current module, count previous hint events via `loadFeedback()`, call `getNextHint()`, render hint inline below current content, wait for another keypress to dismiss. Only active on lessons containing a `project` content block (no-op on regular lessons).
 
-**Need:** The existing prompt templates (`overview.prompt.md`, `source-dive.prompt.md`) are designed for CJS source code lessons. Module 1 needs templates tuned for markdown file content.
+### 5. Navigation Footer Update
 
-| Template | Purpose | Key Placeholders |
-|----------|---------|------------------|
-| `command-overview.prompt.md` | Lesson about what slash commands are and how they work | `{{COMMAND_LIST}}`, `{{EXAMPLE_COMMAND}}`, `{{FRONTMATTER_EXAMPLE}}` |
-| `command-dive.prompt.md` | Deep-dive into a specific command .md file | `{{COMMAND_NAME}}`, `{{FRONTMATTER}}`, `{{SECTIONS}}`, `{{FILE_REFERENCES}}`, `{{SOURCE_MARKDOWN}}` |
-| `workflow-dive.prompt.md` | Deep-dive into a workflow .md file | `{{WORKFLOW_NAME}}`, `{{PURPOSE}}`, `{{STEPS}}`, `{{TOOL_CALLS}}`, `{{AGENT_SPAWNS}}`, `{{SOURCE_MARKDOWN}}` |
-| `connection.prompt.md` | Lesson connecting command -> workflow -> tool chain | `{{COMMAND_FILE}}`, `{{WORKFLOW_FILE}}`, `{{TOOL_CALLS}}`, `{{DATA_FLOW}}` |
+**Modification to `renderer.cjs` `renderPart()`**
 
-**Implementation:** New files in `learn/content/prompts/`. The existing `prompt-templates.cjs` `assemblePrompt()` function has hardcoded placeholder replacements -- each new placeholder needs a corresponding `.replace()` call.
+Current footer:
+```
+  [w] Next  [q] Back  [e] Skip lesson  [c] Copy  [esc] Quit
+```
 
-**Recommended change:** Refactor `assemblePrompt()` to accept a context object and do generic replacement:
+New footer (regular lessons):
+```
+  [w] Next  [q] Back  [e] Skip  [c] Copy  [m] Modules  [esc] Quit
+```
 
-```javascript
-// Replace all {{KEY}} with context[KEY]
-for (const [key, value] of Object.entries(context)) {
-  const placeholder = '{{' + key.toUpperCase() + '}}';
-  template = template.replaceAll(placeholder, String(value || ''));
+New footer (mini-project lessons):
+```
+  [w] Next  [q] Back  [e] Skip  [c] Copy  [m] Modules  [h] Hint  [esc] Quit
+```
+
+### 6. Progress Schema (Minor Extension)
+
+Current schema (v2):
+```json
+{
+  "version": 2,
+  "currentModule": "gsd-commands",
+  "currentLesson": 3,
+  "modules": {
+    "gsd-commands": { "currentLesson": 3, "started": true }
+  }
 }
 ```
 
-This is a small, backward-compatible change (existing keys still work) that avoids adding a new `.replace()` line for every future placeholder.
-
-**Confidence: HIGH** -- Template system is simple; the change is mechanical.
-
-### 3. Updated Lesson Plan and Generation Script
-
-**Need:** `generate-lessons.cjs` currently has a hardcoded `LESSON_PLAN` array for the command-lifecycle module. Module 1 needs its own lesson plan.
-
-| Change | What | Why |
-|--------|------|-----|
-| New lesson plan constant | `LESSON_PLAN_COMMANDS_WORKFLOWS` array in generate-lessons.cjs | Defines the lesson sequence for Module 1 |
-| Module ID routing | `--module=gsd-commands` flag support | Generate prompts for the correct module |
-| Source paths for markdown | `sources: ['../../commands/gsd/new-project.md']` entries using relative-from-GSD-root paths | Points parser at .md files instead of .cjs files |
-| New lesson type | `type: 'command-dive'` and `type: 'workflow-dive'` alongside existing `'overview'` and `'source-dive'` | Routes to correct parser and template |
-
-**Lesson plan structure (recommended):**
-
-```
-Lesson 1: Overview -- What are slash commands and workflows?
-Lesson 2: Command Anatomy -- Deep-dive into a command .md file (new-project.md)
-Lesson 3: Workflow Anatomy -- Deep-dive into a workflow .md file (new-project.md)
-Lesson 4: The Connection -- How command -> workflow -> tools chain together
-Lesson 5: Mini-project -- Build a custom slash command + workflow
-```
-
-**Confidence: HIGH** -- Follows the exact pattern established in v1.0.
-
-### 4. New Content Directory Structure
-
-```
-learn/content/modules/gsd-commands/
-  module.json                    # Module metadata
-  lessons/                       # Generated lesson JSON files
-    01-overview.json
-    02-command-anatomy.json
-    03-workflow-anatomy.json
-    04-the-connection.json
-    05-mini-project.json
-  project/
-    spec.json                    # Mini-project verification spec
-    hints.json                   # Progressive hints
-```
-
-**No new libraries needed.** Same directory conventions, same JSON format, same verification system.
-
-### 5. Updated Mini-Project Spec
-
-**Need:** Module 1's mini-project should have the learner create a slash command (.md) and a workflow (.md). The existing `verifier.cjs` checks file existence and regex patterns -- this works for .md files identically to .cjs files.
-
+**Optional addition** for module picker display:
 ```json
 {
-  "artifacts": [
-    {
-      "description": "Custom slash command file",
-      "path": "commands/gsd/my-command.md",
-      "checks": [
-        { "pattern": "^---", "description": "Has YAML frontmatter" },
-        { "pattern": "name:\\s*gsd:", "description": "Has gsd: prefixed name" },
-        { "pattern": "<execution_context>", "description": "References a workflow" }
-      ]
-    },
-    {
-      "description": "Custom workflow file",
-      "path": "get-shit-done/workflows/my-command.md",
-      "checks": [
-        { "pattern": "<purpose>", "description": "Has purpose section" },
-        { "pattern": "<process>", "description": "Has process section" },
-        { "pattern": "gsd-tools\\.cjs", "description": "Calls gsd-tools" }
-      ]
+  "modules": {
+    "gsd-commands": {
+      "currentLesson": 6,
+      "started": true,
+      "completed": true
     }
-  ]
+  }
 }
 ```
 
-**Confidence: HIGH** -- `verifier.cjs` is file-type agnostic. It reads any file and runs regex checks.
+The `completed` flag lets the picker show checkmarks. This is backward-compatible (missing field = false). No version bump or migration needed -- just set it when the completion banner is shown.
 
-### 6. Module Ordering and Multi-Module Support
+### 7. Control Flow Restructure
 
-**Need:** Current progress tracks by module ID. Module 1 becomes `gsd-commands`, Module 2 stays `command-lifecycle`. A module ordering concept is needed.
-
-**Change:** Add a top-level `learn/content/modules.json` manifest:
-
-```json
-{
-  "modules": [
-    { "id": "gsd-commands", "number": 1, "title": "GSD Commands & Workflows" },
-    { "id": "command-lifecycle", "number": 2, "title": "Command Lifecycle" }
-  ]
-}
+Current flow in `gsd-learn.cjs`:
+```
+main() -> loadModule(hardcoded 'gsd-commands') -> runNavigationLoop() -> exit
 ```
 
-This is a data file, not a library addition. The `gsd-learn.cjs` module selection already works by module ID.
+New flow:
+```
+main() -> checkProgress() ->
+  first-time:  renderWelcome() -> waitForKey() -> showModulePicker() -> selectModule() -> runNavigationLoop()
+  returning:   showResumeBanner() -> loadModule(saved) -> runNavigationLoop()
+  M key exit:  save progress -> showModulePicker() -> selectModule() -> runNavigationLoop()
+```
 
-**Confidence: HIGH** -- Minimal change, follows existing patterns.
+The main function becomes a while loop that re-enters module picker when `runNavigationLoop()` exits with reason `'modules'`. This is the largest structural change in v2.2.
 
-## Reuse Opportunities (Existing Code That Serves Module 1)
+**Return value from `runNavigationLoop()`:** Currently returns `undefined` (void). Change to return an exit reason string: `'quit'` or `'modules'`. This is a backward-compatible change -- callers that don't check the return value are unaffected.
 
-| Existing Module | Reuse for Module 1 | Changes Needed |
-|-----------------|---------------------|----------------|
-| `learn/lib/lessons.cjs` | Load gsd-commands module | None -- `loadModule(moduleId)` is already generic |
-| `learn/lib/renderer.cjs` | Render markdown-source lessons | None -- content format is the same JSON schema |
-| `learn/lib/navigator.cjs` | Lesson navigation | None -- fully module-agnostic |
-| `learn/lib/progress.cjs` | Track Module 1 progress | None -- already supports multiple modules by ID |
-| `learn/lib/verifier.cjs` | Verify mini-project | None -- file-type agnostic regex checking |
-| `learn/lib/hints.cjs` | Progressive hints | None -- reads from any hints.json |
-| `learn/lib/feedback.cjs` | Track learning events | None -- module-agnostic event recording |
-| `learn/lib/terminal.cjs` | ANSI formatting | None |
-| `learn/lib/clipboard.cjs` | Copy lesson to clipboard | None |
-| `learn/lib/clipboard-formatter.cjs` | Format lesson for clipboard | None |
-| `learn/lib/errors.cjs` | Error formatting | None |
-| `learn/lib/evaluator.cjs` | Score lesson quality | None |
+## New Files (Recommended)
 
-**Key insight:** 10 of 12 existing lib modules need zero changes. Only `parser.cjs` gets a sibling (`md-parser.cjs`) and `prompt-templates.cjs` gets a small refactor.
+| File | Purpose | Rationale |
+|------|---------|-----------|
+| `learn/lib/welcome.cjs` | Welcome screen render function | Keeps `renderer.cjs` focused on lesson rendering |
+| `learn/lib/module-picker.cjs` | Module picker render + number-key selection loop | Self-contained screen with its own key handling |
+
+## Modified Files
+
+| File | Change | Scope |
+|------|--------|-------|
+| `learn/lib/navigator.cjs` | Add `m` and `h` to `waitForKey()`, handle in `runNavigationLoop()`, return exit reason | ~30 lines |
+| `learn/lib/renderer.cjs` | Update navigation footer string to include [m] and conditional [h] | ~5 lines |
+| `learn/lib/progress.cjs` | Set `completed: true` when module finishes (optional) | ~3 lines |
+| `learn/bin/gsd-learn.cjs` | Welcome/picker/resume orchestration, while loop for M key re-entry | Major restructure of `main()` |
+
+## Unchanged Files
+
+| File | Why No Changes |
+|------|---------------|
+| `terminal.cjs` | All rendering primitives already exist |
+| `lessons.cjs` | `listModules()` and `loadModule()` already do what is needed |
+| `hints.cjs` | `getNextHint()` already works; just needs to be called from navigator |
+| `parser.cjs` | Content generation is out of scope for v2.2 |
+| `md-parser.cjs` | Content generation is out of scope for v2.2 |
+| `prompt-templates.cjs` | No new lesson content generation |
+| `verifier.cjs` | Verification flow unchanged |
+| `feedback.cjs` | Event recording unchanged |
+| `clipboard.cjs` | Copy functionality unchanged |
+| `clipboard-formatter.cjs` | Formatting unchanged |
+| `errors.cjs` | Error handling unchanged |
+| `evaluator.cjs` | Scoring unchanged |
+| `concept-map.cjs` | Concept maps unchanged |
+| `frontmatter.cjs` | Not involved in v2.2 features |
 
 ## What NOT to Add
 
-| Technology | Why Not | What to Do Instead |
-|------------|---------|-------------------|
-| markdown-it / remark / unified | Runtime dependency. We parse structure, not render markdown. GSD's markdown follows strict conventions that regex handles. | Write `md-parser.cjs` with targeted regex extractors |
-| gray-matter (YAML frontmatter lib) | Runtime dependency. GSD already has `frontmatter.cjs` that does this. | Require GSD's own `frontmatter.cjs` for YAML portions |
-| js-yaml | Runtime dependency. GSD's frontmatter parser handles the YAML subset used in command/workflow files. | Use GSD's `extractFrontmatter()` |
-| Any templating engine (handlebars, ejs, mustache) | Runtime dependency. The `{{PLACEHOLDER}}` replacement in prompt-templates.cjs is sufficient. | Extend existing `assemblePrompt()` with generic replacement |
-| glob / fast-glob | Runtime dependency for file discovery. | Use `fs.readdirSync` + `.filter()` -- already the pattern in `lessons.cjs` |
-| New test framework | Consistency matters more than features. | Keep `node:test` + `node:assert` |
-| Any AST parser for markdown | Overkill. Command files use XML-like tags (`<purpose>`, `<process>`), not complex nested markdown. | Regex extraction of tagged sections |
-
-## Integration Points
-
-### GSD's Own frontmatter.cjs
-
-The learn tool can `require()` GSD's frontmatter parser directly:
-
-```javascript
-// Path from learn/lib/ to GSD's lib/
-const { extractFrontmatter } = require('../../get-shit-done/bin/lib/frontmatter.cjs');
-```
-
-This is an in-repo require, not an external dependency. It keeps YAML parsing DRY.
-
-**Risk:** If GSD's frontmatter module changes API, the learn tool breaks. Mitigation: both are in the same repo and tested together.
-
-**Confidence: HIGH** -- Same-repo requires are standard practice.
-
-### Source File Locations
-
-The markdown parser needs to know where command and workflow files live. Two approaches:
-
-1. **Hardcoded relative paths** from repo root (simpler, matches existing CJS parser pattern)
-2. **Detect from installed location** via `os.homedir() + '/.claude/'` (matches `generate-lessons.cjs` which uses `GSD_ROOT`)
-
-**Recommendation:** Use approach 2 (homedir-based) to match the existing `GSD_ROOT` pattern in `generate-lessons.cjs`. This ensures lessons are generated from the actually-installed GSD files, not just the repo copy.
-
-```javascript
-const GSD_ROOT = path.join(os.homedir(), '.claude', 'get-shit-done');
-const COMMANDS_DIR = path.join(os.homedir(), '.claude', 'commands', 'gsd');
-```
-
-### Updated Command Lifecycle Mini-Project (Module 2)
-
-Per PROJECT.md, the existing Module 2 mini-project expands to "full-stack (all 4 layers)." The spec.json grows from 2 artifacts to 4:
-
-```json
-{
-  "artifacts": [
-    { "path": "commands/gsd/echo.md", "checks": ["frontmatter", "name field", "execution_context tag"] },
-    { "path": "get-shit-done/workflows/echo.md", "checks": ["purpose tag", "process tag", "gsd-tools call"] },
-    { "path": "get-shit-done/bin/lib/echo.cjs", "checks": ["module.exports", "cmd* function", "output pattern"] },
-    { "path": "get-shit-done/bin/gsd-tools.cjs", "checks": ["case 'echo'"] }
-  ]
-}
-```
-
-No new libraries needed -- same `verifier.cjs` with more artifact entries.
-
-### Concept Map Update
-
-`learn/lib/concept-map.cjs` has a single ASCII diagram showing the Node.js tool layers. Module 1 needs an updated or separate concept map that includes the markdown layer:
-
-```
-  User types /gsd:new-project
-        |
-        v
-  +------------------+     +------------------+
-  | Command Spec     |---->| Workflow          |   <-- Module 1 teaches this layer
-  | commands/gsd/    |     | workflows/*.md    |
-  +------------------+     +--------+---------+
-                                    |
-                                    v
-                           +------------------+
-                           | Tool Dispatch    |   <-- Module 2 teaches this layer
-                           | gsd-tools.cjs    |
-                           +--------+---------+
-                                    |
-                       +------------+------------+
-                       v            v            v
-                 +---------+  +---------+  +---------+
-                 | State   |  | Config  |  | Phase   |
-                 | .cjs    |  | .cjs    |  | .cjs    |
-                 +---------+  +---------+  +---------+
-```
-
-**Change needed:** Add module-layer annotations and potentially a separate `renderConceptMap()` variant for Module 1 that highlights the top layer. No new libraries -- just updated string content in `concept-map.cjs`.
+| Avoid | Why | What to Do Instead |
+|-------|-----|-------------------|
+| `inquirer` / `prompts` | Adds runtime dependency to a zero-dependency project; overkill for 2-item number-key selection | Number-key selection with existing `waitForKey()` pattern |
+| `blessed` / `ink` / `neo-blessed` | Full TUI frameworks are massive overkill; existing ANSI primitives handle everything | Compose with existing `style()`, `clearScreen()` |
+| `chalk` | Project has its own ANSI color implementation in `terminal.cjs` | Use existing `style()` function |
+| `figlet` / `ascii-art` | ASCII art banners add noise and a dependency for a welcome screen | Use `style()` with bold/color for headers |
+| `boxen` | Unicode box drawing already done manually in `renderBridgeSection()` | Copy the box-drawing pattern if needed |
+| `conf` / `configstore` | Progress handled by plain JSON file I/O in `progress.cjs` | Use existing `loadProgress()`/`saveProgress()` |
+| `ansi-escapes` / `term-size` | Already using raw ANSI codes and `process.stdout.columns` | Continue with existing approach |
+| Arrow-key cursor navigation | Adds state tracking complexity for module selection with 2-4 items | Number keys for instant selection |
+| Event emitter for screen transitions | Over-engineering for 3 screens (welcome, picker, lesson) | Simple function calls with return values |
 
 ## Installation
 
@@ -307,46 +245,40 @@ No new libraries needed -- same `verifier.cjs` with more artifact entries.
 # No npm install changes.
 ```
 
-All work is new .cjs modules, .json content files, and .prompt.md templates within the existing `learn/` directory.
-
 ## Version Compatibility
 
-| Component | Compatible With | Notes |
-|-----------|-----------------|-------|
-| New `md-parser.cjs` | Node >= 18.0.0 | Uses only `fs`, `path`, `RegExp` -- works on any Node version, but project floor is 18 |
-| GSD `frontmatter.cjs` | Node >= 16.7.0 | GSD's own module, designed for broad compatibility |
-| New prompt templates | `prompt-templates.cjs` | Backward compatible if `assemblePrompt()` is refactored to generic replacement |
-| New `module.json` | `lessons.cjs` `loadModule()` | Existing loader is already generic by module ID |
+| Concern | Status | Notes |
+|---------|--------|-------|
+| Node.js >= 16.7.0 | Compatible | All APIs used (`readline.emitKeypressEvents`, raw mode, ANSI codes) available since Node 12+ |
+| Windows terminal | Compatible | ANSI escape codes work in Windows Terminal, VS Code terminal, modern cmd.exe (Win 10+) |
+| `process.stdout.columns` | Compatible | Used for responsive width; falls back to 80 in `horizontalRule()` |
+| Progress file backward compat | Compatible | New `completed` field is additive; old progress files work without it |
 
 ## Confidence Assessment
 
 | Decision | Confidence | Rationale |
 |----------|------------|-----------|
-| No new dependencies | HIGH | PROJECT.md constraint + all needs met by built-in APIs |
-| New md-parser.cjs module | HIGH | Examined actual command/workflow files; tags are consistent and regex-parseable |
-| Reuse GSD's frontmatter.cjs | HIGH | Same repo, same runtime, tested module |
-| Generic prompt template refactor | HIGH | Small change, backward compatible, eliminates per-placeholder maintenance |
-| 10/12 existing modules unchanged | HIGH | Verified by reading every lib module -- they're content-agnostic |
-| Homedir-based source paths | MEDIUM | Matches existing pattern but requires GSD to be installed (not just cloned) |
-| Module ordering via modules.json | MEDIUM | Simple approach; could also hardcode in gsd-learn.cjs |
+| No new dependencies | HIGH | PROJECT.md hard constraint + all needs met by existing primitives |
+| Number keys for module selection | HIGH | Matches existing keypress pattern, 2 modules now, scales to 9 |
+| Resume via existing progress schema | HIGH | `currentModule` + `modules[id].currentLesson` already stored |
+| `waitForKey()` extension for M/H | HIGH | Two new else-if branches; identical pattern to existing keys |
+| Return exit reason from nav loop | HIGH | Backward-compatible change; minimal surface area |
+| New `welcome.cjs` + `module-picker.cjs` | HIGH | Separation of concerns; follows existing module-per-feature pattern |
+| H key inline hints | MEDIUM | Inline display keeps context but may need screen re-render logic |
 
 ## Sources
 
-- `learn/lib/parser.cjs` -- existing CJS parser, confirms what's missing for .md files
-- `learn/lib/prompt-templates.cjs` -- hardcoded placeholders, confirms refactor need
-- `learn/lib/lessons.cjs` -- generic `loadModule()`, confirms no changes needed
-- `learn/lib/verifier.cjs` -- file-agnostic regex checks, confirms no changes needed
-- `learn/bin/generate-lessons.cjs` -- hardcoded lesson plan, confirms extension pattern
-- `commands/gsd/new-project.md` -- actual command file structure (frontmatter + XML tags)
-- `commands/gsd/execute-phase.md` -- actual command file structure (frontmatter + XML tags)
-- `get-shit-done/workflows/new-project.md` -- actual workflow file structure (XML tags + bash blocks)
-- `get-shit-done/bin/lib/frontmatter.cjs` -- YAML parser available for reuse
-- `learn/lib/concept-map.cjs` -- current diagram needing module-layer annotations
-- `learn/content/modules/command-lifecycle/project/spec.json` -- mini-project spec pattern
-- `.planning/codebase/STACK.md` -- confirms zero-dependency constraint
-- `.planning/PROJECT.md` -- confirms v2.0 requirements and constraints
+- Codebase analysis: `learn/lib/navigator.cjs` -- keypress handling, navigation loop, exit flow
+- Codebase analysis: `learn/lib/renderer.cjs` -- render patterns, footer format, `renderCompletionBanner()` as template
+- Codebase analysis: `learn/lib/progress.cjs` -- schema, load/save, migration pattern
+- Codebase analysis: `learn/lib/lessons.cjs` -- `listModules()` already exists and returns sorted modules
+- Codebase analysis: `learn/lib/hints.cjs` -- `getNextHint()` API, ready for navigator integration
+- Codebase analysis: `learn/lib/terminal.cjs` -- all ANSI primitives confirmed available
+- Codebase analysis: `learn/bin/gsd-learn.cjs` -- current control flow, flag parsing, module loading
+- Codebase analysis: `learn/content/modules/*/module.json` -- module metadata structure
+- Project context: `.planning/PROJECT.md` -- v2.2 requirements, zero-dependency constraint
+- Stack reference: `.planning/codebase/STACK.md` -- confirms zero runtime dependencies
 
 ---
-
-*Stack research for: GSD Commands & Workflows Module (v2.0)*
+*Stack research for: GSD Learn v2.2 Module Discovery & Welcome*
 *Researched: 2026-03-12*
