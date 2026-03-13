@@ -1,13 +1,13 @@
 {
   "id": "mini-project",
-  "title": "Mini-Project: Build a GSD Command",
+  "title": "Mini-Project: Build a Full-Stack GSD Command",
   "lessonNumber": 6,
-  "objective": "Apply everything from lessons 1-5 to add a new command to GSD",
+  "objective": "Extend your Module 1 skeptic command with the Node.js backend — completing all 4 layers of a GSD command",
   "content": [
     {
       "type": "text",
-      "value": "You have traced the full command lifecycle -- from CLI entry point through the switch router, into tool modules, and back out through the output layer. Now prove you understand it by building something real.\n\nYour task is to add a brand new command to GSD. This is not a quiz or a hypothetical exercise. You will create actual files in the GSD codebase, and a verifier will check your work structurally.\n\nIf you get stuck, use the hint command. Hints start vague and get more specific, but they never give you the code -- that part is yours.",
-      "focus": "Hands-on command building challenge",
+      "value": "In Module 1, you built the markdown layer of /gsd:skeptic -- a command spec and workflow file. But those files are just the prompt side. To make a command that GSD can actually dispatch, you need the Node.js backend: a handler function and a switch case in the router. That is what you will build now.\n\nYou already know the command lifecycle from lessons 1-5. Now you will close the loop by wiring your skeptic command into the actual GSD codebase.\n\nIf you get stuck, use the hint command. Hints start vague and get more specific, but they never give you the code -- that part is yours.",
+      "focus": "Hands-on full-stack command building challenge",
       "bridge": "Before you start coding, here is how to check your progress."
     },
     {
@@ -18,18 +18,19 @@
     },
     {
       "type": "project",
-      "task": "Add a new 'echo' command to GSD that takes a message argument and outputs it using the standard GSD output pattern.",
+      "task": "Extend your /gsd:skeptic command with a Node.js handler and switch case, completing all 4 layers of the GSD command lifecycle.",
       "deliverables": [
-        "A handler function in a lib/*.cjs file (e.g., get-shit-done/bin/lib/echo.cjs)",
-        "A new case in the gsd-tools.cjs switch statement that routes to your handler",
-        "Output that follows the GSD JSON/raw dual-output pattern"
+        "A command spec at ~/.claude/commands/gsd/skeptic.md (already built in Module 1 -- verify it is still there)",
+        "A workflow file at ~/.claude/get-shit-done/workflows/skeptic.md (already built in Module 1 -- verify it is still there)",
+        "A handler function in get-shit-done/bin/lib/skeptic.cjs following the cmd* naming convention",
+        "A new 'skeptic' case in the gsd-tools.cjs switch statement that routes to your handler"
       ],
       "verifyCommand": "node learn/bin/gsd-learn.cjs --verify",
       "hintCommand": "node learn/bin/gsd-learn.cjs --hint",
-      "focus": "Echo command implementation spec",
-      "bridge": "Complete all three deliverables and run verify to confirm your module mastery."
+      "focus": "Full-stack skeptic command implementation spec",
+      "bridge": "Complete all four deliverables and run verify to confirm your full-stack command mastery."
     }
   ],
   "conceptMap": "mini-project",
-  "successCriteria": "Running --verify shows all checks passing: file exists, function exported, switch case added, output follows GSD pattern\n\nWant to go deeper? Press [c] to copy this lesson to your clipboard and paste it into your favorite LLM for follow-up questions."
+  "successCriteria": "Running --verify shows all checks passing: command spec exists, workflow exists, handler file exports a cmd* function, switch case routes to handler, output follows GSD pattern. All 4 layers verified.\n\nWant to go deeper? Press [c] to copy this lesson to your clipboard and paste it into your favorite LLM for follow-up questions."
 }
