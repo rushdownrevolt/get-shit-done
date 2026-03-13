@@ -3,7 +3,7 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert');
 
-const { renderLesson, renderProgressDots, renderCompletionBanner, renderPart, groupContentItems } = require('../lib/renderer.cjs');
+const { renderLesson, renderProgressDots, renderCompletionBanner, renderPart, groupContentItems, renderLessonProgressFooter } = require('../lib/renderer.cjs');
 const { COLORS, _styleWithColor } = require('../lib/terminal.cjs');
 
 describe('renderLesson', () => {
@@ -541,6 +541,128 @@ describe('renderPart', () => {
     const totalParts = groups.length;
     const output = renderPart(groupedLesson, 0, totalParts, 0, 5);
     assert.ok(output.includes('Part 1 of 3'), 'should show Part 1 of 3 (groups), not Part 1 of 5 (items)');
+  });
+});
+
+// ─── renderLessonProgressFooter ──────────────────────────────────────
+
+describe('renderLessonProgressFooter', () => {
+  test('returns string containing module title', () => {
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 1, 4);
+    assert.ok(typeof output === 'string', 'should return a string');
+    assert.ok(output.includes('Command Lifecycle'), 'should contain module title');
+  });
+
+  test('returns correct filled/empty dot counts', () => {
+    // currentLessonIndex=2 -> 3 filled (0,1,2), 3 empty (3,4,5)
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 1, 4);
+    const filled = (output.match(/\u25CF/g) || []).length;
+    const empty = (output.match(/\u25CB/g) || []).length;
+    assert.strictEqual(filled, 3, 'should have 3 filled dots');
+    assert.strictEqual(empty, 3, 'should have 3 empty dots');
+  });
+
+  test('contains lesson title', () => {
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 1, 4);
+    assert.ok(output.includes('Command Dispatch'), 'should contain lesson title');
+  });
+
+  test('contains part counter in "(X / Y)" format (1-based)', () => {
+    // currentPart=1 (0-based) -> display "(2 / 4)"
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 1, 4);
+    assert.ok(output.includes('(2 / 4)'), 'should contain "(2 / 4)"');
+  });
+
+  test('edge case: first lesson (1 filled, rest empty)', () => {
+    const output = renderLessonProgressFooter('Mod', 'Lesson One', 0, 5, 0, 3);
+    const filled = (output.match(/\u25CF/g) || []).length;
+    const empty = (output.match(/\u25CB/g) || []).length;
+    assert.strictEqual(filled, 1, 'should have 1 filled dot');
+    assert.strictEqual(empty, 4, 'should have 4 empty dots');
+    assert.ok(output.includes('(1 / 3)'), 'should contain "(1 / 3)"');
+  });
+
+  test('edge case: last lesson (all filled)', () => {
+    const output = renderLessonProgressFooter('Mod', 'Final', 4, 5, 2, 3);
+    const filled = (output.match(/\u25CF/g) || []).length;
+    const empty = (output.match(/\u25CB/g) || []).length;
+    assert.strictEqual(filled, 5, 'should have 5 filled dots (all)');
+    assert.strictEqual(empty, 0, 'should have 0 empty dots');
+    assert.ok(output.includes('(3 / 3)'), 'should contain "(3 / 3)"');
+  });
+});
+
+// ─── renderPart with lesson progress footer ─────────────────────────
+
+describe('renderPart lesson progress footer integration', () => {
+  const lesson = {
+    id: 'footer-test',
+    title: 'Footer Test Lesson',
+    lessonNumber: 1,
+    objective: 'Test footer rendering',
+    content: [
+      { type: 'text', value: 'Some content.', focus: 'Content focus', bridge: 'Bridge text.' },
+    ],
+    conceptMap: null,
+    successCriteria: 'Footer works',
+  };
+
+  test('renderPart includes module name in footer when moduleTitle provided', () => {
+    const output = renderPart(lesson, 0, 1, 2, 6, undefined, 'Command Lifecycle');
+    assert.ok(output.includes('Command Lifecycle'), 'should contain module title in footer');
+  });
+
+  test('renderPart includes lesson-level progress dots in footer', () => {
+    const output = renderPart(lesson, 0, 1, 2, 6, undefined, 'Command Lifecycle');
+    // 3 filled lesson dots (0,1,2), 3 empty (3,4,5)
+    // But we need to distinguish from part progress dots -- lesson footer dots are separate
+    assert.ok(output.includes('Footer Test Lesson'), 'should contain lesson title in footer');
+    assert.ok(output.includes('(1 / 1)'), 'should contain part counter');
+  });
+
+  test('renderPart footer appears before nav key hints', () => {
+    const output = renderPart(lesson, 0, 1, 2, 6, undefined, 'My Module');
+    const footerIdx = output.indexOf('My Module');
+    const navIdx = output.indexOf('[w]');
+    assert.ok(footerIdx < navIdx, 'module footer should appear before nav hints');
+  });
+
+  test('renderPart without moduleTitle still works (backward compatible)', () => {
+    const output = renderPart(lesson, 0, 1, 2, 6);
+    assert.ok(output.includes('[w]'), 'should still render nav footer');
+    assert.ok(!output.includes('Command Lifecycle'), 'should not contain module title if not provided');
+  });
+});
+
+// ─── renderLesson with lesson progress footer ───────────────────────
+
+describe('renderLesson lesson progress footer integration', () => {
+  const lesson = {
+    id: 'footer-test',
+    title: 'Footer Test Lesson',
+    lessonNumber: 1,
+    objective: 'Test footer rendering',
+    content: [
+      { type: 'text', value: 'Some content.', focus: 'Content focus', bridge: 'Bridge text.' },
+    ],
+    conceptMap: null,
+    successCriteria: 'Footer works',
+  };
+
+  test('renderLesson includes module name in footer when moduleTitle provided', () => {
+    const output = renderLesson(lesson, 2, 6, undefined, 'Command Lifecycle');
+    assert.ok(output.includes('Command Lifecycle'), 'should contain module title in footer');
+  });
+
+  test('renderLesson shows part counter as (1 / 1) since it renders full lesson', () => {
+    const output = renderLesson(lesson, 2, 6, undefined, 'Command Lifecycle');
+    assert.ok(output.includes('(1 / 1)'), 'should contain "(1 / 1)" part counter');
+  });
+
+  test('renderLesson without moduleTitle still works (backward compatible)', () => {
+    const output = renderLesson(lesson, 2, 6);
+    assert.ok(output.includes('[n]'), 'should still render nav footer');
+    assert.ok(!output.includes('Command Lifecycle'), 'should not contain module title');
   });
 });
 
