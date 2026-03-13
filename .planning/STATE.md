@@ -44,6 +44,8 @@ Progress: [░░░░░░░░░░] 0%
 
 Decisions are logged in PROJECT.md Key Decisions table.
 
+- 01.2-03: Code blocks group with FOLLOWING text (explanation), not preceding text (lead-in). User feedback drove this correction.
+
 ### Pending Todos
 
 None.
@@ -55,5 +57,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Defining v2.1 requirements
-Next action: Define requirements and create roadmap
+Stopped at: Completed 01.2-03 gap closure (content grouping fix)
+Next action: Continue defining v2.1 requirements and create roadmap
