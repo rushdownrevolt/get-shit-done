@@ -81,13 +81,15 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
   setupCleanExit();
   const totalLessons = lessons.length;
   let currentLesson = startIndex;
+  let startPart = 0;
 
   outer:
   while (currentLesson < totalLessons) {
     const lesson = lessons[currentLesson];
     const groups = groupContentItems(lesson.content);
     const totalParts = groups.length + (lesson.conceptMap ? 1 : 0);
-    let currentPart = 0;
+    let currentPart = startPart;
+    startPart = 0;
 
     while (true) {
       renderFn(lesson, currentPart, totalParts, currentLesson, totalLessons);
@@ -120,10 +122,17 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
           return;
         }
       } else if (action === 'prev') {
-        if (currentPart > 0) {
-          currentPart--;
+        const prevPos = computePrevPosition(currentLesson, currentPart, lessons, groupContentItems);
+        if (prevPos === null) {
+          // At absolute start, do nothing
+        } else if (prevPos.lesson !== currentLesson) {
+          // Navigate to previous lesson
+          currentLesson = prevPos.lesson;
+          startPart = prevPos.part;
+          continue outer;
+        } else {
+          currentPart = prevPos.part;
         }
-        // If currentPart === 0, do nothing (stay on first part)
       } else if (action === 'skip') {
         if (currentLesson < totalLessons - 1) {
           currentLesson++;
@@ -152,4 +161,25 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
   }
 }
 
-module.exports = { runNavigationLoop, setupCleanExit, waitForKey };
+/**
+ * Compute the previous position when navigating backward.
+ *
+ * @param {number} currentLesson - Current lesson index.
+ * @param {number} currentPart - Current part index within the lesson.
+ * @param {Array} lessons - Array of lesson objects.
+ * @param {function} groupFn - groupContentItems function.
+ * @returns {{ lesson: number, part: number } | null} New position, or null if at absolute start.
+ */
+function computePrevPosition(currentLesson, currentPart, lessons, groupFn) {
+  if (currentPart > 0) {
+    return { lesson: currentLesson, part: currentPart - 1 };
+  } else if (currentLesson > 0) {
+    const prevLesson = lessons[currentLesson - 1];
+    const prevGroups = groupFn(prevLesson.content);
+    const prevTotalParts = prevGroups.length + (prevLesson.conceptMap ? 1 : 0);
+    return { lesson: currentLesson - 1, part: prevTotalParts - 1 };
+  }
+  return null;
+}
+
+module.exports = { runNavigationLoop, setupCleanExit, waitForKey, computePrevPosition };
