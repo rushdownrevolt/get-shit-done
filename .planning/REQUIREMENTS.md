@@ -17,7 +17,7 @@
 
 ### Hints
 
-- [ ] **HNT-01**: hints.json updated with full-stack guidance connecting both layers (references Module 1 work as starting point)
+- [x] **HNT-01**: hints.json updated with full-stack guidance connecting both layers (references Module 1 work as starting point)
 
 ## Future Requirements
 
@@ -44,7 +44,7 @@
 | MP-02 | Phase 7 | Complete |
 | VER-01 | Phase 7 | Complete |
 | VER-02 | Phase 7 | Complete |
-| HNT-01 | Phase 8 | Pending |
+| HNT-01 | Phase 8 | Complete |
 
 **Coverage:**
 - v2.1 requirements: 5 total

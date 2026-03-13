@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1-3 + 01.1, 02.1 (shipped 2026-03-12)
 - ✅ **v2.0 GSD Commands & Workflows Module** — Phases 4-6 (shipped 2026-03-12)
-- **v2.1 Full-Stack Mini-Project** — Phases 7-8 (in progress)
+- **v2.1 Full-Stack Mini-Project** — Phases 7-8 (shipped 2026-03-13)
 
 ## Phases
 
@@ -32,7 +32,7 @@
 ### v2.1 Full-Stack Mini-Project (Phases 7-8)
 
 - [x] **Phase 7: Full-Stack Lesson and Verification** - Update Module 2 lesson 6 content and spec.json to cover all 4 skeptic layers
-- [ ] **Phase 8: Full-Stack Hints** - Update hints.json with guidance connecting markdown and Node.js layers
+- [x] **Phase 8: Full-Stack Hints** - Update hints.json with guidance connecting markdown and Node.js layers
 
 ## Phase Details
 
@@ -60,7 +60,7 @@ Plans:
   3. Hints follow the existing progressive disclosure pattern (general direction first, specific code guidance later)
 **Plans:** 1 plan
 Plans:
-- [ ] 08-01-PLAN.md — Rewrite hints.json with full-stack skeptic progressive guidance
+- [x] 08-01-PLAN.md — Rewrite hints.json with full-stack skeptic progressive guidance
 
 ## Progress
 
@@ -76,7 +76,7 @@ Plans:
 | 5. Module 1 Lessons | v2.0 | 2/2 | Complete | 2026-03-12 |
 | 6. Module 1 Mini-Project | v2.0 | 1/1 | Complete | 2026-03-12 |
 | 7. Full-Stack Lesson and Verification | v2.1 | 1/1 | Complete | 2026-03-13 |
-| 8. Full-Stack Hints | v2.1 | 0/1 | Not started | - |
+| 8. Full-Stack Hints | v2.1 | 1/1 | Complete | 2026-03-13 |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md (if archived)*
