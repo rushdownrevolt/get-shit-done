@@ -119,7 +119,7 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
             await waitForKey(); // Any key quits after banner
           }
           progressFn(currentLesson);
-          return;
+          return { reason: 'completed' };
         }
       } else if (action === 'prev') {
         const prevPos = computePrevPosition(currentLesson, currentPart, lessons, groupContentItems);
@@ -155,10 +155,12 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
         continue;
       } else if (action === 'quit') {
         progressFn(currentLesson);
-        return;
+        return { reason: 'quit' };
       }
     }
   }
+  // Safety: while condition became false (currentLesson >= totalLessons)
+  return { reason: 'completed' };
 }
 
 /**
