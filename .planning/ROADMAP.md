@@ -46,7 +46,9 @@
   3. spec.json verifies Node.js artifacts exist (lib/skeptic.cjs handler function and gsd-tools.cjs switch case)
   4. spec.json verifies Module 1 markdown artifacts remain present and valid (command.md and workflow.md)
   5. Running the verifier against a complete skeptic implementation reports all checks passing
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 07-01-PLAN.md — Update lesson 6 content and spec.json from echo to full-stack skeptic
 
 ### Phase 8: Full-Stack Hints
 **Goal**: Learner gets progressive guidance that connects their existing markdown-layer work to the new Node.js-layer work
@@ -71,7 +73,7 @@
 | 4. Multi-Module Infrastructure | v2.0 | 3/3 | Complete | 2026-03-12 |
 | 5. Module 1 Lessons | v2.0 | 2/2 | Complete | 2026-03-12 |
 | 6. Module 1 Mini-Project | v2.0 | 1/1 | Complete | 2026-03-12 |
-| 7. Full-Stack Lesson and Verification | v2.1 | 0/? | Not started | - |
+| 7. Full-Stack Lesson and Verification | v2.1 | 0/1 | Not started | - |
 | 8. Full-Stack Hints | v2.1 | 0/? | Not started | - |
 
 ---
