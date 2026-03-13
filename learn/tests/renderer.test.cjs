@@ -548,47 +548,66 @@ describe('renderPart', () => {
 
 describe('renderLessonProgressFooter', () => {
   test('returns string containing module title', () => {
-    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 1, 4);
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6);
     assert.ok(typeof output === 'string', 'should return a string');
     assert.ok(output.includes('Command Lifecycle'), 'should contain module title');
   });
 
   test('returns correct filled/empty dot counts', () => {
-    // currentLessonIndex=2 -> 3 filled (0,1,2), 3 empty (3,4,5)
-    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 1, 4);
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6);
     const filled = (output.match(/\u25CF/g) || []).length;
     const empty = (output.match(/\u25CB/g) || []).length;
     assert.strictEqual(filled, 3, 'should have 3 filled dots');
     assert.strictEqual(empty, 3, 'should have 3 empty dots');
   });
 
-  test('contains lesson title', () => {
-    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 1, 4);
-    assert.ok(output.includes('Command Dispatch'), 'should contain lesson title');
+  test('contains lesson title followed by colon', () => {
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6);
+    assert.ok(output.includes('Command Dispatch:'), 'should contain lesson title with colon');
   });
 
-  test('contains part counter in "(X / Y)" format (1-based)', () => {
-    // currentPart=1 (0-based) -> display "(2 / 4)"
-    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 1, 4);
-    assert.ok(output.includes('(2 / 4)'), 'should contain "(2 / 4)"');
+  test('does NOT contain (X / Y) part counter', () => {
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6);
+    assert.ok(!(/\(\d+ \/ \d+\)/).test(output), 'should NOT contain (X / Y) pattern');
+  });
+
+  test('when blockSummary provided, output contains subtitle on second line', () => {
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6, 'Three entry point questions');
+    assert.ok(output.includes('Three entry point questions'), 'should contain blockSummary text');
+    // Should be multiline
+    const lines = output.split('\n');
+    assert.ok(lines.length >= 2, 'should have at least 2 lines when blockSummary provided');
+  });
+
+  test('when blockSummary is null/undefined, output is single line', () => {
+    const output = renderLessonProgressFooter('Command Lifecycle', 'Command Dispatch', 2, 6);
+    const lines = output.split('\n');
+    assert.strictEqual(lines.length, 1, 'should be single line when no blockSummary');
+  });
+
+  test('subtitle line is indented to align under lesson title', () => {
+    const output = renderLessonProgressFooter('Mod', 'My Lesson', 0, 3, 'Focus text here');
+    const lines = output.split('\n');
+    assert.ok(lines.length >= 2, 'should have subtitle line');
+    // The subtitle line should start with spaces (alignment padding)
+    assert.ok(lines[1].match(/^\s+/), 'subtitle should start with whitespace for alignment');
   });
 
   test('edge case: first lesson (1 filled, rest empty)', () => {
-    const output = renderLessonProgressFooter('Mod', 'Lesson One', 0, 5, 0, 3);
+    const output = renderLessonProgressFooter('Mod', 'Lesson One', 0, 5);
     const filled = (output.match(/\u25CF/g) || []).length;
     const empty = (output.match(/\u25CB/g) || []).length;
     assert.strictEqual(filled, 1, 'should have 1 filled dot');
     assert.strictEqual(empty, 4, 'should have 4 empty dots');
-    assert.ok(output.includes('(1 / 3)'), 'should contain "(1 / 3)"');
+    assert.ok(!(/\(\d+ \/ \d+\)/).test(output), 'should NOT contain part counter');
   });
 
   test('edge case: last lesson (all filled)', () => {
-    const output = renderLessonProgressFooter('Mod', 'Final', 4, 5, 2, 3);
+    const output = renderLessonProgressFooter('Mod', 'Final', 4, 5);
     const filled = (output.match(/\u25CF/g) || []).length;
     const empty = (output.match(/\u25CB/g) || []).length;
     assert.strictEqual(filled, 5, 'should have 5 filled dots (all)');
     assert.strictEqual(empty, 0, 'should have 0 empty dots');
-    assert.ok(output.includes('(3 / 3)'), 'should contain "(3 / 3)"');
   });
 });
 
@@ -612,12 +631,12 @@ describe('renderPart lesson progress footer integration', () => {
     assert.ok(output.includes('Command Lifecycle'), 'should contain module title in footer');
   });
 
-  test('renderPart includes lesson-level progress dots in footer', () => {
+  test('renderPart includes lesson title with colon and focus subtitle in footer', () => {
     const output = renderPart(lesson, 0, 1, 2, 6, undefined, 'Command Lifecycle');
-    // 3 filled lesson dots (0,1,2), 3 empty (3,4,5)
-    // But we need to distinguish from part progress dots -- lesson footer dots are separate
-    assert.ok(output.includes('Footer Test Lesson'), 'should contain lesson title in footer');
-    assert.ok(output.includes('(1 / 1)'), 'should contain part counter');
+    assert.ok(output.includes('Footer Test Lesson:'), 'should contain lesson title with colon in footer');
+    assert.ok(!(/\(\d+ \/ \d+\)/).test(output), 'should NOT contain (X / Y) part counter');
+    // The focus text from the content block should appear as subtitle
+    assert.ok(output.includes('Content focus'), 'should contain block focus as subtitle');
   });
 
   test('renderPart footer appears before nav key hints', () => {
@@ -654,9 +673,10 @@ describe('renderLesson lesson progress footer integration', () => {
     assert.ok(output.includes('Command Lifecycle'), 'should contain module title in footer');
   });
 
-  test('renderLesson shows part counter as (1 / 1) since it renders full lesson', () => {
+  test('renderLesson shows lesson title with colon and no part counter', () => {
     const output = renderLesson(lesson, 2, 6, undefined, 'Command Lifecycle');
-    assert.ok(output.includes('(1 / 1)'), 'should contain "(1 / 1)" part counter');
+    assert.ok(output.includes('Footer Test Lesson:'), 'should contain lesson title with colon');
+    assert.ok(!(/\(\d+ \/ \d+\)/).test(output), 'should NOT contain (X / Y) part counter');
   });
 
   test('renderLesson without moduleTitle still works (backward compatible)', () => {
