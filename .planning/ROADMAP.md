@@ -57,7 +57,7 @@
   2. System correctly distinguishes first-run users (no progress) from returning users (any module started)
   3. runNavigationLoop can exit to an outer loop (not just quit), enabling module switching in later phases
   4. Progress schema auto-migrates from v2 to v3 with zero data loss for existing users
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 09-01-PLAN.md — Progress schema v3 migration, isFirstRun detection, and tests
@@ -111,7 +111,7 @@ Phases execute in numeric order: 9 -> 10 -> 11
 | 6. Module 1 Mini-Project | v2.0 | 1/1 | Complete | 2026-03-12 |
 | 7. Full-Stack Lesson and Verification | v2.1 | 1/1 | Complete | 2026-03-13 |
 | 8. Full-Stack Hints | v2.1 | 1/1 | Complete | 2026-03-13 |
-| 9. Navigation Architecture & Progress Foundation | v2.2 | 0/2 | Not started | - |
+| 9. Navigation Architecture & Progress Foundation | 1/2 | In Progress|  | - |
 | 10. Welcome Screen & Module Picker | v2.2 | 0/? | Not started | - |
 | 11. Key Bindings & Navigation Footer | v2.2 | 0/? | Not started | - |
 

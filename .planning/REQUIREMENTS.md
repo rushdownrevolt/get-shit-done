@@ -10,7 +10,7 @@ Requirements for Module Discovery & Welcome milestone. Each maps to roadmap phas
 ### Welcome & Onboarding
 
 - [ ] **WELC-01**: User sees a welcome screen with GSD pitch on first launch
-- [ ] **WELC-02**: System detects first-run vs returning user
+- [x] **WELC-02**: System detects first-run vs returning user
 - [ ] **WELC-03**: Welcome copy communicates what the learner will be able to do after completing modules
 
 ### Module Discovery
@@ -22,7 +22,7 @@ Requirements for Module Discovery & Welcome milestone. Each maps to roadmap phas
 
 ### Navigation & Resume
 
-- [ ] **NAV-01**: Returning user resumes at their last lesson position on launch
+- [x] **NAV-01**: Returning user resumes at their last lesson position on launch
 - [ ] **NAV-02**: User can press "M" from any lesson to return to module picker
 - [ ] **NAV-03**: User can press "H" on mini-project step to see progressive hints
 - [ ] **NAV-04**: Footer displays available keys based on current context (M, H, arrows, etc.)
@@ -54,13 +54,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | WELC-01 | Phase 10 | Pending |
-| WELC-02 | Phase 9 | Pending |
+| WELC-02 | Phase 9 | Complete |
 | WELC-03 | Phase 10 | Pending |
 | DISC-01 | Phase 10 | Pending |
 | DISC-02 | Phase 10 | Pending |
 | DISC-03 | Phase 10 | Pending |
 | DISC-04 | Phase 10 | Pending |
-| NAV-01 | Phase 9 | Pending |
+| NAV-01 | Phase 9 | Complete |
 | NAV-02 | Phase 11 | Pending |
 | NAV-03 | Phase 11 | Pending |
 | NAV-04 | Phase 11 | Pending |
