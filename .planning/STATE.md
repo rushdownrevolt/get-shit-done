@@ -80,9 +80,10 @@ None.
 | 1 | Clickable file names and code snippets | 2026-03-12 | — | [1-clickable-file-names-and-code-snippets-w](./quick/1-clickable-file-names-and-code-snippets-w/) |
 | 4 | Fix backward navigation at lesson start to go to end of previous lesson | 2026-03-13 | 26c3859 | [4-fix-backward-navigation-at-lesson-start-](./quick/4-fix-backward-navigation-at-lesson-start-/) |
 | 5 | Update footer to show module name and lesson progress | 2026-03-13 | 1aa3f53 | [5-update-footer-to-show-module-name-lesson](./quick/5-update-footer-to-show-module-name-lesson/) |
+| 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 
 ## Session Continuity
 
-Last session: 2026-03-13
-Stopped at: Milestone v2.1 archived
+Last session: 2026-03-12
+Stopped at: Completed quick-6 (remove duplicated footer)
 Next action: `/gsd:new-milestone`
