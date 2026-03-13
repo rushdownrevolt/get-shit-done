@@ -49,3 +49,50 @@ describe('navigator module exports', () => {
   // and key mapping behavior is verified via the human-verify checkpoint
   // in Task 2.
 });
+
+describe('computePrevPosition', () => {
+  const { computePrevPosition } = require('../lib/navigator.cjs');
+  const { groupContentItems } = require('../lib/renderer.cjs');
+
+  // Helper: create a mock lesson with N text content items and optional conceptMap
+  function mockLesson(contentCount, hasConceptMap = false) {
+    const content = [];
+    for (let i = 0; i < contentCount; i++) {
+      content.push({ type: 'text', text: `Item ${i}` });
+    }
+    return {
+      content,
+      conceptMap: hasConceptMap ? 'some-map' : null,
+    };
+  }
+
+  const lessons = [
+    mockLesson(3), // lesson 0: 3 parts (3 text groups, no conceptMap)
+    mockLesson(3), // lesson 1: 3 parts
+  ];
+
+  test('within-lesson backward: decrements part when currentPart > 0', () => {
+    const result = computePrevPosition(1, 2, lessons, groupContentItems);
+    assert.deepStrictEqual(result, { lesson: 1, part: 1 });
+  });
+
+  test('cross-lesson backward: moves to last part of previous lesson when at part 0 of lesson > 0', () => {
+    const result = computePrevPosition(1, 0, lessons, groupContentItems);
+    // Previous lesson (0) has 3 text items grouped into 3 groups, no conceptMap => 3 parts, last = 2
+    assert.deepStrictEqual(result, { lesson: 0, part: 2 });
+  });
+
+  test('at absolute start: returns null when at part 0 of lesson 0', () => {
+    const result = computePrevPosition(0, 0, lessons, groupContentItems);
+    assert.strictEqual(result, null);
+  });
+
+  test('cross-lesson backward with conceptMap: includes conceptMap in part count', () => {
+    const lessonsWithMap = [
+      mockLesson(2, true), // lesson 0: 2 text groups + 1 conceptMap = 3 parts, last = 2
+      mockLesson(2),       // lesson 1: 2 parts
+    ];
+    const result = computePrevPosition(1, 0, lessonsWithMap, groupContentItems);
+    assert.deepStrictEqual(result, { lesson: 0, part: 2 });
+  });
+});
