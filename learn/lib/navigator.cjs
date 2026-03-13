@@ -184,4 +184,41 @@ function computePrevPosition(currentLesson, currentPart, lessons, groupFn) {
   return null;
 }
 
-module.exports = { runNavigationLoop, setupCleanExit, waitForKey, computePrevPosition };
+/**
+ * Wait for a picker key selection (number key or quit).
+ *
+ * @param {number} moduleCount - Number of modules available.
+ * @returns {Promise<{ action: 'select', index: number } | { action: 'quit' }>}
+ */
+function waitForPickerKey(moduleCount) {
+  return new Promise((resolve) => {
+    readline.emitKeypressEvents(process.stdin);
+    if (process.stdin.isTTY) process.stdin.setRawMode(true);
+
+    const handler = (str, key) => {
+      if (!key) return;
+
+      // Check for number key
+      const num = parseInt(key.name, 10) || parseInt(str, 10);
+      if (num >= 1 && num <= moduleCount) {
+        cleanup(); resolve({ action: 'select', index: num - 1 });
+        return;
+      }
+
+      if (key.name === 'q' || key.name === 'escape' || (key.ctrl && key.name === 'c')) {
+        cleanup(); resolve({ action: 'quit' });
+      }
+    };
+
+    function cleanup() {
+      process.stdin.removeListener('keypress', handler);
+      if (process.stdin.isTTY) process.stdin.setRawMode(false);
+      process.stdin.pause();
+    }
+
+    process.stdin.on('keypress', handler);
+    process.stdin.resume();
+  });
+}
+
+module.exports = { runNavigationLoop, setupCleanExit, waitForKey, computePrevPosition, waitForPickerKey };
