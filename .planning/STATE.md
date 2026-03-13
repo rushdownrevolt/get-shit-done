@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Full-Stack Mini-Project
-status: defining-requirements
-stopped_at: Defining requirements
-last_updated: "2026-03-12T22:30:00Z"
-last_activity: 2026-03-12 — Milestone v2.1 started
+status: ready-to-plan
+stopped_at: Roadmap created
+last_updated: "2026-03-12T23:00:00Z"
+last_activity: 2026-03-12 — Roadmap created for v2.1 (2 phases, 5 requirements)
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-12)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Defining v2.1 requirements
+**Current focus:** Phase 7 — Full-Stack Lesson and Verification
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-12 — Milestone v2.1 started
+Phase: 7 of 8 (Full-Stack Lesson and Verification)
+Plan: Ready to plan
+Status: Ready to plan Phase 7
+Last activity: 2026-03-12 — Roadmap created for v2.1
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -57,5 +57,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 01.2-03 gap closure (content grouping fix)
-Next action: Continue defining v2.1 requirements and create roadmap
+Stopped at: Roadmap created for v2.1 milestone
+Next action: `/gsd:plan-phase 7`

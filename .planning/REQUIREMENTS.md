@@ -40,17 +40,17 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MP-01 | — | Pending |
-| MP-02 | — | Pending |
-| VER-01 | — | Pending |
-| VER-02 | — | Pending |
-| HNT-01 | — | Pending |
+| MP-01 | Phase 7 | Pending |
+| MP-02 | Phase 7 | Pending |
+| VER-01 | Phase 7 | Pending |
+| VER-02 | Phase 7 | Pending |
+| HNT-01 | Phase 8 | Pending |
 
 **Coverage:**
 - v2.1 requirements: 5 total
-- Mapped to phases: 0
-- Unmapped: 5 (awaiting roadmap)
+- Mapped to phases: 5
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-12*
-*Last updated: 2026-03-12 after initial definition*
+*Last updated: 2026-03-12 after roadmap creation*
