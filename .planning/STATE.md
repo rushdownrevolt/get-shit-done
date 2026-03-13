@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.2
 milestone_name: Module Discovery & Welcome
 status: active
-stopped_at: "Completed 09-01-PLAN.md"
-last_updated: "2026-03-13T05:37:57Z"
-last_activity: 2026-03-13 — Completed 09-01 progress schema v3 and isFirstRun
+stopped_at: "Completed 09-02-PLAN.md"
+last_updated: "2026-03-13T05:42:38Z"
+last_activity: 2026-03-13 — Completed 09-02 dispatch loop and return contract
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 82
+  completed_plans: 2
+  percent: 88
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-12)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Phase 9 — Navigation Architecture & Progress Foundation
+**Current focus:** Phase 9 — Navigation Architecture & Progress Foundation (complete)
 
 ## Current Position
 
 Phase: 9 of 11 (Navigation Architecture & Progress Foundation)
-Plan: 1 of 2 in current phase
-Status: Plan 09-01 complete
-Last activity: 2026-03-13 — Completed 09-01 progress schema v3 and isFirstRun
+Plan: 2 of 2 in current phase (phase complete)
+Status: Phase 09 complete
+Last activity: 2026-03-13 — Completed 09-02 dispatch loop and return contract
 
-Progress: [████████░░] 82%
+Progress: [█████████░] 88%
 
 ## Performance Metrics
 
@@ -38,7 +38,8 @@ Progress: [████████░░] 82%
 - v1.0: 8 plans in ~28 min (avg 3.5min/plan)
 - v2.0: 6 plans in ~25 min (avg 4.2min/plan)
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
-- Overall: 16 plans in ~58 min (avg 3.6min/plan)
+- v2.2: 2 plans in ~3 min (avg 1.5min/plan)
+- Overall: 18 plans in ~61 min (avg 3.4min/plan)
 
 ## Accumulated Context
 
@@ -51,6 +52,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - 08-01: Hints acknowledge Module 1 artifacts as already done, focus on Node.js layer.
 - v2.2: Hub-and-spoke architecture — module picker is central navigation hub for all entry paths.
 - 09-01: isFirstRun is pure function, chained migrations persist to disk immediately
+- 09-02: progressFn updates both top-level and per-module currentLesson for backward compatibility
+- 09-02: Dispatch loop uses action variable pattern for future extensibility
 
 ### Pending Todos
 
@@ -72,6 +75,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-13T05:37:57Z
-Stopped at: Completed 09-01-PLAN.md
-Next action: Execute 09-02-PLAN.md
+Last session: 2026-03-13T05:42:38Z
+Stopped at: Completed 09-02-PLAN.md
+Next action: Execute Phase 10 plans
