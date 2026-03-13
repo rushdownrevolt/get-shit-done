@@ -7,13 +7,13 @@
 
 ### Mini-Project Content
 
-- [ ] **MP-01**: Module 2 Lesson 6 updated to reference /gsd:skeptic (building on Module 1 output) instead of standalone echo command
-- [ ] **MP-02**: Module 2 Lesson 6 deliverables include all 4 layers: command.md, workflow.md, lib/skeptic.cjs handler, gsd-tools.cjs switch case
+- [x] **MP-01**: Module 2 Lesson 6 updated to reference /gsd:skeptic (building on Module 1 output) instead of standalone echo command
+- [x] **MP-02**: Module 2 Lesson 6 deliverables include all 4 layers: command.md, workflow.md, lib/skeptic.cjs handler, gsd-tools.cjs switch case
 
 ### Verification
 
-- [ ] **VER-01**: spec.json checks Node.js artifacts (lib/skeptic.cjs handler function + gsd-tools.cjs switch case)
-- [ ] **VER-02**: spec.json checks markdown artifacts from Module 1 (command.md + workflow.md still present and valid)
+- [x] **VER-01**: spec.json checks Node.js artifacts (lib/skeptic.cjs handler function + gsd-tools.cjs switch case)
+- [x] **VER-02**: spec.json checks markdown artifacts from Module 1 (command.md + workflow.md still present and valid)
 
 ### Hints
 
@@ -40,10 +40,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MP-01 | Phase 7 | Pending |
-| MP-02 | Phase 7 | Pending |
-| VER-01 | Phase 7 | Pending |
-| VER-02 | Phase 7 | Pending |
+| MP-01 | Phase 7 | Complete |
+| MP-02 | Phase 7 | Complete |
+| VER-01 | Phase 7 | Complete |
+| VER-02 | Phase 7 | Complete |
 | HNT-01 | Phase 8 | Pending |
 
 **Coverage:**

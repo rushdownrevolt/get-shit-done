@@ -31,7 +31,7 @@
 
 ### v2.1 Full-Stack Mini-Project (Phases 7-8)
 
-- [ ] **Phase 7: Full-Stack Lesson and Verification** - Update Module 2 lesson 6 content and spec.json to cover all 4 skeptic layers
+- [x] **Phase 7: Full-Stack Lesson and Verification** - Update Module 2 lesson 6 content and spec.json to cover all 4 skeptic layers
 - [ ] **Phase 8: Full-Stack Hints** - Update hints.json with guidance connecting markdown and Node.js layers
 
 ## Phase Details
@@ -48,7 +48,7 @@
   5. Running the verifier against a complete skeptic implementation reports all checks passing
 **Plans:** 1 plan
 Plans:
-- [ ] 07-01-PLAN.md — Update lesson 6 content and spec.json from echo to full-stack skeptic
+- [x] 07-01-PLAN.md — Update lesson 6 content and spec.json from echo to full-stack skeptic
 
 ### Phase 8: Full-Stack Hints
 **Goal**: Learner gets progressive guidance that connects their existing markdown-layer work to the new Node.js-layer work
@@ -73,7 +73,7 @@ Plans:
 | 4. Multi-Module Infrastructure | v2.0 | 3/3 | Complete | 2026-03-12 |
 | 5. Module 1 Lessons | v2.0 | 2/2 | Complete | 2026-03-12 |
 | 6. Module 1 Mini-Project | v2.0 | 1/1 | Complete | 2026-03-12 |
-| 7. Full-Stack Lesson and Verification | v2.1 | 0/1 | Not started | - |
+| 7. Full-Stack Lesson and Verification | v2.1 | 1/1 | Complete | 2026-03-13 |
 | 8. Full-Stack Hints | v2.1 | 0/? | Not started | - |
 
 ---
