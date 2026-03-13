@@ -251,11 +251,7 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
     renderSuccessCriteria(lesson, parts);
   }
 
-  // 9. Progress dots
-  parts.push(renderProgressDots(partIndex, totalParts));
-  parts.push('\n\n');
-
-  // 9b. Lesson progress footer (module context)
+  // 9. Lesson progress footer (module context)
   if (moduleTitle) {
     parts.push(renderLessonProgressFooter(moduleTitle, lesson.title, currentLessonIndex, totalLessons, partIndex, totalParts));
     parts.push('\n\n');

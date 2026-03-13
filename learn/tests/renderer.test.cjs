@@ -323,10 +323,9 @@ describe('renderPart', () => {
     assert.ok(output.includes('File B'), 'should contain second deliverable');
   });
 
-  test('includes progress dots from renderProgressDots', () => {
+  test('does not include old-style "Part X of Y" progress dots', () => {
     const output = renderPart(lesson, 1, 2, 0, 5);
-    assert.ok(output.includes('Part 2 of 2'), 'should contain progress dots label');
-    assert.ok(output.includes('\u25CF'), 'should contain filled dot');
+    assert.ok(!output.includes('Part 2 of 2'), 'should NOT contain old-style Part X of Y label');
   });
 
   test('includes new navigation footer with [w] [q] [e] [c] [esc]', () => {
@@ -534,13 +533,14 @@ describe('renderPart', () => {
     assert.ok(hrBetweenGroups >= 1, 'should have HR separator between groups');
   });
 
-  test('GROUP: progress dots count reflects group count', () => {
+  test('GROUP: old-style "Part X of Y" progress dots absent from grouped output', () => {
     // groupedLesson has [text, code, text, code, text] -> 3 groups
     const groups = groupContentItems(groupedLesson.content);
     assert.strictEqual(groups.length, 3, 'should produce 3 groups');
     const totalParts = groups.length;
-    const output = renderPart(groupedLesson, 0, totalParts, 0, 5);
-    assert.ok(output.includes('Part 1 of 3'), 'should show Part 1 of 3 (groups), not Part 1 of 5 (items)');
+    const output = renderPart(groupedLesson, 0, totalParts, 0, 5, undefined, 'My Module');
+    assert.ok(!output.includes('Part 1 of 3'), 'should NOT contain old-style Part X of Y');
+    assert.ok(output.includes('My Module'), 'should contain module title in new footer');
   });
 });
 
