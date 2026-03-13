@@ -43,7 +43,7 @@
 **Milestone Goal:** Give learners a proper introduction to GSD Learn and let them navigate between modules
 
 - [x] **Phase 9: Navigation Architecture & Progress Foundation** - Two-level loop and progress schema v3 enabling module switching and resume (completed 2026-03-13)
-- [ ] **Phase 10: Welcome Screen & Module Picker** - First-time welcome, module selection UI, and returning-user experience
+- [x] **Phase 10: Welcome Screen & Module Picker** - First-time welcome, module selection UI, and returning-user experience (completed 2026-03-13)
 - [ ] **Phase 11: Key Bindings & Navigation Footer** - M/H key bindings and context-dependent footer
 
 ## Phase Details
@@ -73,7 +73,7 @@ Plans:
   3. Module 1 is visually flagged as recommended for new users
   4. Returning user sees a slim welcome-back message (not the full welcome pitch) when entering the module picker
   5. Welcome screen and module picker share a single module list renderer (no duplicated rendering logic)
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 10-01-PLAN.md — Render functions (renderModuleList, renderWelcomeScreen, renderModulePicker) and picker key handler with tests
@@ -112,7 +112,7 @@ Phases execute in numeric order: 9 -> 10 -> 11
 | 7. Full-Stack Lesson and Verification | v2.1 | 1/1 | Complete | 2026-03-13 |
 | 8. Full-Stack Hints | v2.1 | 1/1 | Complete | 2026-03-13 |
 | 9. Navigation Architecture & Progress Foundation | v2.2 | 2/2 | Complete | 2026-03-13 |
-| 10. Welcome Screen & Module Picker | 1/2 | In Progress|  | - |
+| 10. Welcome Screen & Module Picker | 2/2 | Complete   | 2026-03-13 | - |
 | 11. Key Bindings & Navigation Footer | v2.2 | 0/? | Not started | - |
 
 ---
