@@ -6,7 +6,7 @@ const path = require('path');
 const PROGRESS_PATH = path.join('.planning', 'learn', 'progress.json');
 
 const DEFAULT_PROGRESS = {
-  version: 2,
+  version: 3,
   currentModule: null,
   currentLesson: 0,
   modules: {},
@@ -42,13 +42,55 @@ function migrateV1toV2(progress) {
   return migrated;
 }
 
+/**
+ * Migrate v2 progress data to v3 schema.
+ * Adds `completed: false` to each module entry that lacks it.
+ * If already v3 or higher, returns unchanged (idempotent).
+ *
+ * @param {object} progress - Progress object to migrate.
+ * @returns {object} Migrated progress object (v3).
+ */
+function migrateV2toV3(progress) {
+  if (progress.version >= 3) {
+    return progress;
+  }
+
+  const migratedModules = {};
+  for (const [key, modData] of Object.entries(progress.modules || {})) {
+    migratedModules[key] = {
+      ...modData,
+      completed: modData.completed || false,
+    };
+  }
+
+  return {
+    version: 3,
+    currentModule: progress.currentModule,
+    currentLesson: progress.currentLesson,
+    modules: migratedModules,
+  };
+}
+
+/**
+ * Determine if this is the user's first run.
+ * Returns true if no module has been started yet.
+ *
+ * @param {object} progress - Progress object to check.
+ * @returns {boolean} True if first run (no modules started).
+ */
+function isFirstRun(progress) {
+  const entries = Object.values(progress.modules || {});
+  if (entries.length === 0) return true;
+  return !entries.some((mod) => mod.started === true);
+}
+
 function loadProgress(cwd) {
   const filePath = path.join(cwd, PROGRESS_PATH);
   try {
     const raw = fs.readFileSync(filePath, 'utf-8');
     const parsed = JSON.parse(raw);
     // Merge with defaults to handle missing fields
-    const progress = {
+    let progress = {
       version: parsed.version !== undefined ? parsed.version : DEFAULT_PROGRESS.version,
       currentModule: parsed.currentModule !== undefined ? parsed.currentModule : DEFAULT_PROGRESS.currentModule,
       currentLesson: parsed.currentLesson !== undefined ? parsed.currentLesson : DEFAULT_PROGRESS.currentLesson,
@@ -57,9 +99,13 @@ function loadProgress(cwd) {
 
     // Auto-migrate v1 to v2
     if (progress.version < 2) {
-      const migrated = migrateV1toV2(progress);
-      saveProgress(cwd, migrated);
-      return migrated;
+      progress = migrateV1toV2(progress);
+    }
+
+    // Auto-migrate v2 to v3
+    if (progress.version < 3) {
+      progress = migrateV2toV3(progress);
+      saveProgress(cwd, progress);
     }
 
     return progress;
@@ -75,4 +121,4 @@ function saveProgress(cwd, progress) {
   fs.writeFileSync(filePath, JSON.stringify(progress, null, 2), 'utf-8');
 }
 
-module.exports = { loadProgress, saveProgress, migrateV1toV2 };
+module.exports = { loadProgress, saveProgress, migrateV1toV2, migrateV2toV3, isFirstRun };
