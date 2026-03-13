@@ -532,10 +532,6 @@ function cmdScaffold(cwd, type, options, raw) {
   output({ created: true, path: relPath }, raw, relPath);
 }
 
-function cmdEcho(text, raw) {
-  output({ text }, raw, text);
-}
-
 module.exports = {
   cmdGenerateSlug,
   cmdCurrentTimestamp,
@@ -549,5 +545,4 @@ module.exports = {
   cmdProgressRender,
   cmdTodoComplete,
   cmdScaffold,
-  cmdEcho,
 };

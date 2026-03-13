@@ -4,10 +4,10 @@ milestone: v2.2
 milestone_name: Module Discovery & Welcome
 status: active
 stopped_at: ""
-last_updated: "2026-03-12"
-last_activity: 2026-03-12 - Milestone v2.2 started
+last_updated: "2026-03-13"
+last_activity: 2026-03-13 - Roadmap created for v2.2
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-12)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v2.2 Module Discovery & Welcome
+**Current focus:** Phase 9 — Navigation Architecture & Progress Foundation
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-12 — Milestone v2.2 started
+Phase: 9 of 11 (Navigation Architecture & Progress Foundation)
+Plan: 0 of ? in current phase
+Status: Ready to plan
+Last activity: 2026-03-13 — Roadmap created for v2.2 milestone
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [░░░░░░░░░░] 0% (v2.2 plans not yet defined)
 
 ## Performance Metrics
 
@@ -46,9 +46,10 @@ Progress: [░░░░░░░░░░] 0%
 
 Decisions are logged in PROJECT.md Key Decisions table.
 
-- 01.2-03: Code blocks group with FOLLOWING text (explanation), not preceding text (lead-in). User feedback drove this correction.
-- 07-01: Carried forward all Module 1 spec checks verbatim into Module 2 spec for cross-module verification continuity.
-- 08-01: Hints acknowledge Module 1 artifacts as already done, focus guidance on Node.js layer only.
+- 01.2-03: Code blocks group with FOLLOWING text (explanation), not preceding text (lead-in).
+- 07-01: Carried forward all Module 1 spec checks verbatim into Module 2 spec.
+- 08-01: Hints acknowledge Module 1 artifacts as already done, focus on Node.js layer.
+- v2.2: Hub-and-spoke architecture — module picker is central navigation hub for all entry paths.
 
 ### Pending Todos
 
@@ -56,7 +57,7 @@ None.
 
 ### Blockers/Concerns
 
-None.
+- 13 pre-existing clipboard-formatter.test.cjs failures (from v1.0, non-blocking)
 
 ### Quick Tasks Completed
 
@@ -71,5 +72,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed quick-7 (update footer with subtitle)
-Next action: `/gsd:new-milestone`
+Stopped at: Roadmap created for v2.2 milestone (Phases 9-11)
+Next action: `/gsd:plan-phase 9`

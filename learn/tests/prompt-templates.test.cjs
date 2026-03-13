@@ -124,6 +124,80 @@ describe('prompt-templates.cjs', () => {
     });
   });
 
+  describe('assembleMarkdownPrompt', () => {
+    test('basic {{KEY}} replacement', () => {
+      const { assembleMarkdownPrompt } = require('../lib/prompt-templates.cjs');
+      const result = assembleMarkdownPrompt('test-template', {
+        name: 'Alice',
+        place: 'Wonderland',
+        role: 'explorer',
+        'frontmatter.description': 'A test description',
+      });
+      assert.ok(result.includes('Hello Alice'), 'should replace {{name}}');
+      assert.ok(result.includes('welcome to Wonderland'), 'should replace {{place}}');
+      assert.ok(result.includes('Your role: explorer'), 'should replace {{role}}');
+    });
+
+    test('throws on missing key', () => {
+      const { assembleMarkdownPrompt } = require('../lib/prompt-templates.cjs');
+      assert.throws(
+        () => assembleMarkdownPrompt('test-template', { name: 'Alice' }),
+        (err) => {
+          assert.ok(err.message.includes('place'), 'error should contain missing key name');
+          assert.ok(err.message.includes('test-template'), 'error should contain template name');
+          return true;
+        },
+        'should throw on missing key'
+      );
+    });
+
+    test('dotted key via flat context', () => {
+      const { assembleMarkdownPrompt } = require('../lib/prompt-templates.cjs');
+      const result = assembleMarkdownPrompt('test-template', {
+        name: 'Bob',
+        place: 'Office',
+        role: 'developer',
+        'frontmatter.description': 'Flat dotted key',
+      });
+      assert.ok(result.includes('Metadata: Flat dotted key'), 'should resolve flat dotted key');
+    });
+
+    test('dotted key via nested object traversal', () => {
+      const { assembleMarkdownPrompt } = require('../lib/prompt-templates.cjs');
+      const result = assembleMarkdownPrompt('test-template', {
+        name: 'Carol',
+        place: 'Lab',
+        role: 'scientist',
+        frontmatter: { description: 'Nested traversal' },
+      });
+      assert.ok(result.includes('Metadata: Nested traversal'), 'should resolve nested dotted key');
+    });
+
+    test('replaces ALL occurrences of same key', () => {
+      const { assembleMarkdownPrompt } = require('../lib/prompt-templates.cjs');
+      const result = assembleMarkdownPrompt('test-template', {
+        name: 'Dave',
+        place: 'Park',
+        role: 'runner',
+        'frontmatter.description': 'test',
+      });
+      const count = (result.match(/Dave/g) || []).length;
+      assert.ok(count >= 2, 'should replace all occurrences of {{name}}, found ' + count);
+    });
+
+    test('assemblePrompt still works unchanged (regression)', () => {
+      const { assemblePrompt } = require('../lib/prompt-templates.cjs');
+      const result = assemblePrompt('source-dive', {
+        fileName: 'test.cjs',
+        lessonNumber: 1,
+        lessonTitle: 'Test Lesson',
+        focus: 'testing',
+      });
+      assert.ok(result.includes('test.cjs'), 'assemblePrompt should still work');
+      assert.ok(!result.includes('{{FILE_NAME}}'), 'should replace FILE_NAME marker');
+    });
+  });
+
   describe('defaults handling', () => {
     test('assemblePrompt uses defaults for missing context values', () => {
       const { assemblePrompt } = require('../lib/prompt-templates.cjs');

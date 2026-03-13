@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "projects": {
+    "command-lifecycle-project": {
+      "events": [
+        {
+          "type": "project_started",
+          "timestamp": "2026-03-12T13:48:21.012Z",
+          "data": {}
+        },
+        {
+          "type": "verify_attempt",
+          "timestamp": "2026-03-12T13:49:29.903Z",
+          "data": {
+            "passed": false,
+            "artifactCount": 2
+          }
+        },
+        {
+          "type": "hint_requested",
+          "timestamp": "2026-03-12T13:49:38.575Z",
+          "data": {
+            "hintIndex": 0
+          }
+        },
+        {
+          "type": "hint_requested",
+          "timestamp": "2026-03-12T13:49:46.120Z",
+          "data": {
+            "hintIndex": 1
+          }
+        },
+        {
+          "type": "hint_requested",
+          "timestamp": "2026-03-12T13:50:03.018Z",
+          "data": {
+            "hintIndex": 2
+          }
+        },
+        {
+          "type": "hint_requested",
+          "timestamp": "2026-03-12T13:50:11.033Z",
+          "data": {
+            "hintIndex": 3
+          }
+        },
+        {
+          "type": "hint_requested",
+          "timestamp": "2026-03-12T13:50:16.861Z",
+          "data": {
+            "hintIndex": 4
+          }
+        },
+        {
+          "type": "verify_attempt",
+          "timestamp": "2026-03-12T14:54:37.628Z",
+          "data": {
+            "passed": true,
+            "artifactCount": 2
+          }
+        },
+        {
+          "type": "project_completed",
+          "timestamp": "2026-03-12T14:54:37.629Z",
+          "data": {}
+        }
+      ],
+      "startedAt": "2026-03-12T13:48:21.012Z",
+      "completedAt": "2026-03-12T14:54:37.629Z"
+    },
+    "gsd-commands-project": {
+      "events": [
+        {
+          "type": "verify_attempt",
+          "timestamp": "2026-03-12T20:26:53.801Z",
+          "data": {
+            "passed": false,
+            "artifactCount": 2
+          }
+        },
+        {
+          "type": "hint_requested",
+          "timestamp": "2026-03-12T20:26:54.222Z",
+          "data": {
+            "hintIndex": 0
+          }
+        },
+        {
+          "type": "verify_attempt",
+          "timestamp": "2026-03-12T20:29:59.633Z",
+          "data": {
+            "passed": false,
+            "artifactCount": 2
+          }
+        },
+        {
+          "type": "hint_requested",
+          "timestamp": "2026-03-12T20:30:00.403Z",
+          "data": {
+            "hintIndex": 1
+          }
+        },
+        {
+          "type": "project_started",
+          "timestamp": "2026-03-12T20:38:39.216Z",
+          "data": {}
+        },
+        {
+          "type": "verify_attempt",
+          "timestamp": "2026-03-12T20:42:12.389Z",
+          "data": {
+            "passed": false,
+            "artifactCount": 2
+          }
+        }
+      ],
+      "startedAt": "2026-03-12T20:38:39.216Z",
+      "completedAt": null
+    }
+  }
+}

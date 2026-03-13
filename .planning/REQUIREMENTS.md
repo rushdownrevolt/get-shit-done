@@ -53,23 +53,23 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WELC-01 | — | Pending |
-| WELC-02 | — | Pending |
-| WELC-03 | — | Pending |
-| DISC-01 | — | Pending |
-| DISC-02 | — | Pending |
-| DISC-03 | — | Pending |
-| DISC-04 | — | Pending |
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| NAV-03 | — | Pending |
-| NAV-04 | — | Pending |
+| WELC-01 | Phase 10 | Pending |
+| WELC-02 | Phase 9 | Pending |
+| WELC-03 | Phase 10 | Pending |
+| DISC-01 | Phase 10 | Pending |
+| DISC-02 | Phase 10 | Pending |
+| DISC-03 | Phase 10 | Pending |
+| DISC-04 | Phase 10 | Pending |
+| NAV-01 | Phase 9 | Pending |
+| NAV-02 | Phase 11 | Pending |
+| NAV-03 | Phase 11 | Pending |
+| NAV-04 | Phase 11 | Pending |
 
 **Coverage:**
 - v2.2 requirements: 11 total
-- Mapped to phases: 0
-- Unmapped: 11 ⚠️
+- Mapped to phases: 11
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-13*
-*Last updated: 2026-03-13 after initial definition*
+*Last updated: 2026-03-13 after roadmap creation*
