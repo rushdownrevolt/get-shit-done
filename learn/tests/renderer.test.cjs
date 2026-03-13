@@ -783,3 +783,164 @@ describe('groupContentItems', () => {
     assert.strictEqual(groups[1].focus, 'explanation-focus', 'code+text group gets text focus');
   });
 });
+
+// ─── renderModuleList ────────────────────────────────────────────────
+
+describe('renderModuleList', () => {
+  const { renderModuleList } = require('../lib/renderer.cjs');
+
+  const modules = [
+    { id: 'mod-1', title: 'Module One', description: 'First module', order: 1, lessonCount: 6 },
+    { id: 'mod-2', title: 'Module Two', description: 'Second module', order: 2, lessonCount: 4 },
+  ];
+
+  test('returns string with numbered module entries', () => {
+    const progress = { modules: {} };
+    const output = renderModuleList(modules, progress, true);
+    assert.ok(typeof output === 'string', 'should return a string');
+    assert.ok(output.includes('[1]'), 'should contain [1]');
+    assert.ok(output.includes('[2]'), 'should contain [2]');
+    assert.ok(output.includes('Module One'), 'should contain first module title');
+    assert.ok(output.includes('Module Two'), 'should contain second module title');
+  });
+
+  test('shows module descriptions indented', () => {
+    const progress = { modules: {} };
+    const output = renderModuleList(modules, progress, true);
+    assert.ok(output.includes('First module'), 'should contain first module description');
+    assert.ok(output.includes('Second module'), 'should contain second module description');
+  });
+
+  test('Module 1 shows "Start here" when isFirstRun=true', () => {
+    const progress = { modules: {} };
+    const output = renderModuleList(modules, progress, true);
+    assert.ok(output.includes('Start here'), 'should contain "Start here" for Module 1');
+  });
+
+  test('Module 1 shows "Start here" when isFirstRun=false but module not started', () => {
+    const progress = { modules: {} };
+    const output = renderModuleList(modules, progress, false);
+    assert.ok(output.includes('Start here'), 'should contain "Start here" when module not started');
+  });
+
+  test('Module 1 does NOT show "Start here" when isFirstRun=false AND module is started', () => {
+    const progress = { modules: { 'mod-1': { currentLesson: 2, started: true, completed: false } } };
+    const output = renderModuleList(modules, progress, false);
+    assert.ok(!output.includes('Start here'), 'should NOT contain "Start here" when module is started and not first run');
+  });
+
+  test('in-progress module shows "Lesson X of Y" (1-indexed)', () => {
+    const progress = { modules: { 'mod-1': { currentLesson: 2, started: true, completed: false } } };
+    const output = renderModuleList(modules, progress, false);
+    assert.ok(output.includes('Lesson 3 of 6'), 'should show "Lesson 3 of 6" for currentLesson=2 (0-indexed)');
+  });
+
+  test('completed module shows "Completed" with checkmark', () => {
+    const progress = { modules: { 'mod-2': { currentLesson: 3, started: true, completed: true } } };
+    const output = renderModuleList(modules, progress, false);
+    assert.ok(output.includes('Completed'), 'should show "Completed"');
+    assert.ok(output.includes('\u2713') || output.includes('\u2714') || output.includes('Completed'), 'should show checkmark or Completed text');
+  });
+
+  test('not-started non-Module-1 shows no progress indicator', () => {
+    const progress = { modules: {} };
+    const output = renderModuleList(modules, progress, true);
+    // Module 2 line should not have Lesson/Completed/Start here
+    const lines = output.split('\n');
+    const mod2Lines = lines.filter(l => l.includes('Module Two') || l.includes('[2]'));
+    const mod2Text = mod2Lines.join(' ');
+    assert.ok(!mod2Text.includes('Start here'), 'Module 2 should not show "Start here"');
+    assert.ok(!mod2Text.includes('Lesson'), 'Module 2 should not show lesson progress');
+    assert.ok(!mod2Text.includes('Completed'), 'Module 2 should not show completed');
+  });
+});
+
+// ─── renderWelcomeScreen ─────────────────────────────────────────────
+
+describe('renderWelcomeScreen', () => {
+  const { renderWelcomeScreen } = require('../lib/renderer.cjs');
+
+  const modules = [
+    { id: 'mod-1', title: 'Module One', description: 'First module', order: 1, lessonCount: 6 },
+    { id: 'mod-2', title: 'Module Two', description: 'Second module', order: 2, lessonCount: 4 },
+  ];
+  const progress = { modules: {} };
+
+  test('returns string containing "GSD Learn" title', () => {
+    const output = renderWelcomeScreen(modules, progress);
+    assert.ok(typeof output === 'string', 'should return a string');
+    assert.ok(output.includes('GSD Learn'), 'should contain "GSD Learn" title');
+  });
+
+  test('contains pitch text about building AI workflows', () => {
+    const output = renderWelcomeScreen(modules, progress);
+    assert.ok(output.includes('AI workflow') || output.includes('ai workflow') || output.includes('AI Workflow'), 'should mention AI workflows in pitch');
+  });
+
+  test('contains horizontal rules', () => {
+    const output = renderWelcomeScreen(modules, progress);
+    assert.ok(output.includes('\u2500'), 'should contain horizontal rule characters');
+  });
+
+  test('contains module list with numbered entries', () => {
+    const output = renderWelcomeScreen(modules, progress);
+    assert.ok(output.includes('[1]'), 'should contain [1]');
+    assert.ok(output.includes('Module One'), 'should contain module title');
+  });
+
+  test('contains "Press a number to begin" footer', () => {
+    const output = renderWelcomeScreen(modules, progress);
+    assert.ok(output.includes('Press a number to begin'), 'should contain footer prompt');
+  });
+
+  test('calls renderModuleList with isFirstRun=true (shows "Start here")', () => {
+    const output = renderWelcomeScreen(modules, progress);
+    assert.ok(output.includes('Start here'), 'should show "Start here" (isFirstRun=true)');
+  });
+});
+
+// ─── renderModulePicker ──────────────────────────────────────────────
+
+describe('renderModulePicker', () => {
+  const { renderModulePicker } = require('../lib/renderer.cjs');
+
+  const modules = [
+    { id: 'mod-1', title: 'Module One', description: 'First module', order: 1, lessonCount: 6 },
+    { id: 'mod-2', title: 'Module Two', description: 'Second module', order: 2, lessonCount: 4 },
+  ];
+  const progress = { modules: { 'mod-1': { currentLesson: 2, started: true, completed: false } } };
+
+  test('returns string containing "Pick up where you left off." header', () => {
+    const output = renderModulePicker(modules, progress);
+    assert.ok(typeof output === 'string', 'should return a string');
+    assert.ok(output.includes('Pick up where you left off.'), 'should contain picker header');
+  });
+
+  test('contains horizontal rule', () => {
+    const output = renderModulePicker(modules, progress);
+    assert.ok(output.includes('\u2500'), 'should contain horizontal rule characters');
+  });
+
+  test('contains module list with numbered entries', () => {
+    const output = renderModulePicker(modules, progress);
+    assert.ok(output.includes('[1]'), 'should contain [1]');
+    assert.ok(output.includes('Module One'), 'should contain module title');
+  });
+
+  test('contains "Press a number to begin" and "[q] Quit" footer', () => {
+    const output = renderModulePicker(modules, progress);
+    assert.ok(output.includes('Press a number to begin'), 'should contain selection prompt');
+    assert.ok(output.includes('[q]'), 'should contain quit key hint');
+    assert.ok(output.includes('Quit'), 'should contain Quit label');
+  });
+
+  test('calls renderModuleList with isFirstRun=false (no "Start here" when started)', () => {
+    const output = renderModulePicker(modules, progress);
+    assert.ok(!output.includes('Start here'), 'should NOT show "Start here" (isFirstRun=false, module started)');
+  });
+
+  test('shows progress indicator for in-progress module', () => {
+    const output = renderModulePicker(modules, progress);
+    assert.ok(output.includes('Lesson 3 of 6'), 'should show lesson progress');
+  });
+});
