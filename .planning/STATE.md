@@ -2,31 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.2
 milestone_name: Module Discovery & Welcome
-status: active
-stopped_at: Phase 11 context gathered
-last_updated: "2026-03-13T22:27:14.114Z"
-last_activity: 2026-03-13 — Completed 10-02 welcome/picker wiring
+status: complete
+stopped_at: Completed 11-01-PLAN.md
+last_updated: "2026-03-14T00:52:39Z"
+last_activity: 2026-03-14 — Completed 11-01 key bindings and navigation footer
 progress:
   total_phases: 3
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
----
-
----
-gsd_state_version: 1.0
-milestone: v2.2
-milestone_name: Module Discovery & Welcome
-status: active
-stopped_at: Completed 10-02-PLAN.md
-last_updated: "2026-03-13T15:34:05.594Z"
-last_activity: 2026-03-13 — Completed 10-02 welcome/picker wiring
-progress:
-  total_phases: 3
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
-  percent: 89
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
+  percent: 100
 ---
 
 # Project State
@@ -36,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-12)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Phase 10 — Welcome Screen & Module Picker (complete)
+**Current focus:** Phase 11 — Key Bindings & Navigation Footer (complete)
 
 ## Current Position
 
-Phase: 10 of 11 (Welcome Screen & Module Picker)
-Plan: 2 of 2 in current phase (phase complete)
-Status: Phase 10 complete
-Last activity: 2026-03-13 — Completed 10-02 welcome/picker wiring
+Phase: 11 of 11 (Key Bindings & Navigation Footer)
+Plan: 1 of 1 in current phase (phase complete)
+Status: Phase 11 complete
+Last activity: 2026-03-14 — Completed 11-01 key bindings and navigation footer
 
-Progress: [█████████░] 89%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -53,8 +38,8 @@ Progress: [█████████░] 89%
 - v1.0: 8 plans in ~28 min (avg 3.5min/plan)
 - v2.0: 6 plans in ~25 min (avg 4.2min/plan)
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
-- v2.2: 4 plans in ~7 min (avg 1.75min/plan)
-- Overall: 20 plans in ~65 min (avg 3.25min/plan)
+- v2.2: 5 plans in ~10 min (avg 2min/plan)
+- Overall: 21 plans in ~68 min (avg 3.24min/plan)
 
 ## Accumulated Context
 
@@ -71,6 +56,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - 09-02: Dispatch loop uses action variable pattern for future extensibility
 - [Phase 10]: renderModuleList shared between welcome and picker via isFirstRun parameter (DISC-04)
 - [Phase 10]: 10-02: Completion flow transitions to picker instead of exiting; review mode resets currentLesson to 0
+- 11-01: renderNavigationFooter builds key array dynamically; [h] Hint conditional on isMiniProjectStep
+- 11-01: M key modules action saves progress before returning, consistent with quit behavior
 
 ### Pending Todos
 
@@ -91,9 +78,10 @@ None.
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
 | Phase 10 P01 | 2min | 2 tasks | 3 files |
 | Phase 10 P02 | 2min | 2 tasks | 1 files |
+| Phase 11 P01 | 3min | 2 tasks | 4 files |
 
 ## Session Continuity
 
-Last session: 2026-03-13T22:27:14.112Z
-Stopped at: Phase 11 context gathered
-Next action: Execute Phase 10 plans
+Last session: 2026-03-14T00:52:39Z
+Stopped at: Completed 11-01-PLAN.md
+Next action: v2.2 milestone complete

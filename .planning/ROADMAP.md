@@ -87,11 +87,11 @@ Plans:
   1. User can press "M" from any lesson to return to the module picker, with their current position saved
   2. User can press "H" on a mini-project step to see progressive hints inline
   3. Navigation footer displays context-appropriate keys (M always visible; H only on mini-project steps; arrows, c, q as before)
-**Plans:** 2/2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
-- [ ] 11-01-PLAN.md — M key binding, dynamic navigation footer, and tests
-- [ ] 11-02-PLAN.md — H key inline hints wiring and gsd-learn integration
+- [ ] 11-01-PLAN.md ï¿½ M key binding, dynamic navigation footer, and tests
+- [ ] 11-02-PLAN.md ï¿½ H key inline hints wiring and gsd-learn integration
 
 ## Progress
 
@@ -113,7 +113,7 @@ Phases execute in numeric order: 9 -> 10 -> 11
 | 8. Full-Stack Hints | v2.1 | 1/1 | Complete | 2026-03-13 |
 | 9. Navigation Architecture & Progress Foundation | v2.2 | 2/2 | Complete | 2026-03-13 |
 | 10. Welcome Screen & Module Picker | 2/2 | Complete   | 2026-03-13 | - |
-| 11. Key Bindings & Navigation Footer | v2.2 | 0/? | Not started | - |
+| 11. Key Bindings & Navigation Footer | 1/2 | In Progress|  | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
