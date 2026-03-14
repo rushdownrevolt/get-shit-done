@@ -74,6 +74,33 @@ describe('runNavigationLoop return contract', () => {
   });
 });
 
+describe('M key and modules action', () => {
+  test('waitForPickerKey is exported as a function', () => {
+    const { waitForPickerKey } = require('../lib/navigator.cjs');
+    assert.strictEqual(typeof waitForPickerKey, 'function', 'waitForPickerKey should be exported');
+  });
+
+  test('computePrevPosition is exported as a function', () => {
+    const { computePrevPosition } = require('../lib/navigator.cjs');
+    assert.strictEqual(typeof computePrevPosition, 'function', 'computePrevPosition should be exported');
+  });
+
+  test('waitForKey JSDoc documents modules as valid return value', () => {
+    const fs = require('fs');
+    const source = fs.readFileSync(require.resolve('../lib/navigator.cjs'), 'utf8');
+    // Find the waitForKey function area and check for 'modules' documentation
+    const waitForKeySection = source.substring(0, source.indexOf('function waitForKey') + 500);
+    assert.ok(waitForKeySection.includes("'modules'"), 'waitForKey JSDoc should document modules action');
+  });
+
+  test('runNavigationLoop source contains modules action handler', () => {
+    const fs = require('fs');
+    const source = fs.readFileSync(require.resolve('../lib/navigator.cjs'), 'utf8');
+    assert.ok(source.includes("action === 'modules'"), 'runNavigationLoop should handle modules action');
+    assert.ok(source.includes("reason: 'modules'"), 'modules handler should return { reason: modules }');
+  });
+});
+
 describe('computePrevPosition', () => {
   const { computePrevPosition } = require('../lib/navigator.cjs');
   const { groupContentItems } = require('../lib/renderer.cjs');
