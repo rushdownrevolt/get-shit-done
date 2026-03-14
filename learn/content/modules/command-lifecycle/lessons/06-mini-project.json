@@ -6,13 +6,13 @@
   "content": [
     {
       "type": "text",
-      "value": "In Module 1, you built the markdown layer of /gsd:skeptic -- a command spec and workflow file. But those files are just the prompt side. To make a command that GSD can actually dispatch, you need the Node.js backend: a handler function and a switch case in the router. That is what you will build now.\n\nYou already know the command lifecycle from lessons 1-5. Now you will close the loop by wiring your skeptic command into the actual GSD codebase.\n\nIf you get stuck, use the hint command. Hints start vague and get more specific, but they never give you the code -- that part is yours.",
+      "value": "In Module 1, you built the markdown layer of /gsd:skeptic -- a command spec and workflow file. But those files are just the prompt side. To make a command that GSD can actually dispatch, you need the Node.js backend: a handler function and a switch case in the router. That is what you will build now.\n\nYou will be creating files in your live GSD installation at ~/.claude/get-shit-done/. This means your skeptic command will actually work as /gsd:skeptic when you are done.\n\nYou already know the command lifecycle from lessons 1-5. Now you will close the loop by wiring your skeptic command into the actual GSD codebase.\n\nIf you get stuck, use the hint command. Hints start vague and get more specific, but they never give you the code -- that part is yours.",
       "focus": "Hands-on full-stack command building challenge",
       "bridge": "Before you start coding, here is how to check your progress."
     },
     {
       "type": "text",
-      "value": "When you are ready to check your work, run the verify command. When you want a nudge, run the hint command. You can run both as many times as you like.\n\nTip: if something goes wrong, remember that `git checkout` can undo your changes. You are working on the real codebase, but everything is recoverable.",
+      "value": "When you are ready to check your work, run the verify command. When you want a nudge, run the hint command. You can run both as many times as you like.\n\nTip: if something goes wrong, remember that `git checkout` can undo changes in your live GSD installation at ~/.claude/get-shit-done/. You are working on the real codebase, but everything is recoverable.",
       "focus": "Verify and hint workflow",
       "bridge": "Here are the exact requirements for the command you will build."
     },
@@ -22,8 +22,8 @@
       "deliverables": [
         "A command spec at ~/.claude/commands/gsd/skeptic.md (already built in Module 1 -- verify it is still there)",
         "A workflow file at ~/.claude/get-shit-done/workflows/skeptic.md (already built in Module 1 -- verify it is still there)",
-        "A handler function in get-shit-done/bin/lib/skeptic.cjs following the cmd* naming convention",
-        "A new 'skeptic' case in the gsd-tools.cjs switch statement that routes to your handler"
+        "A handler function at ~/.claude/get-shit-done/bin/lib/skeptic.cjs following the cmd* naming convention",
+        "A new 'skeptic' case in ~/.claude/get-shit-done/bin/gsd-tools.cjs switch statement that routes to your handler"
       ],
       "verifyCommand": "node learn/bin/gsd-learn.cjs --verify",
       "hintCommand": "node learn/bin/gsd-learn.cjs --hint",
