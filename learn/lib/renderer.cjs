@@ -66,7 +66,8 @@ function renderLesson(lesson, currentIndex, totalLessons, moduleDir, moduleTitle
   }
 
   // 10. Navigation footer
-  parts.push('  [n] Next  [p] Previous  [c] Copy  [q] Quit');
+  const isMiniProjectStep = lesson.content.some(s => s.type === 'project');
+  parts.push(renderNavigationFooter({ isMiniProjectStep }));
   parts.push('\n');
 
   return parts.join('');
@@ -259,7 +260,8 @@ function renderPart(lesson, partIndex, totalParts, currentLessonIndex, totalLess
   }
 
   // 10. Navigation footer
-  parts.push('  [w] Next  [q] Back  [e] Skip lesson  [c] Copy  [esc] Quit');
+  const isMiniProjectStep = lesson.content.some(s => s.type === 'project');
+  parts.push(renderNavigationFooter({ isMiniProjectStep }));
   parts.push('\n');
 
   return parts.join('');
@@ -493,4 +495,20 @@ function renderModulePicker(modules, progressData) {
   return parts.join('');
 }
 
-module.exports = { renderLesson, renderPart, renderProgressDots, renderCompletionBanner, groupContentItems, renderLessonProgressFooter, renderModuleList, renderWelcomeScreen, renderModulePicker };
+/**
+ * Render the navigation footer with context-appropriate key bindings.
+ *
+ * @param {object} [opts] - Options.
+ * @param {boolean} [opts.isMiniProjectStep] - Whether current step is a mini-project (shows [h] Hint).
+ * @returns {string} Formatted navigation footer string.
+ */
+function renderNavigationFooter(opts) {
+  const keys = ['[w] Next', '[q] Back', '[e] Skip lesson', '[c] Copy', '[m] Modules'];
+  if (opts && opts.isMiniProjectStep) {
+    keys.push('[h] Hint');
+  }
+  keys.push('[esc] Quit');
+  return '  ' + keys.join('  ');
+}
+
+module.exports = { renderLesson, renderPart, renderProgressDots, renderCompletionBanner, groupContentItems, renderLessonProgressFooter, renderModuleList, renderWelcomeScreen, renderModulePicker, renderNavigationFooter };

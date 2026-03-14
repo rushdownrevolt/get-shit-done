@@ -55,8 +55,8 @@ describe('renderLesson', () => {
 
   test('includes navigation hint footer', () => {
     const output = renderLesson(lesson, 0, 1);
-    assert.ok(output.includes('[n]'), 'output should contain next hint');
-    assert.ok(output.includes('[p]'), 'output should contain prev hint');
+    assert.ok(output.includes('[w]'), 'output should contain next hint');
+    assert.ok(output.includes('[q]'), 'output should contain back hint');
     assert.ok(output.includes('[q]'), 'output should contain quit hint');
   });
 
@@ -361,7 +361,7 @@ describe('renderPart', () => {
   test('existing renderLesson still exported and works', () => {
     const output = renderLesson(lesson, 1, 5);
     assert.ok(output.includes('Test Lesson Title'), 'renderLesson should still work');
-    assert.ok(output.includes('[n]'), 'renderLesson should still have old nav footer');
+    assert.ok(output.includes('[w]'), 'renderLesson should still have nav footer');
   });
 
   // ─── NEW: Progressive Accumulation Tests ──────────────────────────
@@ -681,7 +681,7 @@ describe('renderLesson lesson progress footer integration', () => {
 
   test('renderLesson without moduleTitle still works (backward compatible)', () => {
     const output = renderLesson(lesson, 2, 6);
-    assert.ok(output.includes('[n]'), 'should still render nav footer');
+    assert.ok(output.includes('[w]'), 'should still render nav footer');
     assert.ok(!output.includes('Command Lifecycle'), 'should not contain module title');
   });
 });
