@@ -21,16 +21,17 @@ function setupCleanExit() {
  * Wait for a single keypress and resolve with action name.
  *
  * Key mappings:
- *   w       -> 'next'   (advance to next part)
- *   q       -> 'prev'   (go back one part)
- *   e       -> 'skip'   (skip to next lesson)
- *   c       -> 'copy'   (copy full lesson to clipboard)
- *   escape  -> 'quit'   (quit and save progress)
- *   Ctrl+C  -> 'quit'   (quit and save progress)
+ *   w       -> 'next'    (advance to next part)
+ *   q       -> 'prev'    (go back one part)
+ *   e       -> 'skip'    (skip to next lesson)
+ *   c       -> 'copy'    (copy full lesson to clipboard)
+ *   m       -> 'modules' (return to module picker)
+ *   escape  -> 'quit'    (quit and save progress)
+ *   Ctrl+C  -> 'quit'    (quit and save progress)
  *
  * Arrow keys and old n/p bindings are removed.
  *
- * @returns {Promise<'next'|'prev'|'skip'|'copy'|'quit'>}
+ * @returns {Promise<'next'|'prev'|'skip'|'copy'|'modules'|'quit'>}
  */
 function waitForKey() {
   return new Promise((resolve) => {
@@ -47,6 +48,8 @@ function waitForKey() {
         cleanup(); resolve('skip');
       } else if (key.name === 'c' && !key.ctrl) {
         cleanup(); resolve('copy');
+      } else if (key.name === 'm') {
+        cleanup(); resolve('modules');
       } else if (key.name === 'escape' || (key.ctrl && key.name === 'c')) {
         cleanup(); resolve('quit');
       }
@@ -156,6 +159,9 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
       } else if (action === 'quit') {
         progressFn(currentLesson);
         return { reason: 'quit' };
+      } else if (action === 'modules') {
+        progressFn(currentLesson);
+        return { reason: 'modules' };
       }
     }
   }
