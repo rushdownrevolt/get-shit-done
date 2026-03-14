@@ -113,7 +113,7 @@ Phases execute in numeric order: 9 -> 10 -> 11
 | 8. Full-Stack Hints | v2.1 | 1/1 | Complete | 2026-03-13 |
 | 9. Navigation Architecture & Progress Foundation | v2.2 | 2/2 | Complete | 2026-03-13 |
 | 10. Welcome Screen & Module Picker | 2/2 | Complete   | 2026-03-13 | - |
-| 11. Key Bindings & Navigation Footer | v2.2 | 2/2 | Complete | 2026-03-14 |
+| 11. Key Bindings & Navigation Footer | v2.2 | Complete    | 2026-03-14 | 2026-03-14 |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
