@@ -87,11 +87,11 @@ Plans:
   1. User can press "M" from any lesson to return to the module picker, with their current position saved
   2. User can press "H" on a mini-project step to see progressive hints inline
   3. Navigation footer displays context-appropriate keys (M always visible; H only on mini-project steps; arrows, c, q as before)
-**Plans**: TBD
+**Plans:** 2/2 plans
 
 Plans:
-- [ ] 11-01: TBD
-- [ ] 11-02: TBD
+- [ ] 11-01-PLAN.md — M key binding, dynamic navigation footer, and tests
+- [ ] 11-02-PLAN.md — H key inline hints wiring and gsd-learn integration
 
 ## Progress
 
