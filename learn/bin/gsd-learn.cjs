@@ -231,9 +231,39 @@ async function main() {
         }
       };
 
+      // Load hints for H key inline display
+      let moduleHints = [];
+      const hintsPath = path.join(__dirname, '..', 'content', 'modules', activeModuleId, 'project', 'hints.json');
+      try {
+        moduleHints = JSON.parse(fs.readFileSync(hintsPath, 'utf-8'));
+      } catch {
+        // No hints file for this module -- H key will be silently ignored
+      }
+
+      // Count existing hint_requested events for cross-session persistence
+      let initialHintsUsed = 0;
+      const hintSpecPath = path.join(__dirname, '..', 'content', 'modules', activeModuleId, 'project', 'spec.json');
+      let projectId = activeModuleId + '-project';
+      try {
+        const spec = JSON.parse(fs.readFileSync(hintSpecPath, 'utf-8'));
+        projectId = spec.id || projectId;
+      } catch {}
+      const hintFeedback = loadFeedback(cwd);
+      const hintProj = hintFeedback.projects[projectId];
+      if (hintProj) {
+        initialHintsUsed = hintProj.events.filter(e => e.type === 'hint_requested').length;
+      }
+
+      const recordHintFn = (hintIndex) => {
+        recordEvent(cwd, projectId, 'hint_requested', { hintIndex });
+      };
+
       const result = await runNavigationLoop(mod.lessons, startIndex, renderFn, progressFn, {
         moduleMeta: { title: mod.title, lessonCount: mod.lessons.length },
         completionBannerFn: renderCompletionBanner,
+        hints: moduleHints,
+        hintsUsed: initialHintsUsed,
+        recordHintFn: recordHintFn,
       });
 
       if (result.reason === 'quit') {
