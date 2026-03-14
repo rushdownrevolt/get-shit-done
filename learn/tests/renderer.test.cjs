@@ -3,7 +3,7 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert');
 
-const { renderLesson, renderProgressDots, renderCompletionBanner, renderPart, groupContentItems, renderLessonProgressFooter, renderModuleList, renderWelcomeScreen, renderModulePicker } = require('../lib/renderer.cjs');
+const { renderLesson, renderProgressDots, renderCompletionBanner, renderPart, groupContentItems, renderLessonProgressFooter, renderModuleList, renderWelcomeScreen, renderModulePicker, renderNavigationFooter } = require('../lib/renderer.cjs');
 const { COLORS, _styleWithColor } = require('../lib/terminal.cjs');
 
 describe('renderLesson', () => {
@@ -683,6 +683,41 @@ describe('renderLesson lesson progress footer integration', () => {
     const output = renderLesson(lesson, 2, 6);
     assert.ok(output.includes('[n]'), 'should still render nav footer');
     assert.ok(!output.includes('Command Lifecycle'), 'should not contain module title');
+  });
+});
+
+// ─── renderNavigationFooter ──────────────────────────────────────────
+
+describe('renderNavigationFooter', () => {
+  test('default footer contains [w], [q], [e], [c], [m], [esc] but NOT [h]', () => {
+    const output = renderNavigationFooter();
+    assert.ok(output.includes('[w]'), 'should contain [w]');
+    assert.ok(output.includes('[q]'), 'should contain [q]');
+    assert.ok(output.includes('[e]'), 'should contain [e]');
+    assert.ok(output.includes('[c]'), 'should contain [c]');
+    assert.ok(output.includes('[m]'), 'should contain [m]');
+    assert.ok(output.includes('[esc]'), 'should contain [esc]');
+    assert.ok(!output.includes('[h]'), 'should NOT contain [h] by default');
+  });
+
+  test('with isMiniProjectStep=true includes [h] Hint', () => {
+    const output = renderNavigationFooter({ isMiniProjectStep: true });
+    assert.ok(output.includes('[h]'), 'should contain [h]');
+    assert.ok(output.includes('Hint'), 'should contain Hint label');
+  });
+
+  test('with isMiniProjectStep=false does NOT contain [h]', () => {
+    const output = renderNavigationFooter({ isMiniProjectStep: false });
+    assert.ok(!output.includes('[h]'), 'should NOT contain [h]');
+  });
+
+  test('[m] Modules appears in all footer variants', () => {
+    const defaultOutput = renderNavigationFooter();
+    const projectOutput = renderNavigationFooter({ isMiniProjectStep: true });
+    const nonProjectOutput = renderNavigationFooter({ isMiniProjectStep: false });
+    assert.ok(defaultOutput.includes('[m]') && defaultOutput.includes('Modules'), 'default should have [m] Modules');
+    assert.ok(projectOutput.includes('[m]') && projectOutput.includes('Modules'), 'project should have [m] Modules');
+    assert.ok(nonProjectOutput.includes('[m]') && nonProjectOutput.includes('Modules'), 'non-project should have [m] Modules');
   });
 });
 
