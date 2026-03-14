@@ -2,25 +2,10 @@
 gsd_state_version: 1.0
 milestone: v2.2
 milestone_name: Module Discovery & Welcome
-status: completed
-stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-03-14T01:00:35.790Z"
-last_activity: 2026-03-14 — Completed 11-02 H key inline hints
-progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
----
-
----
-gsd_state_version: 1.0
-milestone: v2.2
-milestone_name: Module Discovery & Welcome
 status: complete
-stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-03-14T00:58:00Z"
-last_activity: 2026-03-14 — Completed 11-02 H key inline hints
+stopped_at: Completed 01.1-02-PLAN.md (retroactive verification)
+last_updated: "2026-03-14T15:08:00Z"
+last_activity: 2026-03-14 — Verified 01.1-02 part-based navigation (retroactive)
 progress:
   total_phases: 3
   completed_phases: 3
@@ -43,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-03-12)
 Phase: 11 of 11 (Key Bindings & Navigation Footer)
 Plan: 2 of 2 in current phase (phase complete)
 Status: Phase 11 complete
-Last activity: 2026-03-14 — Completed 11-02 H key inline hints
+Last activity: 2026-03-14 — Verified 01.1-02 part-based navigation (retroactive)
 
 Progress: [██████████] 100%
 
@@ -74,6 +59,7 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - 11-01: renderNavigationFooter builds key array dynamically; [h] Hint conditional on isMiniProjectStep
 - 11-01: M key modules action saves progress before returning, consistent with quit behavior
 - 11-02: Hint display uses inline stdout.write (no screen clear); hintsUsed tracked via opts mutation + feedback events
+- 01.1-02: No code changes needed -- all Plan 02 requirements verified as already complete from phases 9-11
 
 ### Pending Todos
 
@@ -99,6 +85,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-14T00:58:00Z
-Stopped at: Completed 11-02-PLAN.md
+Last session: 2026-03-14T15:08:00Z
+Stopped at: Completed 01.1-02-PLAN.md (retroactive verification)
 Next action: v2.2 milestone complete
