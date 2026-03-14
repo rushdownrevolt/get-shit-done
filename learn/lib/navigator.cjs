@@ -2,6 +2,8 @@
 
 const readline = require('readline');
 const { groupContentItems } = require('./renderer.cjs');
+const { getNextHint } = require('./hints.cjs');
+const { style } = require('./terminal.cjs');
 
 /**
  * Register process exit handlers to restore stdin raw mode.
@@ -26,12 +28,13 @@ function setupCleanExit() {
  *   e       -> 'skip'    (skip to next lesson)
  *   c       -> 'copy'    (copy full lesson to clipboard)
  *   m       -> 'modules' (return to module picker)
+ *   h       -> 'hint'    (show next progressive hint on project steps)
  *   escape  -> 'quit'    (quit and save progress)
  *   Ctrl+C  -> 'quit'    (quit and save progress)
  *
  * Arrow keys and old n/p bindings are removed.
  *
- * @returns {Promise<'next'|'prev'|'skip'|'copy'|'modules'|'quit'>}
+ * @returns {Promise<'next'|'prev'|'skip'|'copy'|'modules'|'hint'|'quit'>}
  */
 function waitForKey() {
   return new Promise((resolve) => {
@@ -50,6 +53,8 @@ function waitForKey() {
         cleanup(); resolve('copy');
       } else if (key.name === 'm') {
         cleanup(); resolve('modules');
+      } else if (key.name === 'h') {
+        cleanup(); resolve('hint');
       } else if (key.name === 'escape' || (key.ctrl && key.name === 'c')) {
         cleanup(); resolve('quit');
       }
@@ -162,6 +167,25 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
       } else if (action === 'modules') {
         progressFn(currentLesson);
         return { reason: 'modules' };
+      } else if (action === 'hint') {
+        const isMiniProject = lesson.content.some(s => s.type === 'project');
+        if (isMiniProject && opts && opts.hints) {
+          const hintsUsed = opts.hintsUsed || 0;
+          const result = getNextHint(opts.hints, hintsUsed);
+          if (result.hint !== null) {
+            opts.hintsUsed = result.hintsUsed;
+            process.stdout.write('\n  ' + style('Hint ' + result.hintsUsed + ' of ' + opts.hints.length + ':', 'yellow', 'bold') + '\n');
+            process.stdout.write('  ' + result.hint + '\n');
+            if (result.remaining > 0) {
+              process.stdout.write('  ' + style(result.remaining + ' hint(s) remaining', 'dim') + '\n');
+            }
+            if (opts.recordHintFn) opts.recordHintFn(result.hintsUsed - 1);
+          } else {
+            process.stdout.write('\n  ' + style('No more hints available.', 'dim') + '\n');
+          }
+        }
+        // Silently ignore H on non-project steps (no footer [h] shown, so no expectation)
+        continue;
       }
     }
   }

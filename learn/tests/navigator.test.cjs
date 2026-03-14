@@ -101,6 +101,28 @@ describe('M key and modules action', () => {
   });
 });
 
+describe('H key and hint action', () => {
+  test('waitForKey JSDoc documents hint as valid return value', () => {
+    const fs = require('fs');
+    const source = fs.readFileSync(require.resolve('../lib/navigator.cjs'), 'utf8');
+    const waitForKeySection = source.substring(0, source.indexOf('function waitForKey') + 500);
+    assert.ok(waitForKeySection.includes("'hint'"), 'waitForKey JSDoc should document hint action');
+  });
+
+  test('runNavigationLoop source contains hint action handler', () => {
+    const fs = require('fs');
+    const source = fs.readFileSync(require.resolve('../lib/navigator.cjs'), 'utf8');
+    assert.ok(source.includes("action === 'hint'"), 'runNavigationLoop should handle hint action');
+  });
+
+  test('navigator imports getNextHint from hints.cjs', () => {
+    const fs = require('fs');
+    const source = fs.readFileSync(require.resolve('../lib/navigator.cjs'), 'utf8');
+    assert.ok(source.includes("require('./hints.cjs')"), 'navigator should import from hints.cjs');
+    assert.ok(source.includes('getNextHint'), 'navigator should use getNextHint');
+  });
+});
+
 describe('computePrevPosition', () => {
   const { computePrevPosition } = require('../lib/navigator.cjs');
   const { groupContentItems } = require('../lib/renderer.cjs');
