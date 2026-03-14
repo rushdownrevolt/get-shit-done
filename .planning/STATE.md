@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.2
 milestone_name: Module Discovery & Welcome
 status: complete
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-03-14T00:52:39Z"
-last_activity: 2026-03-14 — Completed 11-01 key bindings and navigation footer
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-03-14T00:58:00Z"
+last_activity: 2026-03-14 — Completed 11-02 H key inline hints
 progress:
   total_phases: 3
   completed_phases: 3
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 6
+  completed_plans: 6
   percent: 100
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-12)
 ## Current Position
 
 Phase: 11 of 11 (Key Bindings & Navigation Footer)
-Plan: 1 of 1 in current phase (phase complete)
+Plan: 2 of 2 in current phase (phase complete)
 Status: Phase 11 complete
-Last activity: 2026-03-14 — Completed 11-01 key bindings and navigation footer
+Last activity: 2026-03-14 — Completed 11-02 H key inline hints
 
 Progress: [██████████] 100%
 
@@ -38,8 +38,8 @@ Progress: [██████████] 100%
 - v1.0: 8 plans in ~28 min (avg 3.5min/plan)
 - v2.0: 6 plans in ~25 min (avg 4.2min/plan)
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
-- v2.2: 5 plans in ~10 min (avg 2min/plan)
-- Overall: 21 plans in ~68 min (avg 3.24min/plan)
+- v2.2: 6 plans in ~12 min (avg 2min/plan)
+- Overall: 22 plans in ~70 min (avg 3.18min/plan)
 
 ## Accumulated Context
 
@@ -58,6 +58,7 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 10]: 10-02: Completion flow transitions to picker instead of exiting; review mode resets currentLesson to 0
 - 11-01: renderNavigationFooter builds key array dynamically; [h] Hint conditional on isMiniProjectStep
 - 11-01: M key modules action saves progress before returning, consistent with quit behavior
+- 11-02: Hint display uses inline stdout.write (no screen clear); hintsUsed tracked via opts mutation + feedback events
 
 ### Pending Todos
 
@@ -79,9 +80,10 @@ None.
 | Phase 10 P01 | 2min | 2 tasks | 3 files |
 | Phase 10 P02 | 2min | 2 tasks | 1 files |
 | Phase 11 P01 | 3min | 2 tasks | 4 files |
+| Phase 11 P02 | 2min | 2 tasks | 3 files |
 
 ## Session Continuity
 
-Last session: 2026-03-14T00:52:39Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-03-14T00:58:00Z
+Stopped at: Completed 11-02-PLAN.md
 Next action: v2.2 milestone complete

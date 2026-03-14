@@ -44,7 +44,7 @@
 
 - [x] **Phase 9: Navigation Architecture & Progress Foundation** - Two-level loop and progress schema v3 enabling module switching and resume (completed 2026-03-13)
 - [x] **Phase 10: Welcome Screen & Module Picker** - First-time welcome, module selection UI, and returning-user experience (completed 2026-03-13)
-- [ ] **Phase 11: Key Bindings & Navigation Footer** - M/H key bindings and context-dependent footer
+- [x] **Phase 11: Key Bindings & Navigation Footer** - M/H key bindings and context-dependent footer (completed 2026-03-14)
 
 ## Phase Details
 
@@ -87,7 +87,7 @@ Plans:
   1. User can press "M" from any lesson to return to the module picker, with their current position saved
   2. User can press "H" on a mini-project step to see progressive hints inline
   3. Navigation footer displays context-appropriate keys (M always visible; H only on mini-project steps; arrows, c, q as before)
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 11-01-PLAN.md � M key binding, dynamic navigation footer, and tests
@@ -113,7 +113,7 @@ Phases execute in numeric order: 9 -> 10 -> 11
 | 8. Full-Stack Hints | v2.1 | 1/1 | Complete | 2026-03-13 |
 | 9. Navigation Architecture & Progress Foundation | v2.2 | 2/2 | Complete | 2026-03-13 |
 | 10. Welcome Screen & Module Picker | 2/2 | Complete   | 2026-03-13 | - |
-| 11. Key Bindings & Navigation Footer | 1/2 | In Progress|  | - |
+| 11. Key Bindings & Navigation Footer | v2.2 | 2/2 | Complete | 2026-03-14 |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*

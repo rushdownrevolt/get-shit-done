@@ -24,7 +24,7 @@ Requirements for Module Discovery & Welcome milestone. Each maps to roadmap phas
 
 - [x] **NAV-01**: Returning user resumes at their last lesson position on launch
 - [x] **NAV-02**: User can press "M" from any lesson to return to module picker
-- [ ] **NAV-03**: User can press "H" on mini-project step to see progressive hints
+- [x] **NAV-03**: User can press "H" on mini-project step to see progressive hints
 - [x] **NAV-04**: Footer displays available keys based on current context (M, H, arrows, etc.)
 
 ## Future Requirements
@@ -62,7 +62,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DISC-04 | Phase 10 | Complete |
 | NAV-01 | Phase 9 | Complete |
 | NAV-02 | Phase 11 | Complete |
-| NAV-03 | Phase 11 | Pending |
+| NAV-03 | Phase 11 | Complete |
 | NAV-04 | Phase 11 | Complete |
 
 **Coverage:**
