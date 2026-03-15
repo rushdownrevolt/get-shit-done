@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships three modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), and Planning & State (planning system). Features a welcome screen, module picker with progress tracking, and context-dependent navigation.
+A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships three modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), and Planning & State (planning system). Features a welcome screen, module picker with progress tracking, and context-dependent navigation. Also ships an AI-ready curriculum export (`docs/ai-curriculum/`) — a self-contained master document and per-module docs that let an LLM learn GSD by reading structured markdown.
 
 ## Core Value
 
@@ -45,16 +45,15 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ All lesson content parsed from GSD's actual planning templates and workflows — v3.0
 - ✓ Artifact-persistence mini-project: skeptic writes persistent SKEPTIC-REVIEW.md — v3.0
 - ✓ 5 progressive hints for planning mini-project — v3.0
+- ✓ Export script converts JSON lessons to AI-readable markdown — v4.0
+- ✓ Per-module markdown docs in docs/ai-curriculum/ — v4.0
+- ✓ Master README walks through entire curriculum sequentially — v4.0
+- ✓ Mini-project specs and hints included in AI curriculum output — v4.0
+- ✓ Script + committed output (both generated and checked in) — v4.0
 
 ### Active
 
-<!-- v4.0 AI-Ready Curriculum scope -->
-
-- [ ] Export script converts JSON lessons to AI-readable markdown
-- [ ] Per-module markdown docs in docs/ai-curriculum/
-- [ ] Master README walks through entire curriculum sequentially
-- [ ] Mini-project specs and hints included in output
-- [ ] Script + committed output (both generated and checked in)
+<!-- Next milestone scope -->
 
 ### Out of Scope
 
@@ -73,9 +72,9 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - GSD is a zero-dependency Node.js project using CommonJS modules
 - GSD's architecture has TWO layers: (1) markdown layer (slash commands + workflows) and (2) Node.js layer (gsd-tools.cjs + lib modules)
 - The codebase map at `.planning/codebase/` provides detailed architecture, stack, conventions, and structure docs
-- Shipped: ~6,850 LOC (Node.js/JSON), 3 modules, 19 lessons total, 3 mini-projects
-- 113+ tests passing across renderer, navigator, progress, verifier, hints, and feedback modules
-- 13 pre-existing clipboard-formatter test failures carried from v1.0 (non-blocking)
+- Shipped: ~7,200 LOC (Node.js/JSON), 3 modules, 19 lessons total, 3 mini-projects
+- AI curriculum: ~3,500 LOC generated markdown (3 per-module docs + 1 master README)
+- 125+ tests passing (renderer, navigator, progress, verifier, hints, feedback, markdown-renderer)
 - Module 3 teaches the planning system that built gsd-learn itself (meta-recursive)
 
 ## Constraints
@@ -108,16 +107,8 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Template-first mini-project pedagogy | Provide real working content as starting point instead of building from scratch; learner focuses on customization and understanding | ✓ Good |
 | Dynamic recommended flag | First uncompleted module gets "Start here" instead of hardcoded index; scales with any number of modules | ✓ Good |
 | Artifact-persistence mini-project | Extends existing skeptic command rather than creating new artifacts; teaches read-previous/write-new pattern through a tool learner already built | ✓ Good |
-
-## Current Milestone: v4.0 AI-Ready Curriculum
-
-**Goal:** Produce LLM-consumable documentation from existing lesson content so an AI can learn how GSD works by reading structured markdown.
-
-**Target features:**
-- Export script that converts JSON lesson files to clean markdown
-- Per-module docs (3 files) with lessons, code examples, and mini-project specs
-- Master README that sequences all modules into one document
-- Both generated on demand and committed for easy access
+| TDD for markdown renderer | Pure function rendering engine tested in isolation before wiring to export script | ✓ Good |
+| Heading-level bump for master README | Simple regex bumps all headings so modules nest under a single h1; avoids AST complexity | ✓ Good |
 
 ---
-*Last updated: 2026-03-15 after v4.0 milestone started*
+*Last updated: 2026-03-15 after v4.0 milestone*

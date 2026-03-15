@@ -1,4 +1,26 @@
 # Milestones: GSD Learn
+## v4.0 — AI-Ready Curriculum (Shipped: 2026-03-15)
+
+**Completed:** 2026-03-15
+**Phases:** 16, 17 (2 phases, 3 plans)
+**Last phase number:** 17
+
+**What shipped:**
+- TDD-built markdown rendering engine (6 functions, 12 tests) converting JSON lessons to clean markdown
+- Export script (`node learn/bin/export-docs.cjs`) producing all docs idempotently from lesson JSON
+- 3 per-module curriculum docs (gsd-commands, command-lifecycle, planning-state) with full lesson content, code blocks, mini-project specs, progressive hints, and concept maps
+- 1,760-line master README.md — self-contained AI curriculum with TOC and all 3 modules in learning order
+- All generated docs committed alongside the export script for easy access
+
+**Requirements completed:** EXPT-01, EXPT-02, EXPT-03, EXPT-04, MODD-01, MODD-02, MODD-03, MODD-04, MODD-05, MSTR-01, MSTR-02, MSTR-03, OUTM-01, OUTM-02
+
+**Key learnings:**
+- Full auto-advance pipeline (plan → execute → verify) across both phases in a single session
+- Small focused milestone (2 phases) from milestone init to completion in ~15 min
+- TDD approach for renderer paid off — clean separation between rendering engine and orchestration script
+
+---
+
 ## v3.0 — Planning & State Module (Shipped: 2026-03-15)
 
 **Completed:** 2026-03-15
