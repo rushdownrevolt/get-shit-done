@@ -131,7 +131,7 @@ Phases execute in numeric order: 16 -> 17
 | 14. State, Milestones & Bridge Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 16. Per-Module Export | v4.0 | 2/2 | Complete | 2026-03-15 |
-| 17. Master Document & Commit | 1/1 | Complete   | 2026-03-15 | - |
+| 17. Master Document & Commit | 1/1 | Complete    | 2026-03-15 | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
