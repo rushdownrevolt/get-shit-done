@@ -60,7 +60,7 @@
 
 **Milestone Goal:** Teach how GSD's planning system works — from project definition through milestone lifecycle — so learners can plan and structure their own work using GSD artifacts.
 
-- [ ] **Phase 12: Module 3 Infrastructure & First Lessons** - Register Module 3, create Lessons 1-2 (planning overview + project definition)
+- [x] **Phase 12: Module 3 Infrastructure & First Lessons** - Register Module 3, create Lessons 1-2 (planning overview + project definition) (completed 2026-03-15)
 - [ ] **Phase 13: Requirements, Roadmap & Phase Lifecycle Lessons** - Create Lessons 3-4 covering the core planning artifacts and execution cycle
 - [ ] **Phase 14: State, Milestones & Bridge Lessons** - Create Lessons 5-6 covering live state tracking, milestone lifecycle, and synthesis
 - [ ] **Phase 15: Planning Mini-Project** - Artifact-persistence mini-project with verification and progressive hints
@@ -134,7 +134,7 @@ Plans:
 | 10. Welcome Screen & Module Picker | v2.2 | 2/2 | Complete | 2026-03-13 |
 | 11. Key Bindings & Navigation Footer | v2.2 | 2/2 | Complete | 2026-03-14 |
 | 11.1. Improve Module 1 mini-project | v2.3 | 1/1 | Complete | 2026-03-15 |
-| 12. Module 3 Infrastructure & First Lessons | 2/3 | In Progress|  | - |
+| 12. Module 3 Infrastructure & First Lessons | 3/3 | Complete   | 2026-03-15 | - |
 | 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 0/0 | Not started | - |
 | 14. State, Milestones & Bridge Lessons | v3.0 | 0/0 | Not started | - |
 | 15. Planning Mini-Project | v3.0 | 0/0 | Not started | - |

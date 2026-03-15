@@ -20,8 +20,8 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 ### Lessons — Project Definition
 
-- [ ] **PROJ-01**: Lesson 2 teaches PROJECT.md anatomy — sections (What This Is, Core Value, Requirements, Context, Constraints, Key Decisions), evolution triggers, how it feeds downstream
-- [ ] **PROJ-02**: Lesson 2 content parsed from GSD's templates/project.md
+- [x] **PROJ-01**: Lesson 2 teaches PROJECT.md anatomy — sections (What This Is, Core Value, Requirements, Context, Constraints, Key Decisions), evolution triggers, how it feeds downstream
+- [x] **PROJ-02**: Lesson 2 content parsed from GSD's templates/project.md
 
 ### Lessons — Requirements & Roadmap
 
@@ -83,8 +83,8 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 | INFRA-03 | Phase 12 | Complete |
 | PLAN-01 | Phase 12 | Complete |
 | PLAN-02 | Phase 12 | Complete |
-| PROJ-01 | Phase 12 | Pending |
-| PROJ-02 | Phase 12 | Pending |
+| PROJ-01 | Phase 12 | Complete |
+| PROJ-02 | Phase 12 | Complete |
 | REQR-01 | Phase 13 | Pending |
 | REQR-02 | Phase 13 | Pending |
 | REQR-03 | Phase 13 | Pending |
