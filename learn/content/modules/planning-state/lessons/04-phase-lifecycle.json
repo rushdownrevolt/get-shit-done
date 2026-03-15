@@ -1,0 +1,70 @@
+{
+  "id": "phase-lifecycle",
+  "title": "Inside a Phase: Plan, Execute, Verify",
+  "lessonNumber": 4,
+  "objective": "Understand the five-step phase execution cycle, PLAN.md anatomy (frontmatter and task XML), and how SUMMARY.md and VERIFICATION.md create an audit trail from goal to shipped code",
+  "content": [
+    {
+      "type": "text",
+      "value": "In Lesson 3, you saw how requirements become phases in the roadmap -- each phase groups related requirements into a deliverable chunk of work. But what happens when a phase actually starts? Each phase follows a five-step execution cycle: discuss (optional context gathering with the user), research (optional technical investigation), plan (create PLAN.md files), execute (run tasks, produce SUMMARY.md files), and verify (check must_haves against reality). Not all steps are required -- simple phases skip discuss and research, jumping straight to planning. The three mandatory steps are plan, execute, and verify. This cycle ensures every phase produces not just code, but an audit trail proving the code achieves its goal.",
+      "focus": "The five-step phase execution cycle",
+      "bridge": "Here's what the cycle looks like as a flow."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "/gsd:discuss-phase  (optional)\n       |\n       v\n/gsd:research-phase (optional)\n       |\n       v\n/gsd:plan-phase     -> PLAN.md files\n       |\n       v\n/gsd:execute-phase  -> SUMMARY.md files\n       |\n       v\n/gsd:verify-phase   -> VERIFICATION.md",
+      "highlight": [7, 9, 11]
+    },
+    {
+      "type": "text",
+      "value": "PLAN.md is the execution blueprint. Each phase produces 1-3 PLAN.md files, each containing 2-3 tasks. Plans have YAML frontmatter for machine-readable metadata and XML task blocks for specific implementation instructions. The key insight: plans are prompts -- they contain enough context and specificity that Claude can execute without asking clarifying questions. A well-written plan is a complete instruction set. If a different Claude instance couldn't execute it cold, the plan isn't specific enough.",
+      "focus": "PLAN.md as the execution blueprint",
+      "bridge": "Let's look at the frontmatter structure that makes plans machine-readable."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "---\nphase: XX-name\nplan: NN\ntype: execute\nwave: N                     # Execution wave (1, 2, 3...). Pre-computed at plan time.\ndepends_on: []              # Plan IDs this plan requires (e.g., [\"01-01\"]).\nfiles_modified: []          # Files this plan modifies.\nautonomous: true            # false if plan has checkpoints requiring user interaction\nrequirements: []            # Requirement IDs from ROADMAP this plan addresses.\n\n# Goal-backward verification (derived during planning, verified after execution)\nmust_haves:\n  truths: []                # Observable behaviors that must be true for goal achievement\n  artifacts: []             # Files that must exist with real implementation\n  key_links: []             # Critical connections between artifacts\n---",
+      "highlight": [5, 6, 12, 13, 14, 15]
+    },
+    {
+      "type": "text",
+      "value": "Each frontmatter field serves a specific purpose. wave is the execution order -- wave 1 plans run in parallel, wave 2 waits for all wave 1 plans to finish. depends_on lists which specific plans must complete first, enabling fine-grained sequencing. files_modified declares exclusive file ownership, preventing merge conflicts when plans run in parallel. autonomous indicates whether the plan needs human checkpoints (visual verification, decisions) or can run fully unattended. requirements traces back to REQUIREMENTS.md IDs, maintaining traceability from code to business need. And must_haves is the goal-backward verification criteria: truths are observable behaviors that must be true, artifacts are files that must exist with real implementation (not stubs), and key_links are critical connections between artifacts that must be wired.",
+      "focus": "Frontmatter fields and their purposes",
+      "bridge": "Below the frontmatter, tasks use XML format for structured instructions."
+    },
+    {
+      "type": "code",
+      "language": "xml",
+      "value": "<task type=\"auto\">\n  <name>Task 1: Create User API endpoints</name>\n  <files>src/features/user/api.ts</files>\n  <action>GET /users (list), GET /users/:id (single), POST /users (create).\n  Use User type from model. Validate email format on POST -- reject\n  malformed emails with 400 status because downstream services\n  assume valid email addresses.</action>\n  <verify>curl tests pass for all endpoints</verify>\n  <done>All CRUD operations work, invalid emails return 400</done>\n</task>",
+      "highlight": [8, 9]
+    },
+    {
+      "type": "text",
+      "value": "Each task element has five children. name is action-oriented (\"Create X\", \"Wire Y\", \"Add Z\"). files lists exact paths this task modifies -- no ambiguity. action has specific implementation instructions including what to do, how to do it, and what to avoid and WHY (the \"why\" prevents future developers from removing safeguards they don't understand). verify has an automated command proving the task works -- not \"check that it works\" but a concrete command like \"curl localhost:3000/users returns 200\". done is measurable acceptance criteria -- the definition of complete. The specificity test: could a different Claude instance execute this task without asking clarifying questions? Task types include auto (fully autonomous), checkpoint:human-verify (pauses for human visual confirmation), and checkpoint:decision (pauses for human to choose between options).",
+      "focus": "Task XML structure and specificity",
+      "bridge": "After tasks execute, SUMMARY.md captures what actually happened."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "---\nphase: XX-name\nplan: YY\nsubsystem: [primary category: auth, payments, ui, api, database, infra, testing]\ntags: [searchable tech: jwt, stripe, react, postgres, prisma]\n\n# Dependency graph\nrequires:\n  - phase: [prior phase this depends on]\n    provides: [what that phase built that this uses]\nprovides:\n  - [bullet list of what this phase built/delivered]\naffects: [list of phase names or keywords that will need this context]\n\n# Tech tracking\ntech-stack:\n  added: [libraries/tools added in this phase]\n  patterns: [architectural/code patterns established]\n\nkey-files:\n  created: [important files created]\n  modified: [important files modified]\n\nkey-decisions:\n  - \"Decision 1\"\n  - \"Decision 2\"\n\nrequirements-completed: []  # Requirement IDs satisfied by this plan\n\n# Metrics\nduration: Xmin\ncompleted: YYYY-MM-DD\n---",
+      "highlight": [8, 9, 10, 11, 12, 13, 28]
+    },
+    {
+      "type": "text",
+      "value": "SUMMARY.md is the execution record: what was built, how long it took, what decisions were made, and what deviated from the plan. But the frontmatter is where the real power lies. The dependency graph (requires/provides/affects) enables automatic context assembly -- when planning future phases, GSD scans all summaries and selects relevant ones based on what they provide and what the new phase needs. This means plans get the right context without manual curation. requirements-completed traces back to REQUIREMENTS.md IDs, closing the traceability loop: a requirement in PROJECT.md flows to REQUIREMENTS.md, gets sequenced in ROADMAP.md, gets addressed in PLAN.md, and is marked complete in SUMMARY.md. The chain is unbroken from intent to delivery.",
+      "focus": "SUMMARY.md as the execution record with dependency graph",
+      "bridge": "After all plans execute, one final step checks whether the phase actually achieved its goal."
+    },
+    {
+      "type": "text",
+      "value": "VERIFICATION.md is the phase audit. After all plans in a phase execute, /gsd:verify-phase checks the must_haves from every plan against reality. It asks three questions: Are observable truths actually true? (Can the user really send a message, or does the button just log to console?) Do required artifacts exist with real implementation? (Is the API route substantive code or a stub returning hardcoded data?) Are key links wired? (Does the frontend actually call the backend, or do both exist in isolation?) Each check gets a status: VERIFIED, FAILED, or UNCERTAIN. The overall status is passed (all clear), gaps_found (critical issues remain), or human_needed (automated checks pass but visual confirmation required). If gaps are found, GSD generates fix plans -- targeted PLAN.md files that address specific gaps -- and the cycle repeats until verification passes. This is the safety net that catches the difference between \"tasks completed\" and \"goal achieved\".",
+      "focus": "VERIFICATION.md as the phase audit and safety net",
+      "bridge": "Now you've seen how a phase executes -- from PLAN.md blueprint through SUMMARY.md record to VERIFICATION.md audit. The next lesson covers STATE.md: how the project tracks where it is across all these phases and milestones."
+    }
+  ],
+  "conceptMap": "phase-lifecycle",
+  "successCriteria": "You can describe the five-step phase execution cycle, explain the key PLAN.md frontmatter fields (wave, depends_on, files_modified, must_haves), describe the task XML structure and its specificity test, and explain how SUMMARY.md and VERIFICATION.md close the loop from plan to verified delivery."
+}
