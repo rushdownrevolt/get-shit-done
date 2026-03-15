@@ -3,6 +3,20 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Planning & State Module
 status: in_progress
+last_updated: "2026-03-15T13:32:43.233Z"
+last_activity: 2026-03-15 — Completed 15-01 Mini-Project Lesson & Verification Spec
+progress:
+  total_phases: 4
+  completed_phases: 4
+  total_plans: 9
+  completed_plans: 9
+---
+
+---
+gsd_state_version: 1.0
+milestone: v3.0
+milestone_name: Planning & State Module
+status: in_progress
 last_updated: "2026-03-15T13:32:24.600Z"
 last_activity: 2026-03-15 — Completed 15-02 Mini-Project Hints
 progress:
@@ -41,7 +55,7 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 Phase: 15 of 15 (Planning Mini-Project)
 Plan: 2 of 2 in current phase (COMPLETE)
 Status: Phase complete
-Last activity: 2026-03-15 — Completed 15-02 Mini-Project Hints
+Last activity: 2026-03-15 — Completed 15-01 Mini-Project Lesson & Verification Spec
 
 Progress: [██████████] 97%
 
@@ -70,6 +84,8 @@ Progress: [██████████] 97%
 - Lesson 5 code blocks use actual content from get-shit-done/templates/state.md, milestone.md, retrospective.md
 - Lesson 6 uses read-previous/write-new as unifying pattern across all GSD artifacts
 - Mini-project hints progress: conceptual why -> structural what -> read specifics -> write specifics -> full solution
+- [Phase 15]: Spec checks use broad regex patterns to accept reasonable learner variations
+- [Phase 15]: Lesson template provides additive workflow steps rather than full replacement
 
 ### Roadmap Evolution
 
@@ -88,4 +104,5 @@ Progress: [██████████] 97%
 | 5 | Update footer to show module name and lesson progress | 2026-03-13 | 1aa3f53 | [5-update-footer-to-show-module-name-lesson](./quick/5-update-footer-to-show-module-name-lesson/) |
 | 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
+| Phase 15 P01 | 2min | 2 tasks | 2 files |
 

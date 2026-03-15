@@ -50,12 +50,12 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 ### Mini-Project
 
-- [ ] **MINI-01**: Mini-project extends the learner's existing skeptic command to produce a persistent artifact (e.g., SKEPTIC-REVIEW.md) capturing findings from each run
-- [ ] **MINI-02**: Skeptic workflow updated to read previous review artifacts on future runs, enabling continuity across sessions
-- [ ] **MINI-03**: Lesson provides the artifact-writing workflow pattern as a template (template-first pedagogy), learner customizes the output format and persistence logic
-- [ ] **MINI-04**: Structural verification checks the workflow contains both read-previous and write-new patterns, and that the artifact file has expected sections (date, findings)
+- [x] **MINI-01**: Mini-project extends the learner's existing skeptic command to produce a persistent artifact (e.g., SKEPTIC-REVIEW.md) capturing findings from each run
+- [x] **MINI-02**: Skeptic workflow updated to read previous review artifacts on future runs, enabling continuity across sessions
+- [x] **MINI-03**: Lesson provides the artifact-writing workflow pattern as a template (template-first pedagogy), learner customizes the output format and persistence logic
+- [x] **MINI-04**: Structural verification checks the workflow contains both read-previous and write-new patterns, and that the artifact file has expected sections (date, findings)
 - [x] **MINI-05**: 5 progressive hints guide from conceptual (why artifacts persist state) to specific (read/write patterns in the workflow)
-- [ ] **MINI-06**: Mini-project outcome is a skeptic command that accumulates institutional knowledge across runs — a real tool the learner will use
+- [x] **MINI-06**: Mini-project outcome is a skeptic command that accumulates institutional knowledge across runs — a real tool the learner will use
 
 ## Future Requirements
 
@@ -98,12 +98,12 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 | MILE-03 | Phase 14 | Complete |
 | BRDG-01 | Phase 14 | Complete |
 | BRDG-02 | Phase 14 | Complete |
-| MINI-01 | Phase 15 | Pending |
-| MINI-02 | Phase 15 | Pending |
-| MINI-03 | Phase 15 | Pending |
-| MINI-04 | Phase 15 | Pending |
+| MINI-01 | Phase 15 | Complete |
+| MINI-02 | Phase 15 | Complete |
+| MINI-03 | Phase 15 | Complete |
+| MINI-04 | Phase 15 | Complete |
 | MINI-05 | Phase 15 | Complete |
-| MINI-06 | Phase 15 | Pending |
+| MINI-06 | Phase 15 | Complete |
 
 **Coverage:**
 - v3.0 requirements: 26 total
