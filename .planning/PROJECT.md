@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships two modules: GSD Commands & Workflows (markdown layer) and Command Lifecycle (Node.js layer). Features a welcome screen, module picker with progress tracking, and context-dependent navigation.
+A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships three modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), and Planning & State (planning system). Features a welcome screen, module picker with progress tracking, and context-dependent navigation.
 
 ## Core Value
 
@@ -39,15 +39,12 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ Module 1 mini-project provides real skeptic workflow as starting template — v2.3
 - ✓ Template-first pedagogy: learn from working example, then customize — v2.3
 - ✓ Hints updated for template-based mini-project approach — v2.3
-
-## Current Milestone: v3.0 Planning & State Module
-
-**Goal:** Teach how GSD's planning system works — from project definition through milestone lifecycle — so learners can plan and structure their own work using GSD artifacts.
-
-**Target features:**
-- Module 3: Planning & State (lessons covering the full planning lifecycle)
-- Mini-project: learner creates planning artifacts (PROJECT.md, requirements, roadmap)
-- Content parsed from GSD's actual planning templates and workflow files
+- ✓ Module 3: Planning & State with 7 lessons covering full planning lifecycle — v3.0
+- ✓ Dynamic module picker recommended flag (first uncompleted module) — v3.0
+- ✓ v3→v4 progress migration chain for Module 3 tracking — v3.0
+- ✓ All lesson content parsed from GSD's actual planning templates and workflows — v3.0
+- ✓ Artifact-persistence mini-project: skeptic writes persistent SKEPTIC-REVIEW.md — v3.0
+- ✓ 5 progressive hints for planning mini-project — v3.0
 
 ### Active
 
@@ -61,7 +58,6 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - Video or multimedia content — text and code only
 - Teaching other tools — GSD only
 - Lesson content auto-updates when GSD source changes — deferred to future milestone
-- Arrow-key module picker — number keys match existing single-keypress patterns; only 2 modules
 - Part-level resume — resume to lesson start is sufficient; part-level adds complexity for minimal gain
 - Module progress percentage — completion state (not started / in progress / complete) is clearer than percentages
 
@@ -71,10 +67,10 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - GSD is a zero-dependency Node.js project using CommonJS modules
 - GSD's architecture has TWO layers: (1) markdown layer (slash commands + workflows) and (2) Node.js layer (gsd-tools.cjs + lib modules)
 - The codebase map at `.planning/codebase/` provides detailed architecture, stack, conventions, and structure docs
-- Shipped: ~6,358 LOC (Node.js/JSON), 2 modules, 12 lessons total, 2 full-stack mini-projects
-- 113 tests passing across renderer, navigator, progress, verifier, hints, and feedback modules
+- Shipped: ~6,850 LOC (Node.js/JSON), 3 modules, 19 lessons total, 3 mini-projects
+- 113+ tests passing across renderer, navigator, progress, verifier, hints, and feedback modules
 - 13 pre-existing clipboard-formatter test failures carried from v1.0 (non-blocking)
-- All v2.2 phases Nyquist-compliant (automated test coverage verified for all requirements)
+- Module 3 teaches the planning system that built gsd-learn itself (meta-recursive)
 
 ## Constraints
 
@@ -104,6 +100,8 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Chained progress migrations | v1→v2→v3 chain in loadProgress ensures zero data loss across versions | ✓ Good |
 | Action variable dispatch pattern | Dispatch loop uses action variable for extensibility (welcome/picker/navigate) | ✓ Good |
 | Template-first mini-project pedagogy | Provide real working content as starting point instead of building from scratch; learner focuses on customization and understanding | ✓ Good |
+| Dynamic recommended flag | First uncompleted module gets "Start here" instead of hardcoded index; scales with any number of modules | ✓ Good |
+| Artifact-persistence mini-project | Extends existing skeptic command rather than creating new artifacts; teaches read-previous/write-new pattern through a tool learner already built | ✓ Good |
 
 ---
-*Last updated: 2026-03-15 after v3.0 milestone start*
+*Last updated: 2026-03-15 after v3.0 milestone*

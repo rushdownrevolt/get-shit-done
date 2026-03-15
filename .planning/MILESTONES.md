@@ -1,4 +1,31 @@
 # Milestones: GSD Learn
+## v3.0 — Planning & State Module (Shipped: 2026-03-15)
+
+**Completed:** 2026-03-15
+**Phases:** 12, 13, 14, 15 (4 phases, 9 plans)
+**Last phase number:** 15
+
+**What shipped:**
+- Module 3: Planning & State with 7 lessons (6 content + 1 mini-project) teaching the full GSD planning lifecycle
+- Lessons cover .planning/ directory structure, PROJECT.md anatomy, REQUIREMENTS.md/ROADMAP.md structure, phase execution cycle, STATE.md tracking, milestone lifecycle, and synthesis
+- All lesson content parsed from GSD's actual planning templates and workflow files
+- Artifact-persistence mini-project: learner extends skeptic command to write persistent SKEPTIC-REVIEW.md and read previous reviews
+- Dynamic module picker recommended flag (first uncompleted module instead of hardcoded index)
+- v3→v4 progress migration chain for Module 3 lesson tracking
+
+**Requirements completed:** INFRA-01, INFRA-02, INFRA-03, PLAN-01, PLAN-02, PROJ-01, PROJ-02, REQR-01, REQR-02, REQR-03, REQR-04, PHSE-01, PHSE-02, PHSE-03, PHSE-04, MILE-01, MILE-02, MILE-03, BRDG-01, BRDG-02, MINI-01, MINI-02, MINI-03, MINI-04, MINI-05, MINI-06
+
+**Key learnings:**
+- Full auto-advance pipeline (plan → execute → verify) across 4 phases completed in a single session
+- Parallel lesson creation in wave-based execution worked smoothly for content-only phases
+- Template-first pedagogy validated again: mini-project provides workflow pattern, learner customizes
+- Plan checker caught a conceptMap collision (Lesson 6 "overview" → "mini-project") before execution — revision loop works
+
+**Tech debt carried forward:**
+- 13 pre-existing clipboard-formatter.test.cjs failures (from v1.0, non-blocking)
+
+---
+
 ## v2.3 — Mini-Project Template Improvement (Shipped: 2026-03-15)
 
 **Completed:** 2026-03-15

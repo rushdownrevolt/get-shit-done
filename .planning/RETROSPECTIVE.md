@@ -2,6 +2,48 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v3.0 — Planning & State Module
+
+**Shipped:** 2026-03-15
+**Phases:** 4 | **Plans:** 9 | **Sessions:** 1
+
+### What Was Built
+- Module 3: Planning & State with 7 lessons (6 content + 1 mini-project)
+- Lessons cover: .planning/ structure, PROJECT.md anatomy, REQUIREMENTS.md/ROADMAP.md, phase lifecycle, STATE.md, milestones, synthesis
+- Artifact-persistence mini-project: learner extends skeptic to write persistent SKEPTIC-REVIEW.md
+- Dynamic module picker recommended flag (first uncompleted module)
+- v3→v4 progress migration chain
+
+### What Worked
+- Full auto-advance pipeline (plan → execute → verify) across all 4 phases in a single session
+- Parallel lesson creation in wave 2 (Phase 12) and wave 1 (Phases 13, 14, 15) executed cleanly
+- Plan checker caught a conceptMap collision in Phase 14 before execution — revision loop prevented a runtime bug
+- Template-first pedagogy validated for third time (Module 1, Module 2, Module 3 mini-projects all use it)
+- Coarse 4-phase granularity kept overhead minimal for a content-heavy milestone
+
+### What Was Inefficient
+- No discuss-phase or research for any phase — worked fine for content-only work but wouldn't for architectural phases
+- Roadmap `get-phase` tool returned stale plan lists from prior phases in the section text — cosmetic but confusing
+- Progress table had formatting inconsistencies (Phase 14 missing milestone column, Phase 15 missing milestone) — manual cleanup needed
+
+### Patterns Established
+- Content-only milestones can skip discuss-phase and research entirely — plan directly from requirements
+- Lesson JSON pattern is fully mature: each lesson is a single task, single file, conceptMap wiring to module.json
+- Plan checker as quality gate: caught the "overview" collision, proving the verification loop's value even for simple phases
+
+### Key Lessons
+1. Auto-advance chains work reliably across 4 phases when all plans are autonomous (no checkpoints needed)
+2. Content lessons are embarrassingly parallel — wave-based execution shines here
+3. The plan checker → revision loop caught a real bug (conceptMap collision) that would have broken lesson navigation
+4. v3.0 completed in a single session end-to-end: requirements → roadmap → 4 phases planned/executed/verified → milestone archived
+
+### Cost Observations
+- Model mix: ~55% opus (executor, orchestrator), ~45% sonnet (verifier, checker, reviser)
+- Sessions: 1
+- Notable: 9 plans across 4 phases in a single continuous session — most ambitious single-session milestone yet
+
+---
+
 ## Milestone: v2.3 — Mini-Project Template Improvement
 
 **Shipped:** 2026-03-15
@@ -213,6 +255,7 @@
 | v2.1 | 1 | 2 | 2 | Focused content update, cross-module verification |
 | v2.2 | ~2 | 3 | 6 | Full Nyquist compliance, integration checker, hub-and-spoke nav |
 | v2.3 | 1 | 1 | 1 | Template-first pedagogy, full auto-advance pipeline |
+| v3.0 | 1 | 4 | 9 | Full single-session milestone, plan checker catches bugs, content parallelism |
 
 ### Cumulative Quality
 
@@ -223,6 +266,7 @@
 | v2.1 | ~71 | 13 (clipboard, carried) | No (draft) |
 | v2.2 | 113 | 13 (clipboard, carried) | Yes (3/3 phases) |
 | v2.3 | 113 | 13 (clipboard, carried) | N/A (content-only) |
+| v3.0 | 113+ | 13 (clipboard, carried) | N/A (content-only) |
 
 ### Top Lessons (Verified Across Milestones)
 
