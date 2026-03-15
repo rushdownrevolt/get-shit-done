@@ -44,6 +44,10 @@ Last activity: 2026-03-14 — Milestone v3.0 started
 
 Decisions are logged in PROJECT.md Key Decisions table.
 
+### Roadmap Evolution
+
+- Phase 11.1 inserted after Phase 11: Improve Module 1 mini-project to provide skeptic workflow template (INSERTED) — skeptic review surfaced that mini-project should deliver a working tool, not test recall
+
 ### Blockers/Concerns
 
 - 13 pre-existing clipboard-formatter.test.cjs failures (from v1.0, non-blocking)
