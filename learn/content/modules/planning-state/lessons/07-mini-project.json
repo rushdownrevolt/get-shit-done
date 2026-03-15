@@ -1,0 +1,58 @@
+{
+  "id": "planning-state-mini-project",
+  "title": "Mini-Project: Persistent Skeptic Reviews",
+  "lessonNumber": 7,
+  "objective": "Apply the artifact persistence pattern (read-previous/write-new) to extend the skeptic workflow with persistent SKEPTIC-REVIEW.md artifacts that accumulate institutional knowledge across runs",
+  "content": [
+    {
+      "type": "text",
+      "value": "In Modules 1 and 2, you built a skeptic command that critiques a phase and prints its findings. The problem: those findings vanish the moment the session ends. Every time you run skeptic again, it starts from zero -- no memory of what it found before, no way to track whether issues were addressed, no institutional knowledge building up over time.\n\nNow you will fix that. You will apply the artifact persistence pattern from Lesson 6 -- read-previous, write-new -- to make your skeptic command produce a persistent SKEPTIC-REVIEW.md file. Each run reads previous reviews for historical context, then appends new findings. Over time, the file becomes a living record of your project's evolution as seen through the skeptic's lens.\n\nThis is exactly the same pattern that STATE.md, SUMMARY.md, MILESTONES.md, and RETROSPECTIVE.md all use. You are not learning something new -- you are applying the one pattern that makes GSD work.",
+      "focus": "Skeptic findings are currently ephemeral -- artifact persistence fixes that",
+      "bridge": "Here is how to check your progress as you build."
+    },
+    {
+      "type": "text",
+      "value": "Run the verify command any time to check your structural progress. Run the hint command when you need a nudge. You can use both as many times as you like.\n\nThis project modifies your existing skeptic workflow file and creates a new artifact file, so the verify command checks both. If something goes wrong with the workflow, you can git checkout the original from your previous work:\n\n  git checkout -- ~/.claude/get-shit-done/workflows/skeptic.md",
+      "focus": "Verify and hint workflow, with git safety net",
+      "bridge": "Here is the template you will integrate into your existing workflow."
+    },
+    {
+      "type": "text",
+      "value": "Below is a workflow template that adds the artifact-persistence pattern to your existing skeptic workflow. Press C to copy, then integrate these two new steps into your existing workflow at ~/.claude/get-shit-done/workflows/skeptic.md. The key additions are: (a) a step that reads the previous SKEPTIC-REVIEW.md if it exists, and (b) a step that writes findings to SKEPTIC-REVIEW.md after analysis.\n\nPlace the read step early in your process (before analysis) and the write step late (after analysis, before presenting findings). The exact position is up to you -- these are additions to your existing workflow, not a replacement.",
+      "focus": "Introducing the artifact-persistence template additions",
+      "bridge": "The template follows below."
+    },
+    {
+      "type": "code",
+      "language": "xml",
+      "value": "<step name=\"read_previous_reviews\">\n**Read previous SKEPTIC-REVIEW.md if it exists.**\n\nBefore analyzing the current phase, check for an existing review artifact:\n- Read .planning/SKEPTIC-REVIEW.md if it exists\n- Note previous findings, patterns, and recurring themes\n- Use this historical context to make the current review more insightful\n- If no previous review exists, proceed without historical context\n\nThis is the \"read-previous\" half of the artifact persistence pattern.\n</step>\n\n<step name=\"write_review_artifact\">\n**Write findings to SKEPTIC-REVIEW.md.**\n\nAfter completing your analysis, persist findings to .planning/SKEPTIC-REVIEW.md:\n- Add a new section with the current date as a heading (## YYYY-MM-DD)\n- Record key findings and observations\n- Note any patterns observed across multiple reviews (if previous reviews exist)\n- Include specific, actionable recommendations\n\nFormat the file so it accumulates -- each run APPENDS a new dated section rather than overwriting. This is the \"write-new\" half of the artifact persistence pattern.\n</step>",
+      "focus": "The read-previous and write-new steps to add to your skeptic workflow"
+    },
+    {
+      "type": "text",
+      "value": "Make it yours. Change the output format, add extra sections to the review artifact, reorganize the steps. The structural requirements that verification checks are:\n\n1. Your workflow must have a step that reads previous SKEPTIC-REVIEW.md (the read-previous pattern)\n2. Your workflow must have a step that writes to SKEPTIC-REVIEW.md (the write-new pattern)\n3. Running the command must produce a .planning/SKEPTIC-REVIEW.md file with a date heading and findings section\n\nEverything else -- the review format, the analysis approach, the section headings, how you structure accumulated knowledge -- is your creative decision. Verification checks structure, not content.",
+      "focus": "Customization encouragement with clear structural requirements",
+      "bridge": "Here is exactly what you need to deliver."
+    },
+    {
+      "type": "project",
+      "task": "Extend your skeptic workflow with artifact persistence -- reading previous reviews and writing new findings to SKEPTIC-REVIEW.md.",
+      "deliverables": [
+        "Updated workflow at ~/.claude/get-shit-done/workflows/skeptic.md with read-previous and write-new steps",
+        "Persistent artifact at .planning/SKEPTIC-REVIEW.md with dated entries and findings (created by running the command)"
+      ],
+      "verifyCommand": "node learn/bin/gsd-learn.cjs --verify --module=planning-state",
+      "hintCommand": "node learn/bin/gsd-learn.cjs --hint --module=planning-state",
+      "focus": "Project deliverables and verification commands",
+      "bridge": "Complete both deliverables and run verify to confirm your module mastery."
+    },
+    {
+      "type": "text",
+      "value": "Going further: try running /gsd:skeptic on your own project multiple times. Watch the SKEPTIC-REVIEW.md file grow with each run -- dated entries accumulating, patterns emerging across reviews, the skeptic getting smarter as it builds on its own history.\n\nWith this mini-project complete, you have finished Module 3: Planning and State. You now understand how every GSD artifact works, how they chain together from PROJECT.md through MILESTONES.md, and most importantly -- you have built the artifact persistence pattern into a real workflow yourself. The artifacts are not bureaucracy. They are the project's memory. And now your skeptic command has memory too.",
+      "focus": "Module completion and the value of accumulated reviews",
+      "bridge": "Module 3 complete. You can now build GSD workflows that persist institutional knowledge across sessions."
+    }
+  ],
+  "conceptMap": "mini-project",
+  "successCriteria": "Running --verify --module=planning-state shows all checks passing for both the updated skeptic workflow (purpose, process, read-previous, write-new) and the SKEPTIC-REVIEW.md artifact (date heading, findings section). Your skeptic command now builds institutional knowledge across runs."
+}
