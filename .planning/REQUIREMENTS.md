@@ -54,7 +54,7 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 - [ ] **MINI-02**: Skeptic workflow updated to read previous review artifacts on future runs, enabling continuity across sessions
 - [ ] **MINI-03**: Lesson provides the artifact-writing workflow pattern as a template (template-first pedagogy), learner customizes the output format and persistence logic
 - [ ] **MINI-04**: Structural verification checks the workflow contains both read-previous and write-new patterns, and that the artifact file has expected sections (date, findings)
-- [ ] **MINI-05**: 5 progressive hints guide from conceptual (why artifacts persist state) to specific (read/write patterns in the workflow)
+- [x] **MINI-05**: 5 progressive hints guide from conceptual (why artifacts persist state) to specific (read/write patterns in the workflow)
 - [ ] **MINI-06**: Mini-project outcome is a skeptic command that accumulates institutional knowledge across runs — a real tool the learner will use
 
 ## Future Requirements
@@ -102,7 +102,7 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 | MINI-02 | Phase 15 | Pending |
 | MINI-03 | Phase 15 | Pending |
 | MINI-04 | Phase 15 | Pending |
-| MINI-05 | Phase 15 | Pending |
+| MINI-05 | Phase 15 | Complete |
 | MINI-06 | Phase 15 | Pending |
 
 **Coverage:**
