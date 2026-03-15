@@ -106,4 +106,4 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Template-first mini-project pedagogy | Provide real working content as starting point instead of building from scratch; learner focuses on customization and understanding | ✓ Good |
 
 ---
-*Last updated: 2026-03-15 after v2.3 milestone*
+*Last updated: 2026-03-15 after v3.0 milestone start*

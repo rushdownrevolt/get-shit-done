@@ -1,47 +1,33 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: executing
-last_updated: "2026-03-15T12:01:26.361Z"
-last_activity: 2026-03-15 — Completed 11.1-01-PLAN.md
-progress:
-  total_phases: 12
-  completed_phases: 12
-  total_plans: 22
-  completed_plans: 22
----
-
----
-gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Planning & State Module
-status: executing
+status: defining_requirements
 last_updated: "2026-03-15"
-last_activity: 2026-03-15 — Completed Phase 11.1 Plan 01 (mini-project skeptic workflow)
+last_activity: 2026-03-15 — Milestone v3.0 started
 progress:
-  total_phases: 1
-  completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-14)
+See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
 **Current focus:** Defining requirements for v3.0 Planning & State Module
 
 ## Current Position
 
-Phase: 11.1-improve-module1-miniproject-skeptic-workflow (COMPLETE)
-Plan: 01 of 01 (COMPLETE)
-Status: Phase 11.1 complete
-Last activity: 2026-03-15 — Completed 11.1-01-PLAN.md
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-15 — Milestone v3.0 started
 
 ## Performance Metrics
 
@@ -50,7 +36,7 @@ Last activity: 2026-03-15 — Completed 11.1-01-PLAN.md
 - v2.0: 6 plans in ~25 min (avg 4.2min/plan)
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
 - v2.2: 6 plans in ~12 min (avg 2min/plan)
-- Phase 11.1: 1 plan in ~4 min (4min/plan)
+- v2.3: 1 plan in ~4 min (4min/plan)
 - Overall: 23 plans in ~74 min (avg 3.22min/plan)
 
 ## Accumulated Context
@@ -58,11 +44,10 @@ Last activity: 2026-03-15 — Completed 11.1-01-PLAN.md
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-- [Phase 11.1]: Embed real skeptic workflow in lesson as code block for clipboard copy; shift pedagogy from build-from-scratch to template-then-customize
 
 ### Roadmap Evolution
 
-- Phase 11.1 inserted after Phase 11: Improve Module 1 mini-project to provide skeptic workflow template (INSERTED) — skeptic review surfaced that mini-project should deliver a working tool, not test recall
+(Fresh milestone — no roadmap changes yet)
 
 ### Blockers/Concerns
 
@@ -77,4 +62,3 @@ Decisions are logged in PROJECT.md Key Decisions table.
 | 5 | Update footer to show module name and lesson progress | 2026-03-13 | 1aa3f53 | [5-update-footer-to-show-module-name-lesson](./quick/5-update-footer-to-show-module-name-lesson/) |
 | 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
-
