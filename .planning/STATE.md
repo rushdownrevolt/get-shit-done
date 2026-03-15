@@ -93,7 +93,7 @@ Progress: [██████████] 97%
 
 ### Blockers/Concerns
 
-- 13 pre-existing clipboard-formatter.test.cjs failures (from v1.0, non-blocking)
+- ~~13 pre-existing clipboard-formatter.test.cjs failures (from v1.0, non-blocking)~~ Fixed in quick task 8
 
 ### Quick Tasks Completed
 
@@ -104,5 +104,6 @@ Progress: [██████████] 97%
 | 5 | Update footer to show module name and lesson progress | 2026-03-13 | 1aa3f53 | [5-update-footer-to-show-module-name-lesson](./quick/5-update-footer-to-show-module-name-lesson/) |
 | 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
+| 8 | Fix copy bug: Cannot read properties of undefined | 2026-03-15 | 1f53f5d | [8-fix-copy-bug-cannot-read-properties-of-u](./quick/8-fix-copy-bug-cannot-read-properties-of-u/) |
 | Phase 15 P01 | 2min | 2 tasks | 2 files |
 
