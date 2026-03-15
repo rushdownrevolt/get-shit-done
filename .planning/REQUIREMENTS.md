@@ -32,10 +32,10 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 ### Lessons — Phase Lifecycle
 
-- [ ] **PHSE-01**: Lesson 4 teaches the phase execution cycle: context → research → plan → execute → verify
-- [ ] **PHSE-02**: Lesson 4 teaches PLAN.md anatomy — frontmatter (wave, depends_on, files_modified), task XML format, verification criteria, must_haves
-- [ ] **PHSE-03**: Lesson 4 teaches SUMMARY.md and VERIFICATION.md as execution records
-- [ ] **PHSE-04**: Lesson 4 content parsed from GSD's templates/plan.md, summary.md, and workflows
+- [x] **PHSE-01**: Lesson 4 teaches the phase execution cycle: context → research → plan → execute → verify
+- [x] **PHSE-02**: Lesson 4 teaches PLAN.md anatomy — frontmatter (wave, depends_on, files_modified), task XML format, verification criteria, must_haves
+- [x] **PHSE-03**: Lesson 4 teaches SUMMARY.md and VERIFICATION.md as execution records
+- [x] **PHSE-04**: Lesson 4 content parsed from GSD's templates/plan.md, summary.md, and workflows
 
 ### Lessons — State & Milestones
 
@@ -89,10 +89,10 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 | REQR-02 | Phase 13 | Complete |
 | REQR-03 | Phase 13 | Complete |
 | REQR-04 | Phase 13 | Complete |
-| PHSE-01 | Phase 13 | Pending |
-| PHSE-02 | Phase 13 | Pending |
-| PHSE-03 | Phase 13 | Pending |
-| PHSE-04 | Phase 13 | Pending |
+| PHSE-01 | Phase 13 | Complete |
+| PHSE-02 | Phase 13 | Complete |
+| PHSE-03 | Phase 13 | Complete |
+| PHSE-04 | Phase 13 | Complete |
 | MILE-01 | Phase 14 | Pending |
 | MILE-02 | Phase 14 | Pending |
 | MILE-03 | Phase 14 | Pending |

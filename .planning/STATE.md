@@ -39,8 +39,8 @@ Progress: [██████████] 100%
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
 - v2.2: 6 plans in ~12 min (avg 2min/plan)
 - v2.3: 1 plan in ~4 min (4min/plan)
-- v3.0: 4 plans in ~9 min (avg 2.3min/plan)
-- Overall: 27 plans in ~83 min (avg 3.07min/plan)
+- v3.0: 5 plans in ~11 min (avg 2.2min/plan)
+- Overall: 28 plans in ~85 min (avg 3.04min/plan)
 
 ## Accumulated Context
 
