@@ -62,7 +62,7 @@
 
 - [x] **Phase 12: Module 3 Infrastructure & First Lessons** - Register Module 3, create Lessons 1-2 (planning overview + project definition) (completed 2026-03-15)
 - [x] **Phase 13: Requirements, Roadmap & Phase Lifecycle Lessons** - Create Lessons 3-4 covering the core planning artifacts and execution cycle (completed 2026-03-15)
-- [ ] **Phase 14: State, Milestones & Bridge Lessons** - Create Lessons 5-6 covering live state tracking, milestone lifecycle, and synthesis
+- [x] **Phase 14: State, Milestones & Bridge Lessons** - Create Lessons 5-6 covering live state tracking, milestone lifecycle, and synthesis (completed 2026-03-15)
 - [ ] **Phase 15: Planning Mini-Project** - Artifact-persistence mini-project with verification and progressive hints
 
 ## Phase Details
@@ -107,8 +107,8 @@ Plans:
   4. After Lesson 6, learner has a connected mental model of how a real GSD project flows from idea through shipped milestone
 **Plans**: 2 plans
 Plans:
-- [ ] 14-01-PLAN.md — Create Lesson 5: State Tracking and Milestone Lifecycle (STATE.md structure, milestone completion, archival, retrospective)
-- [ ] 14-02-PLAN.md — Create Lesson 6: Bridge to Practice (synthesis of all concepts, artifact flow, mini-project preparation)
+- [x] 14-01-PLAN.md — Create Lesson 5: State Tracking and Milestone Lifecycle (STATE.md structure, milestone completion, archival, retrospective)
+- [x] 14-02-PLAN.md — Create Lesson 6: Bridge to Practice (synthesis of all concepts, artifact flow, mini-project preparation)
 
 ### Phase 15: Planning Mini-Project
 **Goal**: Learner builds a persistent-artifact skeptic command that accumulates institutional knowledge across runs
@@ -145,7 +145,7 @@ Plans:
 | 11.1. Improve Module 1 mini-project | v2.3 | 1/1 | Complete | 2026-03-15 |
 | 12. Module 3 Infrastructure & First Lessons | v3.0 | 3/3 | Complete | 2026-03-15 |
 | 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
-| 14. State, Milestones & Bridge Lessons | v3.0 | 0/2 | Not started | - |
+| 14. State, Milestones & Bridge Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 15. Planning Mini-Project | v3.0 | 0/2 | Not started | - |
 
 ---

@@ -3,28 +3,13 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Planning & State Module
 status: in_progress
-last_updated: "2026-03-15T13:03:46.385Z"
-last_activity: 2026-03-15 — Completed 13-02 Lesson 4 Phase Lifecycle
+last_updated: "2026-03-15T13:16:00Z"
+last_activity: 2026-03-15 — Completed 14-02 Lesson 6 Bridge to Practice
 progress:
   total_phases: 4
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
----
-
----
-gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Planning & State Module
-status: in_progress
-last_updated: "2026-03-15"
-last_activity: 2026-03-15 — Completed 13-01 Lesson 3 Requirements and Roadmap
-progress:
-  total_phases: 4
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  completed_phases: 3
+  total_plans: 7
+  completed_plans: 7
 ---
 
 # Project State
@@ -34,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v3.0 Planning & State Module — Phase 13 in progress
+**Current focus:** v3.0 Planning & State Module — Phase 14 in progress
 
 ## Current Position
 
-Phase: 13 of 15 (Requirements, Roadmap & Phase Lifecycle Lessons)
+Phase: 14 of 15 (State, Milestones & Bridge Lessons)
 Plan: 2 of 2 in current phase (COMPLETE)
-Status: In progress
-Last activity: 2026-03-15 — Completed 13-02 Lesson 4 Phase Lifecycle
+Status: Phase complete
+Last activity: 2026-03-15 — Completed 14-02 Lesson 6 Bridge to Practice
 
 Progress: [██████████] 100%
 
@@ -53,8 +38,8 @@ Progress: [██████████] 100%
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
 - v2.2: 6 plans in ~12 min (avg 2min/plan)
 - v2.3: 1 plan in ~4 min (4min/plan)
-- v3.0: 5 plans in ~11 min (avg 2.2min/plan)
-- Overall: 28 plans in ~85 min (avg 3.04min/plan)
+- v3.0: 7 plans in ~15 min (avg 2.1min/plan)
+- Overall: 30 plans in ~89 min (avg 3.0min/plan)
 
 ## Accumulated Context
 
@@ -67,6 +52,8 @@ Progress: [██████████] 100%
 - Lesson 2 code blocks use actual content from get-shit-done/templates/project.md
 - Lesson 3 code blocks use actual content from get-shit-done/templates/requirements.md and roadmap.md
 - Lesson 4 code blocks use actual content from get-shit-done/templates/phase-prompt.md and summary.md
+- Lesson 5 code blocks use actual content from get-shit-done/templates/state.md, milestone.md, retrospective.md
+- Lesson 6 uses read-previous/write-new as unifying pattern across all GSD artifacts
 
 ### Roadmap Evolution
 
@@ -85,3 +72,4 @@ Progress: [██████████] 100%
 | 5 | Update footer to show module name and lesson progress | 2026-03-13 | 1aa3f53 | [5-update-footer-to-show-module-name-lesson](./quick/5-update-footer-to-show-module-name-lesson/) |
 | 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
+

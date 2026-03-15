@@ -39,9 +39,9 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 ### Lessons — State & Milestones
 
-- [ ] **MILE-01**: Lesson 5 teaches STATE.md as the live position tracker — current phase, decisions, blockers, session info
-- [ ] **MILE-02**: Lesson 5 teaches the milestone lifecycle — completion, archival, MILESTONES.md, version tagging
-- [ ] **MILE-03**: Lesson 5 content parsed from GSD's templates and complete-milestone workflow
+- [x] **MILE-01**: Lesson 5 teaches STATE.md as the live position tracker — current phase, decisions, blockers, session info
+- [x] **MILE-02**: Lesson 5 teaches the milestone lifecycle — completion, archival, MILESTONES.md, version tagging
+- [x] **MILE-03**: Lesson 5 content parsed from GSD's templates and complete-milestone workflow
 
 ### Lessons — Bridge to Practice
 
@@ -93,9 +93,9 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 | PHSE-02 | Phase 13 | Complete |
 | PHSE-03 | Phase 13 | Complete |
 | PHSE-04 | Phase 13 | Complete |
-| MILE-01 | Phase 14 | Pending |
-| MILE-02 | Phase 14 | Pending |
-| MILE-03 | Phase 14 | Pending |
+| MILE-01 | Phase 14 | Complete |
+| MILE-02 | Phase 14 | Complete |
+| MILE-03 | Phase 14 | Complete |
 | BRDG-01 | Phase 14 | Pending |
 | BRDG-02 | Phase 14 | Pending |
 | MINI-01 | Phase 15 | Pending |
