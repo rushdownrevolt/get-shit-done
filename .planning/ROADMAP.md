@@ -7,6 +7,7 @@
 - ✅ **v2.1 Full-Stack Mini-Project** — Phases 7-8 (shipped 2026-03-13)
 - ✅ **v2.2 Module Discovery & Welcome** — Phases 9-11 (shipped 2026-03-14)
 - ✅ **v2.3 Mini-Project Template Improvement** — Phase 11.1 (shipped 2026-03-15)
+- **v3.0 Planning & State Module** — Phases 12-15 (in progress)
 
 ## Phases
 
@@ -55,6 +56,61 @@
 
 </details>
 
+### v3.0 Planning & State Module (In Progress)
+
+**Milestone Goal:** Teach how GSD's planning system works — from project definition through milestone lifecycle — so learners can plan and structure their own work using GSD artifacts.
+
+- [ ] **Phase 12: Module 3 Infrastructure & First Lessons** - Register Module 3, create Lessons 1-2 (planning overview + project definition)
+- [ ] **Phase 13: Requirements, Roadmap & Phase Lifecycle Lessons** - Create Lessons 3-4 covering the core planning artifacts and execution cycle
+- [ ] **Phase 14: State, Milestones & Bridge Lessons** - Create Lessons 5-6 covering live state tracking, milestone lifecycle, and synthesis
+- [ ] **Phase 15: Planning Mini-Project** - Artifact-persistence mini-project with verification and progressive hints
+
+## Phase Details
+
+### Phase 12: Module 3 Infrastructure & First Lessons
+**Goal**: Learner can launch Module 3 and complete Lessons 1-2 covering the planning directory structure and PROJECT.md anatomy
+**Depends on**: Phase 11.1 (v2.3 complete)
+**Requirements**: INFRA-01, INFRA-02, INFRA-03, PLAN-01, PLAN-02, PROJ-01, PROJ-02
+**Success Criteria** (what must be TRUE):
+  1. Module picker shows 3 modules with Module 3 listed and correct recommended flag logic
+  2. Learner can navigate into Module 3 and see Lesson 1 teaching the .planning/ directory structure and planning lifecycle
+  3. Learner can complete Lesson 2 which explains PROJECT.md anatomy with content parsed from GSD's actual templates
+  4. Progress tracking works for Module 3 lessons (v4 schema migration applied)
+**Plans**: TBD
+
+### Phase 13: Requirements, Roadmap & Phase Lifecycle Lessons
+**Goal**: Learner understands how requirements become phases and how phases execute, through Lessons 3-4
+**Depends on**: Phase 12
+**Requirements**: REQR-01, REQR-02, REQR-03, REQR-04, PHSE-01, PHSE-02, PHSE-03, PHSE-04
+**Success Criteria** (what must be TRUE):
+  1. Learner can complete Lesson 3 which teaches REQUIREMENTS.md structure, ROADMAP.md structure, and the traceability chain from requirements to phases
+  2. Lesson 3 content is parsed from GSD's actual templates/requirements.md and ROADMAP.md structure
+  3. Learner can complete Lesson 4 which teaches the phase execution cycle (context, research, plan, execute, verify), PLAN.md anatomy, and SUMMARY.md/VERIFICATION.md as execution records
+  4. Lesson 4 content is parsed from GSD's actual templates/plan.md, summary.md, and workflows
+**Plans**: TBD
+
+### Phase 14: State, Milestones & Bridge Lessons
+**Goal**: Learner understands the full planning lifecycle from live state tracking through milestone completion, and can synthesize all concepts into one mental model
+**Depends on**: Phase 13
+**Requirements**: MILE-01, MILE-02, MILE-03, BRDG-01, BRDG-02
+**Success Criteria** (what must be TRUE):
+  1. Learner can complete Lesson 5 which teaches STATE.md as the live position tracker and the milestone lifecycle (completion, archival, version tagging)
+  2. Lesson 5 content is parsed from GSD's actual templates and complete-milestone workflow
+  3. Learner can complete Lesson 6 which synthesizes all planning concepts and prepares them for the mini-project
+  4. After Lesson 6, learner has a connected mental model of how a real GSD project flows from idea through shipped milestone
+**Plans**: TBD
+
+### Phase 15: Planning Mini-Project
+**Goal**: Learner builds a persistent-artifact skeptic command that accumulates institutional knowledge across runs
+**Depends on**: Phase 14
+**Requirements**: MINI-01, MINI-02, MINI-03, MINI-04, MINI-05, MINI-06
+**Success Criteria** (what must be TRUE):
+  1. Mini-project lesson provides the artifact-writing workflow pattern as a template (template-first pedagogy) and the learner customizes it
+  2. Structural verification confirms the workflow contains both read-previous and write-new patterns, and the artifact file has expected sections
+  3. Five progressive hints guide the learner from conceptual (why artifacts persist state) to specific (read/write patterns)
+  4. The completed mini-project produces a skeptic command that writes persistent SKEPTIC-REVIEW.md artifacts and reads previous ones for continuity
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -74,6 +130,10 @@
 | 10. Welcome Screen & Module Picker | v2.2 | 2/2 | Complete | 2026-03-13 |
 | 11. Key Bindings & Navigation Footer | v2.2 | 2/2 | Complete | 2026-03-14 |
 | 11.1. Improve Module 1 mini-project | v2.3 | 1/1 | Complete | 2026-03-15 |
+| 12. Module 3 Infrastructure & First Lessons | v3.0 | 0/0 | Not started | - |
+| 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 0/0 | Not started | - |
+| 14. State, Milestones & Bridge Lessons | v3.0 | 0/0 | Not started | - |
+| 15. Planning Mini-Project | v3.0 | 0/0 | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
