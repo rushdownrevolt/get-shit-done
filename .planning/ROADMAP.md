@@ -91,7 +91,11 @@ Plans:
   2. Lesson 3 content is parsed from GSD's actual templates/requirements.md and ROADMAP.md structure
   3. Learner can complete Lesson 4 which teaches the phase execution cycle (context, research, plan, execute, verify), PLAN.md anatomy, and SUMMARY.md/VERIFICATION.md as execution records
   4. Lesson 4 content is parsed from GSD's actual templates/plan.md, summary.md, and workflows
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 13-01-PLAN.md — Create Lesson 3: Requirements and Roadmap (REQUIREMENTS.md structure, ROADMAP.md structure, traceability chain)
+- [ ] 13-02-PLAN.md — Create Lesson 4: Phase Lifecycle (execution cycle, PLAN.md anatomy, SUMMARY.md and VERIFICATION.md)
 
 ### Phase 14: State, Milestones & Bridge Lessons
 **Goal**: Learner understands the full planning lifecycle from live state tracking through milestone completion, and can synthesize all concepts into one mental model
@@ -102,7 +106,11 @@ Plans:
   2. Lesson 5 content is parsed from GSD's actual templates and complete-milestone workflow
   3. Learner can complete Lesson 6 which synthesizes all planning concepts and prepares them for the mini-project
   4. After Lesson 6, learner has a connected mental model of how a real GSD project flows from idea through shipped milestone
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 13-01-PLAN.md — Create Lesson 3: Requirements and Roadmap (REQUIREMENTS.md structure, ROADMAP.md structure, traceability chain)
+- [ ] 13-02-PLAN.md — Create Lesson 4: Phase Lifecycle (execution cycle, PLAN.md anatomy, SUMMARY.md and VERIFICATION.md)
 
 ### Phase 15: Planning Mini-Project
 **Goal**: Learner builds a persistent-artifact skeptic command that accumulates institutional knowledge across runs
@@ -113,7 +121,11 @@ Plans:
   2. Structural verification confirms the workflow contains both read-previous and write-new patterns, and the artifact file has expected sections
   3. Five progressive hints guide the learner from conceptual (why artifacts persist state) to specific (read/write patterns)
   4. The completed mini-project produces a skeptic command that writes persistent SKEPTIC-REVIEW.md artifacts and reads previous ones for continuity
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 13-01-PLAN.md — Create Lesson 3: Requirements and Roadmap (REQUIREMENTS.md structure, ROADMAP.md structure, traceability chain)
+- [ ] 13-02-PLAN.md — Create Lesson 4: Phase Lifecycle (execution cycle, PLAN.md anatomy, SUMMARY.md and VERIFICATION.md)
 
 ## Progress
 
