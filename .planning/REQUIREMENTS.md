@@ -45,8 +45,8 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 ### Lessons — Bridge to Practice
 
-- [ ] **BRDG-01**: Lesson 6 synthesizes all planning concepts — shows how a real GSD project flows from idea through shipped milestone
-- [ ] **BRDG-02**: Lesson 6 prepares the learner for the mini-project by connecting all artifacts into one mental model
+- [x] **BRDG-01**: Lesson 6 synthesizes all planning concepts — shows how a real GSD project flows from idea through shipped milestone
+- [x] **BRDG-02**: Lesson 6 prepares the learner for the mini-project by connecting all artifacts into one mental model
 
 ### Mini-Project
 
@@ -96,8 +96,8 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 | MILE-01 | Phase 14 | Complete |
 | MILE-02 | Phase 14 | Complete |
 | MILE-03 | Phase 14 | Complete |
-| BRDG-01 | Phase 14 | Pending |
-| BRDG-02 | Phase 14 | Pending |
+| BRDG-01 | Phase 14 | Complete |
+| BRDG-02 | Phase 14 | Complete |
 | MINI-01 | Phase 15 | Pending |
 | MINI-02 | Phase 15 | Pending |
 | MINI-03 | Phase 15 | Pending |
