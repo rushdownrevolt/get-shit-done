@@ -1,20 +1,7 @@
 'use strict';
 
-const { CONCEPT_MAP } = require('./concept-map.cjs');
-
-/**
- * Map section names to labels in the concept map diagram.
- */
-const sectionMap = {
-  'entry-point': 'Command Spec',
-  'command-spec': 'Command Spec',
-  'workflow': 'Workflow',
-  'tool-dispatch': 'Tool Dispatch',
-  'state': 'State',
-  'config': 'Config',
-  'phase': 'Phase',
-  'overview': null,
-};
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Format a lesson as LLM-friendly markdown for clipboard.
@@ -23,9 +10,10 @@ const sectionMap = {
  * @param {object} lesson - Lesson data object.
  * @param {number} currentIndex - Zero-based index of current lesson.
  * @param {number} totalLessons - Total lessons in module.
+ * @param {string} [moduleDir] - Absolute path to module directory (for concept map loading).
  * @returns {string} Clean markdown string.
  */
-function formatLessonForClipboard(lesson, currentIndex, totalLessons) {
+function formatLessonForClipboard(lesson, currentIndex, totalLessons, moduleDir) {
   const parts = [];
 
   // Preamble
@@ -74,25 +62,41 @@ function formatLessonForClipboard(lesson, currentIndex, totalLessons) {
     }
   }
 
-  // Concept map
-  if (lesson.conceptMap) {
-    parts.push('## Architecture Overview\n');
-    parts.push('\n');
-    parts.push('```\n');
+  // Concept map (loaded from file)
+  if (lesson.conceptMap && moduleDir) {
+    try {
+      const mapPath = path.join(moduleDir, 'concept-map.txt');
+      let map = fs.readFileSync(mapPath, 'utf-8');
 
-    let map = CONCEPT_MAP;
-    const label = sectionMap[lesson.conceptMap] || lesson.conceptMap;
-    if (label) {
-      const marker = ' <-- YOU ARE HERE';
-      map = map.replace(
-        new RegExp('(\\|\\s*' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*)'),
-        '$1' + marker
-      );
+      // Load sectionMap from module.json for marker insertion
+      let sectionMap = null;
+      try {
+        const moduleJson = JSON.parse(fs.readFileSync(path.join(moduleDir, 'module.json'), 'utf-8'));
+        sectionMap = moduleJson.sectionMap || null;
+      } catch {
+        // No module.json or no sectionMap -- skip marker
+      }
+
+      if (sectionMap) {
+        const label = sectionMap[lesson.conceptMap] || lesson.conceptMap;
+        if (label && sectionMap[lesson.conceptMap]) {
+          const marker = ' <-- YOU ARE HERE';
+          map = map.replace(
+            new RegExp('(\\|\\s*' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*)'),
+            '$1' + marker
+          );
+        }
+      }
+
+      parts.push('## Architecture Overview\n');
+      parts.push('\n');
+      parts.push('```\n');
+      parts.push(map.trim() + '\n');
+      parts.push('```\n');
+      parts.push('\n');
+    } catch {
+      // concept-map.txt not found -- skip concept map section
     }
-
-    parts.push(map.trim() + '\n');
-    parts.push('```\n');
-    parts.push('\n');
   }
 
   // Success criteria
