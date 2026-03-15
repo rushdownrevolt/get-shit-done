@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: AI-Ready Curriculum
 status: in_progress
-last_updated: "2026-03-15T14:00:00Z"
-last_activity: 2026-03-15 — Milestone v4.0 started
+last_updated: "2026-03-15T15:00:00Z"
+last_activity: 2026-03-15 — Roadmap created (2 phases, 14 requirements)
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v4.0 AI-Ready Curriculum — Defining requirements
+**Current focus:** v4.0 AI-Ready Curriculum — Phase 16: Per-Module Export
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-15 — Milestone v4.0 started
+Phase: 16 of 17 (Per-Module Export)
+Plan: Ready to plan
+Status: Ready to plan
+Last activity: 2026-03-15 — Roadmap created (2 phases, 14 requirements mapped)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 ### Roadmap Evolution
 
 - 2026-03-15: v4.0 milestone started — AI-Ready Curriculum
+- 2026-03-15: Roadmap created — 2 phases (16-17), 14 requirements mapped
 
 ### Blockers/Concerns
 

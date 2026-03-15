@@ -54,26 +54,26 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| EXPT-01 | TBD | Pending |
-| EXPT-02 | TBD | Pending |
-| EXPT-03 | TBD | Pending |
-| EXPT-04 | TBD | Pending |
-| MODD-01 | TBD | Pending |
-| MODD-02 | TBD | Pending |
-| MODD-03 | TBD | Pending |
-| MODD-04 | TBD | Pending |
-| MODD-05 | TBD | Pending |
-| MSTR-01 | TBD | Pending |
-| MSTR-02 | TBD | Pending |
-| MSTR-03 | TBD | Pending |
-| OUTM-01 | TBD | Pending |
-| OUTM-02 | TBD | Pending |
+| EXPT-01 | Phase 16 | Pending |
+| EXPT-02 | Phase 16 | Pending |
+| EXPT-03 | Phase 16 | Pending |
+| EXPT-04 | Phase 16 | Pending |
+| MODD-01 | Phase 16 | Pending |
+| MODD-02 | Phase 16 | Pending |
+| MODD-03 | Phase 16 | Pending |
+| MODD-04 | Phase 16 | Pending |
+| MODD-05 | Phase 16 | Pending |
+| MSTR-01 | Phase 17 | Pending |
+| MSTR-02 | Phase 17 | Pending |
+| MSTR-03 | Phase 17 | Pending |
+| OUTM-01 | Phase 17 | Pending |
+| OUTM-02 | Phase 17 | Pending |
 
 **Coverage:**
 - v1 requirements: 14 total
-- Mapped to phases: 0
-- Unmapped: 14 ⚠️
+- Mapped to phases: 14
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-15*
-*Last updated: 2026-03-15 after initial definition*
+*Last updated: 2026-03-15 after roadmap creation*

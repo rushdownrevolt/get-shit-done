@@ -8,6 +8,7 @@
 - ✅ **v2.2 Module Discovery & Welcome** — Phases 9-11 (shipped 2026-03-14)
 - ✅ **v2.3 Mini-Project Template Improvement** — Phase 11.1 (shipped 2026-03-15)
 - ✅ **v3.0 Planning & State Module** — Phases 12-15 (shipped 2026-03-15)
+- 🚧 **v4.0 AI-Ready Curriculum** — Phases 16-17 (in progress)
 
 ## Phases
 
@@ -66,7 +67,47 @@
 
 </details>
 
+### v4.0 AI-Ready Curriculum
+
+- [ ] **Phase 16: Per-Module Export** - Build export script that converts JSON lessons to per-module markdown docs with code blocks, mini-project specs, hints, and concept maps
+- [ ] **Phase 17: Master Document & Commit** - Assemble master README combining all modules sequentially, and commit all generated output
+
+## Phase Details
+
+### Phase 16: Per-Module Export
+**Goal**: Users can run a single script to produce clean, complete markdown documentation for each learning module
+**Depends on**: Nothing (first phase of v4.0; reads existing lesson JSON from v3.0)
+**Requirements**: EXPT-01, EXPT-02, EXPT-03, EXPT-04, MODD-01, MODD-02, MODD-03, MODD-04, MODD-05
+**Success Criteria** (what must be TRUE):
+  1. Running `node learn/bin/export-docs.cjs` with no arguments produces 3 markdown files in `docs/ai-curriculum/` (one per module)
+  2. Each module doc contains all lessons rendered sequentially with code blocks using correct language annotations (```yaml, ```markdown, etc.)
+  3. Each module doc includes the mini-project spec with verification checks listed, followed by progressive hints
+  4. Each module doc includes the concept map rendered as ASCII diagram
+  5. Re-running the script on unchanged JSON produces identical output (idempotent regeneration)
+**Plans**: TBD
+
+Plans:
+- [ ] 16-01: TBD
+- [ ] 16-02: TBD
+
+### Phase 17: Master Document & Commit
+**Goal**: An AI can read one file to learn the complete GSD curriculum, and all generated docs are committed to the repo
+**Depends on**: Phase 16
+**Requirements**: MSTR-01, MSTR-02, MSTR-03, OUTM-01, OUTM-02
+**Success Criteria** (what must be TRUE):
+  1. `docs/ai-curriculum/README.md` exists and combines all 3 modules in learning order (Module 1 -> 2 -> 3)
+  2. README includes a table of contents with links to each module section and lesson
+  3. README is self-contained — an AI reading only this file understands the complete GSD curriculum
+  4. Both the export script (`learn/bin/export-docs.cjs`) and all generated docs (`docs/ai-curriculum/`) are committed to the repo
+**Plans**: TBD
+
+Plans:
+- [ ] 17-01: TBD
+
 ## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 16 -> 17
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -89,6 +130,8 @@
 | 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 14. State, Milestones & Bridge Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
+| 16. Per-Module Export | v4.0 | 0/? | Not started | - |
+| 17. Master Document & Commit | v4.0 | 0/? | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
