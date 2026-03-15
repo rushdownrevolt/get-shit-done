@@ -1,0 +1,14 @@
+{
+  "id": "planning-state",
+  "title": "Planning & State",
+  "description": "Understand how GSD structures projects with planning artifacts -- from PROJECT.md through milestones.",
+  "order": 3,
+  "sectionMap": {
+    "overview": "Overview",
+    "project": "PROJECT.md",
+    "requirements-roadmap": "Requirements & Roadmap",
+    "phase-lifecycle": "Phase Lifecycle",
+    "state-milestones": "State & Milestones",
+    "mini-project": "Mini-Project"
+  }
+}
