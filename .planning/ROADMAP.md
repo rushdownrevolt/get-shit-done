@@ -147,7 +147,7 @@ Plans:
 | 11. Key Bindings & Navigation Footer | v2.2 | 2/2 | Complete | 2026-03-14 |
 | 11.1. Improve Module 1 mini-project | v2.3 | 1/1 | Complete | 2026-03-15 |
 | 12. Module 3 Infrastructure & First Lessons | 3/3 | Complete    | 2026-03-15 | - |
-| 13. Requirements, Roadmap & Phase Lifecycle Lessons | 2/2 | Complete   | 2026-03-15 | - |
+| 13. Requirements, Roadmap & Phase Lifecycle Lessons | 2/2 | Complete    | 2026-03-15 | - |
 | 14. State, Milestones & Bridge Lessons | v3.0 | 0/0 | Not started | - |
 | 15. Planning Mini-Project | v3.0 | 0/0 | Not started | - |
 
