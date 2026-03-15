@@ -1,0 +1,70 @@
+{
+  "id": "state-milestones",
+  "title": "State Tracking & Milestone Lifecycle",
+  "lessonNumber": 5,
+  "objective": "Understand STATE.md as the project's living memory that persists context across sessions, and the milestone lifecycle from completion through archival, version tagging, and retrospective",
+  "content": [
+    {
+      "type": "text",
+      "value": "In Lesson 4, you saw how phases execute -- from PLAN.md blueprint through SUMMARY.md record to VERIFICATION.md audit. But what ties all those sessions and phases together? STATE.md is the project's short-term memory -- a single small file read first in every workflow and updated after every significant action. The problem it solves: information captured in summaries, issues, and decisions isn't systematically consumed. Each new session starts without context. STATE.md enables instant session restoration by keeping a living digest of where you are, what's been decided, and what's blocking progress. The key constraint: keep it under 100 lines. It's a digest, not an archive.",
+      "focus": "STATE.md as the project's short-term memory",
+      "bridge": "Here's the actual template structure that every GSD project uses."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "# Project State\n\n## Project Reference\n\nSee: .planning/PROJECT.md (updated 2026-03-10)\n\n**Core value:** Real-time sync that feels instant\n**Current focus:** v1.1 Security & Polish -- Phase 5\n\n## Current Position\n\nPhase: 5 of 6 (Security Audit)\nPlan: 1 of 2 in current phase\nStatus: In progress\nLast activity: 2026-03-10 -- Completed Keychain migration\n\nProgress: [██████░░░░] 62%\n\n## Performance Metrics\n\n**Velocity:**\n- Total plans completed: 8\n- Average duration: 3.5 min\n- Total execution time: 0.5 hours\n\n## Accumulated Context\n\n### Decisions\n\n- Phase 3: Used Canvas API over SVG for drawing performance\n- Phase 5: Keychain storage for API keys (not UserDefaults)\n\n### Blockers/Concerns\n\n- 3 pre-existing test failures (non-blocking)\n\n## Session Continuity\n\nLast session: 2026-03-10 14:30\nStopped at: Completed 05-01 Keychain migration plan\nResume file: None",
+      "highlight": [3, 11, 12, 13, 14, 16, 26, 27, 33, 34]
+    },
+    {
+      "type": "text",
+      "value": "STATE.md has a strict lifecycle. It's created after ROADMAP.md during project initialization. From then on, it's read first in every workflow -- /gsd:progress reads it to present status, /gsd:plan-phase reads it to inform planning decisions, /gsd:execute-phase reads it to know the current position, and /gsd:transition-phase reads it to know what's complete. It's written after every significant action: after a SUMMARY.md is created, STATE.md updates position, notes new decisions, and adds blockers. After a phase completes, it updates the progress bar, clears resolved blockers, and refreshes the Project Reference date. This is what makes context persist across sessions -- without it, every session starts from scratch.",
+      "focus": "STATE.md lifecycle: created once, read first, written after every action",
+      "bridge": "When all phases in a milestone finish, it's time to ship."
+    },
+    {
+      "type": "text",
+      "value": "When all phases in a milestone are complete, the complete-milestone workflow handles the shipping process. It creates a MILESTONES.md entry with stats and accomplishments, performs a full PROJECT.md evolution review (validating 'What This Is', verifying core value, moving shipped requirements to Validated, auditing Out of Scope items, updating context, and adding decisions with outcomes). It archives ROADMAP.md and REQUIREMENTS.md to a milestones/ directory, creates a git tag for the release, and writes a retrospective. This is how institutional memory is preserved -- nothing is lost, but working documents stay constant-size.",
+      "focus": "The complete-milestone workflow and what it handles",
+      "bridge": "The milestone entry captures what shipped and becomes the permanent record."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "## v1.0 MVP (Shipped: 2025-11-25)\n\n**Delivered:** Menu bar weather app with current conditions and 3-day forecast\n\n**Phases completed:** 1-4 (7 plans total)\n\n**Key accomplishments:**\n- Menu bar app with popover UI (AppKit)\n- OpenWeather API integration with auto-refresh\n- Current weather display with conditions icon\n- 3-day forecast list with high/low temperatures\n- Code signed and notarized for distribution\n\n**Stats:**\n- 47 files created\n- 2,450 lines of Swift\n- 4 phases, 7 plans, 28 tasks\n- 12 days from start to ship\n\n**Git range:** `feat(01-01)` -> `feat(04-01)`\n\n**What's next:** Security audit and hardening for v1.1",
+      "highlight": [1, 3, 5, 7, 14, 20]
+    },
+    {
+      "type": "text",
+      "value": "When a milestone completes, the archival process preserves full history while keeping working documents constant-size. Three things happen: (1) ROADMAP.md is archived to milestones/vX.Y-ROADMAP.md and the completed milestone's phases are collapsed into a details/summary tag in the active ROADMAP, so they're still accessible but don't clutter the view. (2) REQUIREMENTS.md is archived to milestones/vX.Y-REQUIREMENTS.md and then deleted -- the next milestone starts with a fresh requirements file, keeping it scoped to current work. (3) PROJECT.md gets a full evolution review -- validate 'What This Is' still describes the product, verify core value hasn't shifted, move all shipped requirements to Validated, audit Out of Scope reasoning, update context with current codebase state, and add key decisions with outcomes. This prevents the planning documents from growing unbounded while preserving everything in the archive.",
+      "focus": "Archival process: archive, collapse, delete, evolve",
+      "bridge": "Here's how the ROADMAP reorganizes to keep completed milestones accessible but compact."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "# Roadmap: WeatherBar\n\n## Milestones\n\n- v1.0 MVP -- Phases 1-4 (shipped 2025-11-25)\n- v1.1 Security -- Phases 5-6 (in progress)\n- v2.0 Redesign -- Phases 7-10 (planned)\n\n## Phases\n\n<details>\n<summary>v1.0 MVP (Phases 1-4) -- SHIPPED 2025-11-25</summary>\n\n- [x] Phase 1: Foundation (2/2 plans) -- completed 2025-11-15\n- [x] Phase 2: Authentication (2/2 plans) -- completed 2025-11-18\n- [x] Phase 3: Core Features (3/3 plans) -- completed 2025-11-22\n- [x] Phase 4: Polish (1/1 plan) -- completed 2025-11-25\n\n</details>\n\n### v1.1 Security (In Progress)\n\n- [ ] Phase 5: Security Audit (2 plans)\n- [ ] Phase 6: Hardening (1 plan)",
+      "highlight": [5, 11, 12, 14, 15, 16, 17, 21]
+    },
+    {
+      "type": "text",
+      "value": "RETROSPECTIVE.md is a living document updated after each milestone. It captures What Was Built, What Worked, What Was Inefficient, Patterns Established, Key Lessons, and Cost Observations. But its real power is the Cross-Milestone Trends section -- tables that track process evolution (how many sessions, what changed in the process), cumulative quality (tests, coverage), and top lessons verified across multiple milestones. A lesson that appears once might be situational. A lesson that appears in three milestones is a proven pattern. The retrospective feeds forward into future planning: if 'keeping STATE.md under 100 lines improved velocity' shows up as a verified lesson, that constraint gets baked into future milestone planning.",
+      "focus": "RETROSPECTIVE.md as the learning feedback loop",
+      "bridge": "Here's the retrospective template structure."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "## Milestone: v1.0 -- MVP\n\n**Shipped:** 2025-11-25\n**Phases:** 4 | **Plans:** 7\n\n### What Was Built\n- Menu bar weather app with popover UI\n- OpenWeather API integration with auto-refresh\n- Code signing and notarization pipeline\n\n### What Worked\n- Phase-level planning prevented scope creep\n- TDD on API layer caught 3 integration bugs early\n\n### What Was Inefficient\n- Phase 3 plans were too large (4 tasks each)\n- Spent time on custom icons before validating UX\n\n### Patterns Established\n- Max 3 tasks per plan for maintainable execution\n- Visual verification checkpoints after UI phases\n\n### Key Lessons\n1. Smaller plans execute faster than larger ones\n2. Verify UX before polishing visuals\n\n---\n\n## Cross-Milestone Trends\n\n### Process Evolution\n\n| Milestone | Phases | Key Change              |\n|-----------|--------|-------------------------|\n| v1.0      | 4      | Established GSD cadence |\n\n### Top Lessons (Verified Across Milestones)\n\n1. Smaller plans (2-3 tasks) consistently outperform larger ones",
+      "highlight": [1, 3, 4, 6, 11, 15, 19, 23, 30, 31]
+    },
+    {
+      "type": "text",
+      "value": "STATE.md and milestones are bookends of the execution cycle. STATE.md is the 'where are we now' -- live, updated constantly, read every session, kept small. Milestones are the 'where have we been' -- archived, immutable once shipped, referenced when needed for patterns and decisions. Together they solve the biggest problem in long-running AI-assisted projects: context loss. STATE.md ensures no session starts cold. Milestones ensure no lesson is forgotten. The retrospective feeds patterns forward. And the archival process keeps working documents from growing unbounded. In the next lesson, we'll bring everything together -- PROJECT.md, REQUIREMENTS.md, ROADMAP.md, PLAN.md, SUMMARY.md, STATE.md, and milestones -- into one connected mental model, and prepare you for the mini-project where you'll create your own planning artifacts.",
+      "focus": "STATE.md and milestones as bookends solving context loss",
+      "bridge": "Next lesson synthesizes the full planning system into a connected mental model."
+    }
+  ],
+  "conceptMap": "state-milestones",
+  "successCriteria": "You can describe what STATE.md contains and why it's kept under 100 lines, explain when and how STATE.md is read and written during the GSD lifecycle, describe the milestone completion process (MILESTONES.md entry, PROJECT.md evolution, archival, git tag, retrospective), and explain how the archival process keeps working documents constant-size while preserving history."
+}
