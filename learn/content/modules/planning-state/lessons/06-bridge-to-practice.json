@@ -1,0 +1,70 @@
+{
+  "id": "bridge-to-practice",
+  "title": "From Idea to Shipped Milestone",
+  "lessonNumber": 6,
+  "objective": "Synthesize all planning concepts into one connected mental model and understand how GSD artifacts create persistent institutional memory across sessions, preparing you for the mini-project",
+  "content": [
+    {
+      "type": "text",
+      "value": "You've now seen every planning artifact GSD produces. Let's trace a complete project lifecycle from idea to shipped milestone, seeing how each artifact feeds the next. The key insight: these aren't independent documents -- they form a chain where each artifact's output becomes the next artifact's input. PROJECT.md feeds REQUIREMENTS.md, which feeds ROADMAP.md, which feeds PLAN.md, which produces SUMMARY.md, which updates STATE.md, which tracks progress toward milestones. This chain is what makes GSD work for long-running projects where context would otherwise be lost between sessions.",
+      "focus": "Artifacts form a chain, not a collection",
+      "bridge": "Here's the complete flow, annotated with what each artifact captures and what it feeds forward."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Idea -> /gsd:kickoff\n         |\n    PROJECT.md (What & Why) -- feeds -> Core value, constraints, context\n         |\n    REQUIREMENTS.md (What to build) -- feeds -> REQ-IDs, categories, scope\n         |\n    ROADMAP.md (When & order) -- feeds -> Phases, milestones, dependencies\n         |\n    For each phase:\n         |\n    PLAN.md (How to build) -- feeds -> Tasks, file ownership, must_haves\n         |\n    SUMMARY.md (What happened) -- feeds -> Decisions, patterns, issues\n         |\n    STATE.md (Where are we) -- feeds -> Position, velocity, blockers\n         |\n    When all phases complete:\n         |\n    /gsd:complete-milestone -> MILESTONES.md, archives, git tag\n         |\n    RETROSPECTIVE.md -- feeds -> Lessons for next milestone",
+      "highlight": [3, 5, 7, 11, 13, 15, 19, 21]
+    },
+    {
+      "type": "text",
+      "value": "Let's make this concrete. Imagine you're building a CLI tool for fast file search. You run /gsd:kickoff, which creates PROJECT.md capturing your core value (\"fast file search across large codebases\"), constraints (\"must work on Windows and Linux\"), and non-goals (\"not a full IDE\"). From PROJECT.md, /gsd:requirements creates REQUIREMENTS.md with REQ-IDs like SEARCH-01 (\"index local files by content\"), SEARCH-02 (\"support regex patterns\"), SEARCH-03 (\"parse boolean queries\"). From requirements, /gsd:roadmap creates ROADMAP.md grouping them into phases: Phase 1 (index engine, SEARCH-01), Phase 2 (query parser, SEARCH-02 and SEARCH-03), Phase 3 (CLI interface). Each requirement traces to exactly one phase.",
+      "focus": "Tracing the artifact chain through a concrete example",
+      "bridge": "Now let's follow this project into execution."
+    },
+    {
+      "type": "text",
+      "value": "Phase 1 starts: /gsd:plan-phase creates PLAN.md with 2 tasks (create index data structure, implement file walker). /gsd:execute-phase runs both tasks, producing SUMMARY.md recording what was built (B-tree index, recursive walker), decisions made (chose mmap for large files), and patterns established (streaming reads for memory safety). STATE.md updates: \"Phase 1 of 3, 1/1 plans complete.\" Phase 2 follows the same cycle -- plan, execute, verify. Its SUMMARY.md references Phase 1's decisions: \"Uses B-tree index from Phase 1, added regex support via streaming match.\" After Phase 3, all requirements are met. The traceability chain is unbroken: SEARCH-01 in REQUIREMENTS.md maps to Phase 1 in ROADMAP.md, addressed in Phase 1's PLAN.md, marked complete in Phase 1's SUMMARY.md.",
+      "focus": "The execution cycle repeating across phases",
+      "bridge": "With all phases complete, it's time to ship."
+    },
+    {
+      "type": "text",
+      "value": "You run /gsd:complete-milestone. It creates a MILESTONES.md entry with stats (3 phases, 4 plans, 8 tasks, 4 days). It archives ROADMAP.md and REQUIREMENTS.md to milestones/v1.0-ROADMAP.md and v1.0-REQUIREMENTS.md -- preserving the historical record while clearing the workspace. It evolves PROJECT.md, moving shipped requirements to Validated and updating context with current state. It creates a git tag v1.0. It writes RETROSPECTIVE.md capturing what worked (\"streaming reads avoided memory issues\") and what didn't (\"should have added regex support earlier -- Phase 3 needed it\"). The project is now ready for v1.1, and every decision, trade-off, and lesson learned is preserved in the artifact chain.",
+      "focus": "Milestone completion and artifact archival",
+      "bridge": "Why does all this matter? Because of the fundamental problem GSD solves."
+    },
+    {
+      "type": "text",
+      "value": "The key pattern is artifact persistence. Every GSD artifact solves the same fundamental problem: context loss. PROJECT.md persists the \"why\" across the entire project lifetime. REQUIREMENTS.md persists the \"what\" within a milestone. ROADMAP.md persists the \"when and order.\" PLAN.md persists the \"how\" for each phase. SUMMARY.md persists \"what actually happened.\" STATE.md persists \"where we are right now.\" MILESTONES.md persists \"where we've been.\" RETROSPECTIVE.md persists \"what we learned.\" Without these artifacts, every new session starts from zero -- the developer explains the project again, Claude re-discovers the architecture, and previous decisions get unknowingly reversed. With them, continuity is automatic.",
+      "focus": "Artifact persistence as the core pattern",
+      "bridge": "Here's what automatic continuity looks like in practice."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Session start:\n  1. Read STATE.md          -> \"Phase 2 of 3, plan 1 of 2, last activity: implemented index engine\"\n  2. Read PROJECT.md        -> Core value, constraints, key decisions\n  3. Read ROADMAP.md        -> Phase 2 depends on Phase 1, requirements SEARCH-03, SEARCH-04\n  4. Read Phase 1 SUMMARY   -> Index engine uses B-tree, decided on mmap for large files\n  5. Read Phase 2 PLAN      -> Task 1: build query parser, Task 2: add regex support\n\nResult: Full context restored in < 30 seconds. No human re-explanation needed.",
+      "highlight": [2, 3, 4, 5, 6]
+    },
+    {
+      "type": "text",
+      "value": "In the mini-project, you'll apply this pattern yourself. You'll extend the skeptic command you built in Module 1 to produce a persistent artifact -- SKEPTIC-REVIEW.md -- that captures findings from each run. On future runs, the workflow will read previous reviews, building continuity across sessions. This is the same read-previous/write-new pattern that STATE.md, SUMMARY.md, and RETROSPECTIVE.md all use. You're not learning a new concept -- you're applying the one pattern that makes GSD work: artifacts that persist context so the next session doesn't start from zero.",
+      "focus": "The mini-project applies the same persistence pattern",
+      "bridge": "Here's what the before and after looks like."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Skeptic workflow (before):        Skeptic workflow (after):\n  1. Read codebase                  1. Read previous SKEPTIC-REVIEW.md\n  2. Analyze                        2. Read codebase\n  3. Print findings                 3. Analyze (with historical context)\n  4. (findings lost)                4. Write new SKEPTIC-REVIEW.md\n                                    5. Print findings\n                                    6. (findings persist for next run)",
+      "highlight": [2, 4, 5, 7]
+    },
+    {
+      "type": "text",
+      "value": "You now understand the complete GSD planning system -- from the first /gsd:kickoff through shipped milestones. The pattern is always the same: capture context in structured artifacts, read them at the start of each session, write updated versions as work progresses. This is how a solo developer and Claude can maintain coherent, long-running projects without losing institutional knowledge. The artifacts aren't bureaucracy -- they're the project's memory. And in the mini-project, you'll build that memory into a workflow yourself. Time to put it into practice.",
+      "focus": "Artifacts are the project's memory",
+      "bridge": "Next: the mini-project, where you build artifact persistence into the skeptic workflow."
+    }
+  ],
+  "conceptMap": "mini-project",
+  "successCriteria": "You can trace the complete artifact chain from PROJECT.md through MILESTONES.md, explain how each artifact's output feeds the next artifact's input, describe the artifact persistence pattern (read previous, write new), and understand how the mini-project applies this same pattern to the skeptic workflow."
+}
