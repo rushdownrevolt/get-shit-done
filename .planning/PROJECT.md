@@ -48,7 +48,13 @@ The learner can confidently modify and extend GSD for their own needs, validated
 
 ### Active
 
-<!-- Next milestone scope -->
+<!-- v4.0 AI-Ready Curriculum scope -->
+
+- [ ] Export script converts JSON lessons to AI-readable markdown
+- [ ] Per-module markdown docs in docs/ai-curriculum/
+- [ ] Master README walks through entire curriculum sequentially
+- [ ] Mini-project specs and hints included in output
+- [ ] Script + committed output (both generated and checked in)
 
 ### Out of Scope
 
@@ -103,5 +109,15 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Dynamic recommended flag | First uncompleted module gets "Start here" instead of hardcoded index; scales with any number of modules | ✓ Good |
 | Artifact-persistence mini-project | Extends existing skeptic command rather than creating new artifacts; teaches read-previous/write-new pattern through a tool learner already built | ✓ Good |
 
+## Current Milestone: v4.0 AI-Ready Curriculum
+
+**Goal:** Produce LLM-consumable documentation from existing lesson content so an AI can learn how GSD works by reading structured markdown.
+
+**Target features:**
+- Export script that converts JSON lesson files to clean markdown
+- Per-module docs (3 files) with lessons, code examples, and mini-project specs
+- Master README that sequences all modules into one document
+- Both generated on demand and committed for easy access
+
 ---
-*Last updated: 2026-03-15 after v3.0 milestone*
+*Last updated: 2026-03-15 after v4.0 milestone started*

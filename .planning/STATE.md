@@ -1,44 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Planning & State Module
+milestone: v4.0
+milestone_name: AI-Ready Curriculum
 status: in_progress
-last_updated: "2026-03-15T13:37:50.903Z"
-last_activity: 2026-03-15 — Completed 15-01 Mini-Project Lesson & Verification Spec
+last_updated: "2026-03-15T14:00:00Z"
+last_activity: 2026-03-15 — Milestone v4.0 started
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 9
-  completed_plans: 9
----
-
----
-gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Planning & State Module
-status: in_progress
-last_updated: "2026-03-15T13:32:24.600Z"
-last_activity: 2026-03-15 — Completed 15-02 Mini-Project Hints
-progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 9
-  completed_plans: 9
-  percent: 100
----
-
----
-gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Planning & State Module
-status: in_progress
-last_updated: "2026-03-15T13:30:47Z"
-last_activity: 2026-03-15 — Completed 15-02 Mini-Project Hints
-progress:
-  [██████████] 100%
-  completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -48,16 +19,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v3.0 Planning & State Module — Phase 15 in progress
+**Current focus:** v4.0 AI-Ready Curriculum — Defining requirements
 
 ## Current Position
 
-Phase: 15 of 15 (Planning Mini-Project)
-Plan: 2 of 2 in current phase (COMPLETE)
-Status: Phase complete
-Last activity: 2026-03-15 - Completed quick task 8: Fix copy bug - Cannot read properties of undefined reading replace
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-15 — Milestone v4.0 started
 
-Progress: [██████████] 97%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -74,26 +45,17 @@ Progress: [██████████] 97%
 
 ### Decisions
 
-- v3->v4 progress migration is version bump only (modules map already dynamic)
-- Module picker recommended flag uses first-uncompleted-module logic
-- Welcome screen text uses generic phrasing (no hardcoded module count)
-- Lesson conceptMap references "overview" from concept-map.txt created in 12-01
-- Lesson 2 code blocks use actual content from get-shit-done/templates/project.md
-- Lesson 3 code blocks use actual content from get-shit-done/templates/requirements.md and roadmap.md
-- Lesson 4 code blocks use actual content from get-shit-done/templates/phase-prompt.md and summary.md
-- Lesson 5 code blocks use actual content from get-shit-done/templates/state.md, milestone.md, retrospective.md
-- Lesson 6 uses read-previous/write-new as unifying pattern across all GSD artifacts
+(Carried from v3.0 — relevant to content structure)
+- Lesson conceptMap references "overview" from concept-map.txt
 - Mini-project hints progress: conceptual why -> structural what -> read specifics -> write specifics -> full solution
-- [Phase 15]: Spec checks use broad regex patterns to accept reasonable learner variations
-- [Phase 15]: Lesson template provides additive workflow steps rather than full replacement
 
 ### Roadmap Evolution
 
-- 2026-03-15: v3.0 roadmap created — 4 phases (12-15), 26 requirements mapped
+- 2026-03-15: v4.0 milestone started — AI-Ready Curriculum
 
 ### Blockers/Concerns
 
-- ~~13 pre-existing clipboard-formatter.test.cjs failures (from v1.0, non-blocking)~~ Fixed in quick task 8
+(None)
 
 ### Quick Tasks Completed
 
@@ -105,5 +67,3 @@ Progress: [██████████] 97%
 | 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
 | 8 | Fix copy bug: Cannot read properties of undefined | 2026-03-15 | 1f53f5d | [8-fix-copy-bug-cannot-read-properties-of-u](./quick/8-fix-copy-bug-cannot-read-properties-of-u/) |
-| Phase 15 P01 | 2min | 2 tasks | 2 files |
-
