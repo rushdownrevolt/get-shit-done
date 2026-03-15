@@ -890,6 +890,64 @@ describe('renderModuleList', () => {
   });
 });
 
+// ─── renderModuleList recommended flag logic ─────────────────────────
+
+describe('renderModuleList recommended flag', () => {
+  const { renderModuleList } = require('../lib/renderer.cjs');
+
+  const threeModules = [
+    { id: 'mod-1', title: 'Module One', description: 'First module', order: 1, lessonCount: 6 },
+    { id: 'mod-2', title: 'Module Two', description: 'Second module', order: 2, lessonCount: 4 },
+    { id: 'mod-3', title: 'Module Three', description: 'Third module', order: 3, lessonCount: 5 },
+  ];
+
+  test('when all modules incomplete and first run, first module shows "Start here"', () => {
+    const progress = { modules: {} };
+    const output = renderModuleList(threeModules, progress, true);
+    assert.ok(output.includes('Start here'), 'should show "Start here" for first module');
+  });
+
+  test('when module 1 completed, module 2 shows "Start here" (not module 1)', () => {
+    const progress = { modules: { 'mod-1': { currentLesson: 5, started: true, completed: true } } };
+    const output = renderModuleList(threeModules, progress, false);
+    // Module 2 line should have "Start here"
+    const lines = output.split('\n');
+    const mod2Lines = lines.filter(l => l.includes('[2]'));
+    const mod2Text = mod2Lines.join(' ');
+    assert.ok(mod2Text.includes('Start here'), 'Module 2 should show "Start here" when Module 1 is completed');
+    // Module 1 should NOT have "Start here"
+    const mod1Lines = lines.filter(l => l.includes('[1]'));
+    const mod1Text = mod1Lines.join(' ');
+    assert.ok(!mod1Text.includes('Start here'), 'Module 1 should NOT show "Start here" when completed');
+  });
+
+  test('when modules 1+2 completed, module 3 shows "Start here"', () => {
+    const progress = {
+      modules: {
+        'mod-1': { currentLesson: 5, started: true, completed: true },
+        'mod-2': { currentLesson: 3, started: true, completed: true },
+      },
+    };
+    const output = renderModuleList(threeModules, progress, false);
+    const lines = output.split('\n');
+    const mod3Lines = lines.filter(l => l.includes('[3]'));
+    const mod3Text = mod3Lines.join(' ');
+    assert.ok(mod3Text.includes('Start here'), 'Module 3 should show "Start here" when 1+2 completed');
+  });
+
+  test('when all completed, no module shows "Start here"', () => {
+    const progress = {
+      modules: {
+        'mod-1': { currentLesson: 5, started: true, completed: true },
+        'mod-2': { currentLesson: 3, started: true, completed: true },
+        'mod-3': { currentLesson: 4, started: true, completed: true },
+      },
+    };
+    const output = renderModuleList(threeModules, progress, false);
+    assert.ok(!output.includes('Start here'), 'No module should show "Start here" when all completed');
+  });
+});
+
 // ─── renderWelcomeScreen ─────────────────────────────────────────────
 
 describe('renderWelcomeScreen', () => {

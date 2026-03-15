@@ -171,6 +171,62 @@ describe('progress.cjs', () => {
     });
   });
 
+  describe('migrateV3toV4()', () => {
+    test('v3 data with existing modules gets version bumped to 4, all module entries preserved', () => {
+      const { migrateV3toV4 } = require('../lib/progress.cjs');
+      const v3 = {
+        version: 3,
+        currentModule: 'gsd-commands',
+        currentLesson: 3,
+        modules: {
+          'gsd-commands': { currentLesson: 3, started: true, completed: false },
+          'command-lifecycle': { currentLesson: 0, started: false, completed: false },
+        },
+      };
+      const result = migrateV3toV4(v3);
+      assert.strictEqual(result.version, 4);
+      assert.strictEqual(result.currentModule, 'gsd-commands');
+      assert.strictEqual(result.currentLesson, 3);
+      assert.deepStrictEqual(result.modules['gsd-commands'], {
+        currentLesson: 3,
+        started: true,
+        completed: false,
+      });
+      assert.deepStrictEqual(result.modules['command-lifecycle'], {
+        currentLesson: 0,
+        started: false,
+        completed: false,
+      });
+    });
+
+    test('v4 data passes through unchanged (idempotent)', () => {
+      const { migrateV3toV4 } = require('../lib/progress.cjs');
+      const v4 = {
+        version: 4,
+        currentModule: 'gsd-commands',
+        currentLesson: 3,
+        modules: {
+          'gsd-commands': { currentLesson: 3, started: true, completed: true },
+        },
+      };
+      const result = migrateV3toV4(v4);
+      assert.deepStrictEqual(result, v4);
+    });
+
+    test('v3 data with no modules migrates cleanly to v4', () => {
+      const { migrateV3toV4 } = require('../lib/progress.cjs');
+      const v3 = {
+        version: 3,
+        currentModule: null,
+        currentLesson: 0,
+        modules: {},
+      };
+      const result = migrateV3toV4(v3);
+      assert.strictEqual(result.version, 4);
+      assert.deepStrictEqual(result.modules, {});
+    });
+  });
+
   describe('isFirstRun()', () => {
     test('returns true for empty modules map', () => {
       const { isFirstRun } = require('../lib/progress.cjs');
