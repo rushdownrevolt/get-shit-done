@@ -1,0 +1,26 @@
+{
+  "id": "planning-state-project",
+  "moduleId": "planning-state",
+  "title": "Build Persistent Skeptic Reviews",
+  "description": "Extend your skeptic workflow to produce persistent SKEPTIC-REVIEW.md artifacts that accumulate institutional knowledge across runs",
+  "artifacts": [
+    {
+      "description": "Skeptic workflow with artifact persistence",
+      "path": "~/.claude/get-shit-done/workflows/skeptic.md",
+      "checks": [
+        { "pattern": "<purpose>[\\s\\S]*?</purpose>", "description": "Has purpose section" },
+        { "pattern": "<process>[\\s\\S]*?</process>", "description": "Has process section" },
+        { "pattern": "SKEPTIC-REVIEW|previous.*(review|artifact)|read.*(previous|prior|existing).*(review|artifact)", "description": "Reads previous review artifact" },
+        { "pattern": "write.*SKEPTIC-REVIEW|SKEPTIC-REVIEW.*write|create.*SKEPTIC-REVIEW|save.*SKEPTIC-REVIEW|output.*SKEPTIC-REVIEW", "description": "Writes new review artifact" }
+      ]
+    },
+    {
+      "description": "Persistent skeptic review artifact",
+      "path": ".planning/SKEPTIC-REVIEW.md",
+      "checks": [
+        { "pattern": "## \\d{4}-\\d{2}-\\d{2}|Date:|Review Date:|timestamp:|\\d{4}-\\d{2}-\\d{2}", "description": "Has date or timestamp" },
+        { "pattern": "## Findings|## Observations|## Review|## Critique|findings:|observations:", "description": "Has findings or observations section" }
+      ]
+    }
+  ]
+}
