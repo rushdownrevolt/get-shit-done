@@ -2,22 +2,11 @@
 
 ## What This Is
 
-A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Currently ships two modules: GSD Commands & Workflows (markdown layer) and Command Lifecycle (Node.js layer).
+A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships two modules: GSD Commands & Workflows (markdown layer) and Command Lifecycle (Node.js layer). Features a welcome screen, module picker with progress tracking, and context-dependent navigation.
 
 ## Core Value
 
 The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-
-## Current Milestone: v2.2 Module Discovery & Welcome
-
-**Goal:** Give learners a proper introduction to GSD Learn and let them navigate between modules
-
-**Target features:**
-- Welcome experience pitching GSD and what the learner will achieve
-- Module picker with progress indicators and recommended starting point
-- Resume-where-you-left-off for returning users
-- "M" key to navigate to module page from anywhere
-- "H" key for hints on mini-project step
 
 ## Requirements
 
@@ -41,17 +30,18 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ Module 2 mini-project upgraded to full-stack skeptic build — v2.1
 - ✓ Node.js artifact verification (skeptic.cjs handler + switch case checks) — v2.1
 - ✓ Full-stack progressive hints connecting both layers — v2.1
+- ✓ Welcome screen with GSD pitch for first-time users — v2.2
+- ✓ Module picker with per-module progress and recommended flag — v2.2
+- ✓ Resume-to-last-position for returning users — v2.2
+- ✓ "M" key binding to navigate to module page from any lesson — v2.2
+- ✓ "H" key binding for hints on mini-project step — v2.2
+- ✓ Context-dependent navigation footer — v2.2
 
 ### Active
 
-<!-- Next milestone scope -->
+<!-- Next milestone scope — to be defined via /gsd:new-milestone -->
 
-- [ ] Welcome screen with GSD pitch for first-time users
-- [ ] Module picker with per-module progress and recommended flag
-- [ ] Resume-to-last-position for returning users
-- [ ] "M" key binding to navigate to module page from any lesson
-- [ ] "H" key binding for hints on mini-project step
-- [ ] Slimmer return-user message on module page
+(None — define via `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -61,7 +51,9 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - Video or multimedia content — text and code only
 - Teaching other tools — GSD only
 - Lesson content auto-updates when GSD source changes — deferred to future milestone
-- Module discovery UI — being built in v2.2
+- Arrow-key module picker — number keys match existing single-keypress patterns; only 2 modules
+- Part-level resume — resume to lesson start is sufficient; part-level adds complexity for minimal gain
+- Module progress percentage — completion state (not started / in progress / complete) is clearer than percentages
 
 ## Context
 
@@ -69,11 +61,10 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - GSD is a zero-dependency Node.js project using CommonJS modules
 - GSD's architecture has TWO layers: (1) markdown layer (slash commands + workflows) and (2) Node.js layer (gsd-tools.cjs + lib modules)
 - The codebase map at `.planning/codebase/` provides detailed architecture, stack, conventions, and structure docs
-- v1.0 proved the teaching model works with Command Lifecycle module
-- v2.0 added GSD Commands & Workflows as Module 1, teaching the simpler markdown layer first
-- Shipped: ~6,885 LOC (Node.js/JSON), 2 modules, 12 lessons total, 2 full-stack mini-projects
-- Both mini-projects now validate real artifacts (Module 1: markdown layer, Module 2: full-stack 4-layer)
+- Shipped: ~6,358 LOC (Node.js/JSON), 2 modules, 12 lessons total, 2 full-stack mini-projects
+- 113 tests passing across renderer, navigator, progress, verifier, hints, and feedback modules
 - 13 pre-existing clipboard-formatter test failures carried from v1.0 (non-blocking)
+- All v2.2 phases Nyquist-compliant (automated test coverage verified for all requirements)
 
 ## Constraints
 
@@ -97,6 +88,11 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Nested XML extraction in parser | Recursive regex handles GSD workflow format cleanly without DOM parser | ✓ Good |
 | Full-stack mini-project for Module 2 | Learner builds all 4 layers (command.md, workflow.md, skeptic.cjs, switch case) | ✓ Good |
 | Cross-module spec carry-forward | Module 2 spec carries all Module 1 checks verbatim for continuity | ✓ Good |
+| Hub-and-spoke navigation | Module picker as central hub simplifies all entry/exit paths | ✓ Good |
+| Shared renderModuleList | Single renderer for welcome and picker eliminates UI duplication (DISC-04) | ✓ Good |
+| Inline hints via stdout.write | No screen clear on H key; hints accumulate below content naturally | ✓ Good |
+| Chained progress migrations | v1→v2→v3 chain in loadProgress ensures zero data loss across versions | ✓ Good |
+| Action variable dispatch pattern | Dispatch loop uses action variable for extensibility (welcome/picker/navigate) | ✓ Good |
 
 ---
-*Last updated: 2026-03-12 after v2.2 milestone start*
+*Last updated: 2026-03-14 after v2.2 milestone*

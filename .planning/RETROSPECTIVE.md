@@ -2,6 +2,51 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v2.2 — Module Discovery & Welcome
+
+**Shipped:** 2026-03-14
+**Phases:** 3 | **Plans:** 6 | **Sessions:** ~2
+
+### What Was Built
+- Welcome screen with GSD pitch for first-time users
+- Module picker with numbered selection, progress indicators, and "Start here" flag
+- Resume-to-last-position via v3 progress schema with chained v1→v2→v3 migration
+- M key to return to module picker from any lesson (saves progress before switching)
+- H key for progressive inline hints on mini-project steps (persists across sessions via feedback events)
+- Context-dependent navigation footer with dynamic key labels
+
+### What Worked
+- Hub-and-spoke architecture (module picker as central hub) simplified all navigation paths
+- Shared renderModuleList between welcome and picker eliminated duplication cleanly (DISC-04)
+- All 3 phases reached Nyquist compliance with 113/113 tests — best test coverage yet
+- Retroactive verification of phases 01.1 and 03 cleaned up v1.0 gaps without code changes
+- Integration checker confirmed all 11 requirements wired end-to-end before completion
+
+### What Was Inefficient
+- Phase 10 VERIFICATION.md was missing — caught by milestone audit, required extra verifier run
+- SUMMARY.md frontmatter `requirements_completed` field was empty across all 6 plans — 3-source cross-reference fell back to 2 sources
+- VALIDATION.md files created in draft state during planning but never updated during execution — had to run validate-phase for all 3 phases at audit time
+- Milestone completion ran twice (CLI + manual), creating duplicate MILESTONES.md entry that needed manual cleanup
+
+### Patterns Established
+- Action variable dispatch pattern in gsd-learn.cjs for extensible screen routing
+- Inline stdout.write for hints (no screen clear) — accumulative display in terminal
+- Feedback events for cross-session state (hint count persistence)
+- isFirstRun as pure function for testability
+
+### Key Lessons
+1. VERIFICATION.md should never be skipped during execute-phase — Phase 10's missing file cost an extra audit cycle
+2. Nyquist validation at audit time works but is slower than doing it during execution — validate-phase should be part of the execute-phase flow
+3. Hub-and-spoke navigation is the right pattern for multi-module CLI tools — all transitions funnel through one central screen
+4. 113 tests with zero failures (excluding pre-existing) across 3 phases proves TDD discipline pays off at scale
+
+### Cost Observations
+- Model mix: ~60% opus (executor, orchestrator), ~40% sonnet (verifier, integration checker, nyquist auditor)
+- Sessions: ~2
+- Notable: 6 plans in ~12 min execution (avg 2min/plan) — fastest per-plan velocity yet
+
+---
+
 ## Milestone: v2.1 — Full-Stack Mini-Project
 
 **Shipped:** 2026-03-13
@@ -130,18 +175,21 @@
 | v1.0 | ~5 | 6 | 13 | Established TDD, atomic commits, SUMMARY.md pattern |
 | v2.0 | ~3 | 3 | 6 | Coarse granularity, infrastructure-first, milestone audit |
 | v2.1 | 1 | 2 | 2 | Focused content update, cross-module verification |
+| v2.2 | ~2 | 3 | 6 | Full Nyquist compliance, integration checker, hub-and-spoke nav |
 
 ### Cumulative Quality
 
-| Milestone | Tests | Known Failures | Zero-Dep Additions |
+| Milestone | Tests | Known Failures | Nyquist Compliant |
 |-----------|-------|----------------|-------------------|
-| v1.0 | ~50 | 13 (clipboard) | 0 |
-| v2.0 | ~71 | 13 (clipboard, carried) | 0 |
-| v2.1 | ~71 | 13 (clipboard, carried) | 0 |
+| v1.0 | ~50 | 13 (clipboard) | No |
+| v2.0 | ~71 | 13 (clipboard, carried) | No (draft) |
+| v2.1 | ~71 | 13 (clipboard, carried) | No (draft) |
+| v2.2 | 113 | 13 (clipboard, carried) | Yes (3/3 phases) |
 
 ### Top Lessons (Verified Across Milestones)
 
-1. Infrastructure phases that produce clean APIs make all subsequent phases faster — validated in both v1.0 (Phase 1 → Phase 2-3) and v2.0 (Phase 4 → Phase 5-6)
+1. Infrastructure phases that produce clean APIs make all subsequent phases faster — validated in v1.0, v2.0, and v2.2 (Phase 9 architecture → Phase 10-11 UI)
 2. Real source code in lessons is essential for authenticity — both modules use actual GSD source snippets
-3. Stale bookkeeping is the #1 process gap — milestone audits catch what execution misses
-4. Small focused milestones execute faster per-plan than large ones (v2.1: 2.5min/plan vs v1.0: 3.5min/plan)
+3. Stale bookkeeping is the #1 process gap — milestone audits catch what execution misses (v2.0 checkboxes, v2.2 missing VERIFICATION.md)
+4. Small focused milestones execute faster per-plan than large ones (v2.2: 2min/plan vs v1.0: 3.5min/plan)
+5. Hub-and-spoke navigation simplifies CLI tool design — all transitions through one central screen

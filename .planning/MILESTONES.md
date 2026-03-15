@@ -1,4 +1,33 @@
 # Milestones: GSD Learn
+
+## v2.2 — Module Discovery & Welcome (Shipped: 2026-03-14)
+
+**Completed:** 2026-03-14
+**Phases:** 9, 10, 11 (3 phases, 6 plans)
+**Last phase number:** 11
+
+**What shipped:**
+- Welcome screen with GSD pitch for first-time users, communicating what they'll build
+- Module picker with per-module progress indicators and "Start here" recommended flag
+- Resume-to-last-position for returning users via v3 progress schema with chained migration
+- "M" key binding to navigate to module page from any lesson (saves progress before switching)
+- "H" key binding for progressive inline hints on mini-project steps (persists across sessions)
+- Context-dependent navigation footer showing available keys based on current screen
+
+**Requirements completed:** WELC-01, WELC-02, WELC-03, DISC-01, DISC-02, DISC-03, DISC-04, NAV-01, NAV-02, NAV-03, NAV-04
+
+**Key learnings:**
+- Hub-and-spoke architecture (module picker as central navigation hub) simplifies all entry/exit paths
+- Shared renderer pattern (renderModuleList) eliminates UI duplication between welcome and picker
+- Inline hints via stdout.write (no screen clear) feels natural in terminal context
+- All 3 phases Nyquist-compliant with 113/113 tests passing
+
+**Tech debt carried forward:**
+- 13 pre-existing clipboard-formatter.test.cjs failures (from v1.0 Phase 02.1)
+- `--hint` CLI flag path lacks try/catch around hints.json read (latent crash)
+
+---
+
 ## v2.1 — Full-Stack Mini-Project (Shipped: 2026-03-13)
 
 **Completed:** 2026-03-13
