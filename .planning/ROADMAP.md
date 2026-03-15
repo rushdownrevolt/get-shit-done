@@ -146,7 +146,7 @@ Plans:
 | 12. Module 3 Infrastructure & First Lessons | v3.0 | 3/3 | Complete | 2026-03-15 |
 | 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 14. State, Milestones & Bridge Lessons | v3.0 | Complete    | 2026-03-15 | 2026-03-15 |
-| 15. Planning Mini-Project | 2/2 | Complete   | 2026-03-15 | - |
+| 15. Planning Mini-Project | 2/2 | Complete    | 2026-03-15 | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
