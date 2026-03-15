@@ -264,6 +264,7 @@ async function main() {
         hints: moduleHints,
         hintsUsed: initialHintsUsed,
         recordHintFn: recordHintFn,
+        moduleDir: moduleDir,
       });
 
       if (result.reason === 'quit') {

@@ -84,6 +84,7 @@ function waitForKey() {
  * @param {object} [opts] - Optional settings.
  * @param {object} [opts.moduleMeta] - { title, lessonCount } for completion banner.
  * @param {function} [opts.completionBannerFn] - renderCompletionBanner function.
+ * @param {string} [opts.moduleDir] - Absolute path to module directory (for clipboard concept map).
  */
 async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts) {
   setupCleanExit();
@@ -151,7 +152,7 @@ async function runNavigationLoop(lessons, startIndex, renderFn, progressFn, opts
       } else if (action === 'copy') {
         const { formatLessonForClipboard } = require('./clipboard-formatter.cjs');
         const { copyToClipboard } = require('./clipboard.cjs');
-        const markdown = formatLessonForClipboard(lesson, currentLesson, totalLessons);
+        const markdown = formatLessonForClipboard(lesson, currentLesson, totalLessons, opts && opts.moduleDir);
         const result = copyToClipboard(markdown);
         process.stdout.write('\x1b[2J\x1b[H'); // clear screen
         if (result.success) {
