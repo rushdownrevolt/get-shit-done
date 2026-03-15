@@ -84,11 +84,11 @@
   3. Each module doc includes the mini-project spec with verification checks listed, followed by progressive hints
   4. Each module doc includes the concept map rendered as ASCII diagram
   5. Re-running the script on unchanged JSON produces identical output (idempotent regeneration)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 16-01: TBD
-- [ ] 16-02: TBD
+- [ ] 16-01-PLAN.md — TDD markdown renderer (lesson, project, hints, concept-map rendering)
+- [ ] 16-02-PLAN.md — Export script orchestration and end-to-end verification
 
 ### Phase 17: Master Document & Commit
 **Goal**: An AI can read one file to learn the complete GSD curriculum, and all generated docs are committed to the repo
@@ -130,7 +130,7 @@ Phases execute in numeric order: 16 -> 17
 | 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 14. State, Milestones & Bridge Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
-| 16. Per-Module Export | v4.0 | 0/? | Not started | - |
+| 16. Per-Module Export | v4.0 | 0/2 | Not started | - |
 | 17. Master Document & Commit | v4.0 | 0/? | Not started | - |
 
 ---
