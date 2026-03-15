@@ -1,10 +1,10 @@
 ---
 gsd_state_version: 1.0
-milestone: null
-milestone_name: null
-status: between_milestones
+milestone: v3.0
+milestone_name: Planning & State Module
+status: defining_requirements
 last_updated: "2026-03-14"
-last_activity: 2026-03-14 — Completed v2.2 Module Discovery & Welcome milestone
+last_activity: 2026-03-14 — Milestone v3.0 started
 progress:
   total_phases: 0
   completed_phases: 0
@@ -20,12 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-14)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Planning next milestone
+**Current focus:** Defining requirements for v3.0 Planning & State Module
 
 ## Current Position
 
-Between milestones. v2.2 shipped 2026-03-14.
-Next action: `/gsd:new-milestone`
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-14 — Milestone v3.0 started
 
 ## Performance Metrics
 

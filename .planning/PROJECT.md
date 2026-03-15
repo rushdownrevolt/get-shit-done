@@ -37,11 +37,18 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ "H" key binding for hints on mini-project step — v2.2
 - ✓ Context-dependent navigation footer — v2.2
 
+## Current Milestone: v3.0 Planning & State Module
+
+**Goal:** Teach how GSD's planning system works — from project definition through milestone lifecycle — so learners can plan and structure their own work using GSD artifacts.
+
+**Target features:**
+- Module 3: Planning & State (lessons covering the full planning lifecycle)
+- Mini-project: learner creates planning artifacts (PROJECT.md, requirements, roadmap)
+- Content parsed from GSD's actual planning templates and workflow files
+
 ### Active
 
-<!-- Next milestone scope — to be defined via /gsd:new-milestone -->
-
-(None — define via `/gsd:new-milestone`)
+<!-- Next milestone scope -->
 
 ### Out of Scope
 
@@ -95,4 +102,4 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Action variable dispatch pattern | Dispatch loop uses action variable for extensibility (welcome/picker/navigate) | ✓ Good |
 
 ---
-*Last updated: 2026-03-14 after v2.2 milestone*
+*Last updated: 2026-03-14 after v3.0 milestone start*
