@@ -1,0 +1,64 @@
+{
+  "id": "project-definition",
+  "title": "PROJECT.md: The Identity Card",
+  "lessonNumber": 2,
+  "objective": "Understand PROJECT.md anatomy -- its six sections, how Core Value drives prioritization, and how this artifact feeds all downstream planning",
+  "content": [
+    {
+      "type": "text",
+      "value": "PROJECT.md is the project's identity card. It's created by /gsd:kickoff and is the FIRST artifact in any GSD project. Everything downstream -- REQUIREMENTS.md, ROADMAP.md, STATE.md, and every plan file -- traces back to what PROJECT.md defines. It answers three questions: What is this? Why does it matter? What are the boundaries? Every GSD project starts here, and the document lives at .planning/PROJECT.md throughout the project's lifecycle.",
+      "focus": "PROJECT.md as the project identity card",
+      "bridge": "Let's look at its structure section by section."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "## What This Is\n\n[Current accurate description -- 2-3 sentences.\nWhat does this product do and who is it for?\nUse the user's language and framing.\nUpdate whenever reality drifts from this description.]\n\n## Core Value\n\n[The ONE thing that matters most.\nIf everything else fails, this must work.\nOne sentence that drives prioritization when tradeoffs arise.]",
+      "highlight": [9]
+    },
+    {
+      "type": "text",
+      "value": "Core Value is the tiebreaker. When two features compete for priority, Core Value decides. When scope creeps, Core Value is the filter. It's one sentence -- not a paragraph, not a list. The discipline of one sentence forces clarity. For example, if Core Value is \"Users can find products in under 3 seconds\", that tells you search performance beats visual polish every time. If a designer wants a richer product page but it slows search results, Core Value has already made the call.",
+      "focus": "Core Value as the prioritization tiebreaker",
+      "bridge": "Below Core Value, PROJECT.md tracks what to build and what to ignore."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "## Requirements\n\n### Validated\n\n<!-- Shipped and confirmed valuable. -->\n\n(None yet -- ship to validate)\n\n### Active\n\n<!-- Current scope. Building toward these. -->\n\n- [ ] [Requirement 1]\n- [ ] [Requirement 2]\n- [ ] [Requirement 3]\n\n### Out of Scope\n\n<!-- Explicit boundaries. Includes reasoning to prevent re-adding. -->\n\n- [Exclusion 1] -- [why]\n- [Exclusion 2] -- [why]",
+      "highlight": [3, 10, 20]
+    },
+    {
+      "type": "text",
+      "value": "The three-tier requirements structure tracks lifecycle, not just current state. \"Active\" is what you're building now -- these are hypotheses until shipped. \"Validated\" is what shipped and users confirmed works -- these are locked. \"Out of Scope\" includes reasoning so you don't re-add things you already decided against. Requirements flow from Active to Validated as you ship, and from Active to Out of Scope when you cut. This movement is tracked, creating a history of what was built, what worked, and what was deliberately excluded.",
+      "focus": "Three-tier requirement lifecycle",
+      "bridge": "PROJECT.md also captures the environment and constraints around these requirements."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "## Context\n\n[Background information that informs implementation:\n- Technical environment or ecosystem\n- Relevant prior work or experience\n- User research or feedback themes\n- Known issues to address]\n\n## Constraints\n\n- **[Type]**: [What] -- [Why]\n- **[Type]**: [What] -- [Why]\n\nCommon types: Tech stack, Timeline, Budget,\nDependencies, Compatibility, Performance, Security\n\n## Key Decisions\n\n<!-- Decisions that constrain future work. -->\n\n| Decision | Rationale | Outcome |\n|----------|-----------|---------|\n| [Choice] | [Why]     | [Good / Revisit / Pending] |",
+      "highlight": [21]
+    },
+    {
+      "type": "text",
+      "value": "Key Decisions is institutional memory. When Claude or a future developer asks \"why did we do X?\", the answer lives here -- not in someone's head, not in a Slack thread. The table captures WHAT was decided, WHY (the rationale), and the OUTCOME (whether it proved correct, needs revisiting, or is still pending evaluation). This prevents relitigating settled decisions and gives context to anyone reading the project cold. Constraints serve a similar purpose: they document hard limits on implementation so no one wastes time exploring solutions that violate known boundaries.",
+      "focus": "Key Decisions as institutional memory",
+      "bridge": "PROJECT.md isn't a static document -- it evolves."
+    },
+    {
+      "type": "text",
+      "value": "PROJECT.md updates when: scope changes (requirements added or removed), reality drifts from the description (\"What This Is\" becomes inaccurate), key decisions are made, or constraints change. The /gsd:kickoff command creates it, but every phase can update it. After each phase transition, GSD checks: Were requirements invalidated? Move to Out of Scope with a reason. Were requirements validated? Move to Validated with a phase reference. After each milestone, there's a full review -- is Core Value still the right priority? Are Out of Scope reasons still valid? The template guidance comments visible in the code blocks above tell you WHEN and HOW to update each section.",
+      "focus": "Evolution triggers keep PROJECT.md alive",
+      "bridge": "So how does PROJECT.md connect to the rest of the planning system?"
+    },
+    {
+      "type": "text",
+      "value": "PROJECT.md feeds every downstream artifact. REQUIREMENTS.md expands the Active requirements into detailed, traceable items with IDs and acceptance criteria. ROADMAP.md sequences those requirements into phases and milestones. STATE.md references PROJECT.md for current focus and core value -- it's the first thing Claude reads to understand project context. Even plan verification connects back: must_haves in plan files trace to whether they serve the Core Value. The chain is PROJECT.md -> REQUIREMENTS.md -> ROADMAP.md -> phase plans -> STATE.md, with PROJECT.md as the root that everything else derives from.",
+      "focus": "PROJECT.md as the source for all downstream artifacts",
+      "bridge": "In the next lesson, we'll follow this chain into REQUIREMENTS.md and ROADMAP.md."
+    }
+  ],
+  "conceptMap": "project-definition",
+  "successCriteria": "You can list the six sections of PROJECT.md and explain how Core Value serves as the prioritization tiebreaker and how requirements flow through the three-tier lifecycle (Active -> Validated, Active -> Out of Scope)."
+}
