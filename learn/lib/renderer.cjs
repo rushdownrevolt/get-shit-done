@@ -434,8 +434,19 @@ function renderModuleList(modules, progressData, isFirstRun) {
       const lessonNum = modProgress.currentLesson + 1;
       const total = mod.lessonCount || '?';
       status = style(' Lesson ' + lessonNum + ' of ' + total, 'yellow');
-    } else if (i === 0 && (isFirstRun || !modProgress || !modProgress.started)) {
-      status = style(' Start here', 'cyan');
+    } else {
+      // Show "Start here" on the first uncompleted module (if all previous are completed)
+      const isRecommended = (() => {
+        if (modProgress && modProgress.completed) return false;
+        for (let j = 0; j < i; j++) {
+          const prevProgress = progressData.modules && progressData.modules[modules[j].id];
+          if (!prevProgress || !prevProgress.completed) return false;
+        }
+        return true;
+      })();
+      if (isRecommended && (isFirstRun || !modProgress || !modProgress.started)) {
+        status = style(' Start here', 'cyan');
+      }
     }
 
     parts.push('  [' + num + '] ' + style(mod.title, 'bold') + status + '\n');
@@ -462,7 +473,7 @@ function renderWelcomeScreen(modules, progressData) {
   parts.push(horizontalRule(60));
   parts.push('\n\n');
   parts.push('  Learn to build your own AI workflows.\n');
-  parts.push('  Two modules. Real GSD source code.\n');
+  parts.push('  Real GSD source code. Hands-on projects.\n');
   parts.push('  By the end, you\'ll ship a custom command from scratch.\n');
   parts.push('\n');
   parts.push(horizontalRule(60));

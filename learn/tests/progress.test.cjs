@@ -18,10 +18,10 @@ describe('progress.cjs', () => {
   });
 
   describe('loadProgress()', () => {
-    test('returns v3 default object when file missing', () => {
+    test('returns v4 default object when file missing', () => {
       const { loadProgress } = require('../lib/progress.cjs');
       const result = loadProgress(tmpDir);
-      assert.strictEqual(result.version, 3);
+      assert.strictEqual(result.version, 4);
       assert.strictEqual(result.currentModule, null);
       assert.strictEqual(result.currentLesson, 0);
       assert.deepStrictEqual(result.modules, {});
@@ -33,7 +33,7 @@ describe('progress.cjs', () => {
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(path.join(dir, 'progress.json'), 'not valid json {{{{');
       const result = loadProgress(tmpDir);
-      assert.strictEqual(result.version, 3);
+      assert.strictEqual(result.version, 4);
       assert.strictEqual(result.currentModule, null);
       assert.strictEqual(result.currentLesson, 0);
       assert.deepStrictEqual(result.modules, {});
@@ -43,9 +43,9 @@ describe('progress.cjs', () => {
       const { loadProgress } = require('../lib/progress.cjs');
       const dir = path.join(tmpDir, '.planning', 'learn');
       fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(path.join(dir, 'progress.json'), JSON.stringify({ version: 3 }));
+      fs.writeFileSync(path.join(dir, 'progress.json'), JSON.stringify({ version: 4 }));
       const result = loadProgress(tmpDir);
-      assert.strictEqual(result.version, 3);
+      assert.strictEqual(result.version, 4);
       assert.strictEqual(result.currentModule, null);
       assert.strictEqual(result.currentLesson, 0);
       assert.deepStrictEqual(result.modules, {});
@@ -230,14 +230,14 @@ describe('progress.cjs', () => {
   describe('isFirstRun()', () => {
     test('returns true for empty modules map', () => {
       const { isFirstRun } = require('../lib/progress.cjs');
-      const progress = { version: 3, currentModule: null, currentLesson: 0, modules: {} };
+      const progress = { version: 4, currentModule: null, currentLesson: 0, modules: {} };
       assert.strictEqual(isFirstRun(progress), true);
     });
 
     test('returns true when all module entries have started: false', () => {
       const { isFirstRun } = require('../lib/progress.cjs');
       const progress = {
-        version: 3,
+        version: 4,
         currentModule: null,
         currentLesson: 0,
         modules: {
@@ -250,7 +250,7 @@ describe('progress.cjs', () => {
     test('returns false when any module entry has started: true', () => {
       const { isFirstRun } = require('../lib/progress.cjs');
       const progress = {
-        version: 3,
+        version: 4,
         currentModule: 'gsd-commands',
         currentLesson: 3,
         modules: {
@@ -262,7 +262,7 @@ describe('progress.cjs', () => {
   });
 
   describe('loadProgress() with v1 data on disk', () => {
-    test('auto-migrates v1 file through v1->v2->v3 and writes back', () => {
+    test('auto-migrates v1 file through v1->v2->v3->v4 and writes back', () => {
       const { loadProgress } = require('../lib/progress.cjs');
       const dir = path.join(tmpDir, '.planning', 'learn');
       fs.mkdirSync(dir, { recursive: true });
@@ -275,38 +275,38 @@ describe('progress.cjs', () => {
       fs.writeFileSync(path.join(dir, 'progress.json'), JSON.stringify(v1Data));
 
       const result = loadProgress(tmpDir);
-      assert.strictEqual(result.version, 3);
+      assert.strictEqual(result.version, 4);
       assert.deepStrictEqual(result.modules, {
         'command-lifecycle': { currentLesson: 5, started: true, completed: false },
       });
 
-      // Verify it was written back to disk as v3
+      // Verify it was written back to disk as v4
       const onDisk = JSON.parse(fs.readFileSync(path.join(dir, 'progress.json'), 'utf-8'));
-      assert.strictEqual(onDisk.version, 3);
+      assert.strictEqual(onDisk.version, 4);
       assert.deepStrictEqual(onDisk.modules, {
         'command-lifecycle': { currentLesson: 5, started: true, completed: false },
       });
     });
 
-    test('does not rewrite v3 data', () => {
+    test('does not rewrite v4 data', () => {
       const { loadProgress } = require('../lib/progress.cjs');
       const dir = path.join(tmpDir, '.planning', 'learn');
       fs.mkdirSync(dir, { recursive: true });
-      const v3Data = {
-        version: 3,
+      const v4Data = {
+        version: 4,
         currentModule: 'command-lifecycle',
         currentLesson: 3,
         modules: { 'command-lifecycle': { currentLesson: 3, started: true, completed: false } },
       };
-      fs.writeFileSync(path.join(dir, 'progress.json'), JSON.stringify(v3Data));
+      fs.writeFileSync(path.join(dir, 'progress.json'), JSON.stringify(v4Data));
 
       const result = loadProgress(tmpDir);
-      assert.deepStrictEqual(result, v3Data);
+      assert.deepStrictEqual(result, v4Data);
     });
   });
 
   describe('loadProgress() with v2 data on disk', () => {
-    test('auto-migrates v2 file to v3 and writes back', () => {
+    test('auto-migrates v2 file to v4 and writes back', () => {
       const { loadProgress } = require('../lib/progress.cjs');
       const dir = path.join(tmpDir, '.planning', 'learn');
       fs.mkdirSync(dir, { recursive: true });
@@ -319,7 +319,7 @@ describe('progress.cjs', () => {
       fs.writeFileSync(path.join(dir, 'progress.json'), JSON.stringify(v2Data));
 
       const result = loadProgress(tmpDir);
-      assert.strictEqual(result.version, 3);
+      assert.strictEqual(result.version, 4);
       assert.deepStrictEqual(result.modules['gsd-commands'], {
         currentLesson: 3,
         started: true,
@@ -328,14 +328,14 @@ describe('progress.cjs', () => {
 
       // Verify persisted to disk
       const onDisk = JSON.parse(fs.readFileSync(path.join(dir, 'progress.json'), 'utf-8'));
-      assert.strictEqual(onDisk.version, 3);
+      assert.strictEqual(onDisk.version, 4);
     });
   });
 
   describe('saveProgress()', () => {
     test('writes JSON to .planning/learn/progress.json creating directories', () => {
       const { saveProgress } = require('../lib/progress.cjs');
-      const data = { version: 3, currentModule: 'test', currentLesson: 2, modules: {} };
+      const data = { version: 4, currentModule: 'test', currentLesson: 2, modules: {} };
       saveProgress(tmpDir, data);
       const filePath = path.join(tmpDir, '.planning', 'learn', 'progress.json');
       assert.ok(fs.existsSync(filePath), 'progress.json should exist');
@@ -345,10 +345,10 @@ describe('progress.cjs', () => {
   });
 
   describe('round-trip', () => {
-    test('loadProgress after saveProgress returns the same v3 data', () => {
+    test('loadProgress after saveProgress returns the same v4 data', () => {
       const { loadProgress, saveProgress } = require('../lib/progress.cjs');
       const data = {
-        version: 3,
+        version: 4,
         currentModule: 'command-lifecycle',
         currentLesson: 3,
         modules: {

@@ -6,7 +6,7 @@ const path = require('path');
 const PROGRESS_PATH = path.join('.planning', 'learn', 'progress.json');
 
 const DEFAULT_PROGRESS = {
-  version: 3,
+  version: 4,
   currentModule: null,
   currentLesson: 0,
   modules: {},
@@ -72,6 +72,27 @@ function migrateV2toV3(progress) {
 }
 
 /**
+ * Migrate v3 progress data to v4 schema.
+ * Structural version bump to support Module 3 tracking.
+ * If already v4 or higher, returns unchanged (idempotent).
+ *
+ * @param {object} progress - Progress object to migrate.
+ * @returns {object} Migrated progress object (v4).
+ */
+function migrateV3toV4(progress) {
+  if (progress.version >= 4) {
+    return progress;
+  }
+
+  return {
+    version: 4,
+    currentModule: progress.currentModule,
+    currentLesson: progress.currentLesson,
+    modules: { ...progress.modules },
+  };
+}
+
+/**
  * Determine if this is the user's first run.
  * Returns true if no module has been started yet.
  *
@@ -105,6 +126,11 @@ function loadProgress(cwd) {
     // Auto-migrate v2 to v3
     if (progress.version < 3) {
       progress = migrateV2toV3(progress);
+    }
+
+    // Auto-migrate v3 to v4
+    if (progress.version < 4) {
+      progress = migrateV3toV4(progress);
       saveProgress(cwd, progress);
     }
 
@@ -121,4 +147,4 @@ function saveProgress(cwd, progress) {
   fs.writeFileSync(filePath, JSON.stringify(progress, null, 2), 'utf-8');
 }
 
-module.exports = { loadProgress, saveProgress, migrateV1toV2, migrateV2toV3, isFirstRun };
+module.exports = { loadProgress, saveProgress, migrateV1toV2, migrateV2toV3, migrateV3toV4, isFirstRun };
