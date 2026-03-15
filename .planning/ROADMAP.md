@@ -78,9 +78,9 @@
   4. Progress tracking works for Module 3 lessons (v4 schema migration applied)
 **Plans**: 3 plans
 Plans:
-- [ ] 12-01-PLAN.md — Register Module 3, progress migration v3->v4, fix module picker recommended logic
-- [ ] 12-02-PLAN.md — Create Lesson 1: Planning Overview (.planning/ directory structure and lifecycle)
-- [ ] 12-03-PLAN.md — Create Lesson 2: PROJECT.md anatomy and downstream feeding
+- [x] 12-01-PLAN.md — Register Module 3, progress migration v3->v4, fix module picker recommended logic
+- [x] 12-02-PLAN.md — Create Lesson 1: Planning Overview (.planning/ directory structure and lifecycle)
+- [x] 12-03-PLAN.md — Create Lesson 2: PROJECT.md anatomy and downstream feeding
 
 ### Phase 13: Requirements, Roadmap & Phase Lifecycle Lessons
 **Goal**: Learner understands how requirements become phases and how phases execute, through Lessons 3-4
@@ -92,10 +92,9 @@ Plans:
   3. Learner can complete Lesson 4 which teaches the phase execution cycle (context, research, plan, execute, verify), PLAN.md anatomy, and SUMMARY.md/VERIFICATION.md as execution records
   4. Lesson 4 content is parsed from GSD's actual templates/plan.md, summary.md, and workflows
 **Plans**: 2 plans
-
 Plans:
-- [ ] 13-01-PLAN.md — Create Lesson 3: Requirements and Roadmap (REQUIREMENTS.md structure, ROADMAP.md structure, traceability chain)
-- [ ] 13-02-PLAN.md — Create Lesson 4: Phase Lifecycle (execution cycle, PLAN.md anatomy, SUMMARY.md and VERIFICATION.md)
+- [x] 13-01-PLAN.md — Create Lesson 3: Requirements and Roadmap (REQUIREMENTS.md structure, ROADMAP.md structure, traceability chain)
+- [x] 13-02-PLAN.md — Create Lesson 4: Phase Lifecycle (execution cycle, PLAN.md anatomy, SUMMARY.md and VERIFICATION.md)
 
 ### Phase 14: State, Milestones & Bridge Lessons
 **Goal**: Learner understands the full planning lifecycle from live state tracking through milestone completion, and can synthesize all concepts into one mental model
@@ -107,10 +106,9 @@ Plans:
   3. Learner can complete Lesson 6 which synthesizes all planning concepts and prepares them for the mini-project
   4. After Lesson 6, learner has a connected mental model of how a real GSD project flows from idea through shipped milestone
 **Plans**: 2 plans
-
 Plans:
-- [ ] 13-01-PLAN.md — Create Lesson 3: Requirements and Roadmap (REQUIREMENTS.md structure, ROADMAP.md structure, traceability chain)
-- [ ] 13-02-PLAN.md — Create Lesson 4: Phase Lifecycle (execution cycle, PLAN.md anatomy, SUMMARY.md and VERIFICATION.md)
+- [ ] 14-01-PLAN.md — Create Lesson 5: State Tracking and Milestone Lifecycle (STATE.md structure, milestone completion, archival, retrospective)
+- [ ] 14-02-PLAN.md — Create Lesson 6: Bridge to Practice (synthesis of all concepts, artifact flow, mini-project preparation)
 
 ### Phase 15: Planning Mini-Project
 **Goal**: Learner builds a persistent-artifact skeptic command that accumulates institutional knowledge across runs
@@ -122,10 +120,9 @@ Plans:
   3. Five progressive hints guide the learner from conceptual (why artifacts persist state) to specific (read/write patterns)
   4. The completed mini-project produces a skeptic command that writes persistent SKEPTIC-REVIEW.md artifacts and reads previous ones for continuity
 **Plans**: 2 plans
-
 Plans:
-- [ ] 13-01-PLAN.md — Create Lesson 3: Requirements and Roadmap (REQUIREMENTS.md structure, ROADMAP.md structure, traceability chain)
-- [ ] 13-02-PLAN.md — Create Lesson 4: Phase Lifecycle (execution cycle, PLAN.md anatomy, SUMMARY.md and VERIFICATION.md)
+- [ ] 15-01-PLAN.md — Create mini-project lesson with artifact-persistence template and structural verification
+- [ ] 15-02-PLAN.md — Create progressive hints for mini-project
 
 ## Progress
 
@@ -146,10 +143,10 @@ Plans:
 | 10. Welcome Screen & Module Picker | v2.2 | 2/2 | Complete | 2026-03-13 |
 | 11. Key Bindings & Navigation Footer | v2.2 | 2/2 | Complete | 2026-03-14 |
 | 11.1. Improve Module 1 mini-project | v2.3 | 1/1 | Complete | 2026-03-15 |
-| 12. Module 3 Infrastructure & First Lessons | 3/3 | Complete    | 2026-03-15 | - |
-| 13. Requirements, Roadmap & Phase Lifecycle Lessons | 2/2 | Complete    | 2026-03-15 | - |
-| 14. State, Milestones & Bridge Lessons | v3.0 | 0/0 | Not started | - |
-| 15. Planning Mini-Project | v3.0 | 0/0 | Not started | - |
+| 12. Module 3 Infrastructure & First Lessons | v3.0 | 3/3 | Complete | 2026-03-15 |
+| 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
+| 14. State, Milestones & Bridge Lessons | v3.0 | 0/2 | Not started | - |
+| 15. Planning Mini-Project | v3.0 | 0/2 | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
