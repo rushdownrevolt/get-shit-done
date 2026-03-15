@@ -73,7 +73,7 @@ Plans:
 | 9. Navigation Architecture & Progress Foundation | v2.2 | 2/2 | Complete | 2026-03-13 |
 | 10. Welcome Screen & Module Picker | v2.2 | 2/2 | Complete | 2026-03-13 |
 | 11. Key Bindings & Navigation Footer | v2.2 | 2/2 | Complete | 2026-03-14 |
-| 11.1. Improve Module 1 mini-project to provide skeptic workflow template | 1/1 | Complete   | 2026-03-15 | — |
+| 11.1. Improve Module 1 mini-project to provide skeptic workflow template | 1/1 | Complete    | 2026-03-15 | — |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
