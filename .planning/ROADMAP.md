@@ -130,7 +130,7 @@ Phases execute in numeric order: 16 -> 17
 | 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 14. State, Milestones & Bridge Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
-| 16. Per-Module Export | 2/2 | Complete   | 2026-03-15 | - |
+| 16. Per-Module Export | 2/2 | Complete    | 2026-03-15 | - |
 | 17. Master Document & Commit | v4.0 | 0/? | Not started | - |
 
 ---
