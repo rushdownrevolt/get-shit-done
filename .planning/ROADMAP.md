@@ -87,8 +87,8 @@
 **Plans**: 2 plans
 
 Plans:
-- [ ] 16-01-PLAN.md — TDD markdown renderer (lesson, project, hints, concept-map rendering)
-- [ ] 16-02-PLAN.md — Export script orchestration and end-to-end verification
+- [x] 16-01-PLAN.md — TDD markdown renderer (lesson, project, hints, concept-map rendering)
+- [x] 16-02-PLAN.md — Export script orchestration and end-to-end verification
 
 ### Phase 17: Master Document & Commit
 **Goal**: An AI can read one file to learn the complete GSD curriculum, and all generated docs are committed to the repo
@@ -99,10 +99,10 @@ Plans:
   2. README includes a table of contents with links to each module section and lesson
   3. README is self-contained — an AI reading only this file understands the complete GSD curriculum
   4. Both the export script (`learn/bin/export-docs.cjs`) and all generated docs (`docs/ai-curriculum/`) are committed to the repo
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 17-01: TBD
+- [ ] 17-01-PLAN.md — Master README generation with TOC and commit all output
 
 ## Progress
 
@@ -130,8 +130,8 @@ Phases execute in numeric order: 16 -> 17
 | 13. Requirements, Roadmap & Phase Lifecycle Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 14. State, Milestones & Bridge Lessons | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
-| 16. Per-Module Export | 2/2 | Complete    | 2026-03-15 | - |
-| 17. Master Document & Commit | v4.0 | 0/? | Not started | - |
+| 16. Per-Module Export | v4.0 | 2/2 | Complete | 2026-03-15 |
+| 17. Master Document & Commit | v4.0 | 0/1 | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
