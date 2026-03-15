@@ -1,4 +1,25 @@
 # Milestones: GSD Learn
+## v2.3 — Mini-Project Template Improvement (Shipped: 2026-03-15)
+
+**Completed:** 2026-03-15
+**Phases:** 11.1 (1 phase, 1 plan)
+**Last phase number:** 11.1
+
+**What shipped:**
+- Module 1 mini-project now provides the real GSD skeptic workflow as a starting template
+- Lesson 6 shifted from "build from scratch" to "learn from a working example, then customize"
+- All 5 progressive hints rewritten for template-based approach
+- Clipboard copy (C key) delivers the complete workflow template
+
+**Key learnings:**
+- Template-first pedagogy works well for complex structures — learner focuses on understanding and customization rather than structural guesswork
+- Single-phase milestones execute very efficiently (~45 min discuss → plan → execute → verify → complete)
+
+**Tech debt carried forward:**
+- 13 pre-existing clipboard-formatter.test.cjs failures (from v1.0 Phase 02.1)
+
+---
+
 
 ## v2.2 — Module Discovery & Welcome (Shipped: 2026-03-14)
 

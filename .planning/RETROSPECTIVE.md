@@ -2,6 +2,42 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v2.3 — Mini-Project Template Improvement
+
+**Shipped:** 2026-03-15
+**Phases:** 1 | **Plans:** 1 | **Sessions:** 1
+
+### What Was Built
+- Module 1 mini-project lesson rewritten with real skeptic workflow as copyable template
+- All 5 progressive hints updated for template-based approach
+- Pedagogical shift from "build from scratch" to "learn from working example, then customize"
+
+### What Worked
+- Full auto-advance pipeline (discuss → plan → execute → verify) completed in a single session (~45 min)
+- Discuss-phase was valuable even for a small change — captured clear decisions (workflow-only template, clipboard delivery, open-ended customization, minimal checks)
+- UAT with 6 tests confirmed all aspects of the change worked correctly
+- Version semantics catch: recognized phase 11.1 didn't match v3.0 scope, shipped as v2.3 instead
+
+### What Was Inefficient
+- Research was disabled in config but the planner still produced a good plan — confirms small content phases don't need research
+- Auto-chain flag wasn't properly persisted through the Skill-based invocation chain — had to manually check --auto flag for checkpoint auto-approval
+
+### Patterns Established
+- Template-first mini-project pedagogy: provide real working content as starting point, let learner customize
+- Single-phase milestones as version bumps when the change is meaningful but small
+
+### Key Lessons
+1. Template-first approach works better than build-from-scratch for complex structures — learner focuses on understanding rather than structural guesswork
+2. Auto-advance chains work end-to-end but checkpoint auto-approval needs better flag propagation through Skill invocations
+3. Minor version milestones (v2.3) are appropriate for meaningful single-phase improvements — keeps versioning honest
+
+### Cost Observations
+- Model mix: ~60% opus (executor, orchestrator), ~40% sonnet (verifier, checker)
+- Sessions: 1
+- Notable: Complete pipeline (discuss → plan → execute → verify → complete) in one session
+
+---
+
 ## Milestone: v2.2 — Module Discovery & Welcome
 
 **Shipped:** 2026-03-14
@@ -176,6 +212,7 @@
 | v2.0 | ~3 | 3 | 6 | Coarse granularity, infrastructure-first, milestone audit |
 | v2.1 | 1 | 2 | 2 | Focused content update, cross-module verification |
 | v2.2 | ~2 | 3 | 6 | Full Nyquist compliance, integration checker, hub-and-spoke nav |
+| v2.3 | 1 | 1 | 1 | Template-first pedagogy, full auto-advance pipeline |
 
 ### Cumulative Quality
 
@@ -185,6 +222,7 @@
 | v2.0 | ~71 | 13 (clipboard, carried) | No (draft) |
 | v2.1 | ~71 | 13 (clipboard, carried) | No (draft) |
 | v2.2 | 113 | 13 (clipboard, carried) | Yes (3/3 phases) |
+| v2.3 | 113 | 13 (clipboard, carried) | N/A (content-only) |
 
 ### Top Lessons (Verified Across Milestones)
 

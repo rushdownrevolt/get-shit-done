@@ -36,6 +36,9 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ "M" key binding to navigate to module page from any lesson — v2.2
 - ✓ "H" key binding for hints on mini-project step — v2.2
 - ✓ Context-dependent navigation footer — v2.2
+- ✓ Module 1 mini-project provides real skeptic workflow as starting template — v2.3
+- ✓ Template-first pedagogy: learn from working example, then customize — v2.3
+- ✓ Hints updated for template-based mini-project approach — v2.3
 
 ## Current Milestone: v3.0 Planning & State Module
 
@@ -100,6 +103,7 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Inline hints via stdout.write | No screen clear on H key; hints accumulate below content naturally | ✓ Good |
 | Chained progress migrations | v1→v2→v3 chain in loadProgress ensures zero data loss across versions | ✓ Good |
 | Action variable dispatch pattern | Dispatch loop uses action variable for extensibility (welcome/picker/navigate) | ✓ Good |
+| Template-first mini-project pedagogy | Provide real working content as starting point instead of building from scratch; learner focuses on customization and understanding | ✓ Good |
 
 ---
-*Last updated: 2026-03-14 after v3.0 milestone start*
+*Last updated: 2026-03-15 after v2.3 milestone*
