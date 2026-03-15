@@ -15,8 +15,8 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 ### Lessons — Planning Overview
 
-- [ ] **PLAN-01**: Lesson 1 teaches the .planning/ directory structure and the planning lifecycle (project → requirements → roadmap → phases → milestone)
-- [ ] **PLAN-02**: Lesson 1 content parsed from GSD's actual planning templates and workflow files
+- [x] **PLAN-01**: Lesson 1 teaches the .planning/ directory structure and the planning lifecycle (project → requirements → roadmap → phases → milestone)
+- [x] **PLAN-02**: Lesson 1 content parsed from GSD's actual planning templates and workflow files
 
 ### Lessons — Project Definition
 
@@ -81,8 +81,8 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 | INFRA-01 | Phase 12 | Complete |
 | INFRA-02 | Phase 12 | Complete |
 | INFRA-03 | Phase 12 | Complete |
-| PLAN-01 | Phase 12 | Pending |
-| PLAN-02 | Phase 12 | Pending |
+| PLAN-01 | Phase 12 | Complete |
+| PLAN-02 | Phase 12 | Complete |
 | PROJ-01 | Phase 12 | Pending |
 | PROJ-02 | Phase 12 | Pending |
 | REQR-01 | Phase 13 | Pending |

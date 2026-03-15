@@ -4,13 +4,13 @@ milestone: v3.0
 milestone_name: Planning & State Module
 status: in_progress
 last_updated: "2026-03-15"
-last_activity: 2026-03-15 — Completed 12-01 Module 3 infrastructure
+last_activity: 2026-03-15 — Completed 12-02 Lesson 1 Planning Overview
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 33
+  completed_plans: 2
+  percent: 67
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v3.0 Planning & State Module — Phase 12 plan 2 next
+**Current focus:** v3.0 Planning & State Module — Phase 12 plan 3 next
 
 ## Current Position
 
 Phase: 12 of 15 (Module 3 Infrastructure & First Lessons)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-03-15 — Completed 12-01 Module 3 infrastructure
+Last activity: 2026-03-15 — Completed 12-02 Lesson 1 Planning Overview
 
-Progress: [███░░░░░░░] 33%
+Progress: [██████░░░░] 67%
 
 ## Performance Metrics
 
@@ -39,8 +39,8 @@ Progress: [███░░░░░░░] 33%
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
 - v2.2: 6 plans in ~12 min (avg 2min/plan)
 - v2.3: 1 plan in ~4 min (4min/plan)
-- v3.0: 1 plan in ~4 min (4min/plan)
-- Overall: 24 plans in ~78 min (avg 3.25min/plan)
+- v3.0: 2 plans in ~5 min (avg 2.5min/plan)
+- Overall: 25 plans in ~79 min (avg 3.16min/plan)
 
 ## Accumulated Context
 
@@ -49,6 +49,7 @@ Progress: [███░░░░░░░] 33%
 - v3->v4 progress migration is version bump only (modules map already dynamic)
 - Module picker recommended flag uses first-uncompleted-module logic
 - Welcome screen text uses generic phrasing (no hardcoded module count)
+- Lesson conceptMap references "overview" from concept-map.txt created in 12-01
 
 ### Roadmap Evolution
 
