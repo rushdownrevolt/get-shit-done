@@ -24,14 +24,14 @@ Requirements for v4.0 AI-Ready Curriculum. Each maps to roadmap phases.
 
 ### Master Document
 
-- [ ] **MSTR-01**: Single README.md combines all modules in learning order (Module 1 → 2 → 3)
-- [ ] **MSTR-02**: Table of contents with links to each module and lesson
-- [ ] **MSTR-03**: Self-contained — AI reads one file to learn complete GSD curriculum
+- [x] **MSTR-01**: Single README.md combines all modules in learning order (Module 1 → 2 → 3)
+- [x] **MSTR-02**: Table of contents with links to each module and lesson
+- [x] **MSTR-03**: Self-contained — AI reads one file to learn complete GSD curriculum
 
 ### Output Management
 
-- [ ] **OUTM-01**: Generated docs committed to `docs/ai-curriculum/` in repo
-- [ ] **OUTM-02**: Export script and output both exist (script generates, output is checked in)
+- [x] **OUTM-01**: Generated docs committed to `docs/ai-curriculum/` in repo
+- [x] **OUTM-02**: Export script and output both exist (script generates, output is checked in)
 
 ## v2 Requirements
 
@@ -63,11 +63,11 @@ Deferred to future release.
 | MODD-03 | Phase 16 | Complete |
 | MODD-04 | Phase 16 | Complete |
 | MODD-05 | Phase 16 | Complete |
-| MSTR-01 | Phase 17 | Pending |
-| MSTR-02 | Phase 17 | Pending |
-| MSTR-03 | Phase 17 | Pending |
-| OUTM-01 | Phase 17 | Pending |
-| OUTM-02 | Phase 17 | Pending |
+| MSTR-01 | Phase 17 | Complete |
+| MSTR-02 | Phase 17 | Complete |
+| MSTR-03 | Phase 17 | Complete |
+| OUTM-01 | Phase 17 | Complete |
+| OUTM-02 | Phase 17 | Complete |
 
 **Coverage:**
 - v1 requirements: 14 total
