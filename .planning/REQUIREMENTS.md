@@ -9,10 +9,10 @@ Requirements for v4.0 AI-Ready Curriculum. Each maps to roadmap phases.
 
 ### Export Pipeline
 
-- [ ] **EXPT-01**: Export script reads all module JSON files and produces markdown output
-- [ ] **EXPT-02**: Script is runnable via `node learn/bin/export-docs.cjs` with no arguments
-- [ ] **EXPT-03**: Script outputs to `docs/ai-curriculum/` directory
-- [ ] **EXPT-04**: Running script regenerates all docs from current lesson JSON (idempotent)
+- [x] **EXPT-01**: Export script reads all module JSON files and produces markdown output
+- [x] **EXPT-02**: Script is runnable via `node learn/bin/export-docs.cjs` with no arguments
+- [x] **EXPT-03**: Script outputs to `docs/ai-curriculum/` directory
+- [x] **EXPT-04**: Running script regenerates all docs from current lesson JSON (idempotent)
 
 ### Per-Module Docs
 
@@ -54,10 +54,10 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| EXPT-01 | Phase 16 | Pending |
-| EXPT-02 | Phase 16 | Pending |
-| EXPT-03 | Phase 16 | Pending |
-| EXPT-04 | Phase 16 | Pending |
+| EXPT-01 | Phase 16 | Complete |
+| EXPT-02 | Phase 16 | Complete |
+| EXPT-03 | Phase 16 | Complete |
+| EXPT-04 | Phase 16 | Complete |
 | MODD-01 | Phase 16 | Complete |
 | MODD-02 | Phase 16 | Complete |
 | MODD-03 | Phase 16 | Complete |

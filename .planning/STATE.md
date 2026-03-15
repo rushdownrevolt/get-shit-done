@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: AI-Ready Curriculum
 status: in_progress
-last_updated: "2026-03-15T14:58:53.225Z"
-last_activity: 2026-03-15 — Completed 16-01 (Markdown Renderer)
+last_updated: "2026-03-15T15:01:30Z"
+last_activity: 2026-03-15 — Completed 16-02 (Export Docs Script)
 progress:
   total_phases: 2
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 50
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 ## Current Position
 
 Phase: 16 of 17 (Per-Module Export)
-Plan: 1 of 2 complete
-Status: In progress
-Last activity: 2026-03-15 — Completed 16-01 (Markdown Renderer)
+Plan: 2 of 2 complete
+Status: Phase 16 complete
+Last activity: 2026-03-15 — Completed 16-02 (Export Docs Script)
 
-Progress: [█████░░░░░] 50%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Progress: [█████░░░░░] 50%
 - Lesson conceptMap references "overview" from concept-map.txt
 - Mini-project hints progress: conceptual why -> structural what -> read specifics -> write specifics -> full solution
 - [Phase 16-01]: Mini-project lesson detected by title prefix or project-type content, not by position
+- [Phase 16-02]: Export script uses __dirname-relative paths and sorts modules by order field for deterministic output
 
 ### Roadmap Evolution
 
