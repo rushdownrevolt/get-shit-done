@@ -1,10 +1,11 @@
 ---
 phase: 11
 slug: key-bindings-navigation-footer
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: complete
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-13
+audited: 2026-03-14
 ---
 
 # Phase 11 — Validation Strategy
@@ -38,9 +39,9 @@ created: 2026-03-13
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 11-01-01 | 01 | 1 | NAV-02 | unit | `node --test learn/tests/navigator.test.cjs` | Existing, needs new tests | ⬜ pending |
-| 11-01-02 | 01 | 1 | NAV-04 | unit | `node --test learn/tests/renderer.test.cjs` | Existing, needs new tests | ⬜ pending |
-| 11-02-01 | 02 | 1 | NAV-03 | unit | `node --test learn/tests/renderer.test.cjs` | Existing, needs new tests | ⬜ pending |
+| 11-01-01 | 01 | 1 | NAV-02 | unit | `node --test learn/tests/navigator.test.cjs` | learn/tests/navigator.test.cjs | ✅ green |
+| 11-01-02 | 01 | 1 | NAV-04 | unit | `node --test learn/tests/renderer.test.cjs` | learn/tests/renderer.test.cjs | ✅ green |
+| 11-02-01 | 02 | 1 | NAV-03 | unit | `node --test learn/tests/navigator.test.cjs` | learn/tests/navigator.test.cjs | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -48,10 +49,10 @@ created: 2026-03-13
 
 ## Wave 0 Requirements
 
-- [ ] `learn/tests/renderer.test.cjs` — add tests for dynamic footer with/without mini-project context
-- [ ] `learn/tests/navigator.test.cjs` — add tests verifying 'modules' and 'hint' are valid action types in the export contract
+- [x] `learn/tests/renderer.test.cjs` — 4 tests in `describe('renderNavigationFooter')` cover default, isMiniProjectStep=true, isMiniProjectStep=false, and [m] Modules in all variants
+- [x] `learn/tests/navigator.test.cjs` — tests in `describe('M key and modules action')` and `describe('H key and hint action')` verify 'modules' and 'hint' are documented and handled
 
-*Existing infrastructure covers framework and fixtures.*
+*113/113 tests passing. All Wave 0 requirements satisfied.*
 
 ---
 
@@ -69,11 +70,11 @@ created: 2026-03-13
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 5s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 5s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** 2026-03-14 — audited by gsd-nyquist-auditor; 113/113 tests green
