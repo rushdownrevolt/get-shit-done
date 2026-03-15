@@ -25,10 +25,10 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 ### Lessons — Requirements & Roadmap
 
-- [ ] **REQR-01**: Lesson 3 teaches REQUIREMENTS.md structure — REQ-ID format, categories, traceability table, v1/v2/out-of-scope sections
-- [ ] **REQR-02**: Lesson 3 teaches ROADMAP.md structure — phase numbering, milestone grouping, progress table, success criteria derivation
-- [ ] **REQR-03**: Lesson 3 shows how requirements map to phases (the traceability chain)
-- [ ] **REQR-04**: Lesson 3 content parsed from GSD's templates/requirements.md and actual ROADMAP.md structure
+- [x] **REQR-01**: Lesson 3 teaches REQUIREMENTS.md structure — REQ-ID format, categories, traceability table, v1/v2/out-of-scope sections
+- [x] **REQR-02**: Lesson 3 teaches ROADMAP.md structure — phase numbering, milestone grouping, progress table, success criteria derivation
+- [x] **REQR-03**: Lesson 3 shows how requirements map to phases (the traceability chain)
+- [x] **REQR-04**: Lesson 3 content parsed from GSD's templates/requirements.md and actual ROADMAP.md structure
 
 ### Lessons — Phase Lifecycle
 
@@ -85,10 +85,10 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 | PLAN-02 | Phase 12 | Complete |
 | PROJ-01 | Phase 12 | Complete |
 | PROJ-02 | Phase 12 | Complete |
-| REQR-01 | Phase 13 | Pending |
-| REQR-02 | Phase 13 | Pending |
-| REQR-03 | Phase 13 | Pending |
-| REQR-04 | Phase 13 | Pending |
+| REQR-01 | Phase 13 | Complete |
+| REQR-02 | Phase 13 | Complete |
+| REQR-03 | Phase 13 | Complete |
+| REQR-04 | Phase 13 | Complete |
 | PHSE-01 | Phase 13 | Pending |
 | PHSE-02 | Phase 13 | Pending |
 | PHSE-03 | Phase 13 | Pending |

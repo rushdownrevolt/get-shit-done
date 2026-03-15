@@ -3,27 +3,13 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Planning & State Module
 status: in_progress
-last_updated: "2026-03-15T12:50:06.250Z"
-last_activity: 2026-03-15 — Completed 12-03 Lesson 2 Project Definition
-progress:
-  total_phases: 4
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
----
-
----
-gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Planning & State Module
-status: in_progress
 last_updated: "2026-03-15"
-last_activity: 2026-03-15 — Completed 12-03 Lesson 2 Project Definition
+last_activity: 2026-03-15 — Completed 13-01 Lesson 3 Requirements and Roadmap
 progress:
   total_phases: 4
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  completed_phases: 2
+  total_plans: 5
+  completed_plans: 5
   percent: 100
 ---
 
@@ -34,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v3.0 Planning & State Module — Phase 12 complete, Phase 13 next
+**Current focus:** v3.0 Planning & State Module — Phase 13 in progress
 
 ## Current Position
 
-Phase: 12 of 15 (Module 3 Infrastructure & First Lessons)
-Plan: 3 of 3 in current phase (COMPLETE)
+Phase: 13 of 15 (Requirements, Roadmap & Phase Lifecycle Lessons)
+Plan: 2 of 2 in current phase (COMPLETE)
 Status: In progress
-Last activity: 2026-03-15 — Completed 12-03 Lesson 2 Project Definition
+Last activity: 2026-03-15 — Completed 13-02 Lesson 4 Phase Lifecycle
 
-Progress: [███░░░░░░░] 33%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -53,8 +39,8 @@ Progress: [███░░░░░░░] 33%
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
 - v2.2: 6 plans in ~12 min (avg 2min/plan)
 - v2.3: 1 plan in ~4 min (4min/plan)
-- v3.0: 3 plans in ~7 min (avg 2.3min/plan)
-- Overall: 26 plans in ~81 min (avg 3.12min/plan)
+- v3.0: 4 plans in ~9 min (avg 2.3min/plan)
+- Overall: 27 plans in ~83 min (avg 3.07min/plan)
 
 ## Accumulated Context
 
@@ -65,6 +51,8 @@ Progress: [███░░░░░░░] 33%
 - Welcome screen text uses generic phrasing (no hardcoded module count)
 - Lesson conceptMap references "overview" from concept-map.txt created in 12-01
 - Lesson 2 code blocks use actual content from get-shit-done/templates/project.md
+- Lesson 3 code blocks use actual content from get-shit-done/templates/requirements.md and roadmap.md
+- Lesson 4 code blocks use actual content from get-shit-done/templates/phase-prompt.md and summary.md
 
 ### Roadmap Evolution
 
