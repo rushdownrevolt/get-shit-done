@@ -76,7 +76,11 @@
   2. Learner can navigate into Module 3 and see Lesson 1 teaching the .planning/ directory structure and planning lifecycle
   3. Learner can complete Lesson 2 which explains PROJECT.md anatomy with content parsed from GSD's actual templates
   4. Progress tracking works for Module 3 lessons (v4 schema migration applied)
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 12-01-PLAN.md — Register Module 3, progress migration v3->v4, fix module picker recommended logic
+- [ ] 12-02-PLAN.md — Create Lesson 1: Planning Overview (.planning/ directory structure and lifecycle)
+- [ ] 12-03-PLAN.md — Create Lesson 2: PROJECT.md anatomy and downstream feeding
 
 ### Phase 13: Requirements, Roadmap & Phase Lifecycle Lessons
 **Goal**: Learner understands how requirements become phases and how phases execute, through Lessons 3-4
