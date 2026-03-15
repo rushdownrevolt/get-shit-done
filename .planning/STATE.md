@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Planning & State Module
-status: roadmap_complete
+status: in_progress
 last_updated: "2026-03-15"
-last_activity: 2026-03-15 — Roadmap created (4 phases, 26 requirements mapped)
+last_activity: 2026-03-15 — Completed 12-01 Module 3 infrastructure
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 3
+  completed_plans: 1
+  percent: 33
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v3.0 Planning & State Module — Phase 12 ready to plan
+**Current focus:** v3.0 Planning & State Module — Phase 12 plan 2 next
 
 ## Current Position
 
 Phase: 12 of 15 (Module 3 Infrastructure & First Lessons)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-15 — Roadmap created for v3.0
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-03-15 — Completed 12-01 Module 3 infrastructure
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [███░░░░░░░] 33%
 
 ## Performance Metrics
 
@@ -39,13 +39,16 @@ Progress: [░░░░░░░░░░] 0%
 - v2.1: 2 plans in ~5 min (avg 2.5min/plan)
 - v2.2: 6 plans in ~12 min (avg 2min/plan)
 - v2.3: 1 plan in ~4 min (4min/plan)
-- Overall: 23 plans in ~74 min (avg 3.22min/plan)
+- v3.0: 1 plan in ~4 min (4min/plan)
+- Overall: 24 plans in ~78 min (avg 3.25min/plan)
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
+- v3->v4 progress migration is version bump only (modules map already dynamic)
+- Module picker recommended flag uses first-uncompleted-module logic
+- Welcome screen text uses generic phrasing (no hardcoded module count)
 
 ### Roadmap Evolution
 

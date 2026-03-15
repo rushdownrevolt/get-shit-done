@@ -9,9 +9,9 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Module 3 registered in module system with module.json, concept-map.txt, lessons/, and project/ directories
-- [ ] **INFRA-02**: Progress migration chain extended (v3→v4) to support Module 3 lesson tracking
-- [ ] **INFRA-03**: Module picker updated to show 3 modules with correct ordering and recommended flag logic
+- [x] **INFRA-01**: Module 3 registered in module system with module.json, concept-map.txt, lessons/, and project/ directories
+- [x] **INFRA-02**: Progress migration chain extended (v3→v4) to support Module 3 lesson tracking
+- [x] **INFRA-03**: Module picker updated to show 3 modules with correct ordering and recommended flag logic
 
 ### Lessons — Planning Overview
 
@@ -78,9 +78,9 @@ Requirements for Module 3: Planning & State. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 12 | Pending |
-| INFRA-02 | Phase 12 | Pending |
-| INFRA-03 | Phase 12 | Pending |
+| INFRA-01 | Phase 12 | Complete |
+| INFRA-02 | Phase 12 | Complete |
+| INFRA-03 | Phase 12 | Complete |
 | PLAN-01 | Phase 12 | Pending |
 | PLAN-02 | Phase 12 | Pending |
 | PROJ-01 | Phase 12 | Pending |
