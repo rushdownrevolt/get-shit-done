@@ -16,11 +16,11 @@ Requirements for v4.0 AI-Ready Curriculum. Each maps to roadmap phases.
 
 ### Per-Module Docs
 
-- [ ] **MODD-01**: Each module produces one markdown file with all lessons rendered sequentially
-- [ ] **MODD-02**: Code blocks rendered with language annotations (```yaml, ```markdown, etc.)
-- [ ] **MODD-03**: Mini-project spec included with verification checks listed
-- [ ] **MODD-04**: Progressive hints included after mini-project section
-- [ ] **MODD-05**: Module concept map included as ASCII diagram
+- [x] **MODD-01**: Each module produces one markdown file with all lessons rendered sequentially
+- [x] **MODD-02**: Code blocks rendered with language annotations (```yaml, ```markdown, etc.)
+- [x] **MODD-03**: Mini-project spec included with verification checks listed
+- [x] **MODD-04**: Progressive hints included after mini-project section
+- [x] **MODD-05**: Module concept map included as ASCII diagram
 
 ### Master Document
 
@@ -58,11 +58,11 @@ Deferred to future release.
 | EXPT-02 | Phase 16 | Pending |
 | EXPT-03 | Phase 16 | Pending |
 | EXPT-04 | Phase 16 | Pending |
-| MODD-01 | Phase 16 | Pending |
-| MODD-02 | Phase 16 | Pending |
-| MODD-03 | Phase 16 | Pending |
-| MODD-04 | Phase 16 | Pending |
-| MODD-05 | Phase 16 | Pending |
+| MODD-01 | Phase 16 | Complete |
+| MODD-02 | Phase 16 | Complete |
+| MODD-03 | Phase 16 | Complete |
+| MODD-04 | Phase 16 | Complete |
+| MODD-05 | Phase 16 | Complete |
 | MSTR-01 | Phase 17 | Pending |
 | MSTR-02 | Phase 17 | Pending |
 | MSTR-03 | Phase 17 | Pending |

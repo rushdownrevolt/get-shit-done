@@ -3,13 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: AI-Ready Curriculum
 status: in_progress
-last_updated: "2026-03-15T15:00:00Z"
-last_activity: 2026-03-15 — Roadmap created (2 phases, 14 requirements)
+last_updated: "2026-03-15T14:58:53.225Z"
+last_activity: 2026-03-15 — Completed 16-01 (Markdown Renderer)
 progress:
   total_phases: 2
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
+  percent: 50
 ---
 
 # Project State
@@ -24,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 ## Current Position
 
 Phase: 16 of 17 (Per-Module Export)
-Plan: Ready to plan
-Status: Ready to plan
-Last activity: 2026-03-15 — Roadmap created (2 phases, 14 requirements mapped)
+Plan: 1 of 2 complete
+Status: In progress
+Last activity: 2026-03-15 — Completed 16-01 (Markdown Renderer)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -48,6 +49,7 @@ Progress: [░░░░░░░░░░] 0%
 (Carried from v3.0 — relevant to content structure)
 - Lesson conceptMap references "overview" from concept-map.txt
 - Mini-project hints progress: conceptual why -> structural what -> read specifics -> write specifics -> full solution
+- [Phase 16-01]: Mini-project lesson detected by title prefix or project-type content, not by position
 
 ### Roadmap Evolution
 
@@ -68,3 +70,4 @@ Progress: [░░░░░░░░░░] 0%
 | 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
 | 8 | Fix copy bug: Cannot read properties of undefined | 2026-03-15 | 1f53f5d | [8-fix-copy-bug-cannot-read-properties-of-u](./quick/8-fix-copy-bug-cannot-read-properties-of-u/) |
+
