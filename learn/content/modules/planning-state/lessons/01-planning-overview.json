@@ -1,0 +1,52 @@
+{
+  "id": "planning-overview",
+  "title": "The Planning Directory",
+  "lessonNumber": 1,
+  "objective": "Understand GSD's .planning/ directory structure and the lifecycle of planning artifacts from project definition through milestone completion",
+  "content": [
+    {
+      "type": "text",
+      "value": "Every GSD project has a .planning/ directory. It is the project's institutional memory -- a collection of markdown files that track decisions, state, and history across the entire lifecycle. Unlike code files that define behavior, these artifacts define intent and progress. GSD's planning system works because AI agents can read and write structured markdown. Each artifact follows a predictable format with YAML frontmatter and markdown sections, making them both human-readable and machine-parseable.",
+      "focus": ".planning/ as institutional memory",
+      "bridge": "Let's look at what's actually inside this directory."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": ".planning/\n  PROJECT.md          # What this project is and why\n  REQUIREMENTS.md     # What we need to build\n  ROADMAP.md          # Phases, milestones, ordering\n  STATE.md            # Where we are right now\n  config.json         # GSD configuration\n  phases/             # Per-phase execution records\n    01-feature-name/\n      01-01-PLAN.md\n      01-01-SUMMARY.md\n  codebase/           # Auto-generated code maps\n  learn/              # Learning progress (you!)",
+      "highlight": [1, 2, 3, 4]
+    },
+    {
+      "type": "text",
+      "value": "The four highlighted files are the core planning artifacts. Together they form a pipeline where each artifact feeds into the next. PROJECT.md defines the what and why -- the project's purpose, audience, and core value. REQUIREMENTS.md breaks that purpose into measurable items with unique IDs. ROADMAP.md sequences those requirements into phases with dependencies. STATE.md tracks live execution position, velocity metrics, and accumulated decisions. This is not waterfall -- these are living documents that update as understanding grows.",
+      "focus": "Pipeline of living artifacts",
+      "bridge": "The lifecycle has a specific order. Let's trace it."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "/gsd:kickoff            Creates PROJECT.md\n      |\n      v\n/gsd:requirements       Creates REQUIREMENTS.md\n      |                   (maps to PROJECT.md scope)\n      v\n/gsd:roadmap            Creates ROADMAP.md\n      |                   (phases from requirements)\n      v\n/gsd:plan-phase         Creates PLAN.md files\n      |                   (tasks from phase goals)\n      v\n/gsd:execute-phase      Creates SUMMARY.md files\n      |                   (records what happened)\n      v\n/gsd:complete-milestone   Archives & tags",
+      "highlight": [1, 4, 7, 10, 13, 16]
+    },
+    {
+      "type": "text",
+      "value": "Here is the key insight: each command reads from previous artifacts and writes new ones. /gsd:requirements reads PROJECT.md to understand scope. /gsd:roadmap reads REQUIREMENTS.md to know what to sequence into phases. /gsd:plan-phase reads ROADMAP.md to know the phase goal, then produces PLAN.md files with concrete tasks. /gsd:execute-phase reads those plans and produces SUMMARY.md files recording what happened. This chain of reads creates full traceability -- you can always trace a task back through its plan, phase, requirement, and ultimately the project goal that spawned it.",
+      "focus": "Read-previous, write-new creates traceability",
+      "bridge": "Within each phase, there's another cycle."
+    },
+    {
+      "type": "text",
+      "value": "Phase execution follows a five-step cycle. First, an optional discuss step gathers context about the domain. Second, an optional research step investigates technical approaches. Third, the plan step creates PLAN.md files with typed tasks, verification commands, and done criteria. Fourth, the execute step runs each task, commits atomically, and produces SUMMARY.md files. Fifth, a verify step checks must-haves against reality. Each phase directory accumulates these records, building a complete audit trail of what was planned versus what actually happened.",
+      "focus": "Five-step phase execution cycle",
+      "bridge": "In the next lesson, we'll zoom into PROJECT.md -- the artifact that starts everything."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "phases/12-module-3-infrastructure/\n  12-01-PLAN.md       # What to build\n  12-01-SUMMARY.md    # What was built\n  12-02-PLAN.md       # Next plan\n  12-02-SUMMARY.md    # Its record\n  12-VERIFICATION.md  # Phase verification",
+      "highlight": [1]
+    }
+  ],
+  "conceptMap": "overview",
+  "successCriteria": "You can name the four core planning artifacts (PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md) and explain how each feeds into the next in the planning lifecycle."
+}
