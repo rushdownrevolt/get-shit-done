@@ -152,6 +152,84 @@ function renderModule(mod, lessons, spec, hints, conceptMapText) {
   return md;
 }
 
+/**
+ * Convert a heading text to a GitHub-style anchor.
+ * @param {string} text
+ * @returns {string}
+ */
+function toAnchor(text) {
+  return text.toLowerCase().replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-');
+}
+
+/**
+ * Render a master README combining all modules with a table of contents.
+ *
+ * @param {{ mod, lessons, spec, hints, conceptMapText }[]} modules - Sorted by order
+ * @returns {string}
+ */
+function renderReadme(modules) {
+  let md = '# GSD Curriculum: Complete AI Learning Guide\n\n';
+  md += 'This document contains the complete GSD (Get Shit Done) curriculum. ';
+  md += 'It is designed to be read sequentially — each module builds on the previous. ';
+  md += 'By the end, you will understand how GSD commands work, how they execute ';
+  md += 'end-to-end, and how GSD manages planning state.\n\n';
+
+  // Table of Contents
+  md += '## Table of Contents\n\n';
+
+  for (let i = 0; i < modules.length; i++) {
+    const { mod, lessons, spec } = modules[i];
+    const moduleNum = i + 1;
+    const moduleHeading = `Module ${moduleNum}: ${mod.title}`;
+    md += `- [${moduleHeading}](#${toAnchor(moduleHeading)})\n`;
+
+    // Lesson links (exclude mini-project lessons)
+    const sorted = [...lessons].sort((a, b) => a.lessonNumber - b.lessonNumber);
+    const isMiniProject = (lesson) =>
+      lesson.title.startsWith('Mini-Project:') ||
+      (lesson.content && lesson.content.some((b) => b.type === 'project'));
+
+    for (const lesson of sorted) {
+      if (isMiniProject(lesson)) continue;
+      const lessonHeading = `Lesson ${lesson.lessonNumber}: ${lesson.title}`;
+      md += `  - [${lessonHeading}](#${toAnchor(lessonHeading)})\n`;
+    }
+
+    // Mini-project link
+    if (spec) {
+      const specHeading = `Mini-Project: ${spec.title}`;
+      md += `  - [${specHeading}](#${toAnchor(specHeading)})\n`;
+    }
+  }
+
+  md += '\n---\n\n';
+
+  // Render each module with heading levels bumped by 1
+  for (let i = 0; i < modules.length; i++) {
+    const { mod, lessons, spec, hints, conceptMapText } = modules[i];
+
+    // Render module, then bump all heading levels by 1
+    let rendered = renderModule(mod, lessons, spec, hints, conceptMapText);
+    rendered = rendered.replace(/^(#+)/gm, '#$1');
+
+    // Replace the first heading (now ##) with "Module N: Title" format
+    const moduleNum = i + 1;
+    rendered = rendered.replace(
+      /^## .+/,
+      `## Module ${moduleNum}: ${mod.title}`
+    );
+
+    md += rendered;
+
+    // Separator between modules (not after last)
+    if (i < modules.length - 1) {
+      md += '\n---\n\n';
+    }
+  }
+
+  return md;
+}
+
 module.exports = {
   renderContentBlock,
   renderLesson,
@@ -159,4 +237,5 @@ module.exports = {
   renderHints,
   renderConceptMap,
   renderModule,
+  renderReadme,
 };

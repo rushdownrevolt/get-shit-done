@@ -3,7 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { renderModule } = require('../lib/markdown-renderer.cjs');
+const { renderModule, renderReadme } = require('../lib/markdown-renderer.cjs');
 
 const CONTENT_DIR = path.join(__dirname, '..', 'content', 'modules');
 const OUTPUT_DIR = path.join(__dirname, '..', '..', 'docs', 'ai-curriculum');
@@ -82,4 +82,8 @@ for (const { mod, lessons, spec, hints, conceptMapText } of modules) {
   fs.writeFileSync(outputPath, markdown, 'utf-8');
 }
 
-console.log(`Exported ${modules.length} modules to docs/ai-curriculum/`);
+// Generate master README
+const readme = renderReadme(modules);
+fs.writeFileSync(path.join(OUTPUT_DIR, 'README.md'), readme, 'utf-8');
+
+console.log(`Exported ${modules.length} modules + README.md to docs/ai-curriculum/`);
