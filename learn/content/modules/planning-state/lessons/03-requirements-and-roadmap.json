@@ -1,0 +1,70 @@
+{
+  "id": "requirements-and-roadmap",
+  "title": "Requirements and Roadmap: From Goals to Phases",
+  "lessonNumber": 3,
+  "objective": "Understand how REQUIREMENTS.md breaks project goals into trackable items with IDs and how ROADMAP.md sequences those requirements into executable phases -- including the traceability chain that connects every task back to a project goal",
+  "content": [
+    {
+      "type": "text",
+      "value": "In the previous lesson, PROJECT.md defined what your project is, its Core Value, and its active requirements. But those requirements are just checkboxes -- they don't tell you HOW to verify them, WHEN to build them, or how to track whether they're done. REQUIREMENTS.md breaks project goals into individually trackable items with unique IDs. ROADMAP.md sequences those items into phases with success criteria. Together, they create a traceability chain: every task traces back to a requirement, and every requirement traces back to Core Value. Nothing gets built without a reason, and nothing gets forgotten.",
+      "focus": "REQUIREMENTS.md and ROADMAP.md bridge goals to execution",
+      "bridge": "Let's start with REQUIREMENTS.md and its structure."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "# Requirements: [Project Name]\n\n**Defined:** [date]\n**Core Value:** [from PROJECT.md]\n\n## v1 Requirements\n\nRequirements for initial release. Each maps to roadmap phases.\n\n### Authentication\n\n- [ ] **AUTH-01**: User can sign up with email and password\n- [ ] **AUTH-02**: User receives email verification after signup\n- [ ] **AUTH-03**: User can reset password via email link\n- [ ] **AUTH-04**: User session persists across browser refresh\n\n### [Category 2]\n\n- [ ] **[CAT]-01**: [Requirement description]\n- [ ] **[CAT]-02**: [Requirement description]\n\n## v2 Requirements\n\nDeferred to future release. Tracked but not in current roadmap.\n\n### [Category]\n\n- **[CAT]-01**: [Requirement description]\n- **[CAT]-02**: [Requirement description]\n\n## Out of Scope\n\nExplicitly excluded. Documented to prevent scope creep.\n\n| Feature | Reason |\n|---------|--------|\n| [Feature] | [Why excluded] |\n| [Feature] | [Why excluded] |",
+      "highlight": [11, 12, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "Each requirement gets a unique ID in the format [CATEGORY]-[NUMBER] -- AUTH-01, CONT-02, SOCL-03. Requirements are user-centric (\"User can...\"), testable (you can verify it works), and atomic (one checkable thing). The three-section structure -- v1, v2, Out of Scope -- is a scope management tool. v1 requirements are committed scope: they WILL appear in the roadmap. v2 requirements are acknowledged but deferred: they won't be in the current roadmap, but they're not forgotten. Out of Scope items are explicitly excluded WITH reasoning, so no one re-adds them without understanding why they were cut. You can't add something to v1 without removing something else or promoting from v2 -- the structure enforces discipline.",
+      "focus": "Requirement ID format and three-section scope management",
+      "bridge": "Requirements alone don't tell you if your roadmap covers everything. That's where traceability comes in."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "## Traceability\n\nWhich phases cover which requirements. Updated during roadmap creation.\n\n| Requirement | Phase | Status |\n|-------------|-------|--------|\n| AUTH-01 | Phase 1 | Pending |\n| AUTH-02 | Phase 1 | Pending |\n| AUTH-03 | Phase 1 | Pending |\n| AUTH-04 | Phase 1 | Pending |\n| [REQ-ID] | Phase [N] | Pending |\n\n**Coverage:**\n- v1 requirements: [X] total\n- Mapped to phases: [Y]\n- Unmapped: [Z]",
+      "highlight": [5]
+    },
+    {
+      "type": "text",
+      "value": "The traceability table is the bridge between requirements and the roadmap. Every v1 requirement maps to exactly one phase. If a requirement is unmapped, that's a gap in your roadmap -- work that needs doing but has no home. Status flows as phases execute: Pending means not started, In Progress means the phase is active, Complete means the requirement has been verified. This creates an audit trail. You can always answer two questions: \"Which requirement drove this work?\" (look at the phase's requirement list) and \"Is this requirement satisfied?\" (check the status column). The traceability table is populated during roadmap creation and updated after each phase completes.",
+      "focus": "Traceability as the bridge between requirements and roadmap",
+      "bridge": "Now let's look at ROADMAP.md -- where requirements become executable phases."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "### Phase 1: [Name]\n**Goal**: [What this phase delivers]\n**Depends on**: Nothing (first phase)\n**Requirements**: [REQ-01, REQ-02, REQ-03]\n**Success Criteria** (what must be TRUE):\n  1. [Observable behavior from user perspective]\n  2. [Observable behavior from user perspective]\n  3. [Observable behavior from user perspective]\n**Plans**: [Number of plans]\n\nPlans:\n- [ ] 01-01: [Brief description of first plan]\n- [ ] 01-02: [Brief description of second plan]\n- [ ] 01-03: [Brief description of third plan]\n\n### Phase 2: [Name]\n**Goal**: [What this phase delivers]\n**Depends on**: Phase 1\n**Requirements**: [REQ-04, REQ-05]\n**Success Criteria** (what must be TRUE):\n  1. [Observable behavior from user perspective]\n  2. [Observable behavior from user perspective]\n**Plans**: [Number of plans]",
+      "highlight": [4, 5, 6, 7, 8, 19, 20, 21, 22]
+    },
+    {
+      "type": "text",
+      "value": "Each phase in ROADMAP.md is the execution unit. The Goal is outcome-shaped, not task-shaped -- \"Users can authenticate and maintain sessions\" rather than \"Build login page.\" Dependencies declare ordering. Requirements list the REQ-IDs this phase satisfies (connecting back to REQUIREMENTS.md). Success Criteria are 2-5 observable behaviors from the user's perspective -- things you can see and verify. These success criteria flow downstream into must_haves in plan files and are checked after execution during phase verification. Plans break the phase into concrete work units. A phase might have 1-3 plans depending on scope, and each plan becomes a PLAN.md file with specific tasks.",
+      "focus": "Phase anatomy: goal, dependencies, requirements, success criteria, plans",
+      "bridge": "Phases don't exist in isolation -- they're grouped into milestones."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "## Milestones\n\n- ✅ **v1.0 MVP** - Phases 1-4 (shipped YYYY-MM-DD)\n- 🚧 **v1.1 [Name]** - Phases 5-6 (in progress)\n- 📋 **v2.0 [Name]** - Phases 7-10 (planned)\n\n<details>\n<summary>✅ v1.0 MVP (Phases 1-4) - SHIPPED YYYY-MM-DD</summary>\n\n### Phase 1: [Name]\n**Goal**: [What this phase delivers]\n**Plans**: 3 plans\n\nPlans:\n- [x] 01-01: [Brief description]\n- [x] 01-02: [Brief description]\n- [x] 01-03: [Brief description]\n\n</details>\n\n### 🚧 v1.1 [Name] (In Progress)\n\n**Milestone Goal:** [What v1.1 delivers]",
+      "highlight": [3, 4, 5]
+    },
+    {
+      "type": "text",
+      "value": "Milestones group phases into shippable units. The emoji status indicators show progress at a glance: completed milestones are marked with a checkmark and collapsed inside details tags so they don't clutter the view, the current milestone stays expanded with an in-progress indicator, and future milestones show as planned. Phase numbering is continuous across milestones (never restart at 01) and uses integers for planned work and decimals (2.1, 2.2) for urgent insertions. The Progress table at the bottom tracks plan completion counts and status for every phase, giving a dashboard view of the entire project.",
+      "focus": "Milestone grouping and progress tracking",
+      "bridge": "Let's zoom out and see the complete chain from Core Value to tasks."
+    },
+    {
+      "type": "text",
+      "value": "The full traceability chain runs: PROJECT.md Core Value -> REQUIREMENTS.md categories with IDs -> ROADMAP.md phases with success criteria -> PLAN.md tasks with must_haves. Each link is traceable in both directions. When a task is verified as complete, you can trace it back: this task belongs to this plan, which serves this phase, which satisfies these requirements, which deliver this Core Value. Going the other direction: this Core Value needs these requirements, which are scheduled in these phases, which are broken into these plans, which contain these tasks. Nothing gets built that doesn't serve the project goal. Nothing gets forgotten because every requirement is mapped to a phase. And when priorities shift, you can see exactly what's affected by tracing the chain. Now that you see how requirements become phases, the next lesson covers what happens INSIDE a phase -- the execution cycle of planning, executing, and verifying.",
+      "focus": "Complete traceability chain from Core Value to tasks",
+      "bridge": "The next lesson dives into the phase lifecycle -- plan, execute, verify."
+    }
+  ],
+  "conceptMap": "requirements-roadmap",
+  "successCriteria": "You can describe the REQUIREMENTS.md structure (REQ-ID format, v1/v2/Out of Scope sections, traceability table) and the ROADMAP.md structure (phases with goals, dependencies, requirements, success criteria, milestone grouping), and explain how the traceability chain connects every task back through phases and requirements to Core Value."
+}
