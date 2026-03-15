@@ -1,0 +1,79 @@
+# Requirements: GSD Learn
+
+**Defined:** 2026-03-15
+**Core Value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
+
+## v1 Requirements
+
+Requirements for v4.0 AI-Ready Curriculum. Each maps to roadmap phases.
+
+### Export Pipeline
+
+- [ ] **EXPT-01**: Export script reads all module JSON files and produces markdown output
+- [ ] **EXPT-02**: Script is runnable via `node learn/bin/export-docs.cjs` with no arguments
+- [ ] **EXPT-03**: Script outputs to `docs/ai-curriculum/` directory
+- [ ] **EXPT-04**: Running script regenerates all docs from current lesson JSON (idempotent)
+
+### Per-Module Docs
+
+- [ ] **MODD-01**: Each module produces one markdown file with all lessons rendered sequentially
+- [ ] **MODD-02**: Code blocks rendered with language annotations (```yaml, ```markdown, etc.)
+- [ ] **MODD-03**: Mini-project spec included with verification checks listed
+- [ ] **MODD-04**: Progressive hints included after mini-project section
+- [ ] **MODD-05**: Module concept map included as ASCII diagram
+
+### Master Document
+
+- [ ] **MSTR-01**: Single README.md combines all modules in learning order (Module 1 → 2 → 3)
+- [ ] **MSTR-02**: Table of contents with links to each module and lesson
+- [ ] **MSTR-03**: Self-contained — AI reads one file to learn complete GSD curriculum
+
+### Output Management
+
+- [ ] **OUTM-01**: Generated docs committed to `docs/ai-curriculum/` in repo
+- [ ] **OUTM-02**: Export script and output both exist (script generates, output is checked in)
+
+## v2 Requirements
+
+Deferred to future release.
+
+- **EXPT-05**: Watch mode — auto-regenerate docs when lesson JSON changes
+- **MSTR-04**: Include GSD architecture overview section before lessons
+- **MODD-06**: Include cross-references between modules (e.g., "builds on Module 1 concept X")
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| PDF or HTML output | Markdown is universally readable by LLMs |
+| Lesson content editing | This milestone exports existing content, not authoring |
+| AI-specific prompt engineering in output | Clean documentation is better than prompt-engineered text |
+| Interactive elements in output | Static docs for context window ingestion |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| EXPT-01 | TBD | Pending |
+| EXPT-02 | TBD | Pending |
+| EXPT-03 | TBD | Pending |
+| EXPT-04 | TBD | Pending |
+| MODD-01 | TBD | Pending |
+| MODD-02 | TBD | Pending |
+| MODD-03 | TBD | Pending |
+| MODD-04 | TBD | Pending |
+| MODD-05 | TBD | Pending |
+| MSTR-01 | TBD | Pending |
+| MSTR-02 | TBD | Pending |
+| MSTR-03 | TBD | Pending |
+| OUTM-01 | TBD | Pending |
+| OUTM-02 | TBD | Pending |
+
+**Coverage:**
+- v1 requirements: 14 total
+- Mapped to phases: 0
+- Unmapped: 14 ⚠️
+
+---
+*Requirements defined: 2026-03-15*
+*Last updated: 2026-03-15 after initial definition*
