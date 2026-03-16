@@ -169,7 +169,7 @@ Plans:
 | 17. Master Document & Commit | v4.0 | 1/1 | Complete | 2026-03-15 |
 | 18. Module Infrastructure | 1/1 | Complete    | 2026-03-16 | - |
 | 19. Lesson Content | 2/2 | Complete    | 2026-03-16 | - |
-| 20. Mini-Project | 1/1 | Complete   | 2026-03-16 | - |
+| 20. Mini-Project | 1/1 | Complete    | 2026-03-16 | - |
 | 21. Export Update | v5.0 | 0/? | Not started | - |
 
 ---
