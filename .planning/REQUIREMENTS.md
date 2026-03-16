@@ -9,9 +9,9 @@ Requirements for v6.0 Quality & Feedback Loops Module. Each maps to roadmap phas
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Module 5 "quality-feedback" registered in module system with module.json, lessons/, project/
-- [ ] **INFR-02**: v5→v6 progress migration chain so Module 5 tracking works for existing users
-- [ ] **INFR-03**: Concept map visualizing quality & feedback lesson flow
+- [x] **INFR-01**: Module 5 "quality-feedback" registered in module system with module.json, lessons/, project/
+- [x] **INFR-02**: v5→v6 progress migration chain so Module 5 tracking works for existing users
+- [x] **INFR-03**: Concept map visualizing quality & feedback lesson flow
 
 ### Lessons
 
@@ -52,9 +52,9 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | Phase 22 | Pending |
-| INFR-02 | Phase 22 | Pending |
-| INFR-03 | Phase 22 | Pending |
+| INFR-01 | Phase 22 | Complete |
+| INFR-02 | Phase 22 | Complete |
+| INFR-03 | Phase 22 | Complete |
 | LESS-01 | Phase 23 | Pending |
 | LESS-02 | Phase 23 | Pending |
 | LESS-03 | Phase 23 | Pending |

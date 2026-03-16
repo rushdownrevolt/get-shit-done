@@ -91,7 +91,7 @@
 
 **Milestone Goal:** Teach how GSD verifies work and closes the feedback loop — UAT, skeptic reviews, debug workflows, and gap closure cycles.
 
-- [ ] **Phase 22: Module Infrastructure** - Scaffold Module 5 with module.json, directory structure, progress migration, and concept map
+- [x] **Phase 22: Module Infrastructure** - Scaffold Module 5 with module.json, directory structure, progress migration, and concept map (completed 2026-03-16)
 - [ ] **Phase 23: Lesson Content** - Author all 7 lessons covering quality lifecycle from verify-work through synthesis
 - [ ] **Phase 24: Mini-Project** - Spec, progressive hints, and mini-project lesson exercising quality/feedback concepts
 - [ ] **Phase 25: Export Update** - Re-run AI curriculum export to include Module 5
@@ -182,7 +182,7 @@ Plans:
 | 19. Lesson Content | v5.0 | 2/2 | Complete | 2026-03-16 |
 | 20. Mini-Project | v5.0 | 1/1 | Complete | 2026-03-16 |
 | 21. Export Update | v5.0 | 1/1 | Complete | 2026-03-16 |
-| 22. Module Infrastructure | v6.0 | 0/1 | Not started | - |
+| 22. Module Infrastructure | 1/1 | Complete   | 2026-03-16 | - |
 | 23. Lesson Content | v6.0 | 0/2 | Not started | - |
 | 24. Mini-Project | v6.0 | 0/1 | Not started | - |
 | 25. Export Update | v6.0 | 0/1 | Not started | - |
