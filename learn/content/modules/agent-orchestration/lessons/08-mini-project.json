@@ -1,0 +1,58 @@
+{
+  "id": "agent-orchestration-mini-project",
+  "title": "Mini-Project: Orchestrated Skeptic Reviews",
+  "lessonNumber": 8,
+  "objective": "Apply the orchestration pattern (subagent delegation, wave-based parallelism, orchestrator aggregation) to extend the skeptic workflow with multiple specialized review agents that run in parallel and aggregate findings",
+  "content": [
+    {
+      "type": "text",
+      "value": "In Modules 1 through 3, you built a skeptic command from scratch -- a command spec, a handler, and persistent review artifacts. Each run produces a single monolithic review: one agent examines everything, writes its findings, and moves on. It works, but it does not scale.\n\nReal GSD orchestrators do not work that way. They split complex work across specialized subagents running in parallel waves. A planner agent handles research while an executor agent handles implementation -- simultaneously, not sequentially. The orchestrator delegates, coordinates, and aggregates.\n\nNow you will apply that same pattern to skeptic. Instead of one agent doing one big review, your workflow will define multiple review subagents -- each focused on a specific aspect like architecture, conventions, or dependencies. These subagents run in parallel (Wave 1), and then an aggregation step (Wave 2) combines their findings into the final SKEPTIC-REVIEW.md. This is orchestration in miniature: the exact pattern behind every /gsd: command.",
+      "focus": "Skeptic currently does monolithic reviews -- orchestration splits work across parallel subagents",
+      "bridge": "Here is how to check your progress as you build."
+    },
+    {
+      "type": "text",
+      "value": "Run the verify command any time to check your structural progress. Run the hint command when you need a nudge. You can use both as many times as you like.\n\nThis project modifies your existing skeptic workflow file, so the verify command checks it for orchestration patterns. If something goes wrong with the workflow, you can git checkout the original from your previous work:\n\n  git checkout -- ~/.claude/get-shit-done/workflows/skeptic.md",
+      "focus": "Verify and hint workflow, with git safety net",
+      "bridge": "Here is the template you will integrate into your existing workflow."
+    },
+    {
+      "type": "text",
+      "value": "Below is a workflow template that adds orchestration structure to your existing skeptic workflow. Press C to copy, then integrate these new steps into your workflow at ~/.claude/get-shit-done/workflows/skeptic.md. The key additions are: (a) multiple review subagent steps, each focused on one aspect, (b) wave annotations marking which steps run in parallel, and (c) an aggregation step that combines findings.\n\nPlace the review subagent steps after your existing analysis setup and before the final output. The aggregation step goes last -- it depends on all review subagents completing first. The exact positioning within your existing workflow is your decision.",
+      "focus": "Introducing the orchestration template additions",
+      "bridge": "The template follows below."
+    },
+    {
+      "type": "code",
+      "language": "xml",
+      "value": "<!-- Wave 1: Parallel review subagents (independent, can run simultaneously) -->\n\n<step name=\"review_architecture\">\n**Review project architecture and design decisions.**\n\nExamine the project structure, file organization, and architectural patterns:\n- Are components properly separated?\n- Do dependencies flow in the right direction?\n- Are there circular dependencies or god objects?\n\nRecord findings for aggregation.\n</step>\n\n<step name=\"review_conventions\">\n**Review coding conventions and standards compliance.**\n\nCheck naming patterns, file structure conventions, and coding standards:\n- Do files follow the project's naming conventions?\n- Are exports and imports consistent?\n- Is error handling following established patterns?\n\nRecord findings for aggregation.\n</step>\n\n<!-- Wave 2: Aggregation (depends on Wave 1 completing) -->\n\n<step name=\"aggregate_findings\">\n**Aggregate findings from all review subagents.**\n\nCollect and synthesize findings from review_architecture and review_conventions:\n- Combine findings into a unified analysis\n- Identify cross-cutting concerns found by multiple reviewers\n- Prioritize issues by severity\n- Write the aggregated analysis to SKEPTIC-REVIEW.md with a dated section\n</step>",
+      "focus": "Wave 1 review subagents and Wave 2 aggregation step to add to your skeptic workflow"
+    },
+    {
+      "type": "text",
+      "value": "Make it yours. Add more review subagents -- security analysis, dependency auditing, test coverage review -- each as its own step in Wave 1. Change the aggregation format. Reorganize the wave structure. The structural requirements that verification checks are:\n\n1. Multiple review aspects defined (architecture, conventions, or your own choices)\n2. Wave-based parallel structure (review steps marked as independent)\n3. An aggregation step that combines findings from all reviewers\n4. Aggregated output written to SKEPTIC-REVIEW.md\n\nEverything else -- the specific review focus areas, the analysis depth, the output format, how cross-cutting concerns are surfaced -- is your creative decision. Verification checks structure, not content.",
+      "focus": "Customization encouragement with clear structural requirements",
+      "bridge": "Here is exactly what you need to deliver."
+    },
+    {
+      "type": "project",
+      "task": "Extend your skeptic workflow with subagent-style orchestration -- multiple specialized review steps organized in waves, with an aggregator that combines findings.",
+      "deliverables": [
+        "Updated workflow at ~/.claude/get-shit-done/workflows/skeptic.md with review subagent steps organized in waves and an aggregation step",
+        "Running /gsd:skeptic produces aggregated multi-aspect findings in SKEPTIC-REVIEW.md"
+      ],
+      "verifyCommand": "node learn/bin/gsd-learn.cjs --verify --module=agent-orchestration",
+      "hintCommand": "node learn/bin/gsd-learn.cjs --hint --module=agent-orchestration",
+      "focus": "Project deliverables and verification commands",
+      "bridge": "Complete both deliverables and run verify to confirm your module mastery."
+    },
+    {
+      "type": "text",
+      "value": "With this mini-project complete, you have finished Module 4: Agent Orchestration. Look at how far you have come: from understanding GSD's orchestration model and subagent types, through wave-based execution and lean orchestrators, to checkpoints, auto-advance chains, and full lifecycle synthesis. Now you have applied it yourself -- your skeptic command orchestrates multiple review perspectives in parallel, just like GSD orchestrates planners and executors.\n\nThis is the pattern behind every /gsd: command you will ever build. Complex work is split into specialized agents. Independent agents run in parallel waves. An orchestrator delegates, coordinates, and aggregates. The result is greater than any single agent could produce alone. You do not just understand orchestration now -- you have built it.",
+      "focus": "Module completion and the power of orchestration patterns",
+      "bridge": "Module 4 complete. You can now build GSD workflows that orchestrate multiple specialized agents in parallel."
+    }
+  ],
+  "conceptMap": "mini-project",
+  "successCriteria": "Running --verify --module=agent-orchestration shows all checks passing for the skeptic workflow (purpose, process, wave structure, review subagents, aggregation, artifact persistence). Your skeptic command now orchestrates multiple review perspectives in parallel, just like GSD orchestrates executors."
+}
