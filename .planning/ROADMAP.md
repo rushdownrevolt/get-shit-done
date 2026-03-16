@@ -166,7 +166,7 @@ Plans:
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 16. Per-Module Export | v4.0 | 2/2 | Complete | 2026-03-15 |
 | 17. Master Document & Commit | v4.0 | 1/1 | Complete | 2026-03-15 |
-| 18. Module Infrastructure | 1/1 | Complete   | 2026-03-16 | - |
+| 18. Module Infrastructure | 1/1 | Complete    | 2026-03-16 | - |
 | 19. Lesson Content | v5.0 | 0/? | Not started | - |
 | 20. Mini-Project | v5.0 | 0/? | Not started | - |
 | 21. Export Update | v5.0 | 0/? | Not started | - |
