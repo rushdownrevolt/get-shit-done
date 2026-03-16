@@ -1,0 +1,20 @@
+{
+  "id": "agent-orchestration-project",
+  "moduleId": "agent-orchestration",
+  "title": "Build Orchestrated Skeptic Reviews",
+  "description": "Extend your skeptic workflow with subagent-style parallel review -- multiple review aspects organized in waves, with an orchestrator step that aggregates findings",
+  "artifacts": [
+    {
+      "description": "Skeptic workflow with orchestration layer",
+      "path": "~/.claude/get-shit-done/workflows/skeptic.md",
+      "checks": [
+        { "pattern": "<purpose>[\\s\\S]*?</purpose>", "description": "Has purpose section" },
+        { "pattern": "<process>[\\s\\S]*?</process>", "description": "Has process section" },
+        { "pattern": "(wave|Wave|WAVE)\\s*(1|2|one|two)|parallel.*review|concurrent.*review|simultaneous.*review", "description": "Defines wave-based or parallel review structure" },
+        { "pattern": "(subagent|sub-agent|review.*agent|agent.*review|aspect|facet|dimension|lens)\\s*(:|--|for|analyze|check|examine)|architecture.*review|convention.*review|dependency.*review|security.*review|quality.*review", "description": "Defines multiple review subagents or aspects" },
+        { "pattern": "aggregat|combine|merge|synthesiz|consolidat|collect.*finding|gather.*finding|unif", "description": "Has orchestrator step that aggregates subagent findings" },
+        { "pattern": "SKEPTIC-REVIEW|skeptic-review|review.*artifact|write.*finding|persist.*finding", "description": "Writes aggregated findings to review artifact" }
+      ]
+    }
+  ]
+}
