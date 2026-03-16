@@ -25,9 +25,9 @@ Requirements for v6.0 Quality & Feedback Loops Module. Each maps to roadmap phas
 
 ### Mini-Project
 
-- [ ] **MINI-01**: Mini-project spec with verification checks exercising quality/feedback knowledge
-- [ ] **MINI-02**: 5 progressive hints for mini-project
-- [ ] **MINI-03**: Mini-project lesson integrating spec into curriculum
+- [x] **MINI-01**: Mini-project spec with verification checks exercising quality/feedback knowledge
+- [x] **MINI-02**: 5 progressive hints for mini-project
+- [x] **MINI-03**: Mini-project lesson integrating spec into curriculum
 
 ### Export
 
@@ -62,9 +62,9 @@ Deferred to future release.
 | LESS-05 | Phase 23 | Complete |
 | LESS-06 | Phase 23 | Complete |
 | LESS-07 | Phase 23 | Complete |
-| MINI-01 | Phase 24 | Pending |
-| MINI-02 | Phase 24 | Pending |
-| MINI-03 | Phase 24 | Pending |
+| MINI-01 | Phase 24 | Complete |
+| MINI-02 | Phase 24 | Complete |
+| MINI-03 | Phase 24 | Complete |
 | EXPO-01 | Phase 25 | Pending |
 
 **Coverage:**
