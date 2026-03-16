@@ -1,0 +1,70 @@
+{
+  "id": "subagent-types",
+  "title": "Subagent Types",
+  "lessonNumber": 2,
+  "objective": "Learn the five specialized subagent types in GSD (executor, planner, researcher, verifier, checker) and understand what each one reads, produces, and is responsible for.",
+  "content": [
+    {
+      "type": "text",
+      "value": "The orchestrator spawns agents, but not all agents are the same. GSD has five specialized subagent types, each designed for a specific role in the workflow. The type determines what context the agent loads and what it is responsible for producing. This specialization prevents bloat -- an executor does not need planner logic, and a researcher does not need commit protocols. Each agent loads only what it needs.",
+      "focus": "Specialization prevents bloat",
+      "bridge": "Let's start with the agent you've already seen -- the executor."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<step name=\"parse_segments\">\nRouting by checkpoint type:\n\n| Checkpoints | Pattern    | Execution                         |\n|-------------|------------|-----------------------------------|\n| None        | A (auto)   | Single subagent: full plan +      |\n|             |            | SUMMARY + commit                  |\n| Verify-only | B (segment)| Segments between checkpoints.     |\n|             |            | After verify -> SUBAGENT.          |\n|             |            | After decision -> MAIN             |\n| Decision    | C (main)   | Execute entirely in main context  |\n</step>",
+      "highlight": [6, 8, 11]
+    },
+    {
+      "type": "text",
+      "value": "The executor (gsd-executor) is the workhorse of GSD. It reads a PLAN.md file, executes tasks sequentially, commits each task atomically, and creates a SUMMARY.md when finished. The routing table above shows three execution patterns: Pattern A is fully autonomous -- a single executor agent does everything. Pattern B is segmented -- the agent pauses at checkpoints for human verification. Pattern C runs in main context for plans requiring decisions. Most plans use Pattern A.",
+      "focus": "Executors build things",
+      "bridge": "Who creates the plans that executors follow?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Task(\n  prompt=filled_prompt,\n  subagent_type=\"gsd-planner\",\n  model=\"{planner_model}\",\n  description=\"Plan Phase {phase}\"\n)\n\n# Planner prompt includes:\n# <files_to_read>\n# - {state_path} (Project State)\n# - {roadmap_path} (Roadmap)\n# - {requirements_path} (Requirements)\n# - {context_path} (USER DECISIONS)\n# - {research_path} (Technical Research)\n# </files_to_read>",
+      "highlight": [3]
+    },
+    {
+      "type": "text",
+      "value": "The planner (gsd-planner) reads phase goals from ROADMAP.md and decomposes them into concrete tasks with dependencies. It produces PLAN.md files with frontmatter containing wave numbers, depends_on arrays, files_modified lists, and autonomous flags. The planner receives project state, requirements, user decisions from discuss-phase, and research findings. It outputs structured plans that executors can follow without ambiguity.",
+      "focus": "Planners decompose goals into executable tasks",
+      "bridge": "Sometimes the planner needs research before it can plan well."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Task(\n  prompt=\"<objective>\n  Research implementation approach for Phase {phase}: {name}\n  </objective>\n\n  <files_to_read>\n  - {context_path} (USER DECISIONS from /gsd:discuss-phase)\n  - {requirements_path} (Project requirements)\n  - {state_path} (Project decisions and history)\n  </files_to_read>\n\n  <output>\n  Write to: {phase_dir}/{phase_num}-RESEARCH.md\n  </output>\",\n  subagent_type=\"gsd-phase-researcher\",\n  model=\"{researcher_model}\"\n)",
+      "highlight": [15]
+    },
+    {
+      "type": "text",
+      "value": "The researcher (gsd-phase-researcher) investigates technical approaches before planning begins. It produces a RESEARCH.md with library evaluations, architecture patterns, and recommendations. The researcher is only spawned when discovery is needed -- if the technology is well-understood, planning proceeds directly. This prevents wasted effort on research when the path is already clear.",
+      "focus": "Researchers prevent blind implementation",
+      "bridge": "Plans get built and executed, but how does GSD know the result is correct?"
+    },
+    {
+      "type": "text",
+      "value": "Two more agents close the quality loop. The verifier (gsd-verifier) runs after execution to check must_haves against reality -- do the artifacts exist on disk, do the key links work, are the stated truths actually observable in the codebase? It produces a VERIFICATION.md with a pass/fail score. The checker (gsd-plan-checker) reviews PLAN.md quality before execution -- task completeness, dependency correctness, scope sanity. Together, the verifier and checker bookend execution: the checker validates the plan, the verifier validates the result.",
+      "focus": "Verifiers and checkers close the quality loop",
+      "bridge": "Here's the full picture of all five types."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Type                  | Spawned By     | Reads          | Produces\n----------------------|----------------|----------------|------------------\ngsd-executor          | execute-phase  | PLAN.md        | SUMMARY.md + commits\ngsd-planner           | plan-phase     | ROADMAP.md     | PLAN.md files\ngsd-phase-researcher  | plan-phase     | external docs  | RESEARCH.md\ngsd-verifier          | verify-phase   | SUMMARY.md     | VERIFICATION.md\ngsd-plan-checker      | plan-phase     | PLAN.md        | checker report",
+      "highlight": [1, 2, 3, 4, 5, 6, 7]
+    },
+    {
+      "type": "text",
+      "value": "Each agent type has a clear contract: what it reads, what it produces, and who spawns it. The orchestrator (execute-phase) only spawns executors and verifiers. The planning orchestrator (plan-phase) spawns planners, researchers, and checkers. This separation means each orchestrator stays focused on its domain. Now that you know WHO the agents are, the next lesson covers HOW they execute in parallel through the wave system.",
+      "focus": "Clear contracts between agent types",
+      "bridge": "In the next lesson, we'll see how plans declare dependencies and execute in parallel waves."
+    }
+  ],
+  "conceptMap": "subagent-types",
+  "successCriteria": "You can name all five GSD subagent types (executor, planner, researcher, verifier, checker), explain what each reads and produces, and describe how they form a quality loop around plan execution."
+}
