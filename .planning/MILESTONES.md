@@ -1,4 +1,26 @@
 # Milestones: GSD Learn
+## v5.0 — Agent Orchestration Module (Shipped: 2026-03-16)
+
+**Completed:** 2026-03-16
+**Phases:** 18, 19, 20, 21 (4 phases, 5 plans)
+**Last phase number:** 21
+
+**What shipped:**
+- Module 4: Agent Orchestration with 8 lessons (7 content + 1 mini-project) teaching subagent types, wave execution, orchestrator pattern, checkpoints, and auto-advance chains
+- All lesson content uses real code snippets from GSD's .agents/ configs and orchestration workflows
+- Mini-project: learner extends skeptic with parallel review subagents organized in waves with aggregation
+- v4→v5 progress migration chain with save-once refactor (25 tests passing)
+- AI curriculum updated — agent-orchestration.md (701 lines) + master README with all 4 modules
+
+**Requirements completed:** INFR-01, INFR-02, INFR-03, LESS-01, LESS-02, LESS-03, LESS-04, LESS-05, LESS-06, LESS-07, MINI-01, MINI-02, MINI-03, EXPO-01
+
+**Key learnings:**
+- Full auto-advance pipeline (plan → execute → verify) across all 4 phases in a single session
+- Mirrors v3.0 pattern (infra → content waves → mini-project) — proven structure scales to new modules
+- Content phases benefit from wave splitting (lessons 1-3, then 4-7) for manageable executor context
+
+---
+
 ## v4.0 — AI-Ready Curriculum (Shipped: 2026-03-15)
 
 **Completed:** 2026-03-15
