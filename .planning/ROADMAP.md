@@ -170,7 +170,7 @@ Plans:
 | 18. Module Infrastructure | 1/1 | Complete    | 2026-03-16 | - |
 | 19. Lesson Content | 2/2 | Complete    | 2026-03-16 | - |
 | 20. Mini-Project | 1/1 | Complete    | 2026-03-16 | - |
-| 21. Export Update | 1/1 | Complete   | 2026-03-16 | - |
+| 21. Export Update | 1/1 | Complete    | 2026-03-16 | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
