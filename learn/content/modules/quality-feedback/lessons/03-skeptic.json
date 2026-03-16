@@ -1,0 +1,58 @@
+{
+  "id": "skeptic",
+  "title": "Skeptic Reviews",
+  "lessonNumber": 3,
+  "objective": "Understand how GSD uses proactive critical assessment through two mechanisms: verify-phase's goal-backward analysis that questions outcomes after execution, and the plan-checker that validates plans before execution begins.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Verify-work tests AFTER building and relies on human observation. But what about gaps humans miss? What about structural problems invisible in the UI -- a component that renders correctly but fetches from a hardcoded array instead of the real API? GSD has a built-in skeptic: mechanisms that proactively question whether work actually achieves its goals. This skepticism operates at two levels. Verify-phase challenges outcomes after execution: did the goal get achieved? The plan-checker challenges plans before execution: is this plan complete enough to succeed?",
+      "focus": "Proactive questioning catches what reactive testing misses.",
+      "bridge": "Let's see how goal-backward analysis works in verify-phase."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Goal-backward verification:\n1. What must be TRUE for the goal to be achieved?\n2. What must EXIST for those truths to hold?\n3. What must be WIRED for those artifacts to function?\n\nThen verify each level against the actual codebase.\n\nmust_haves:\n  truths:\n    - \"User can see existing messages\"\n    - \"User can send a message\"\n    - \"Messages persist across refresh\"\n  artifacts:\n    - path: \"src/components/Chat.tsx\"\n      provides: \"Message list rendering\"\n    - path: \"src/app/api/chat/route.ts\"\n      provides: \"Message CRUD operations\"\n  key_links:\n    - from: \"src/components/Chat.tsx\"\n      to: \"/api/chat\"\n      via: \"fetch in useEffect\"\n      pattern: \"fetch.*api/chat\"",
+      "highlight": [1, 2, 3]
+    },
+    {
+      "type": "text",
+      "value": "Goal-backward verification flips the perspective from producer to skeptic. Instead of asking \"did all tasks pass?\" it asks \"what must be TRUE for the goal to be achieved?\" A task \"create chat component\" can be marked done while the component is a placeholder. Goal-backward catches this because the truth \"user can send messages\" requires actual wiring, not just file existence. The verifier checks that artifacts exist, that they contain substantive implementation (not stubs), and that critical connections between them actually work.",
+      "focus": "Flip perspective: start from the goal, work backward to evidence.",
+      "bridge": "The key_links section is where the real skepticism happens."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "key_links:\n  - from: \"src/components/Chat.tsx\"\n    to: \"/api/chat\"\n    via: \"fetch in useEffect\"\n    pattern: \"fetch.*api/chat\"\n  - from: \"src/app/api/chat/route.ts\"\n    to: \"prisma.message\"\n    via: \"Prisma query in handler\"\n    pattern: \"prisma\\\\.message\"\n\nVerification checks each key_link:\n| Exists | Substantive | Wired | Status     |\n|--------|-------------|-------|------------|\n| Y      | Y           | Y     | VERIFIED   |\n| Y      | Y           | N     | ORPHANED   |\n| Y      | N           | -     | STUB       |\n| N      | -           | -     | MISSING    |",
+      "highlight": [5, 9]
+    },
+    {
+      "type": "text",
+      "value": "Key links are the critical connections where breakage causes cascading failures. \"Chat.tsx fetches from /api/chat via useEffect\" -- if that fetch call is missing, the component renders but shows nothing. Key links have regex patterns that the verifier greps for in actual source code. This is not trust-based verification -- it is evidence-based. The verifier reads the actual file and confirms the pattern exists. A file can pass existence checks and even contain substantial code, but if the key link pattern is missing, it is flagged as ORPHANED -- present but not wired.",
+      "focus": "Key links catch the gaps between components -- where stubs hide.",
+      "bridge": "That is post-execution skepticism. GSD also reviews plans BEFORE execution."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<quality_gate>\n- [ ] PLAN.md files created in phase directory\n- [ ] Each plan has valid frontmatter\n- [ ] Tasks are specific and actionable\n- [ ] Every task has <read_first> with at least the file being modified\n- [ ] Every task has <acceptance_criteria> with grep-verifiable conditions\n- [ ] Every <action> contains concrete values (no \"align X with Y\")\n- [ ] Dependencies correctly identified\n- [ ] Waves assigned for parallel execution\n- [ ] must_haves derived from phase goal\n</quality_gate>",
+      "highlight": [6, 10]
+    },
+    {
+      "type": "text",
+      "value": "The plan-checker (gsd-plan-checker) reviews plans BEFORE execution starts. It checks: are all requirements covered? Are dependencies correct? Are tasks complete enough to execute without clarification? Does every task have acceptance criteria that can be verified with grep or a test command? Are must_haves derived from the phase goal for goal-backward verification? If the checker finds issues, it sends them back to the planner for revision -- up to three iterations. This prevents the \"build first, find out it was wrong later\" pattern. Plans are validated before any execution context is spent on them.",
+      "focus": "Catch plan defects before spending execution context on them.",
+      "bridge": "Together, these two mechanisms form GSD's complete skeptic review system."
+    },
+    {
+      "type": "text",
+      "value": "GSD's skeptic reviews operate at two levels: goal-backward verification AFTER execution checks that goals were achieved (not just tasks completed), and plan-checker validation BEFORE execution ensures plans are complete and precise. Together, they catch problems from both directions -- structural gaps that testing misses (orphaned components, unwired connections) and plan defects that would waste execution context (vague actions, missing acceptance criteria). Next, we will see the debug workflow: when bugs DO get through, how does GSD turn symptoms into root causes through hypothesis testing and persistent debug state?",
+      "focus": "Pre-execution and post-execution skepticism together close the quality gap.",
+      "bridge": "In the next lesson, we will examine the debug workflow that systematically finds root causes."
+    }
+  ],
+  "conceptMap": "skeptic",
+  "successCriteria": "You can explain goal-backward verification (truths, artifacts, key_links), describe how key_links use regex patterns to verify wiring in actual source code, and articulate how the plan-checker validates plans before execution to prevent wasted context."
+}
