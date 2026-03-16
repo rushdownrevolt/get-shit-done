@@ -182,7 +182,7 @@ Plans:
 | 19. Lesson Content | v5.0 | 2/2 | Complete | 2026-03-16 |
 | 20. Mini-Project | v5.0 | 1/1 | Complete | 2026-03-16 |
 | 21. Export Update | v5.0 | 1/1 | Complete | 2026-03-16 |
-| 22. Module Infrastructure | 1/1 | Complete   | 2026-03-16 | - |
+| 22. Module Infrastructure | 1/1 | Complete    | 2026-03-16 | - |
 | 23. Lesson Content | v6.0 | 0/2 | Not started | - |
 | 24. Mini-Project | v6.0 | 0/1 | Not started | - |
 | 25. Export Update | v6.0 | 0/1 | Not started | - |
