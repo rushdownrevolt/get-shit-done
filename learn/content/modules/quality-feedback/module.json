@@ -1,0 +1,16 @@
+{
+  "id": "quality-feedback",
+  "title": "Quality & Feedback Loops",
+  "description": "Learn how GSD verifies work and closes the feedback loop -- UAT, skeptic reviews, debug workflows, and gap closure cycles.",
+  "order": 5,
+  "sectionMap": {
+    "overview": "Overview",
+    "verify-work": "Verify-Work & UAT",
+    "skeptic": "Skeptic Reviews",
+    "debug": "Debug Workflows",
+    "gap-closure": "Gap Closure",
+    "milestone-audit": "Milestone Audit",
+    "synthesis": "Synthesis",
+    "mini-project": "Mini-Project"
+  }
+}
