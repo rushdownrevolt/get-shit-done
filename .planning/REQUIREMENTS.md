@@ -53,26 +53,26 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | TBD | Pending |
-| INFR-02 | TBD | Pending |
-| INFR-03 | TBD | Pending |
-| LESS-01 | TBD | Pending |
-| LESS-02 | TBD | Pending |
-| LESS-03 | TBD | Pending |
-| LESS-04 | TBD | Pending |
-| LESS-05 | TBD | Pending |
-| LESS-06 | TBD | Pending |
-| LESS-07 | TBD | Pending |
-| MINI-01 | TBD | Pending |
-| MINI-02 | TBD | Pending |
-| MINI-03 | TBD | Pending |
-| EXPO-01 | TBD | Pending |
+| INFR-01 | Phase 18 | Pending |
+| INFR-02 | Phase 18 | Pending |
+| INFR-03 | Phase 18 | Pending |
+| LESS-01 | Phase 19 | Pending |
+| LESS-02 | Phase 19 | Pending |
+| LESS-03 | Phase 19 | Pending |
+| LESS-04 | Phase 19 | Pending |
+| LESS-05 | Phase 19 | Pending |
+| LESS-06 | Phase 19 | Pending |
+| LESS-07 | Phase 19 | Pending |
+| MINI-01 | Phase 20 | Pending |
+| MINI-02 | Phase 20 | Pending |
+| MINI-03 | Phase 20 | Pending |
+| EXPO-01 | Phase 21 | Pending |
 
 **Coverage:**
 - v1 requirements: 14 total
-- Mapped to phases: 0
-- Unmapped: 14 ⚠️
+- Mapped to phases: 14
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-15*
-*Last updated: 2026-03-15 after initial definition*
+*Last updated: 2026-03-15 after roadmap creation*

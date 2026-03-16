@@ -9,6 +9,7 @@
 - ✅ **v2.3 Mini-Project Template Improvement** — Phase 11.1 (shipped 2026-03-15)
 - ✅ **v3.0 Planning & State Module** — Phases 12-15 (shipped 2026-03-15)
 - ✅ **v4.0 AI-Ready Curriculum** — Phases 16-17 (shipped 2026-03-15)
+- 🚧 **v5.0 Agent Orchestration Module** — Phases 18-21 (in progress)
 
 ## Phases
 
@@ -75,6 +76,71 @@
 
 </details>
 
+### 🚧 v5.0 Agent Orchestration Module (In Progress)
+
+**Milestone Goal:** Teach how GSD orchestrates work through subagents — wave-based parallelization, checkpoints, and auto-advance chains.
+
+- [ ] **Phase 18: Module Infrastructure** - Scaffold Module 4 with module.json, directory structure, progress migration, and concept map
+- [ ] **Phase 19: Lesson Content** - Author all 7 lessons covering orchestration model through synthesis
+- [ ] **Phase 20: Mini-Project** - Spec, progressive hints, and mini-project lesson exercising orchestration concepts
+- [ ] **Phase 21: Export Update** - Re-run AI curriculum export to include Module 4
+
+## Phase Details
+
+### Phase 18: Module Infrastructure
+**Goal**: Module 4 exists in the system and returning users can track their progress
+**Depends on**: Nothing (first phase of v5.0)
+**Requirements**: INFR-01, INFR-02, INFR-03
+**Success Criteria** (what must be TRUE):
+  1. Module picker shows "Agent Orchestration" as Module 4 with correct recommended flag behavior
+  2. Existing users' progress files migrate cleanly from v4 to v5 schema with zero data loss
+  3. concept-map.txt exists showing the lesson flow from orchestration overview through synthesis
+  4. Module directory structure matches convention: module.json, lessons/, project/
+**Plans**: TBD
+
+Plans:
+- [ ] 18-01: TBD
+
+### Phase 19: Lesson Content
+**Goal**: Learner can work through 7 lessons that teach agent orchestration from GSD's actual source
+**Depends on**: Phase 18
+**Requirements**: LESS-01, LESS-02, LESS-03, LESS-04, LESS-05, LESS-06, LESS-07
+**Success Criteria** (what must be TRUE):
+  1. Learner can navigate all 7 lessons sequentially with working next/back navigation
+  2. Each lesson contains real code snippets extracted from GSD's .agents/ configs and orchestration workflows
+  3. Learner progresses from "what is orchestration" through subagent roles, wave execution, orchestrator pattern, checkpoints, auto-advance, to full lifecycle synthesis
+  4. All 7 lesson JSON files load and render correctly in the existing lesson display engine
+**Plans**: TBD
+
+Plans:
+- [ ] 19-01: TBD
+
+### Phase 20: Mini-Project
+**Goal**: Learner exercises orchestration knowledge by building something that passes structural verification
+**Depends on**: Phase 19
+**Requirements**: MINI-01, MINI-02, MINI-03
+**Success Criteria** (what must be TRUE):
+  1. Mini-project lesson appears as the final step in Module 4 with spec-based verification
+  2. Verification checks exercise orchestration concepts (not just file existence)
+  3. 5 progressive hints guide the learner from stuck to solution without giving away the answer
+  4. Pressing "H" on the mini-project step reveals hints inline, persisted across sessions
+**Plans**: TBD
+
+Plans:
+- [ ] 20-01: TBD
+
+### Phase 21: Export Update
+**Goal**: AI curriculum docs include Module 4 so LLMs can learn agent orchestration by reading markdown
+**Depends on**: Phase 20
+**Requirements**: EXPO-01
+**Success Criteria** (what must be TRUE):
+  1. Running `node learn/bin/export-docs.cjs` produces agent-orchestration.md in docs/ai-curriculum/
+  2. Master README.md includes Module 4 content in correct learning order after Module 3
+**Plans**: TBD
+
+Plans:
+- [ ] 21-01: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -100,6 +166,10 @@
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 16. Per-Module Export | v4.0 | 2/2 | Complete | 2026-03-15 |
 | 17. Master Document & Commit | v4.0 | 1/1 | Complete | 2026-03-15 |
+| 18. Module Infrastructure | v5.0 | 0/? | Not started | - |
+| 19. Lesson Content | v5.0 | 0/? | Not started | - |
+| 20. Mini-Project | v5.0 | 0/? | Not started | - |
+| 21. Export Update | v5.0 | 0/? | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*

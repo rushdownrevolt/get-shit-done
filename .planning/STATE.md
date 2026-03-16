@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Agent Orchestration Module
 status: in_progress
-last_updated: "2026-03-15T22:00:00Z"
-last_activity: 2026-03-15 — Milestone v5.0 started
+last_updated: "2026-03-15T22:30:00Z"
+last_activity: 2026-03-15 — Roadmap created (4 phases, 14 requirements)
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v5.0 Agent Orchestration Module — Defining requirements
+**Current focus:** v5.0 Agent Orchestration Module — Phase 18 ready to plan
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 18 of 21 (Module Infrastructure)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-03-15 — Milestone v5.0 started
+Status: Ready to plan
+Last activity: 2026-03-15 — Roadmap created
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -48,12 +48,13 @@ Progress: [░░░░░░░░░░] 0%
 
 (Carried from v3.0/v4.0)
 - Module picker recommended flag uses first-uncompleted-module logic
-- Welcome screen text uses generic phrasing (no hardcoded module count)
 - Template-first mini-project pedagogy: provide working example, learner customizes
+- Hand-authored lessons with real source code snippets (not LLM-generated)
 
 ### Roadmap Evolution
 
 - 2026-03-15: v5.0 milestone started — Agent Orchestration Module
+- 2026-03-15: Roadmap created — 4 phases (18-21), 14 requirements mapped
 
 ### Blockers/Concerns
 
