@@ -3,27 +3,13 @@ gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Agent Orchestration Module
 status: in_progress
-last_updated: "2026-03-16T01:46:51.303Z"
-last_activity: 2026-03-16 — Completed 20-01 mini-project plan (spec, hints, lesson)
+last_updated: "2026-03-16T01:54:35.871Z"
+last_activity: 2026-03-16 — Completed 21-01 export-update plan (Module 4 AI curriculum export)
 progress:
   total_phases: 4
-  completed_phases: 3
-  total_plans: 4
-  completed_plans: 4
----
-
----
-gsd_state_version: 1.0
-milestone: v5.0
-milestone_name: Agent Orchestration Module
-status: in_progress
-last_updated: "2026-03-16T01:43:44.430Z"
-last_activity: 2026-03-16 — Completed 20-01 mini-project plan (spec, hints, lesson)
-progress:
-  total_phases: 4
-  completed_phases: 3
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 4
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State
@@ -33,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v5.0 Agent Orchestration Module — Phase 20 Plan 01 complete
+**Current focus:** v5.0 Agent Orchestration Module — Phase 21 Plan 01 complete
 
 ## Current Position
 
-Phase: 20 of 21 (Mini-Project)
+Phase: 21 of 21 (Export Update)
 Plan: 1 of 1 complete
 Status: In progress
-Last activity: 2026-03-16 — Completed 20-01 mini-project plan (spec, hints, lesson)
+Last activity: 2026-03-16 — Completed 21-01 export-update plan (Module 4 AI curriculum export)
 
 Progress: [##########] 100% (Overall)
 
@@ -54,8 +40,8 @@ Progress: [##########] 100% (Overall)
 - v2.3: 1 plan in ~4 min (4min/plan)
 - v3.0: 8 plans in ~16 min (avg 2.0min/plan)
 - v4.0: 3 plans in ~5 min (avg 1.7min/plan)
-- v5.0: 4 plans in ~13 min (avg 3.3min/plan)
-- Overall: 38 plans in ~108 min (avg 2.8min/plan)
+- v5.0: 5 plans in ~14 min (avg 2.8min/plan)
+- Overall: 39 plans in ~109 min (avg 2.8min/plan)
 
 ## Accumulated Context
 
@@ -72,6 +58,7 @@ Progress: [##########] 100% (Overall)
 - 8 blocks per lesson (5 text, 3 code) established as consistent pacing pattern
 - Spec checks test orchestration concepts (waves, subagents, aggregation) via regex, not just file existence
 - Template provides 2 review subagents as Wave 1 with aggregation as Wave 2
+- [Phase 21]: Used existing export-docs.cjs without modification - auto-discovery found Module 4
 
 ### Roadmap Evolution
 

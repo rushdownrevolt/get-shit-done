@@ -31,7 +31,7 @@ Requirements for v5.0 Agent Orchestration Module. Each maps to roadmap phases.
 
 ### Export
 
-- [ ] **EXPO-01**: AI curriculum export updated — Module 4 appears in per-module docs and master README
+- [x] **EXPO-01**: AI curriculum export updated — Module 4 appears in per-module docs and master README
 
 ## v2 Requirements
 
@@ -66,7 +66,7 @@ Deferred to future release.
 | MINI-01 | Phase 20 | Complete |
 | MINI-02 | Phase 20 | Complete |
 | MINI-03 | Phase 20 | Complete |
-| EXPO-01 | Phase 21 | Pending |
+| EXPO-01 | Phase 21 | Complete |
 
 **Coverage:**
 - v1 requirements: 14 total
