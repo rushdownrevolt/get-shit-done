@@ -56,7 +56,13 @@ The learner can confidently modify and extend GSD for their own needs, validated
 
 ### Active
 
-<!-- Next milestone scope -->
+<!-- v6.0 Quality & Feedback Loops Module scope -->
+
+- [ ] Module 5: Quality & Feedback Loops with lessons covering verify-work, UAT, skeptic, debug workflows, and gap closure
+- [ ] All lesson content parsed from GSD's actual verification and debugging workflows
+- [ ] Mini-project at end of module exercising quality/feedback concepts
+- [ ] v5→v6 progress migration for Module 5 tracking
+- [ ] AI curriculum export updated with Module 5 content
 
 ### Out of Scope
 
@@ -113,5 +119,16 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | TDD for markdown renderer | Pure function rendering engine tested in isolation before wiring to export script | ✓ Good |
 | Heading-level bump for master README | Simple regex bumps all headings so modules nest under a single h1; avoids AST complexity | ✓ Good |
 
+## Current Milestone: v6.0 Quality & Feedback Loops Module
+
+**Goal:** Teach how GSD verifies work and closes the feedback loop — UAT, skeptic reviews, debug workflows, and gap closure cycles.
+
+**Target features:**
+- Module 5: Quality & Feedback Loops (6-7 lessons + mini-project)
+- Lessons covering: verify-work/UAT, skeptic command, debug sessions, gap closure, diagnosis
+- Content parsed from actual verification and debugging workflows
+- Mini-project exercising quality/feedback concepts
+- AI curriculum export updated
+
 ---
-*Last updated: 2026-03-16 after v5.0 milestone*
+*Last updated: 2026-03-16 after v6.0 milestone started*

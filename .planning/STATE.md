@@ -1,48 +1,34 @@
 ---
 gsd_state_version: 1.0
-milestone: v5.0
-milestone_name: Agent Orchestration Module
+milestone: v6.0
+milestone_name: Quality & Feedback Loops Module
 status: in_progress
-last_updated: "2026-03-16T02:04:09.226Z"
-last_activity: 2026-03-16 — Completed 21-01 export-update plan (Module 4 AI curriculum export)
+last_updated: "2026-03-16T01:00:00Z"
+last_activity: 2026-03-16 — Milestone v6.0 started
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 5
-  completed_plans: 5
----
-
----
-gsd_state_version: 1.0
-milestone: v5.0
-milestone_name: Agent Orchestration Module
-status: in_progress
-last_updated: "2026-03-16T01:54:35.871Z"
-last_activity: 2026-03-16 — Completed 21-01 export-update plan (Module 4 AI curriculum export)
-progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 5
-  completed_plans: 5
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-15)
+See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v5.0 Agent Orchestration Module — Phase 21 Plan 01 complete
+**Current focus:** v6.0 Quality & Feedback Loops Module — Defining requirements
 
 ## Current Position
 
-Phase: 21 of 21 (Export Update)
-Plan: 1 of 1 complete
-Status: In progress
-Last activity: 2026-03-16 — Completed 21-01 export-update plan (Module 4 AI curriculum export)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-16 — Milestone v6.0 started
 
-Progress: [##########] 100% (Overall)
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -61,23 +47,15 @@ Progress: [##########] 100% (Overall)
 
 ### Decisions
 
-(Carried from v3.0/v4.0)
 - Module picker recommended flag uses first-uncompleted-module logic
 - Template-first mini-project pedagogy: provide working example, learner customizes
-- Hand-authored lessons with real source code snippets (not LLM-generated)
-- Refactored loadProgress to save once after all migrations (not per-migration)
-- v4-to-v5 structural version bump pattern (same as v3-to-v4)
-- Lessons use real verbatim code from GSD workflow files, not invented examples
-- 7-10 content blocks per lesson with text/code mix for pacing variety
+- Hand-authored lessons with real source code snippets
+- Content phases benefit from wave splitting (lessons 1-3, then 4-7)
 - 8 blocks per lesson (5 text, 3 code) established as consistent pacing pattern
-- Spec checks test orchestration concepts (waves, subagents, aggregation) via regex, not just file existence
-- Template provides 2 review subagents as Wave 1 with aggregation as Wave 2
-- [Phase 21]: Used existing export-docs.cjs without modification - auto-discovery found Module 4
 
 ### Roadmap Evolution
 
-- 2026-03-15: v5.0 milestone started — Agent Orchestration Module
-- 2026-03-15: Roadmap created — 4 phases (18-21), 14 requirements mapped
+- 2026-03-16: v6.0 milestone started — Quality & Feedback Loops Module
 
 ### Blockers/Concerns
 
