@@ -1,0 +1,52 @@
+{
+  "id": "overview",
+  "title": "The Orchestration Model",
+  "lessonNumber": 1,
+  "objective": "Understand how GSD uses an orchestration model where a coordinator agent spawns specialized subagents with fresh context, rather than running everything in a single long-lived agent.",
+  "content": [
+    {
+      "type": "text",
+      "value": "GSD breaks work into phases and plans, but who actually executes them? You might assume a single agent reads the plan and does everything. But that approach has a fatal flaw -- as an agent works through tasks, it fills its context window. By task 8 of 12, it has forgotten the nuances from task 1. Quality degrades as context fills. GSD solves this with an orchestration model: a coordinator agent spawns specialized subagents, each starting with a fresh context window.",
+      "focus": "Why orchestration instead of one big agent",
+      "bridge": "Let's see the core principle that drives this design."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<core_principle>\nOrchestrator coordinates, not executes. Each subagent loads the\nfull execute-plan context. Orchestrator: discover plans -> analyze\ndeps -> group waves -> spawn agents -> handle checkpoints ->\ncollect results.\n</core_principle>",
+      "highlight": [2, 3]
+    },
+    {
+      "type": "text",
+      "value": "Three key insights from that principle. First, the orchestrator coordinates but never writes code itself -- it spawns agents that do the work. Second, each subagent loads full context fresh, meaning every agent starts with a clean 200k-token window. Third, the orchestrator stays lean at roughly 10-15% context usage. This means the orchestrator can manage dozens of plans without its own quality degrading. The coordinator stays sharp because it never gets bogged down in implementation details.",
+      "focus": "Lean orchestrator = consistent quality",
+      "bridge": "What does the orchestrator actually do at a high level?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<purpose>\nExecute all plans in a phase using wave-based parallel execution.\nOrchestrator stays lean -- delegates plan execution to subagents.\n</purpose>",
+      "highlight": [2, 3]
+    },
+    {
+      "type": "text",
+      "value": "The execution flow follows a clear sequence of discrete responsibilities: discover plans, analyze dependencies, group into waves, spawn agents per wave, handle checkpoints, collect results. Each step is a distinct job. The orchestrator never drifts into implementation -- it never edits a source file, never writes a test, never creates a component. It only reads plan metadata and spawns agents to do the actual building. This separation of concerns prevents scope creep at the coordination level.",
+      "focus": "Discrete responsibilities prevent scope creep",
+      "bridge": "How does the orchestrator actually spawn an agent?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Task(\n  subagent_type=\"gsd-executor\",\n  model=\"{executor_model}\",\n  prompt=\"\n    <objective>\n    Execute plan {plan_number} of phase {phase_number}-{phase_name}.\n    Commit each task atomically. Create SUMMARY.md. Update STATE.md\n    and ROADMAP.md.\n    </objective>\n\n    <files_to_read>\n    Read these files at execution start using the Read tool:\n    - {phase_dir}/{plan_file} (Plan)\n    - .planning/STATE.md (State)\n    - .planning/config.json (Config)\n    </files_to_read>\n\n    <success_criteria>\n    - [ ] All tasks executed\n    - [ ] Each task committed individually\n    - [ ] SUMMARY.md created in plan directory\n    </success_criteria>\n  \"\n)",
+      "highlight": [2, 11, 12, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "Notice what the orchestrator passes: paths, not content. The executor reads files itself with its fresh 200k context window. This is the path-only delegation pattern -- the orchestrator tells agents WHERE to look, not WHAT to do. The plan file IS the instruction set. The executor loads it, reads the tasks, executes them sequentially, commits each one, and produces a SUMMARY.md. The orchestrator never sees the code being written. Now you know the orchestration model: a lean coordinator spawns fresh agents that each load their own context. Next, we'll meet the specific agent types that play each role.",
+      "focus": "Path-only delegation keeps the orchestrator lean",
+      "bridge": "In the next lesson, we'll examine the five specialized agent types and what each one is responsible for."
+    }
+  ],
+  "conceptMap": "overview",
+  "successCriteria": "You can explain that GSD uses an orchestration model where a lean coordinator spawns subagents with fresh context, and describe the path-only delegation pattern where the orchestrator passes file paths rather than content."
+}
