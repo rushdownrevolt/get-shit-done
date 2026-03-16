@@ -1,0 +1,58 @@
+{
+  "id": "gap-closure",
+  "title": "Gap Closure",
+  "lessonNumber": 5,
+  "objective": "Understand the gap closure cycle: how diagnosed gaps flow from UAT.md through plan-phase --gaps to create targeted fix plans, and how execute --gaps-only runs only those plans for surgical fixes.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Debug agents found root causes and updated UAT.md with diagnoses. Now what? The gap closure cycle turns those diagnoses into targeted fix plans. The flow is: diagnose-issues updates UAT.md status to \"diagnosed\" with root_cause, artifacts, and missing fields filled in. Then plan-phase --gaps reads those diagnosed gaps and creates fix plans with mode: gap_closure. Finally, execute-phase --gaps-only runs just those fix plans. Each step carries forward the diagnosis -- planners do not re-investigate, they read the root cause and create precise tasks.",
+      "focus": "From diagnosis to targeted fix, automatically.",
+      "bridge": "Let's see how plan-phase handles the --gaps flag."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "plan-phase receives --gaps flag:\n\n1. Skip research (gaps already diagnosed)\n2. Load gap sources:\n   - VERIFICATION.md (code verification gaps)\n   - UAT.md with \"status: diagnosed\" (user testing gaps)\n3. Pass to planner with mode: gap_closure\n\nPlanner prompt includes:\n<planning_context>\n**Mode:** gap_closure\n\n<files_to_read>\n- {verification_path} (Verification Gaps)\n- {uat_path} (UAT Gaps - diagnosed)\n</files_to_read>\n</planning_context>\n\nThe planner reads diagnosed gaps and creates targeted fix plans\ninstead of planning new features from scratch.",
+      "highlight": [2, 3, 4, 11]
+    },
+    {
+      "type": "text",
+      "value": "What makes gap closure targeted: each gap carries its diagnosis forward. A diagnosed gap in UAT.md has a truth (what should be TRUE), a reason (what went wrong), a root_cause (what the debug agent found), artifacts (files with issues), and missing (things to add or fix). The planner does not guess -- it reads the diagnosed root cause and creates tasks that address the specific missing items. The gap_closure mode flag tracks that these plans exist to close gaps, not add new features. This is the difference between \"something is broken, figure it out\" and \"this specific thing in this specific file needs this specific change.\"",
+      "focus": "Gaps carry their diagnosis -- planners do not re-investigate.",
+      "bridge": "Let's see what gap information flows into the fix plans."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Diagnosed gap in UAT.md (after diagnose-issues):\n\n```yaml\n- truth: \"Comment appears immediately after submission\"\n  status: diagnosed\n  reason: \"User reported: works but doesn't show until I refresh\"\n  severity: major\n  test: 2\n  root_cause: \"useEffect in CommentList.tsx missing commentCount dependency\"\n  artifacts:\n    - path: \"src/components/CommentList.tsx\"\n      issue: \"useEffect missing dependency\"\n  missing:\n    - \"Add commentCount to useEffect dependency array\"\n    - \"Trigger re-render when new comment added\"\n  debug_session: .planning/debug/comment-not-refreshing.md\n```\n\nThis diagnosed gap feeds directly into plan-phase --gaps.\nThe planner creates tasks from root_cause and missing fields.",
+      "highlight": [4, 9, 12, 13]
+    },
+    {
+      "type": "text",
+      "value": "When running execute-phase with --gaps-only, only gap closure plans execute. This prevents re-running already-complete plans. Gap closure plans get sequential plan numbers after existing plans (if plans 01-03 exist, gap plans start at 04), their own wave assignments based on dependencies, and their own verification. After execution, verify-work can re-test to confirm gaps are closed. The execution is surgical: only the diagnosed issues get fixed, only the affected files get modified, only the relevant tests get re-run.",
+      "focus": "Gaps-only execution -- surgical fixes without re-running everything.",
+      "bridge": "But what happens after the fixes are applied? The cycle can repeat."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Gap becomes phase tasks (from plan-milestone-gaps):\n\ngap:\n  id: DASH-01\n  description: \"User sees their data\"\n  reason: \"Dashboard exists but doesn't fetch from API\"\n  missing:\n    - \"useEffect with fetch to /api/user/data\"\n    - \"State for user data\"\n    - \"Render user data in JSX\"\n\nbecomes:\n\nphase: \"Wire Dashboard Data\"\ntasks:\n  - name: \"Add data fetching\"\n    files: [src/components/Dashboard.tsx]\n    action: \"Add useEffect that fetches /api/user/data on mount\"\n\n  - name: \"Add state management\"\n    files: [src/components/Dashboard.tsx]\n    action: \"Add useState for userData, loading, error states\"\n\n  - name: \"Render user data\"\n    files: [src/components/Dashboard.tsx]\n    action: \"Replace placeholder with userData.map rendering\"",
+      "highlight": [3, 7, 8, 9]
+    },
+    {
+      "type": "text",
+      "value": "After gap closure plans execute, the system can run verify-work again. If new issues are found, the cycle repeats: diagnose -> plan --gaps -> execute --gaps-only -> verify again. Each iteration is targeted and smaller than the last. In practice, most gaps close in one cycle because root cause diagnosis prevents symptom-chasing. The cycle converges because each iteration addresses specific, diagnosed causes rather than guessing. If a fix introduces a new problem, the next iteration catches it with a fresh diagnosis -- not by reverting to guesswork.",
+      "focus": "The cycle converges -- each pass is smaller and more targeted.",
+      "bridge": "Gap closure fixes problems within a single phase. But what about gaps that span multiple phases?"
+    },
+    {
+      "type": "text",
+      "value": "Gap closure fixes problems within a single phase. But what about gaps that span multiple phases? What about ensuring an entire milestone hangs together? Phase 1 might create a database schema, Phase 2 an API, Phase 3 a UI -- each phase can pass verification individually while the cross-phase wiring is broken. Next, we will see how audit-milestone checks the big picture and plan-milestone-gaps creates cross-phase fixes.",
+      "focus": "Phase-level fixes are necessary but not sufficient for milestone success.",
+      "bridge": "In the next lesson, we will examine milestone-level auditing."
+    }
+  ],
+  "conceptMap": "gap-closure",
+  "successCriteria": "You can explain the gap closure cycle (diagnose -> plan --gaps -> execute --gaps-only -> re-verify), describe how diagnosed gaps carry root cause information forward to planners, and articulate why the cycle converges rather than looping endlessly."
+}
