@@ -94,7 +94,7 @@
 - [x] **Phase 22: Module Infrastructure** - Scaffold Module 5 with module.json, directory structure, progress migration, and concept map (completed 2026-03-16)
 - [x] **Phase 23: Lesson Content** - Author all 7 lessons covering quality lifecycle from verify-work through synthesis (completed 2026-03-16)
 - [x] **Phase 24: Mini-Project** - Spec, progressive hints, and mini-project lesson exercising quality/feedback concepts (completed 2026-03-16)
-- [ ] **Phase 25: Export Update** - Re-run AI curriculum export to include Module 5
+- [x] **Phase 25: Export Update** - Re-run AI curriculum export to include Module 5 (completed 2026-03-16)
 
 ## Phase Details
 
@@ -185,7 +185,7 @@ Plans:
 | 22. Module Infrastructure | 1/1 | Complete    | 2026-03-16 | - |
 | 23. Lesson Content | 2/2 | Complete    | 2026-03-16 | - |
 | 24. Mini-Project | 1/1 | Complete    | 2026-03-16 | - |
-| 25. Export Update | v6.0 | 0/1 | Not started | - |
+| 25. Export Update | 1/1 | Complete   | 2026-03-16 | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*

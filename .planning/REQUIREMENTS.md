@@ -31,7 +31,7 @@ Requirements for v6.0 Quality & Feedback Loops Module. Each maps to roadmap phas
 
 ### Export
 
-- [ ] **EXPO-01**: AI curriculum export updated — Module 5 appears in per-module docs and master README
+- [x] **EXPO-01**: AI curriculum export updated — Module 5 appears in per-module docs and master README
 
 ## v2 Requirements
 
@@ -65,7 +65,7 @@ Deferred to future release.
 | MINI-01 | Phase 24 | Complete |
 | MINI-02 | Phase 24 | Complete |
 | MINI-03 | Phase 24 | Complete |
-| EXPO-01 | Phase 25 | Pending |
+| EXPO-01 | Phase 25 | Complete |
 
 **Coverage:**
 - v1 requirements: 14 total
