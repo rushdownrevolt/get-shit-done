@@ -1,0 +1,58 @@
+{
+  "id": "overview",
+  "title": "The Quality Lifecycle",
+  "lessonNumber": 1,
+  "objective": "Understand the quality lifecycle loop that GSD uses at every level: build -> verify -> diagnose -> fix -> re-verify. This loop is not aspirational -- it is enforced by the workflow structure.",
+  "content": [
+    {
+      "type": "text",
+      "value": "GSD automates execution with agents, but how does it know the output is correct? Completing tasks does not equal achieving goals. A \"create chat component\" task can pass while producing a placeholder that renders nothing. The component file exists, the task is marked done, but the user cannot send messages. GSD solves this with a quality lifecycle: build -> verify -> diagnose -> fix -> re-verify. This loop runs at every level -- per-task, per-phase, per-milestone. Each level has dedicated workflows that enforce the loop automatically.",
+      "focus": "Task completion is not goal achievement.",
+      "bridge": "Let's see the verify-work workflow that starts this loop."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<purpose>\nValidate built features through conversational testing with persistent\nstate. Creates UAT.md that tracks test progress, survives /clear, and\nfeeds gaps into /gsd:plan-phase --gaps.\n\nUser tests, Claude records. One test at a time. Plain text responses.\n</purpose>",
+      "highlight": [2, 3, 4]
+    },
+    {
+      "type": "text",
+      "value": "That is verify-work -- the entry point to the quality loop. It validates what was built through conversational testing and creates a persistent UAT.md file. But verification happens at a higher level too. After execute-phase completes all plans, verify-phase checks whether the phase GOAL was achieved -- not just whether tasks completed. If gaps are found, diagnose-issues investigates root causes, then plan-phase --gaps creates targeted fix plans, then execute-phase --gaps-only runs them. This is the re-verify cycle: gaps drive new work until the goal is truly met.",
+      "focus": "The loop closes itself -- gaps drive new plans automatically.",
+      "bridge": "Here is the core principle that drives phase-level verification."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<core_principle>\n**Task completion \\u2260 Goal achievement**\n\nA task \"create chat component\" can be marked complete when the\ncomponent is a placeholder. The task was done -- but the goal\n\"working chat interface\" was not achieved.\n\nGoal-backward verification:\n1. What must be TRUE for the goal to be achieved?\n2. What must EXIST for those truths to hold?\n3. What must be WIRED for those artifacts to function?\n\nThen verify each level against the actual codebase.\n</core_principle>",
+      "highlight": [8, 9, 10]
+    },
+    {
+      "type": "text",
+      "value": "Those three questions -- what must be TRUE, what must EXIST, what must be WIRED -- are the goal-backward verification framework. They flip the perspective from \"did we do stuff?\" to \"did we achieve the goal?\" At the milestone level, the same pattern repeats: audit-milestone aggregates all phase verifications, checks cross-phase integration, and assesses requirements coverage. If gaps remain, plan-milestone-gaps creates new phases. The loop is the same at every level: check -> diagnose -> fix -> re-check. This is not aspirational -- it is enforced by the workflow structure.",
+      "focus": "Same loop at every level: task, phase, milestone.",
+      "bridge": "Before fixing gaps, GSD insists on diagnosis first. Here is why."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<core_principle>\n**Diagnose before planning fixes.**\n\nUAT tells us WHAT is broken (symptoms). Debug agents find WHY\n(root cause). plan-phase --gaps then creates targeted fixes based\non actual causes, not guesses.\n\nWithout diagnosis: \"Comment doesn't refresh\" -> guess at fix -> maybe wrong\nWith diagnosis: \"Comment doesn't refresh\" -> \"useEffect missing dependency\" -> precise fix\n</core_principle>",
+      "highlight": [8]
+    },
+    {
+      "type": "text",
+      "value": "Without root cause analysis, plan-phase --gaps would create fixes based on symptoms. \"Doesn't refresh\" might lead to a guess -- add a setTimeout, force a re-render, clear a cache. With diagnosis, debug agents find the actual cause: \"useEffect missing dependency in CommentList.tsx.\" Now plan-phase --gaps creates a precise, targeted fix. This is the difference between guessing and knowing. The quality lifecycle depends on this step -- diagnosis turns symptoms into actionable causes, making the fix cycle converge instead of looping endlessly.",
+      "focus": "Diagnosis turns symptoms into actionable causes.",
+      "bridge": "Now that you understand the quality lifecycle, the next lesson dives deep into the first step."
+    },
+    {
+      "type": "text",
+      "value": "You now know the quality lifecycle: build -> verify -> diagnose -> fix -> re-verify. This loop runs at task level (verify-work tests features), phase level (verify-phase checks goal achievement), and milestone level (audit-milestone checks cross-phase integration). Each level uses the same pattern: check whether the goal was achieved, diagnose why it was not, create targeted fixes, and re-check. Next, we will dive deep into verify-work and UAT -- how GSD conducts conversational testing and creates persistent records that survive context window clears.",
+      "focus": "The quality lifecycle is a loop, not a checklist.",
+      "bridge": "In the next lesson, we will see how verify-work and UAT implement the first step of this loop."
+    }
+  ],
+  "conceptMap": "overview",
+  "successCriteria": "You can explain the quality lifecycle (build -> verify -> diagnose -> fix -> re-verify), describe how it operates at task, phase, and milestone levels, and articulate why diagnosis before fixing matters for creating targeted rather than speculative fixes."
+}
