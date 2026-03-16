@@ -1,0 +1,58 @@
+{
+  "id": "checkpoints",
+  "title": "Checkpoints and Gates",
+  "lessonNumber": 5,
+  "objective": "Understand how GSD uses checkpoints for human-in-the-loop control: the three checkpoint types, the autonomous flag, continuation agents, and execution routing patterns.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Lean orchestrators run plans autonomously, but not ALL work can be fully automated. Visual verification, deployment approval, external service setup -- these need human judgment. GSD handles this through checkpoints: structured pause points in plan execution. The key principle is automation first -- Claude automates everything it can, then checkpoints verify the result. Checkpoints do not replace automation; they confirm it worked.",
+      "focus": "Automation first, checkpoints for what requires human judgment",
+      "bridge": "Let's see how plans signal whether they need checkpoints."
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "value": "# Plan with no checkpoints -- runs fully autonomously\n---\nphase: 05-feature\nplan: 01\nautonomous: true\n---\n\n# Plan with checkpoints -- pauses for human input\n---\nphase: 05-feature\nplan: 02\nautonomous: false\n---\n\n# A checkpoint task inside a plan:\n<task type=\"checkpoint:human-verify\" gate=\"blocking\">\n  <name>Verify login page renders correctly</name>\n  <what-built>Login form with email/password fields and OAuth buttons</what-built>\n  <how-to-verify>\n    1. Visit http://localhost:3000/login\n    2. Confirm email and password fields are visible\n    3. Test with credentials: admin@test.com / password123\n    4. Verify redirect to dashboard after login\n  </how-to-verify>\n  <resume-signal>\"approved\" or describe issues found</resume-signal>\n</task>",
+      "highlight": [5, 12, 16, 17]
+    },
+    {
+      "type": "text",
+      "value": "There are three checkpoint types. checkpoint:human-verify (90% of cases) -- Claude automates everything, then the human confirms it works by visiting a URL, clicking through UI, or checking visual output. checkpoint:decision (9%) -- the human makes an implementation choice between options that Claude cannot decide alone. checkpoint:human-action (1%, rare) -- a truly unavoidable manual step like clicking an email verification link or entering a 2FA code. The critical rule: if Claude CAN do it via CLI or API, Claude MUST do it. Checkpoints verify AFTER automation, not replace it.",
+      "focus": "Checkpoints verify, they don't replace automation",
+      "bridge": "How does the orchestrator handle these checkpoint types?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<step name=\"checkpoint_handling\">\nPlans with autonomous: false require user interaction.\n\nWhen executor returns a checkpoint:\n- human-verify  -> Auto-spawn continuation agent\n                   with user_response = \"approved\".\n                   Log: Auto-approved checkpoint.\n- decision      -> Auto-spawn continuation agent\n                   with user_response = first option.\n                   Log: Auto-selected: [option].\n- human-action  -> Present to user (cannot be automated).\n                   Auth gates cannot be automated.\n\nStandard flow (not auto-mode):\n1. Spawn agent for checkpoint plan\n2. Agent runs until checkpoint -> returns structured state\n3. Agent return includes: completed tasks table,\n   current task + blocker, checkpoint type/details\n4. Present to user with verification steps\n5. User responds: \"approved\" | issue description | decision\n6. Spawn CONTINUATION agent (NOT resume)\n7. Continuation agent verifies previous commits,\n   continues from resume point\n8. Repeat until plan completes\n</step>",
+      "highlight": [5, 8, 11, 22]
+    },
+    {
+      "type": "text",
+      "value": "When an executor hits a checkpoint task, it stops and returns its state: completed tasks with commit hashes, the current blocker, and what is awaited from the user. The orchestrator presents this to the user with specific verification steps. The user responds -- approved, an issue description, or a decision selection. Then a CONTINUATION agent is spawned. This is critical: not a resume of the old agent, but a fresh agent that picks up from where the checkpoint was. It verifies previous commits exist, loads the plan, and continues from the resume point. This preserves the fresh-context principle even across human checkpoints.",
+      "focus": "Continuation, not resumption -- fresh context even after checkpoints",
+      "bridge": "How does the executor decide its execution pattern?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<step name=\"parse_segments\">\nRouting by checkpoint type:\n\n| Checkpoints  | Pattern        | Execution                    |\n|--------------|----------------|------------------------------|\n| None         | A (autonomous) | Single subagent: full plan   |\n|              |                | + SUMMARY + commit           |\n| Verify-only  | B (segmented)  | Segments between checkpoints |\n|              |                | After verify -> SUBAGENT     |\n|              |                | After decision -> MAIN       |\n| Decision     | C (main)       | Execute entirely in main     |\n|              |                | context                      |\n\nFresh context per subagent preserves peak quality.\nMain context stays lean.\n</step>",
+      "highlight": [6, 8, 11]
+    },
+    {
+      "type": "text",
+      "value": "The routing is automatic based on checkpoint types found in the plan. Pattern A plans have no checkpoints -- they get one executor that does everything autonomously. Pattern B plans have verify-only checkpoints -- they get segmented execution where autonomous segments run as subagents and checkpoint segments pause for human input. Pattern C plans have decision checkpoints -- they execute entirely in the main orchestrator context because complex decisions need the orchestrator's full awareness. The executor scans for checkpoint tasks and routes accordingly, before any code runs.",
+      "focus": "Routing adapts execution to plan structure",
+      "bridge": "What does this mean for the overall workflow?"
+    },
+    {
+      "type": "text",
+      "value": "Checkpoints create human-in-the-loop control without sacrificing automation. The orchestrator runs everything it can, pauses only when it must, and uses fresh continuation agents to maintain quality after pauses. Most plans (Pattern A) never pause at all. The few that do (Patterns B and C) get precise, structured interactions rather than vague 'is this okay?' prompts. Next, we will see the opposite end of the control spectrum -- how GSD chains entire phases together for fully hands-free execution with auto-advance.",
+      "focus": "Structured control without sacrificing automation",
+      "bridge": "In the next lesson, we'll explore auto-advance chains -- how GSD runs entire phase lifecycles without any human interaction."
+    }
+  ],
+  "conceptMap": "checkpoints",
+  "successCriteria": "You can explain the three checkpoint types (human-verify, decision, human-action), the autonomous flag in plan frontmatter, the continuation agent pattern (fresh agent, not resumed), and the three execution routing patterns (A: autonomous, B: segmented, C: main context)."
+}
