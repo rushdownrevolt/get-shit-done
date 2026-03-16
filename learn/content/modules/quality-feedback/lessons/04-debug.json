@@ -1,0 +1,58 @@
+{
+  "id": "debug",
+  "title": "Debug Workflows",
+  "lessonNumber": 4,
+  "objective": "Understand how GSD systematically debugs issues using parallel debug agents, hypothesis testing, and persistent DEBUG.md state that survives context window clears.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Skeptic reviews catch structural problems, but sometimes bugs get through to testing. When verify-work finds issues, GSD does not just guess at fixes. It uses a systematic debug workflow: diagnose-issues spawns parallel debug agents, each investigating one gap with hypothesis testing and persistent state. The orchestrator stays lean -- it parses gaps from UAT.md, spawns one agent per gap, collects root causes, and updates UAT.md with diagnoses. No guessing, no random changes -- structured investigation.",
+      "focus": "Systematic debugging, not guessing.",
+      "bridge": "Let's see the debug orchestrator that drives this process."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<purpose>\nOrchestrate parallel debug agents to investigate UAT gaps and find root causes.\n\nAfter UAT finds gaps, spawn one debug agent per gap. Each agent investigates\nautonomously with symptoms pre-filled from UAT. Collect root causes, update\nUAT.md gaps with diagnosis, then hand off to plan-phase --gaps with actual\ndiagnoses.\n\nOrchestrator stays lean: parse gaps, spawn agents, collect results, update UAT.\n</purpose>\n\n<core_principle>\n**Diagnose before planning fixes.**\n\nUAT tells us WHAT is broken (symptoms). Debug agents find WHY (root cause).\nplan-phase --gaps then creates targeted fixes based on actual causes, not guesses.\n\nWithout diagnosis: \"Comment doesn't refresh\" -> guess at fix -> maybe wrong\nWith diagnosis: \"Comment doesn't refresh\" -> \"useEffect missing dependency\" -> precise fix\n</core_principle>",
+      "highlight": [12, 17, 18]
+    },
+    {
+      "type": "text",
+      "value": "The debug orchestration flow works like this: diagnose-issues reads the Gaps section of UAT.md. For each gap, it extracts the truth (what should happen), the severity, and the reason (what the user reported). Then it spawns one debug agent per gap -- all in parallel. Each agent investigates autonomously with symptoms pre-filled from UAT, so no time is wasted gathering information the system already has. The orchestrator stays lean: parse gaps, spawn agents, collect results, update UAT.md with diagnoses.",
+      "focus": "One agent per gap, parallel investigation, orchestrator stays lean.",
+      "bridge": "Each debug agent tracks its investigation in a persistent DEBUG.md file."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "---\nstatus: gathering | investigating | fixing | verifying | awaiting_human_verify | resolved\ntrigger: \"[verbatim user input]\"\ncreated: [ISO timestamp]\nupdated: [ISO timestamp]\n---\n\n## Current Focus\n<!-- OVERWRITE on each update - always reflects NOW -->\n\nhypothesis: [current theory being tested]\ntest: [how testing it]\nexpecting: [what result means if true/false]\nnext_action: [immediate next step]\n\n## Symptoms\n<!-- Written during gathering, then immutable -->\n\nexpected: [what should happen]\nactual: [what actually happens]\nerrors: [error messages if any]\nreproduction: [how to trigger]\n\n## Eliminated\n<!-- APPEND only - prevents re-investigating after /clear -->\n\n- hypothesis: [theory that was wrong]\n  evidence: [what disproved it]\n  timestamp: [when eliminated]\n\n## Evidence\n<!-- APPEND only - facts discovered during investigation -->\n\n- timestamp: [when found]\n  checked: [what was examined]\n  found: [what was observed]\n  implication: [what this means]",
+      "highlight": [2, 11, 12, 13]
+    },
+    {
+      "type": "text",
+      "value": "The hypothesis-testing methodology is the heart of the debug workflow. The agent states a hypothesis (\"useEffect missing dependency\"), designs a test to confirm or deny it, records what the result would mean, then executes. If the hypothesis is wrong, it goes into the Eliminated section -- which is append-only to prevent re-investigating the same dead end after a context clear. If the hypothesis is right, it goes into Resolution with the root_cause and fix. This structured approach prevents the \"change random things and hope\" anti-pattern. Every investigation step produces evidence, and eliminated theories are never revisited.",
+      "focus": "State hypothesis, test, record -- never re-investigate eliminated theories.",
+      "bridge": "The orchestrator parses gaps from UAT.md in a structured format before spawning agents."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Extract gaps from UAT.md (YAML format):\n\n```yaml\n- truth: \"Comment appears immediately after submission\"\n  status: failed\n  reason: \"User reported: works but doesn't show until I refresh the page\"\n  severity: major\n  test: 2\n  artifacts: []\n  missing: []\n```\n\nDiagnosis plan table:\n\n| Gap (Truth)                               | Severity |\n|-------------------------------------------|----------|\n| Comment appears immediately after submit  | major    |\n| Reply button positioned correctly         | minor    |\n| Delete removes comment                    | blocker  |\n\nEach agent will:\n1. Create DEBUG-{slug}.md with symptoms pre-filled\n2. Investigate autonomously (read code, form hypotheses, test)\n3. Return root cause",
+      "highlight": [4, 6, 7]
+    },
+    {
+      "type": "text",
+      "value": "DEBUG.md files persist across context clears. If a debug session is interrupted, the agent picks up from the Current Focus section -- which is always overwritten to reflect the current state. It reads Eliminated to avoid repeating dead-end investigations, and reads Evidence for accumulated facts. The Symptoms section is written once during the gathering phase and becomes immutable -- the original bug description never changes even as understanding evolves. This persistence means an investigation can survive any number of session boundaries without losing progress or repeating work.",
+      "focus": "Debug state persists -- investigation survives session boundaries.",
+      "bridge": "Debug agents find root causes for individual gaps, but how does the system turn those diagnoses into organized fix plans?"
+    },
+    {
+      "type": "text",
+      "value": "Debug agents find root causes for individual gaps. But how does the system turn those diagnoses into organized fix plans and close the loop? After diagnose-issues completes, UAT.md gaps are updated with root_cause, artifacts (files involved), and missing (things to add or fix). This diagnosed state feeds directly into plan-phase --gaps, which creates targeted fix plans based on actual causes rather than symptoms. Next, we will see the gap closure cycle that takes diagnosed gaps all the way to targeted fixes.",
+      "focus": "From root cause to targeted fix plan.",
+      "bridge": "In the next lesson, we will examine the gap closure cycle."
+    }
+  ],
+  "conceptMap": "debug",
+  "successCriteria": "You can explain how diagnose-issues orchestrates parallel debug agents, describe the DEBUG.md persistent state format with hypothesis testing and append-only sections, and articulate why structured diagnosis prevents guessing at fixes."
+}
