@@ -9,9 +9,9 @@ Requirements for v5.0 Agent Orchestration Module. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Module 4 "agent-orchestration" registered in module system with module.json, lessons/, project/
-- [ ] **INFR-02**: v4→v5 progress migration chain so Module 4 tracking works for existing users
-- [ ] **INFR-03**: Concept map visualizing agent orchestration lesson flow
+- [x] **INFR-01**: Module 4 "agent-orchestration" registered in module system with module.json, lessons/, project/
+- [x] **INFR-02**: v4→v5 progress migration chain so Module 4 tracking works for existing users
+- [x] **INFR-03**: Concept map visualizing agent orchestration lesson flow
 
 ### Lessons
 
@@ -53,9 +53,9 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | Phase 18 | Pending |
-| INFR-02 | Phase 18 | Pending |
-| INFR-03 | Phase 18 | Pending |
+| INFR-01 | Phase 18 | Complete |
+| INFR-02 | Phase 18 | Complete |
+| INFR-03 | Phase 18 | Complete |
 | LESS-01 | Phase 19 | Pending |
 | LESS-02 | Phase 19 | Pending |
 | LESS-03 | Phase 19 | Pending |

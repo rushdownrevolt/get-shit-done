@@ -80,7 +80,7 @@
 
 **Milestone Goal:** Teach how GSD orchestrates work through subagents — wave-based parallelization, checkpoints, and auto-advance chains.
 
-- [ ] **Phase 18: Module Infrastructure** - Scaffold Module 4 with module.json, directory structure, progress migration, and concept map
+- [x] **Phase 18: Module Infrastructure** - Scaffold Module 4 with module.json, directory structure, progress migration, and concept map (completed 2026-03-16)
 - [ ] **Phase 19: Lesson Content** - Author all 7 lessons covering orchestration model through synthesis
 - [ ] **Phase 20: Mini-Project** - Spec, progressive hints, and mini-project lesson exercising orchestration concepts
 - [ ] **Phase 21: Export Update** - Re-run AI curriculum export to include Module 4
@@ -166,7 +166,7 @@ Plans:
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 16. Per-Module Export | v4.0 | 2/2 | Complete | 2026-03-15 |
 | 17. Master Document & Commit | v4.0 | 1/1 | Complete | 2026-03-15 |
-| 18. Module Infrastructure | v5.0 | 0/1 | Not started | - |
+| 18. Module Infrastructure | 1/1 | Complete   | 2026-03-16 | - |
 | 19. Lesson Content | v5.0 | 0/? | Not started | - |
 | 20. Mini-Project | v5.0 | 0/? | Not started | - |
 | 21. Export Update | v5.0 | 0/? | Not started | - |
