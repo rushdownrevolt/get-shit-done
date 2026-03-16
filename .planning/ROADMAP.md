@@ -10,6 +10,7 @@
 - ✅ **v3.0 Planning & State Module** — Phases 12-15 (shipped 2026-03-15)
 - ✅ **v4.0 AI-Ready Curriculum** — Phases 16-17 (shipped 2026-03-15)
 - ✅ **v5.0 Agent Orchestration Module** — Phases 18-21 (shipped 2026-03-16)
+- 🚧 **v6.0 Quality & Feedback Loops Module** — Phases 22-25 (in progress)
 
 ## Phases
 
@@ -86,6 +87,72 @@
 
 </details>
 
+### 🚧 v6.0 Quality & Feedback Loops Module (In Progress)
+
+**Milestone Goal:** Teach how GSD verifies work and closes the feedback loop — UAT, skeptic reviews, debug workflows, and gap closure cycles.
+
+- [ ] **Phase 22: Module Infrastructure** - Scaffold Module 5 with module.json, directory structure, progress migration, and concept map
+- [ ] **Phase 23: Lesson Content** - Author all 7 lessons covering quality lifecycle from verify-work through synthesis
+- [ ] **Phase 24: Mini-Project** - Spec, progressive hints, and mini-project lesson exercising quality/feedback concepts
+- [ ] **Phase 25: Export Update** - Re-run AI curriculum export to include Module 5
+
+## Phase Details
+
+### Phase 22: Module Infrastructure
+**Goal**: Module 5 exists in the system and returning users can track their progress
+**Depends on**: Nothing (first phase of v6.0)
+**Requirements**: INFR-01, INFR-02, INFR-03
+**Success Criteria** (what must be TRUE):
+  1. Module picker shows "Quality & Feedback Loops" as Module 5 with correct recommended flag behavior
+  2. Existing users' progress files migrate cleanly from v5 to v6 schema with zero data loss
+  3. concept-map.txt exists showing the lesson flow from quality overview through synthesis
+  4. Module directory structure matches convention: module.json, lessons/, project/
+**Plans**: 1 plan
+
+Plans:
+- [ ] 22-01-PLAN.md — Scaffold Module 5 directory, v5->v6 progress migration, and concept map
+
+### Phase 23: Lesson Content
+**Goal**: Learner can work through 7 lessons that teach quality and feedback loops from GSD's actual source
+**Depends on**: Phase 22
+**Requirements**: LESS-01, LESS-02, LESS-03, LESS-04, LESS-05, LESS-06, LESS-07
+**Success Criteria** (what must be TRUE):
+  1. Learner can navigate all 7 lessons sequentially with working next/back navigation
+  2. Each lesson contains real code snippets extracted from GSD's verification and debugging workflows (verify-work.md, UAT.md, skeptic.md, debug.md, diagnose-issues.md, audit-milestone.md)
+  3. Learner progresses from "what is the quality lifecycle" through verify-work/UAT, skeptic reviews, debug workflows, gap closure, milestone audits, to full lifecycle synthesis
+  4. All 7 lesson JSON files load and render correctly in the existing lesson display engine
+**Plans**: 2 plans
+
+Plans:
+- [ ] 23-01-PLAN.md — Lessons 1-3: Quality Lifecycle Overview, Verify-Work & UAT, Skeptic Reviews
+- [ ] 23-02-PLAN.md — Lessons 4-7: Debug Workflows, Gap Closure, Milestone Audit, Synthesis
+
+### Phase 24: Mini-Project
+**Goal**: Learner exercises quality/feedback knowledge by building something that passes structural verification
+**Depends on**: Phase 23
+**Requirements**: MINI-01, MINI-02, MINI-03
+**Success Criteria** (what must be TRUE):
+  1. Mini-project lesson appears as the final step in Module 5 with spec-based verification
+  2. Verification checks exercise quality/feedback concepts (not just file existence)
+  3. 5 progressive hints guide the learner from stuck to solution without giving away the answer
+  4. Pressing "H" on the mini-project step reveals hints inline, persisted across sessions
+**Plans**: 1 plan
+
+Plans:
+- [ ] 24-01-PLAN.md — Spec, hints, and mini-project lesson for quality feedback workflow
+
+### Phase 25: Export Update
+**Goal**: AI curriculum docs include Module 5 so LLMs can learn quality & feedback loops by reading markdown
+**Depends on**: Phase 24
+**Requirements**: EXPO-01
+**Success Criteria** (what must be TRUE):
+  1. Running `node learn/bin/export-docs.cjs` produces quality-feedback.md in docs/ai-curriculum/
+  2. Master README.md includes Module 5 content in correct learning order after Module 4
+**Plans**: 1 plan
+
+Plans:
+- [ ] 25-01-PLAN.md — Run export script to generate Module 5 AI curriculum docs
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -115,6 +182,10 @@
 | 19. Lesson Content | v5.0 | 2/2 | Complete | 2026-03-16 |
 | 20. Mini-Project | v5.0 | 1/1 | Complete | 2026-03-16 |
 | 21. Export Update | v5.0 | 1/1 | Complete | 2026-03-16 |
+| 22. Module Infrastructure | v6.0 | 0/1 | Not started | - |
+| 23. Lesson Content | v6.0 | 0/2 | Not started | - |
+| 24. Mini-Project | v6.0 | 0/1 | Not started | - |
+| 25. Export Update | v6.0 | 0/1 | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
