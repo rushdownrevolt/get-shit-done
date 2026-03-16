@@ -1,0 +1,16 @@
+{
+  "id": "agent-orchestration",
+  "title": "Agent Orchestration",
+  "description": "Learn how GSD orchestrates work through subagents -- wave-based parallelization, checkpoints, and auto-advance chains.",
+  "order": 4,
+  "sectionMap": {
+    "overview": "Overview",
+    "subagent-types": "Subagent Types",
+    "wave-execution": "Wave Execution",
+    "orchestrator-pattern": "Orchestrator Pattern",
+    "checkpoints": "Checkpoints",
+    "auto-advance": "Auto-Advance",
+    "synthesis": "Synthesis",
+    "mini-project": "Mini-Project"
+  }
+}
