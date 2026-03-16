@@ -1,0 +1,58 @@
+{
+  "id": "orchestrator-pattern",
+  "title": "The Orchestrator Pattern",
+  "lessonNumber": 4,
+  "objective": "Understand the lean orchestrator design principle: how the orchestrator manages context budget through path-only delegation, and why this pattern repeats at every level of GSD.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Waves show how plans execute in parallel, but why does the orchestrator itself work reliably across many plans? Because it follows a strict design principle: stay lean. The orchestrator never reads file contents, never writes code, never makes implementation decisions. It passes paths and reads summaries. This is not a suggestion -- it is a survival constraint. If the orchestrator loaded even one plan's source files, it would consume 20-30% of its context window on a single plan, leaving nothing for the remaining nine.",
+      "focus": "Lean by design, not by accident",
+      "bridge": "Let's see the context budget in action."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<context_efficiency>\nOrchestrator: ~10-15% context. Subagents: fresh 200k each.\nNo polling (Task blocks). No context bleed.\n</context_efficiency>\n\n<step name=\"init_context\" priority=\"first\">\nLoad execution context (paths only to minimize orchestrator context):\n\nINIT=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\"\n  init execute-phase \"${PHASE}\")\n\nExtract from init JSON: executor_model, commit_docs, phase_dir,\nplans, incomplete_plans, state_path, config_path.\n</step>",
+      "highlight": [2, 6]
+    },
+    {
+      "type": "text",
+      "value": "The context budget principle is explicit: the orchestrator targets 10-15% context usage. Claude has a finite context window. If the orchestrator reads every file, it exhausts context before finishing. Instead, it reads only paths and metadata -- frontmatter from PLAN.md files, existence checks on SUMMARY.md files. The actual file content is read by executors in their own fresh context windows. This is why gsd-tools returns JSON with paths, not file contents. The init call returns executor_model, phase_dir, plans -- all metadata. No source code, no implementation details.",
+      "focus": "Paths not content keeps orchestrator viable",
+      "bridge": "What does this look like when the orchestrator spawns an agent?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "INIT=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\"\n  init execute-phase \"${PHASE_ARG}\")\n\nParse JSON for: executor_model, verifier_model, commit_docs,\nparallelization, branching_strategy, branch_name, phase_found,\nphase_dir, phase_number, phase_name, phase_slug, plans,\nincomplete_plans, plan_count, incomplete_count, state_exists,\nroadmap_exists, phase_req_ids.",
+      "highlight": [1, 2, 4, 5, 6, 7, 8]
+    },
+    {
+      "type": "text",
+      "value": "When the orchestrator spawns an executor, it passes a prompt containing file PATHS -- @file references -- not file contents. The executor reads those files itself. This means the orchestrator uses roughly 100-200 tokens per plan spawn, while the executor gets a fresh 200k context to work with. The orchestrator can manage 10+ plans without degrading. Each executor starts at 0% context, reads the plan, reads the source files it needs, and builds at peak quality. The orchestrator never sees the code being written.",
+      "focus": "Each executor gets full context, orchestrator stays thin",
+      "bridge": "Let's see how plan-phase follows the same pattern."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<purpose>\nCreate executable phase prompts (PLAN.md files) for a roadmap\nphase with integrated research and verification. Default flow:\nResearch (if needed) -> Plan -> Verify -> Done. Orchestrates\ngsd-phase-researcher, gsd-planner, and gsd-plan-checker agents\nwith a revision loop (max 3 iterations).\n</purpose>\n\nLoad all context in one call (paths only to minimize\norchestrator context):\n\nINIT=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\"\n  init plan-phase \"$PHASE\")\n\nParse JSON for: researcher_model, planner_model, checker_model,\nresearch_enabled, plan_checker_enabled, phase_found, phase_dir,\nphase_number, has_research, has_context, has_plans, plan_count.",
+      "highlight": [5, 6, 9, 10]
+    },
+    {
+      "type": "text",
+      "value": "Plan-phase is ALSO an orchestrator -- it spawns the researcher (which investigates unknowns), then the planner (which creates PLAN.md files), then the checker (which validates them), then routes back for revision if needed. This is the same pattern: coordinate, delegate, verify. GSD has multiple orchestrators, each following the same lean principle. Execute-phase coordinates executors. Plan-phase coordinates researchers, planners, and checkers. Both load paths only, both delegate actual work to fresh agents, both stay at 10-15% context.",
+      "focus": "The pattern repeats at every level",
+      "bridge": "What makes this more than just delegation?"
+    },
+    {
+      "type": "text",
+      "value": "The orchestrator pattern is not just 'delegate work to subagents.' It is a specific discipline: the orchestrator reads metadata, makes routing decisions, and verifies outcomes -- nothing else. It does not peek at source files 'just to understand.' It does not 'help' the executor by pre-reading context. Every byte of context the orchestrator consumes is context it cannot use for coordinating the next plan. This discipline is what makes 10-plan phases possible. Next, we will see what happens when the orchestrator cannot run autonomously -- how checkpoints pause execution and resume after human decisions.",
+      "focus": "Discipline, not just delegation",
+      "bridge": "In the next lesson, we'll examine checkpoints -- structured pause points that bring humans into the loop when automation alone isn't enough."
+    }
+  ],
+  "conceptMap": "orchestrator-pattern",
+  "successCriteria": "You can explain the lean orchestrator design principle (10-15% context budget), the path-only delegation pattern (pass paths not content), and how the same orchestrator pattern repeats at multiple levels in GSD (execute-phase, plan-phase)."
+}
