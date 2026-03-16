@@ -18,10 +18,10 @@ Requirements for v5.0 Agent Orchestration Module. Each maps to roadmap phases.
 - [x] **LESS-01**: Overview lesson — the orchestration model (orchestrators coordinate, executors build, fresh context per agent)
 - [x] **LESS-02**: Subagent types lesson — executor, planner, researcher, verifier, checker roles from .agents/ configs
 - [x] **LESS-03**: Wave execution lesson — plan discovery, wave grouping, parallel spawning, spot-check verification
-- [ ] **LESS-04**: Orchestrator pattern lesson — context budget, path-only delegation, lean orchestrator principle
-- [ ] **LESS-05**: Checkpoints and gates lesson — autonomous flags, human-in-the-loop, checkpoint continuation
-- [ ] **LESS-06**: Auto-advance chains lesson — plan→execute→verify piping, --auto flag, --no-transition
-- [ ] **LESS-07**: Bridge/synthesis lesson connecting orchestration to the full GSD lifecycle
+- [x] **LESS-04**: Orchestrator pattern lesson — context budget, path-only delegation, lean orchestrator principle
+- [x] **LESS-05**: Checkpoints and gates lesson — autonomous flags, human-in-the-loop, checkpoint continuation
+- [x] **LESS-06**: Auto-advance chains lesson — plan→execute→verify piping, --auto flag, --no-transition
+- [x] **LESS-07**: Bridge/synthesis lesson connecting orchestration to the full GSD lifecycle
 
 ### Mini-Project
 
@@ -59,10 +59,10 @@ Deferred to future release.
 | LESS-01 | Phase 19 | Complete |
 | LESS-02 | Phase 19 | Complete |
 | LESS-03 | Phase 19 | Complete |
-| LESS-04 | Phase 19 | Pending |
-| LESS-05 | Phase 19 | Pending |
-| LESS-06 | Phase 19 | Pending |
-| LESS-07 | Phase 19 | Pending |
+| LESS-04 | Phase 19 | Complete |
+| LESS-05 | Phase 19 | Complete |
+| LESS-06 | Phase 19 | Complete |
+| LESS-07 | Phase 19 | Complete |
 | MINI-01 | Phase 20 | Pending |
 | MINI-02 | Phase 20 | Pending |
 | MINI-03 | Phase 20 | Pending |
