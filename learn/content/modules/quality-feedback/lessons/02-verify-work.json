@@ -1,0 +1,58 @@
+{
+  "id": "verify-work",
+  "title": "Verify-Work & UAT",
+  "lessonNumber": 2,
+  "objective": "Understand how GSD verifies built features through conversational testing with verify-work, how severity is inferred from natural language, and how UAT.md persists testing state across sessions to feed gaps into the fix cycle.",
+  "content": [
+    {
+      "type": "text",
+      "value": "The quality lifecycle starts with verification. But how does GSD actually verify that built features work? Through /gsd:verify-work, which conducts conversational testing. Claude presents what SHOULD happen, and the user confirms or describes what is different. There are no pass/fail buttons, no severity dropdowns, no test forms. Just: \"here is what should happen, does it?\" The user types naturally and Claude handles the rest -- logging results, inferring severity, tracking progress.",
+      "focus": "Show expected, ask if reality matches.",
+      "bridge": "Let's see the philosophy that drives this approach."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<philosophy>\n**Show expected, ask if reality matches.**\n\nClaude presents what SHOULD happen. User confirms or describes\nwhat's different.\n- \"yes\" / \"y\" / \"next\" / empty -> pass\n- Anything else -> logged as issue, severity inferred\n\nNo Pass/Fail buttons. No severity questions. Just: \"Here's what\nshould happen. Does it?\"\n</philosophy>",
+      "highlight": [6]
+    },
+    {
+      "type": "text",
+      "value": "Notice \"severity inferred\" on line 6. When the user says \"works but doesn't show until I refresh,\" Claude infers that as a major issue without asking \"how severe is this?\" The inference follows natural language: crash/error/fails -> blocker, doesn't work/wrong/missing -> major, slow/weird/minor -> minor, color/spacing/alignment -> cosmetic. This keeps the flow conversational. Tests come from what was actually built -- verify-work reads SUMMARY.md files from the completed phase and generates tests from the actual deliverables, not from a test plan written beforehand.",
+      "focus": "Tests come from what was actually built, not a test plan written beforehand.",
+      "bridge": "All this testing state needs to survive across sessions. That is where UAT.md comes in."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "---\nstatus: testing | complete | diagnosed\nphase: XX-name\nsource: [list of SUMMARY.md files tested]\nstarted: [ISO timestamp]\nupdated: [ISO timestamp]\n---\n\n## Current Test\n<!-- OVERWRITE each test - shows where we are -->\n\nnumber: [N]\nname: [test name]\nexpected: |\n  [what user should observe]\nawaiting: user response\n\n## Tests\n\n### 1. [Test Name]\nexpected: [observable behavior]\nresult: [pending]\n\n### 2. [Test Name]\nexpected: [observable behavior]\nresult: pass\n\n### 3. [Test Name]\nexpected: [observable behavior]\nresult: issue\nreported: \"[verbatim user response]\"\nseverity: major",
+      "highlight": [2, 30, 31]
+    },
+    {
+      "type": "text",
+      "value": "UAT.md is persistent because Claude's context window gets cleared between sessions -- via /clear or starting a new conversation. Without a persistent file, test progress would be lost. UAT.md acts as the source of truth for testing state. When the user resumes testing, verify-work reads UAT.md and picks up where it left off. The Current Test section is overwritten each time (it always reflects NOW), while Tests entries are append-only. The status field in frontmatter tracks the lifecycle: testing -> complete -> diagnosed.",
+      "focus": "Persistent state survives /clear -- testing continues across sessions.",
+      "bridge": "When issues are found, they go into the Gaps section. Let's see that format."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "## Gaps\n\n<!-- YAML format for plan-phase --gaps consumption -->\n- truth: \"[expected behavior from test]\"\n  status: failed\n  reason: \"User reported: [verbatim response]\"\n  severity: blocker | major | minor | cosmetic\n  test: [N]\n  root_cause: \"\"     # Filled by diagnosis\n  artifacts: []      # Filled by diagnosis\n  missing: []        # Filled by diagnosis\n  debug_session: \"\"  # Filled by diagnosis\n\n## Summary\n\ntotal: [N]\npassed: [N]\nissues: [N]\npending: [N]\nskipped: [N]",
+      "highlight": [4, 7]
+    },
+    {
+      "type": "text",
+      "value": "This is the critical connection: UAT.md gaps feed directly into /gsd:plan-phase --gaps. Each gap has a truth (what should be true), a reason (what the user observed), and severity. After diagnosis fills in root_cause, artifacts, and missing fields, the planner reads these structured gaps and creates targeted fix plans. This is the loop from Lesson 1 in action: verify-work creates UAT.md -> gaps found -> diagnose-issues finds root causes -> plan-phase --gaps creates fix plans -> execute-phase --gaps-only runs fixes -> verify-work re-tests. The UAT.md file is the bridge between finding problems and fixing them.",
+      "focus": "Gaps drive the feedback loop -- UAT.md is the bridge between finding problems and fixing them.",
+      "bridge": "Next, we will see how GSD catches problems that testing alone would miss."
+    },
+    {
+      "type": "text",
+      "value": "Verify-work catches problems AFTER building, and it relies on human observation -- the user tries features and reports what happens. But what about gaps humans miss? What about structural problems invisible in the UI, like a component that renders correctly but fetches from a hardcoded array instead of the API? Next, we will see how verify-phase uses goal-backward analysis and how the plan-checker validates plans before execution -- GSD's built-in skeptic that catches what reactive testing cannot.",
+      "focus": "Reactive testing catches visible problems; proactive review catches structural ones.",
+      "bridge": "In the next lesson, we will examine skeptic reviews: goal-backward verification and plan checking."
+    }
+  ],
+  "conceptMap": "verify-work",
+  "successCriteria": "You can explain how verify-work conducts conversational testing by showing expected behavior and inferring severity from natural language, describe how UAT.md persists testing state across sessions, and trace the gap-to-fix pipeline from UAT.md through plan-phase --gaps."
+}
