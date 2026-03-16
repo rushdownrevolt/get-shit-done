@@ -125,10 +125,10 @@ Plans:
   2. Verification checks exercise orchestration concepts (not just file existence)
   3. 5 progressive hints guide the learner from stuck to solution without giving away the answer
   4. Pressing "H" on the mini-project step reveals hints inline, persisted across sessions
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 20-01: TBD
+- [ ] 20-01-PLAN.md — Spec, hints, and mini-project lesson for orchestrated skeptic reviews
 
 ### Phase 21: Export Update
 **Goal**: AI curriculum docs include Module 4 so LLMs can learn agent orchestration by reading markdown
@@ -137,7 +137,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Running `node learn/bin/export-docs.cjs` produces agent-orchestration.md in docs/ai-curriculum/
   2. Master README.md includes Module 4 content in correct learning order after Module 3
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
 - [ ] 21-01: TBD
