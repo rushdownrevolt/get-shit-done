@@ -1,0 +1,64 @@
+{
+  "id": "wave-execution",
+  "title": "Wave Execution",
+  "lessonNumber": 3,
+  "objective": "Understand how GSD groups plans into waves based on dependencies and executes them in parallel, with spot-check verification after each wave.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Agents know their roles, but how does the orchestrator decide what runs when? Through waves. Plans declare dependencies via the depends_on field in their frontmatter. The orchestrator reads these declarations, groups plans into waves, and runs each wave's plans in parallel. Wave 1 plans have no dependencies. Wave 2 plans depend on wave 1 completions. The dependency graph drives execution order automatically.",
+      "focus": "Dependencies drive execution order",
+      "bridge": "Let's see what dependency declarations look like in practice."
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "value": "# Plan 01 -- no dependencies, runs in wave 1\n---\nphase: 05-feature\nplan: 01\nwave: 1\ndepends_on: []\nfiles_modified: [src/models/user.ts]\nautonomous: true\n---\n\n# Plan 02 -- also no dependencies, runs in wave 1\n---\nphase: 05-feature\nplan: 02\nwave: 1\ndepends_on: []\nfiles_modified: [src/api/auth.ts]\nautonomous: true\n---\n\n# Plan 03 -- depends on both, runs in wave 2\n---\nphase: 05-feature\nplan: 03\nwave: 2\ndepends_on: [05-01, 05-02]\nfiles_modified: [src/pages/dashboard.tsx]\nautonomous: true\n---",
+      "highlight": [5, 6, 15, 16, 25, 26]
+    },
+    {
+      "type": "text",
+      "value": "Wave assignment follows a simple formula: wave = max(dependency waves) + 1. Plans 01 and 02 have no dependencies, so they start in wave 1. Plan 03 depends on both wave 1 plans, so it goes to wave 2. This is computed during planning, not at runtime -- the wave number is baked into the frontmatter. The planner analyzes the dependency graph and assigns waves upfront, so the orchestrator can execute without doing dependency resolution at runtime.",
+      "focus": "Wave numbers are pre-computed from dependency analysis",
+      "bridge": "How does the orchestrator discover and group these plans?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<step name=\"discover_and_group_plans\">\nLoad plan inventory with wave grouping in one call:\n\nPLAN_INDEX=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\"\n  phase-plan-index \"${PHASE_NUMBER}\")\n\nParse JSON for: plans[] (each with id, wave, autonomous,\nobjective, files_modified, task_count, has_summary),\nwaves (map of wave number -> plan IDs), incomplete,\nhas_checkpoints.\n\nReport:\n## Execution Plan\n\n**Phase {X}: {Name}** -- {total_plans} plans across {wave_count} waves\n\n| Wave | Plans         | What it builds  |\n|------|---------------|-----------------|\n| 1    | 01-01, 01-02  | {from objectives, 3-8 words} |\n| 2    | 01-03         | ...             |\n</step>",
+      "highlight": [4, 5]
+    },
+    {
+      "type": "text",
+      "value": "At runtime, the orchestrator calls phase-plan-index which reads all PLAN.md frontmatter, groups by wave number, and returns a structured index. Plans with has_summary: true are skipped -- they have already been executed. The orchestrator then iterates waves sequentially, but within each wave, plans run in parallel. This is the key insight: sequential waves, parallel plans within each wave. Wave 1 plans all start simultaneously. Only after all wave 1 plans complete does wave 2 begin.",
+      "focus": "Sequential waves, parallel plans within each wave",
+      "bridge": "What does spawning a wave actually look like?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<step name=\"execute_waves\">\nFor each wave:\n\n1. Describe what's being built (BEFORE spawning):\n   Read each plan's <objective>. Extract what's being built\n   and why.\n\n2. Spawn executor agents:\n   Pass paths only -- executors read files themselves with\n   their fresh 200k context. This keeps orchestrator context\n   lean (~10-15%).\n\n3. Wait for all agents in wave to complete.\n\n4. Report completion -- spot-check claims first:\n   For each SUMMARY.md:\n   - Verify first 2 files from key-files.created exist on disk\n   - Check git log --oneline --all --grep=\"{phase}-{plan}\"\n     returns >= 1 commit\n   - Check for ## Self-Check: FAILED marker\n</step>",
+      "highlight": [8, 13]
+    },
+    {
+      "type": "text",
+      "value": "After each wave completes, the orchestrator does not blindly trust agent reports. It runs spot-checks: do the SUMMARY files exist? Are there git commits matching the plan ID? Is there a Self-Check: FAILED marker? This lightweight verification catches failures without requiring full re-execution. If any spot-check fails, the orchestrator reports which plan failed and asks whether to retry or continue with remaining waves.",
+      "focus": "Trust but verify -- spot-checks catch failures fast",
+      "bridge": "Let's see the exact spot-check verification code."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "For each SUMMARY.md:\n- Verify first 2 files from key-files.created exist on disk\n- Check git log --oneline --all --grep=\"{phase}-{plan}\"\n  returns >= 1 commit\n- Check for ## Self-Check: FAILED marker\n\nIf ANY spot-check fails:\n  Report which plan failed, route to failure handler --\n  ask \"Retry plan?\" or \"Continue with remaining waves?\"",
+      "highlight": [2, 3, 4, 5]
+    },
+    {
+      "type": "text",
+      "value": "Wave execution gives GSD its speed. Independent plans run simultaneously, each with a fresh context window. The orchestrator stays lean -- it discovers plans, groups them into waves, spawns agents, and verifies results, never touching code itself. A phase with 6 plans across 3 waves finishes far faster than serial execution, because wave 1's 3 plans all run at the same time. You have seen how plans execute in waves. Next, we will examine the orchestrator's own design -- why it deliberately stays thin and what patterns keep it effective.",
+      "focus": "Wave parallelism is GSD's performance multiplier",
+      "bridge": "In the next lesson, we'll look at the orchestrator pattern -- how it manages context budget and stays lean across many plans."
+    }
+  ],
+  "conceptMap": "wave-execution",
+  "successCriteria": "You can explain how plans declare dependencies via depends_on, how waves are computed (wave = max dependency waves + 1), how the orchestrator runs waves sequentially but plans within waves in parallel, and how spot-checks verify each wave's results."
+}
