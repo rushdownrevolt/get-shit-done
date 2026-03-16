@@ -1,0 +1,20 @@
+{
+  "id": "quality-feedback-project",
+  "moduleId": "quality-feedback",
+  "title": "Add Quality Verification to Skeptic Reviews",
+  "description": "Extend your skeptic workflow with a verify-findings section -- after the review completes, run a UAT-style verification checklist against the findings, infer severity levels, and track gaps between what was reviewed and what was missed",
+  "artifacts": [
+    {
+      "description": "Skeptic workflow with quality verification section",
+      "path": "~/.claude/get-shit-done/workflows/skeptic.md",
+      "checks": [
+        { "pattern": "verify.findings|verify.review|validate.findings|quality.check", "description": "Has a verify/validation section after the review steps" },
+        { "pattern": "(critical|major|minor|high|medium|low).*(severity|priority|level)|(severity|priority|level).*(critical|major|minor|high|medium|low)", "description": "Defines severity levels for classifying findings" },
+        { "pattern": "checklist|acceptance.criter|pass.*fail|criteria.*check|check.*criteria", "description": "Has a UAT-style checklist with acceptance criteria or pass/fail checks" },
+        { "pattern": "gap|coverage|miss|blind.spot|uncovered|not.review|not.examin", "description": "Tracks coverage gaps identifying what was not reviewed" },
+        { "pattern": "verification.*summary|quality.*report|verify.*output|summary.*finding|verification.*result", "description": "Produces a verification summary separate from the review" },
+        { "pattern": "after.*review|depends.*on.*review|post.*review|once.*complete|when.*done|after.*aggregat", "description": "Verification step depends on review completion" }
+      ]
+    }
+  ]
+}
