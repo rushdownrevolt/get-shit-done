@@ -15,9 +15,9 @@ Requirements for v6.0 Quality & Feedback Loops Module. Each maps to roadmap phas
 
 ### Lessons
 
-- [ ] **LESS-01**: Overview lesson — the quality lifecycle (build → verify → diagnose → fix → re-verify)
-- [ ] **LESS-02**: verify-work & UAT lesson — conversational testing, severity inference, persistent UAT.md
-- [ ] **LESS-03**: Skeptic reviews lesson — proactive critical assessment from workflows/skeptic.md
+- [x] **LESS-01**: Overview lesson — the quality lifecycle (build → verify → diagnose → fix → re-verify)
+- [x] **LESS-02**: verify-work & UAT lesson — conversational testing, severity inference, persistent UAT.md
+- [x] **LESS-03**: Skeptic reviews lesson — proactive critical assessment from workflows/skeptic.md
 - [ ] **LESS-04**: Debug workflows lesson — systematic debugging, hypothesis testing, persistent state
 - [ ] **LESS-05**: Gap closure lesson — diagnosis → plan --gaps → execute --gaps-only cycle
 - [ ] **LESS-06**: Milestone audit lesson — audit-milestone, plan-milestone-gaps, completion gates
@@ -55,9 +55,9 @@ Deferred to future release.
 | INFR-01 | Phase 22 | Complete |
 | INFR-02 | Phase 22 | Complete |
 | INFR-03 | Phase 22 | Complete |
-| LESS-01 | Phase 23 | Pending |
-| LESS-02 | Phase 23 | Pending |
-| LESS-03 | Phase 23 | Pending |
+| LESS-01 | Phase 23 | Complete |
+| LESS-02 | Phase 23 | Complete |
+| LESS-03 | Phase 23 | Complete |
 | LESS-04 | Phase 23 | Pending |
 | LESS-05 | Phase 23 | Pending |
 | LESS-06 | Phase 23 | Pending |
