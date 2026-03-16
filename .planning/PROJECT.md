@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships four modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), Planning & State (planning system), and Agent Orchestration (subagent execution engine). Features a welcome screen, module picker with progress tracking, and context-dependent navigation. Also ships an AI-ready curriculum export (`docs/ai-curriculum/`) — a self-contained master document and per-module docs that let an LLM learn GSD by reading structured markdown.
+A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships five modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), Planning & State (planning system), Agent Orchestration (subagent execution engine), and Quality & Feedback Loops (verification and debugging). Features a welcome screen, module picker with progress tracking, and context-dependent navigation. Also ships an AI-ready curriculum export (`docs/ai-curriculum/`) — a self-contained master document and per-module docs that let an LLM learn GSD by reading structured markdown.
 
 ## Core Value
 
@@ -53,16 +53,13 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ Module 4: Agent Orchestration with 8 lessons covering subagent types, wave execution, orchestrator pattern, checkpoints, auto-advance — v5.0
 - ✓ v4→v5 progress migration for Module 4 tracking — v5.0
 - ✓ AI curriculum export updated with Module 4 content — v5.0
+- ✓ Module 5: Quality & Feedback Loops with 8 lessons covering verify-work, UAT, skeptic, debug, gap closure, milestone audit — v6.0
+- ✓ v5→v6 progress migration for Module 5 tracking — v6.0
+- ✓ AI curriculum export updated with Module 5 content — v6.0
 
 ### Active
 
-<!-- v6.0 Quality & Feedback Loops Module scope -->
-
-- [ ] Module 5: Quality & Feedback Loops with lessons covering verify-work, UAT, skeptic, debug workflows, and gap closure
-- [ ] All lesson content parsed from GSD's actual verification and debugging workflows
-- [ ] Mini-project at end of module exercising quality/feedback concepts
-- [ ] v5→v6 progress migration for Module 5 tracking
-- [ ] AI curriculum export updated with Module 5 content
+<!-- Next milestone scope -->
 
 ### Out of Scope
 
@@ -81,8 +78,8 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - GSD is a zero-dependency Node.js project using CommonJS modules
 - GSD's architecture has TWO layers: (1) markdown layer (slash commands + workflows) and (2) Node.js layer (gsd-tools.cjs + lib modules)
 - The codebase map at `.planning/codebase/` provides detailed architecture, stack, conventions, and structure docs
-- Shipped: ~7,700 LOC (Node.js/JSON), 4 modules, 27 lessons total, 4 mini-projects
-- AI curriculum: ~4,200 LOC generated markdown (4 per-module docs + 1 master README)
+- Shipped: ~8,200 LOC (Node.js/JSON), 5 modules, 35 lessons total, 5 mini-projects
+- AI curriculum: ~4,900 LOC generated markdown (5 per-module docs + 1 master README)
 - 125+ tests passing (renderer, navigator, progress, verifier, hints, feedback, markdown-renderer)
 - Module 3 teaches the planning system that built gsd-learn itself (meta-recursive)
 
@@ -119,16 +116,5 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | TDD for markdown renderer | Pure function rendering engine tested in isolation before wiring to export script | ✓ Good |
 | Heading-level bump for master README | Simple regex bumps all headings so modules nest under a single h1; avoids AST complexity | ✓ Good |
 
-## Current Milestone: v6.0 Quality & Feedback Loops Module
-
-**Goal:** Teach how GSD verifies work and closes the feedback loop — UAT, skeptic reviews, debug workflows, and gap closure cycles.
-
-**Target features:**
-- Module 5: Quality & Feedback Loops (6-7 lessons + mini-project)
-- Lessons covering: verify-work/UAT, skeptic command, debug sessions, gap closure, diagnosis
-- Content parsed from actual verification and debugging workflows
-- Mini-project exercising quality/feedback concepts
-- AI curriculum export updated
-
 ---
-*Last updated: 2026-03-16 after v6.0 milestone started*
+*Last updated: 2026-03-16 after v6.0 milestone*

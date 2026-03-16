@@ -1,4 +1,26 @@
 # Milestones: GSD Learn
+## v6.0 — Quality & Feedback Loops Module (Shipped: 2026-03-16)
+
+**Completed:** 2026-03-16
+**Phases:** 22, 23, 24, 25 (4 phases, 5 plans)
+**Last phase number:** 25
+
+**What shipped:**
+- Module 5: Quality & Feedback Loops with 8 lessons (7 content + 1 mini-project) teaching verify-work/UAT, skeptic reviews, debug workflows, gap closure, and milestone audit
+- All lesson content uses real code snippets from GSD's verification and debugging workflows
+- Mini-project: quality verification extension to the skeptic command (severity, UAT checklist, gap tracking)
+- v5→v6 progress migration chain (29 tests passing)
+- AI curriculum updated — quality-feedback.md (706 lines) + master README with all 5 modules
+
+**Requirements completed:** INFR-01, INFR-02, INFR-03, LESS-01, LESS-02, LESS-03, LESS-04, LESS-05, LESS-06, LESS-07, MINI-01, MINI-02, MINI-03, EXPO-01
+
+**Key learnings:**
+- Full auto-advance pipeline across all 4 phases in a single session (same as v5.0)
+- Proven module template: infra → content (2 waves) → mini-project → export scales to 5th module
+- Skeptic lesson adapted successfully despite missing workflows/skeptic.md — used verify-phase.md + plan-checker instead
+
+---
+
 ## v5.0 — Agent Orchestration Module (Shipped: 2026-03-16)
 
 **Completed:** 2026-03-16
