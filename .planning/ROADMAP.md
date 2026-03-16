@@ -110,10 +110,11 @@ Plans:
   2. Each lesson contains real code snippets extracted from GSD's .agents/ configs and orchestration workflows
   3. Learner progresses from "what is orchestration" through subagent roles, wave execution, orchestrator pattern, checkpoints, auto-advance, to full lifecycle synthesis
   4. All 7 lesson JSON files load and render correctly in the existing lesson display engine
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 19-01: TBD
+- [ ] 19-01-PLAN.md — Lessons 1-3: Overview, Subagent Types, Wave Execution
+- [ ] 19-02-PLAN.md — Lessons 4-7: Orchestrator Pattern, Checkpoints, Auto-Advance, Synthesis
 
 ### Phase 20: Mini-Project
 **Goal**: Learner exercises orchestration knowledge by building something that passes structural verification
@@ -167,7 +168,7 @@ Plans:
 | 16. Per-Module Export | v4.0 | 2/2 | Complete | 2026-03-15 |
 | 17. Master Document & Commit | v4.0 | 1/1 | Complete | 2026-03-15 |
 | 18. Module Infrastructure | 1/1 | Complete    | 2026-03-16 | - |
-| 19. Lesson Content | v5.0 | 0/? | Not started | - |
+| 19. Lesson Content | v5.0 | 0/2 | Not started | - |
 | 20. Mini-Project | v5.0 | 0/? | Not started | - |
 | 21. Export Update | v5.0 | 0/? | Not started | - |
 
