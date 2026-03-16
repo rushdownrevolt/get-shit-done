@@ -96,10 +96,10 @@
   2. Existing users' progress files migrate cleanly from v4 to v5 schema with zero data loss
   3. concept-map.txt exists showing the lesson flow from orchestration overview through synthesis
   4. Module directory structure matches convention: module.json, lessons/, project/
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 18-01: TBD
+- [ ] 18-01-PLAN.md — Scaffold Module 4 directory, v4->v5 progress migration, and concept map
 
 ### Phase 19: Lesson Content
 **Goal**: Learner can work through 7 lessons that teach agent orchestration from GSD's actual source
@@ -166,7 +166,7 @@ Plans:
 | 15. Planning Mini-Project | v3.0 | 2/2 | Complete | 2026-03-15 |
 | 16. Per-Module Export | v4.0 | 2/2 | Complete | 2026-03-15 |
 | 17. Master Document & Commit | v4.0 | 1/1 | Complete | 2026-03-15 |
-| 18. Module Infrastructure | v5.0 | 0/? | Not started | - |
+| 18. Module Infrastructure | v5.0 | 0/1 | Not started | - |
 | 19. Lesson Content | v5.0 | 0/? | Not started | - |
 | 20. Mini-Project | v5.0 | 0/? | Not started | - |
 | 21. Export Update | v5.0 | 0/? | Not started | - |
