@@ -1,0 +1,55 @@
+  Agent Orchestration
+        |
+        v
+  +-------------------------+
+  | Overview                |
+  | (The orchestration      |
+  |  model & why agents)    |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Subagent Types          |
+  | (Executor, planner,     |
+  |  researcher, verifier,  |
+  |  checker)               |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Wave Execution          |
+  | (Parallel spawning,     |
+  |  wave grouping,         |
+  |  depends_on)            |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Orchestrator Pattern    |
+  | (Context budget, lean   |
+  |  orchestrator, routing) |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Checkpoints             |
+  | (Autonomous flags,      |
+  |  human-in-the-loop,     |
+  |  verification gates)    |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Auto-Advance            |
+  | (Plan -> execute ->     |
+  |  verify piping, chain   |
+  |  automation)            |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Synthesis               |
+  | (Full lifecycle         |
+  |  connection, putting    |
+  |  it all together)       |
+  +-------------------------+
