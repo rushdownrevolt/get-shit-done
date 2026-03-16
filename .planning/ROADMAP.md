@@ -140,7 +140,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 21-01: TBD
+- [ ] 21-01-PLAN.md — Run export script to generate Module 4 AI curriculum docs
 
 ## Progress
 
