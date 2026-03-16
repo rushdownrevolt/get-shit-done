@@ -1,0 +1,58 @@
+{
+  "id": "quality-feedback-mini-project",
+  "title": "Mini-Project: Quality Verification for Skeptic Reviews",
+  "lessonNumber": 8,
+  "objective": "Apply quality and feedback loop concepts (UAT-style verification, severity inference, gap tracking) to extend the skeptic workflow with a self-verification section that checks the quality of its own review findings",
+  "content": [
+    {
+      "type": "text",
+      "value": "Look at the skeptic command you have built across four modules. In Module 1 you wrote the command spec -- the blueprint that tells GSD what skeptic does. In Module 2 you added the handler that executes the review. In Module 3 you made findings persist to SKEPTIC-REVIEW.md so reviews accumulate over time. In Module 4 you added orchestration -- multiple review subagents running in parallel waves, with an aggregator that combines their findings.\n\nBut here is the gap: your skeptic reviews code, yet nothing reviews the skeptic. It produces findings, but nobody asks whether those findings are thorough, properly prioritized, or even covering the right areas. In real quality systems, this is the critical missing piece -- the feedback loop that checks the checker.\n\nModule 5 closes that loop. You will add a quality verification section to your skeptic workflow that runs AFTER the review completes. It examines the findings themselves: classifies each by severity (critical, major, minor), runs a UAT-style acceptance checklist (are findings specific? evidence-based? actionable?), and identifies coverage gaps (what parts of the project did no reviewer examine?). This is quality applied to quality -- the meta-verification that separates thorough systems from ones that merely look thorough.",
+      "focus": "The skeptic journey across 5 modules -- now the skeptic verifies its own output quality",
+      "bridge": "Here is how to check your progress as you build."
+    },
+    {
+      "type": "text",
+      "value": "Run the verify command any time to check your structural progress. Run the hint command when you need a nudge. You can use both as many times as you like.\n\nThis project modifies your existing skeptic workflow file, so the verify command checks it for quality verification patterns. If something goes wrong with the workflow, you can git checkout the original from your previous work:\n\n  git checkout -- ~/.claude/get-shit-done/workflows/skeptic.md",
+      "focus": "Verify and hint workflow, with git safety net",
+      "bridge": "Here is the template you will integrate into your existing workflow."
+    },
+    {
+      "type": "text",
+      "value": "Below is a workflow template that adds a quality verification section to your existing skeptic workflow. Press C to copy, then integrate it into your workflow at ~/.claude/get-shit-done/workflows/skeptic.md. The key addition is a verify_findings step that goes AFTER your aggregation step from Module 4. It has three components: severity classification (categorize each finding), an acceptance checklist (verify finding quality), and coverage gap tracking (identify what was missed).\n\nPlace this step after aggregate_findings -- it depends on the review being complete before it can verify the output. The exact checklist items, severity thresholds, and gap categories are yours to customize.",
+      "focus": "Introducing the quality verification template",
+      "bridge": "The template follows below."
+    },
+    {
+      "type": "code",
+      "language": "xml",
+      "value": "<!-- Post-review quality verification (depends on review/aggregation completing) -->\n\n<step name=\"verify_findings\">\n**Verify the quality of review findings after aggregation is complete.**\n\n## Severity Classification\nClassify each aggregated finding by severity level:\n- **Critical**: Bugs, security issues, or design flaws that will cause failures\n- **Major**: Significant problems that affect maintainability or correctness\n- **Minor**: Style issues, naming suggestions, or low-impact improvements\n\n## Acceptance Checklist\nRun each finding through these quality criteria (pass/fail):\n- [ ] Finding is specific (cites file, line, or pattern -- not vague)\n- [ ] Finding includes evidence (shows the problematic code or pattern)\n- [ ] Finding is actionable (clear what to fix, not just what is wrong)\n- [ ] Severity level is justified (matches the criteria above)\n\n## Coverage Gap Tracking\nIdentify project areas NOT examined by any review subagent:\n- List directories, file types, or architectural layers not covered\n- Note any blind spots in the review scope\n- Flag areas that should be reviewed but were missed\n\n## Verification Summary\nProduce a summary of verification results:\n- Total findings by severity (critical/major/minor counts)\n- Checklist pass rate (what percentage of findings meet quality criteria)\n- Coverage gaps identified (areas needing future review)\n- Overall quality assessment of the review output\n</step>",
+      "focus": "Verify-findings step with severity classification, acceptance checklist, gap tracking, and verification summary"
+    },
+    {
+      "type": "text",
+      "value": "Make it yours. The six structural requirements that verification checks for are:\n\n1. A verify/validation section after the review steps\n2. Severity levels defined (critical/major/minor or your own scale)\n3. A UAT-style checklist with acceptance criteria or pass/fail checks\n4. Coverage gap tracking that identifies what was not reviewed\n5. A verification summary separate from the review itself\n6. The verification step depends on review completion (ordering matters)\n\nEverything else -- the specific checklist items, how many severity levels, what counts as a coverage gap, the summary format, whether you add multiple verification steps or keep it as one -- is your creative decision. Verification checks structure, not content.",
+      "focus": "Six structural requirements with creative freedom for everything else",
+      "bridge": "Here is exactly what you need to deliver."
+    },
+    {
+      "type": "project",
+      "task": "Extend your skeptic workflow with a quality verification section -- a verify-findings step that classifies findings by severity, runs a UAT-style acceptance checklist, tracks coverage gaps, and produces a verification summary.",
+      "deliverables": [
+        "Updated workflow at ~/.claude/get-shit-done/workflows/skeptic.md with a verify-findings section after the aggregation step",
+        "Running /gsd:skeptic produces verified findings with severity classification, quality checklist results, and coverage gap tracking"
+      ],
+      "verifyCommand": "node learn/bin/gsd-learn.cjs --verify --module=quality-feedback",
+      "hintCommand": "node learn/bin/gsd-learn.cjs --hint --module=quality-feedback",
+      "focus": "Project deliverables and verification commands",
+      "bridge": "Complete both deliverables and run verify to confirm your module mastery."
+    },
+    {
+      "type": "text",
+      "value": "With this mini-project complete, you have finished Module 5: Quality & Feedback Loops. Step back and see the full arc: from understanding the quality lifecycle and verify-work patterns, through UAT-style validation, skeptic reviews, debug workflows, gap closure cycles, milestone audits, and synthesis -- you have learned how GSD ensures nothing ships without scrutiny.\n\nAnd now you have applied it. Your skeptic command does not just review code across multiple dimensions in parallel -- it verifies the quality of its own output. Severity classification ensures findings are properly prioritized. The acceptance checklist catches vague or unactionable feedback. Gap tracking reveals blind spots. The verification summary closes the loop: build, review, verify the review, close gaps.\n\nThis is the complete feedback loop. Quality is not a single check -- it is a cycle. Your skeptic now embodies that cycle. Module 5 complete.",
+      "focus": "Module 5 completion -- the complete feedback loop from review to self-verification",
+      "bridge": "Module 5 complete. Your skeptic workflow now verifies the quality of its own review output."
+    }
+  ],
+  "conceptMap": "mini-project",
+  "successCriteria": "Running --verify --module=quality-feedback shows all checks passing for the skeptic workflow (verify-findings section, severity levels, UAT checklist, gap tracking, verification summary, review dependency). Your skeptic command now verifies its own output quality, completing the quality feedback loop."
+}
