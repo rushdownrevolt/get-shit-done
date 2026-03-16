@@ -53,7 +53,13 @@ The learner can confidently modify and extend GSD for their own needs, validated
 
 ### Active
 
-<!-- Next milestone scope -->
+<!-- v5.0 Agent Orchestration Module scope -->
+
+- [ ] Module 4: Agent Orchestration with lessons covering subagent types, wave execution, orchestrator pattern, checkpoints, and auto-advance chains
+- [ ] All lesson content parsed from GSD's actual agent configs and orchestration workflows
+- [ ] Mini-project at end of module exercising agent orchestration concepts
+- [ ] v4→v5 progress migration for Module 4 tracking
+- [ ] AI curriculum export updated with Module 4 content
 
 ### Out of Scope
 
@@ -110,5 +116,16 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | TDD for markdown renderer | Pure function rendering engine tested in isolation before wiring to export script | ✓ Good |
 | Heading-level bump for master README | Simple regex bumps all headings so modules nest under a single h1; avoids AST complexity | ✓ Good |
 
+## Current Milestone: v5.0 Agent Orchestration Module
+
+**Goal:** Teach how GSD orchestrates work through subagents — the execution engine that turns plans into code via wave-based parallelization, checkpoints, and auto-advance chains.
+
+**Target features:**
+- Module 4: Agent Orchestration (6-7 lessons + mini-project)
+- Lessons covering: subagent types, wave execution, orchestrator pattern, checkpoints, auto-advance
+- Content parsed from actual .agents/ configs and orchestration workflows
+- Mini-project exercising agent orchestration concepts
+- AI curriculum export updated
+
 ---
-*Last updated: 2026-03-15 after v4.0 milestone*
+*Last updated: 2026-03-15 after v5.0 milestone started*

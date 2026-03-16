@@ -1,30 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v4.0
-milestone_name: AI-Ready Curriculum
-status: completed
-last_updated: "2026-03-15T21:24:08.433Z"
-last_activity: 2026-03-15 — Completed 17-01 (Master Document and Commit)
+milestone: v5.0
+milestone_name: Agent Orchestration Module
+status: in_progress
+last_updated: "2026-03-15T22:00:00Z"
+last_activity: 2026-03-15 — Milestone v5.0 started
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
----
-
----
-gsd_state_version: 1.0
-milestone: v4.0
-milestone_name: AI-Ready Curriculum
-status: complete
-last_updated: "2026-03-15T15:12:31.867Z"
-last_activity: 2026-03-15 — Completed 17-01 (Master Document and Commit)
-progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -34,16 +19,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v4.0 AI-Ready Curriculum — Phase 17: Master Document and Commit
+**Current focus:** v5.0 Agent Orchestration Module — Defining requirements
 
 ## Current Position
 
-Phase: 17 of 17 (Master Document and Commit)
-Plan: 1 of 1 complete
-Status: v4.0 milestone complete
-Last activity: 2026-03-15 — Completed 17-01 (Master Document and Commit)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-15 — Milestone v5.0 started
 
-Progress: [██████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -54,24 +39,21 @@ Progress: [██████████] 100%
 - v2.2: 6 plans in ~12 min (avg 2min/plan)
 - v2.3: 1 plan in ~4 min (4min/plan)
 - v3.0: 8 plans in ~16 min (avg 2.0min/plan)
-- Overall: 31 plans in ~90 min (avg 2.9min/plan)
+- v4.0: 3 plans in ~5 min (avg 1.7min/plan)
+- Overall: 34 plans in ~95 min (avg 2.8min/plan)
 
 ## Accumulated Context
 
 ### Decisions
 
-(Carried from v3.0 — relevant to content structure)
-- Lesson conceptMap references "overview" from concept-map.txt
-- Mini-project hints progress: conceptual why -> structural what -> read specifics -> write specifics -> full solution
-- [Phase 16-01]: Mini-project lesson detected by title prefix or project-type content, not by position
-- [Phase 16-02]: Export script uses __dirname-relative paths and sorts modules by order field for deterministic output
-- [Phase 17]: Module headings in README prefixed with Module N for sequential clarity
-- [Phase 17]: toAnchor() strips special chars for GitHub-compatible anchor links
+(Carried from v3.0/v4.0)
+- Module picker recommended flag uses first-uncompleted-module logic
+- Welcome screen text uses generic phrasing (no hardcoded module count)
+- Template-first mini-project pedagogy: provide working example, learner customizes
 
 ### Roadmap Evolution
 
-- 2026-03-15: v4.0 milestone started — AI-Ready Curriculum
-- 2026-03-15: Roadmap created — 2 phases (16-17), 14 requirements mapped
+- 2026-03-15: v5.0 milestone started — Agent Orchestration Module
 
 ### Blockers/Concerns
 
@@ -87,10 +69,3 @@ Progress: [██████████] 100%
 | 6 | Fix duplicated footer: remove old "Part X of Y" progress dots | 2026-03-12 | cd89431 | [6-fix-duplicated-footer-remove-old-part-x-](./quick/6-fix-duplicated-footer-remove-old-part-x-/) |
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
 | 8 | Fix copy bug: Cannot read properties of undefined | 2026-03-15 | 1f53f5d | [8-fix-copy-bug-cannot-read-properties-of-u](./quick/8-fix-copy-bug-cannot-read-properties-of-u/) |
-
-## Execution Metrics
-
-| Phase | Plan | Duration | Tasks | Files |
-|-------|------|----------|-------|-------|
-| 17 | 01 | 1min | 2 | 3 |
-
