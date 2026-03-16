@@ -3,27 +3,13 @@ gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Agent Orchestration Module
 status: in_progress
-last_updated: "2026-03-16T01:34:09.556Z"
-last_activity: 2026-03-16 — Completed 19-02 lesson content plan (lessons 4-7)
+last_updated: "2026-03-16T01:43:44.430Z"
+last_activity: 2026-03-16 — Completed 20-01 mini-project plan (spec, hints, lesson)
 progress:
   total_phases: 4
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
----
-
----
-gsd_state_version: 1.0
-milestone: v5.0
-milestone_name: Agent Orchestration Module
-status: in_progress
-last_updated: "2026-03-16T01:30:37Z"
-last_activity: 2026-03-16 — Completed 19-02 lesson content plan (lessons 4-7)
-progress:
-  total_phases: 4
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  completed_phases: 3
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # Project State
@@ -33,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** v5.0 Agent Orchestration Module — Phase 19 Plan 02 complete
+**Current focus:** v5.0 Agent Orchestration Module — Phase 20 Plan 01 complete
 
 ## Current Position
 
-Phase: 19 of 21 (Lesson Content)
-Plan: 2 of 3 complete
+Phase: 20 of 21 (Mini-Project)
+Plan: 1 of 1 complete
 Status: In progress
-Last activity: 2026-03-16 — Completed 19-02 lesson content plan (lessons 4-7)
+Last activity: 2026-03-16 — Completed 20-01 mini-project plan (spec, hints, lesson)
 
 Progress: [##########] 100% (Overall)
 
@@ -54,8 +40,8 @@ Progress: [##########] 100% (Overall)
 - v2.3: 1 plan in ~4 min (4min/plan)
 - v3.0: 8 plans in ~16 min (avg 2.0min/plan)
 - v4.0: 3 plans in ~5 min (avg 1.7min/plan)
-- v5.0: 3 plans in ~11 min (avg 3.7min/plan)
-- Overall: 37 plans in ~106 min (avg 2.9min/plan)
+- v5.0: 4 plans in ~13 min (avg 3.3min/plan)
+- Overall: 38 plans in ~108 min (avg 2.8min/plan)
 
 ## Accumulated Context
 
@@ -70,6 +56,8 @@ Progress: [##########] 100% (Overall)
 - Lessons use real verbatim code from GSD workflow files, not invented examples
 - 7-10 content blocks per lesson with text/code mix for pacing variety
 - 8 blocks per lesson (5 text, 3 code) established as consistent pacing pattern
+- Spec checks test orchestration concepts (waves, subagents, aggregation) via regex, not just file existence
+- Template provides 2 review subagents as Wave 1 with aggregation as Wave 2
 
 ### Roadmap Evolution
 

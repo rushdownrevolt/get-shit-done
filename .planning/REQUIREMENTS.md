@@ -25,9 +25,9 @@ Requirements for v5.0 Agent Orchestration Module. Each maps to roadmap phases.
 
 ### Mini-Project
 
-- [ ] **MINI-01**: Mini-project spec with verification checks exercising orchestration knowledge
-- [ ] **MINI-02**: 5 progressive hints for mini-project
-- [ ] **MINI-03**: Mini-project lesson integrating spec into curriculum
+- [x] **MINI-01**: Mini-project spec with verification checks exercising orchestration knowledge
+- [x] **MINI-02**: 5 progressive hints for mini-project
+- [x] **MINI-03**: Mini-project lesson integrating spec into curriculum
 
 ### Export
 
@@ -63,9 +63,9 @@ Deferred to future release.
 | LESS-05 | Phase 19 | Complete |
 | LESS-06 | Phase 19 | Complete |
 | LESS-07 | Phase 19 | Complete |
-| MINI-01 | Phase 20 | Pending |
-| MINI-02 | Phase 20 | Pending |
-| MINI-03 | Phase 20 | Pending |
+| MINI-01 | Phase 20 | Complete |
+| MINI-02 | Phase 20 | Complete |
+| MINI-03 | Phase 20 | Complete |
 | EXPO-01 | Phase 21 | Pending |
 
 **Coverage:**
