@@ -184,7 +184,7 @@ Plans:
 | 21. Export Update | v5.0 | 1/1 | Complete | 2026-03-16 |
 | 22. Module Infrastructure | 1/1 | Complete    | 2026-03-16 | - |
 | 23. Lesson Content | 2/2 | Complete    | 2026-03-16 | - |
-| 24. Mini-Project | 1/1 | Complete   | 2026-03-16 | - |
+| 24. Mini-Project | 1/1 | Complete    | 2026-03-16 | - |
 | 25. Export Update | v6.0 | 0/1 | Not started | - |
 
 ---
