@@ -1,0 +1,58 @@
+{
+  "id": "milestone-audit",
+  "title": "Milestone Audit",
+  "lessonNumber": 6,
+  "objective": "Understand how audit-milestone aggregates phase verifications, checks cross-phase integration, and enforces completion gates -- and how plan-milestone-gaps turns audit gaps into new fix phases.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Gap closure fixes problems within a single phase. But a milestone spans multiple phases. Phase 1 might create a database schema, Phase 2 an API, Phase 3 a UI -- each phase can pass verification individually while the cross-phase wiring is broken. The API might not use the schema types. The UI might call endpoints that do not exist. GSD checks the big picture with audit-milestone, which aggregates phase verifications and checks cross-phase integration. Individual phase passes do not guarantee milestone success.",
+      "focus": "Individual phase passes do not guarantee milestone success.",
+      "bridge": "Let's see the audit process that checks the big picture."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<purpose>\nVerify milestone achieved its definition of done by aggregating phase\nverifications, checking cross-phase integration, and assessing requirements\ncoverage. Reads existing VERIFICATION.md files (phases already verified\nduring execute-phase), aggregates tech debt and deferred gaps, then spawns\nintegration checker for cross-phase wiring.\n</purpose>\n\nStep 1 - Determine Milestone Scope:\n- Identify all phase directories in scope\n- Extract milestone definition of done from ROADMAP.md\n- Extract requirements mapped to this milestone from REQUIREMENTS.md\n\nStep 2 - Read All Phase Verifications:\n- For each phase, read VERIFICATION.md\n- Extract: status, critical gaps, non-critical gaps, anti-patterns, requirements coverage\n- Missing VERIFICATION.md = \"unverified phase\" = blocker",
+      "highlight": [2, 3, 4, 18]
+    },
+    {
+      "type": "text",
+      "value": "The audit has three layers. First, phase verification aggregation: read every VERIFICATION.md and aggregate status, gaps, anti-patterns, and requirements coverage. If any phase is unverified, that is a blocker -- you cannot complete a milestone with unchecked phases. Second, integration checking: spawn a gsd-integration-checker subagent that examines cross-phase wiring. Does the API use the schema types? Does the UI call the right API endpoints? Third, requirements coverage: compare actual verified requirements against REQUIREMENTS.md using a three-source cross-reference to find anything unsatisfied.",
+      "focus": "Three layers: phase-level, integration-level, requirement-level.",
+      "bridge": "Let's see what information the audit extracts from each phase."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From each VERIFICATION.md, extract:\n- Status: passed | gaps_found\n- Critical gaps (blockers)\n- Non-critical gaps (tech debt, deferred items)\n- Anti-patterns found (TODOs, stubs, placeholders)\n- Requirements coverage (which requirements satisfied/blocked)\n\nMissing VERIFICATION.md = \"unverified phase\" = blocker\n\nStep 3 - Spawn Integration Checker:\n  Check cross-phase integration and E2E flows.\n  Phases: {phase_dirs}\n  Phase exports: {from SUMMARYs}\n  API routes: {routes created}\n  Milestone Requirements: {REQ-IDs with descriptions}\n  MUST map each integration finding to affected requirement IDs.\n  Verify cross-phase wiring and E2E user flows.",
+      "highlight": [1, 8, 10]
+    },
+    {
+      "type": "text",
+      "value": "The audit produces a structured result with completion gates. If critical gaps exist -- requirements unsatisfied, integration broken, unverified phases -- the milestone CANNOT be completed. These are gates, not suggestions. Non-critical items like tech debt and minor deferred gaps are recorded but do not block completion. The gate is binary: all critical items resolved or the milestone stays open. This prevents shipping a milestone that looks done but has fundamental gaps hiding in the cross-phase wiring.",
+      "focus": "Gates enforce completion quality -- no shipping with critical gaps.",
+      "bridge": "When the audit finds gaps, plan-milestone-gaps turns them into fix phases."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<purpose>\nCreate all phases necessary to close gaps identified by /gsd:audit-milestone.\nReads MILESTONE-AUDIT.md, groups gaps into logical phases, creates phase\nentries in ROADMAP.md, and offers to plan each phase.\n</purpose>\n\nLoad Audit Results - parse three gap categories:\n- gaps.requirements -- unsatisfied requirements\n- gaps.integration -- missing cross-phase connections\n- gaps.flows -- broken E2E flows\n\nPrioritize Gaps:\n| Priority | Action                          |\n|----------|---------------------------------|\n| must     | Create phase, blocks milestone  |\n| should   | Create phase, recommended       |\n| nice     | Ask user: include or defer?     |",
+      "highlight": [8, 9, 10, 15, 16, 17]
+    },
+    {
+      "type": "text",
+      "value": "Plan-milestone-gaps closes the milestone loop: it reads audit gaps, groups them by priority and logical concern (same affected phase, same subsystem, dependency order), creates new phase entries in ROADMAP.md, and offers to plan each phase. Must-priority gaps get phases automatically. Nice-priority gaps ask the user. This creates a clean path from \"audit found problems\" to \"here are the specific phases that fix them.\" The same execute -> verify loop runs on these new phases. After all gap phases complete, re-audit confirms the milestone is truly done.",
+      "focus": "Audit gaps become phases -- the same lifecycle that built the milestone now fixes it.",
+      "bridge": "Milestone audit completes the quality picture at the highest level."
+    },
+    {
+      "type": "text",
+      "value": "Milestone audit completes the quality picture at the highest level. In the next lesson, we will step back and see how ALL these quality mechanisms -- verify-work, skeptic reviews, debug workflows, gap closure, and milestone audit -- compose into a single coherent feedback system. Each mechanism handles a different scale and failure mode, but together they form layered, persistent, evidence-based quality assurance.",
+      "focus": "From individual mechanisms to the complete quality system.",
+      "bridge": "In the final lesson, we will synthesize everything into the complete quality feedback system."
+    }
+  ],
+  "conceptMap": "milestone-audit",
+  "successCriteria": "You can explain the three-layer audit (phase aggregation, integration checking, requirements coverage), describe completion gates that block milestone completion when critical gaps exist, and articulate how plan-milestone-gaps turns audit gaps into fix phases."
+}

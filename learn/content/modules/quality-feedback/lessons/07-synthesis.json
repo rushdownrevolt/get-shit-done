@@ -1,0 +1,58 @@
+{
+  "id": "synthesis",
+  "title": "The Quality Feedback System",
+  "lessonNumber": 7,
+  "objective": "See how all quality mechanisms compose into a unified feedback system operating at task, phase, and milestone levels -- and understand why layered, persistent, evidence-based quality beats single-gate approaches.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This final lesson connects all the quality pieces. You have learned: the quality lifecycle (Lesson 1), verify-work and UAT (Lesson 2), skeptic reviews via goal-backward analysis (Lesson 3), debug workflows (Lesson 4), gap closure (Lesson 5), and milestone audit (Lesson 6). Now we will see how these compose into a unified quality feedback system that operates at every level of GSD. Each mechanism handles a different scale and failure mode, but together they form something greater than the sum of parts.",
+      "focus": "From parts to whole -- the quality system.",
+      "bridge": "Let's map the complete system."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "The Complete Quality Feedback System:\n\nplan-phase                execute-phase              verify-work\n  |                          |                          |\n  +-- plan-checker           +-- task commits           +-- conversational tests\n  |   (pre-execution         |   (atomic, verifiable)   |   (UAT.md persistent)\n  |    skeptic review)       |                          |\n  v                          v                          v\nverify-phase ----------> diagnose-issues ----------> plan-phase --gaps\n  |                          |                          |\n  +-- goal-backward          +-- parallel debug         +-- gap closure plans\n  |   (truths, artifacts,    |   agents                 |   (targeted fixes)\n  |    key_links)            |   (DEBUG.md persistent)  |\n  v                          v                          v\naudit-milestone -------> plan-milestone-gaps         execute --gaps-only\n  |                          |                          |\n  +-- phase aggregation      +-- priority grouping      +-- surgical execution\n  +-- integration check      +-- new phases created     +-- re-verify\n  +-- requirements gate",
+      "highlight": [3, 9, 16]
+    },
+    {
+      "type": "text",
+      "value": "Walk through a concrete example: building a commenting feature across 3 phases. Phase 1 creates the schema and API. Phase 2 creates the UI. Phase 3 adds real-time updates. After Phase 2 executes, verify-work finds: \"comments appear but do not refresh until page reload.\" UAT.md records this as a major gap. diagnose-issues spawns a debug agent that finds \"useEffect missing comment subscription dependency.\" plan-phase --gaps creates a fix plan. execute --gaps-only applies the fix. verify-work re-tests: comments now refresh in real time. One automated cycle, from gap discovery to verified fix.",
+      "focus": "Concrete example: from gap to fix in one automated cycle.",
+      "bridge": "Let's see what the gap looks like as it flows through the system."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Gap in UAT.md (from verify-work):\n\n- truth: \"Comments refresh when new comment posted\"\n  status: failed\n  reason: \"User reported: comment appears after page reload only\"\n  severity: major\n  test: 3\n\nAfter diagnosis -> gap closure PLAN.md task:\n\n<task type=\"auto\">\n  <name>Fix comment refresh</name>\n  <files>src/components/CommentList.tsx</files>\n  <action>\n  Root cause: useEffect missing commentCount dependency.\n  Add commentCount to the useEffect dependency array in CommentList.tsx\n  so the component re-renders when new comments are added.\n  </action>\n  <verify>\n    <automated>grep -q \"commentCount\" src/components/CommentList.tsx</automated>\n  </verify>\n</task>\n\nThe truth from UAT drives the action in the fix plan.\nNo guessing -- diagnosis flows directly into targeted repair.",
+      "highlight": [3, 15, 16]
+    },
+    {
+      "type": "text",
+      "value": "Three feedback loops operate at different scales. Loop 1 (task level): each task has a verify block that runs after implementation -- instant feedback on whether the specific change worked. Loop 2 (phase level): verify-work tests the full feature, diagnose-issues finds root causes, plan-phase --gaps creates fix plans, execute --gaps-only applies them -- catches integration issues within a phase. Loop 3 (milestone level): audit-milestone checks cross-phase wiring, plan-milestone-gaps creates new fix phases -- catches gaps that span the entire milestone. Each loop is wider but less frequent. Together they catch problems at every granularity.",
+      "focus": "Three loops at three scales -- nothing falls through.",
+      "bridge": "The verify-phase workflow ties the loops together with evidence-based checking."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "verify-phase checks each must_haves level:\n\n1. Truths - observable behaviors that must be TRUE:\n   \"User can see existing messages\"\n   \"User can send a message\"\n   \"Messages persist across refresh\"\n\n2. Artifacts - files that must EXIST with real content:\n   path: \"src/components/Chat.tsx\"\n   provides: \"Message list rendering\"\n   Check: exists + substantive (not stub) + wired (imported/used)\n\n3. Key links - critical connections verified with grep:\n   from: \"src/components/Chat.tsx\"\n   to: \"/api/chat\"\n   pattern: \"fetch.*api/chat\"\n\n   grep -r \"fetch.*api/chat\" src/components/Chat.tsx\n   FOUND = wired. NOT FOUND = orphaned component.\n\nEvidence-based: grep on actual source, not trust.",
+      "highlight": [3, 8, 13, 17]
+    },
+    {
+      "type": "text",
+      "value": "Why this system works: it is not a single monolithic quality check -- it is layered, persistent, and evidence-based. Persistent because UAT.md, DEBUG.md, and VERIFICATION.md survive context window clears. If a session is interrupted mid-debug, the investigation resumes from exactly where it left off. Evidence-based because key_links use grep patterns on actual source code, not trust. A component cannot pass verification by merely existing -- it must be wired to its dependencies. Layered because plan-checker catches plan issues, verify-phase catches implementation issues, verify-work catches user-visible issues, and audit-milestone catches integration issues. Each layer catches different failure modes.",
+      "focus": "Persistent, evidence-based, layered -- not a single quality gate.",
+      "bridge": "This brings us to the core principle."
+    },
+    {
+      "type": "text",
+      "value": "GSD's quality system embodies one principle: close the loop. Every verification feeds back into planning. Every gap drives targeted fixes. Every fix gets re-verified. This is not a waterfall quality gate at the end; it is continuous feedback woven into every workflow. The result is a system where problems are caught at the right level, diagnosed with evidence, fixed with precision, and confirmed with re-testing. In the next step (the mini-project), you will apply these quality concepts by building your own verification workflow.",
+      "focus": "Close the loop -- continuous feedback at every level.",
+      "bridge": "In the mini-project, you will build your own verification workflow using these patterns."
+    }
+  ],
+  "conceptMap": "synthesis",
+  "successCriteria": "You can explain the complete quality feedback system with its three loops (task, phase, milestone), describe how persistent state files enable investigation across session boundaries, and articulate why evidence-based verification with grep patterns beats trust-based checking."
+}
