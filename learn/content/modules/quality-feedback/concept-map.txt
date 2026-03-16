@@ -1,0 +1,58 @@
+  Quality & Feedback Loops
+        |
+        v
+  +-------------------------+
+  | Overview                |
+  | (Quality lifecycle:     |
+  |  build -> verify ->     |
+  |  diagnose -> fix ->     |
+  |  re-verify)             |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Verify-Work & UAT       |
+  | (Conversational testing,|
+  |  severity levels,       |
+  |  persistent UAT.md)     |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Skeptic Reviews         |
+  | (Proactive critical     |
+  |  assessment, skeptic.md,|
+  |  pre-emptive quality)   |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Debug Workflows         |
+  | (Systematic debugging,  |
+  |  hypothesis testing,    |
+  |  persistent state)      |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Gap Closure             |
+  | (Diagnosis -> plan      |
+  |  --gaps -> execute      |
+  |  --gaps-only cycle)     |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Milestone Audit         |
+  | (audit-milestone,       |
+  |  plan-milestone-gaps,   |
+  |  completion gates)      |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Synthesis               |
+  | (Quality loops in the   |
+  |  full GSD lifecycle,    |
+  |  putting it together)   |
+  +-------------------------+
