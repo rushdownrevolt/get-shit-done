@@ -1,0 +1,58 @@
+{
+  "id": "synthesis",
+  "title": "The Full Lifecycle",
+  "lessonNumber": 7,
+  "objective": "Synthesize how all orchestration concepts compose into the complete GSD lifecycle, from project definition through milestone completion.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This final lesson connects all the pieces. You have learned: the orchestration model (Lesson 1), the five agent types (Lesson 2), wave execution (Lesson 3), lean orchestrator design (Lesson 4), checkpoints (Lesson 5), and auto-advance (Lesson 6). Now we will see how these compose into the complete GSD lifecycle -- from the first command to milestone completion.",
+      "focus": "From parts to whole",
+      "bridge": "Let's trace the full command chain."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "The Complete GSD Lifecycle:\n\n/gsd:kickoff           -> PROJECT.md\n/gsd:requirements      -> REQUIREMENTS.md\n/gsd:roadmap           -> ROADMAP.md (phases with goals)\n\n/gsd:discuss-phase N   -> CONTEXT.md (user decisions)\n\n/gsd:plan-phase N      [ORCHESTRATOR]\n  |-> gsd-phase-researcher  -> RESEARCH.md\n  |-> gsd-planner           -> PLAN.md files\n  |-> gsd-plan-checker      -> revision loop (max 3)\n\n/gsd:execute-phase N   [ORCHESTRATOR]\n  |-> discover plans, group into waves\n  |-> Wave 1: spawn executors in parallel\n  |     |-> gsd-executor -> commits + SUMMARY.md\n  |     |-> gsd-executor -> commits + SUMMARY.md\n  |-> spot-check Wave 1 results\n  |-> Wave 2: spawn executors (depend on Wave 1)\n  |     |-> gsd-executor -> commits + SUMMARY.md\n  |-> checkpoint plans: pause -> human -> continuation\n  |-> gsd-verifier -> VERIFICATION.md\n\n/gsd:transition        -> advance STATE.md, next phase\n/gsd:complete-milestone -> archive, retrospective",
+      "highlight": [9, 14, 23]
+    },
+    {
+      "type": "text",
+      "value": "Let's walk through a concrete example: building a user authentication feature. /gsd:plan-phase reads the phase goal from ROADMAP.md, spawns a researcher to investigate auth libraries, then a planner that creates 2 plans -- database schema plus API routes in wave 1, login UI in wave 2. The checker verifies the plans have proper dependencies and frontmatter. /gsd:execute-phase discovers the 2 plans, groups them by wave. Wave 1's executor creates the database schema, implements API routes, commits each task atomically. Wave 2's executor creates the login form, wires it to the API. Both produce SUMMARY.md files with commit hashes and file inventories.",
+      "focus": "Concrete example: auth feature end-to-end",
+      "bridge": "What does the orchestrator see during this flow?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "## Execution Plan\n\n**Phase 5: User Authentication** -- 2 plans across 2 waves\n\n| Wave | Plans | What it builds                    |\n|------|-------|-----------------------------------|\n| 1    | 05-01 | Database schema and auth API      |\n| 2    | 05-02 | Login UI wired to auth endpoints  |\n\n---\n## Wave 1\n\n**05-01: Auth Schema and API**\nJWT authentication with refresh token rotation using jose\nlibrary. Creates users table, password hashing with bcrypt,\nlogin/register/refresh endpoints with validation.\n\nSpawning 1 agent...\n\n---\n## Wave 1 Complete\n\n**05-01: Auth Schema and API**\nJWT auth with refresh rotation -- 4 tasks, 6 files created.\nLogin UI (Wave 2) can now reference auth endpoints.\n\n---\n## Wave 2\n\n**05-02: Login UI**\nReact login form with email/password fields, error handling,\nand redirect on successful auth.\n\nSpawning 1 agent...",
+      "highlight": [3, 12, 22, 29]
+    },
+    {
+      "type": "text",
+      "value": "Five key principles make this work. First, fresh context per agent -- quality never degrades because every executor starts with a clean context window. Second, path-only delegation -- the orchestrator stays lean at 10-15% by passing file paths, not file contents. Third, pre-computed waves -- dependency resolution happens during planning, not at runtime, so the orchestrator executes without analyzing code. Fourth, atomic commits -- each task is independently verifiable in git history. Fifth, spot-check verification -- the orchestrator trusts but verifies by checking file existence and commit history. These are not aspirational -- they are enforced by the workflow structure itself.",
+      "focus": "Five principles that make orchestration reliable",
+      "bridge": "Why does fresh context matter so much?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Why fresh context matters -- quality vs. context usage:\n\n| Context Usage | Quality    | Agent State               |\n|---------------|------------|---------------------------|\n| 0-30%         | PEAK       | Full attention, creative  |\n|               |            | solutions, thorough code  |\n| 30-50%        | GOOD       | Solid output, occasional  |\n|               |            | shortcuts in edge cases   |\n| 50-70%        | DEGRADING  | Rushing, minimal tests,   |\n|               |            | copy-paste patterns       |\n| 70%+          | POOR       | Hallucinations, skipped   |\n|               |            | steps, incomplete output  |",
+      "highlight": [9, 10, 11, 12]
+    },
+    {
+      "type": "text",
+      "value": "Without fresh context per agent, a long-running session would hit 70%+ context by the third plan, producing rushed, minimal output. With orchestration, every plan gets 0-30% context -- peak quality every time. This is not theoretical. GSD's own development demonstrates it: 36+ plans executed with consistent 2-4 minute completion times and thorough output across every plan, because each executor started fresh. The orchestrator pattern is the reason a 10-plan phase produces the same quality on plan 10 as on plan 1.",
+      "focus": "Fresh context = peak quality, every time",
+      "bridge": "Let's bring it all together."
+    },
+    {
+      "type": "text",
+      "value": "GSD's orchestration is not magic -- it is structured decomposition. Break work into phases. Break phases into plans. Break plans into tasks. Assign waves by dependency. Spawn agents with fresh context. Verify results. Advance automatically. Every piece you learned in this module is a specific mechanism serving this decomposition: the orchestration model (coordinate, not execute), agent types (specialized roles), waves (parallel when possible, sequential when dependent), lean design (paths not content), checkpoints (human judgment where needed), auto-advance (hands-free when possible). In the next step -- the mini-project -- you will apply these concepts yourself.",
+      "focus": "Structured decomposition, not magic",
+      "bridge": "The mini-project will give you hands-on practice with orchestration concepts."
+    }
+  ],
+  "conceptMap": "synthesis",
+  "successCriteria": "You can trace the complete GSD lifecycle from /gsd:kickoff to /gsd:complete-milestone, explain how orchestration concepts compose together, describe the five reliability principles, and articulate why fresh context per agent prevents quality degradation."
+}

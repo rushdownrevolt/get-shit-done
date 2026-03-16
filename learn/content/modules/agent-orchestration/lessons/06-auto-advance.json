@@ -1,0 +1,58 @@
+{
+  "id": "auto-advance",
+  "title": "Auto-Advance Chains",
+  "lessonNumber": 6,
+  "objective": "Understand how GSD chains phase lifecycles together for hands-free execution using the --auto flag and auto-advance configuration.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Checkpoints give human control when needed, but GSD can also run entire phase lifecycles hands-free. The auto-advance system chains plan -> execute -> verify -> transition automatically using the --auto flag. A single command can plan a phase, execute all its plans in waves, verify the results, mark the phase complete, and advance to the next one -- all without human interaction.",
+      "focus": "From manual steps to automated pipelines",
+      "bridge": "Let's see how auto-advance is configured."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Sync chain flag with intent -- if user invoked manually\n(no --auto), clear the ephemeral chain flag:\n\nif [[ ! \"$ARGUMENTS\" =~ --auto ]]; then\n  node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" \\\n    config-set workflow._auto_chain_active false\nfi\n\nRead both the chain flag and user preference:\n\nAUTO_CHAIN=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" \\\n  config-get workflow._auto_chain_active || echo \"false\")\nAUTO_CFG=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" \\\n  config-get workflow.auto_advance || echo \"false\")",
+      "highlight": [4, 5, 6, 11, 12, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "There are two auto-advance mechanisms. First, the --auto flag on a single invocation, which sets _auto_chain_active for that run. This is ephemeral -- it clears when the chain ends or the user invokes manually without the flag. Second, workflow.auto_advance in config.json, which is the persistent user preference -- it stays on until the user turns it off. When either is true, the system auto-approves checkpoints: human-verify gets 'approved,' decisions get the first option. Only human-action checkpoints (like auth gates) still pause.",
+      "focus": "Two levels: per-run flag and persistent setting",
+      "bridge": "How does the transition step chain phases together?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<step name=\"verify_completion\">\nCheck current phase has all plan summaries:\n\nls .planning/phases/XX-current/*-PLAN.md | sort\nls .planning/phases/XX-current/*-SUMMARY.md | sort\n\nVerification logic:\n- Count PLAN files\n- Count SUMMARY files\n- If counts match: all plans complete\n- If counts don't match: incomplete\n</step>\n\n<step name=\"update_roadmap_and_state\">\nTRANSITION=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\"\n  phase complete \"${current_phase}\")\n\nThe CLI handles:\n- Marking the phase checkbox as [x] complete with today's date\n- Updating plan count to final (e.g., \"3/3 plans complete\")\n- Updating the Progress table (Status -> Complete, adding date)\n- Advancing STATE.md to next phase\n- Detecting if this is the last phase in the milestone\n</step>",
+      "highlight": [10, 15, 16]
+    },
+    {
+      "type": "text",
+      "value": "The chain works like this: execute-phase completes all plans, then transition marks the phase done and advances STATE.md. If auto-advance is on, the next phase starts automatically. This creates a pipeline: plan Phase 5 -> execute Phase 5 -> verify Phase 5 -> transition to Phase 6 -> plan Phase 6 -> execute Phase 6, all without user interaction. The --no-transition flag breaks the chain if you want to stop after execution. The chain also stops at milestone boundaries -- when the last phase completes, the auto-advance flag is cleared automatically.",
+      "focus": "The full chain: execute -> verify -> transition -> next",
+      "bridge": "How does auto-mode handle checkpoints within this chain?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Auto-mode checkpoint handling:\n\nWhen executor returns a checkpoint AND auto-mode is active:\n\n- checkpoint:human-verify\n  -> Auto-spawn continuation agent\n     with user_response = \"approved\"\n  -> Log: Auto-approved checkpoint\n\n- checkpoint:decision\n  -> Auto-spawn continuation agent\n     with user_response = first option\n  -> Log: Auto-selected: [option]\n\n- checkpoint:human-action\n  -> Present to user (existing behavior)\n  -> Auth gates cannot be automated\n  -> Chain PAUSES here",
+      "highlight": [5, 6, 7, 8, 10, 11, 12, 13, 15, 16, 17, 18]
+    },
+    {
+      "type": "text",
+      "value": "In auto-mode, human-verify checkpoints are instantly approved -- the assumption is that if the automation passed its own verification, it is good enough to continue. Decision checkpoints auto-select the first option, because GSD planners front-load the recommended choice as option one. Only human-action checkpoints (like entering a 2FA code or clicking an email link) still pause the chain. This means a 10-phase milestone with verify-only checkpoints can run end-to-end without any user input at all.",
+      "focus": "Smart auto-approval keeps the chain moving",
+      "bridge": "Let's step back and see the complete picture."
+    },
+    {
+      "type": "text",
+      "value": "Auto-advance completes the automation story. At one extreme, every plan has checkpoints and humans verify each step. At the other, the --auto flag chains entire milestones. Most real usage falls in between: auto-advance runs the pipeline, but a human-action checkpoint pauses for a deployment secret or a visual review that truly cannot be automated. The next lesson synthesizes everything -- how orchestration connects to the full GSD lifecycle from project definition to milestone completion.",
+      "focus": "A spectrum from manual verification to full automation",
+      "bridge": "In the final lesson, we'll zoom out and see how all six orchestration concepts compose into the complete GSD lifecycle."
+    }
+  ],
+  "conceptMap": "auto-advance",
+  "successCriteria": "You can explain the two auto-advance mechanisms (--auto flag and workflow.auto_advance config), how the chain works (execute -> verify -> transition -> next phase), and how auto-mode handles each checkpoint type differently."
+}
