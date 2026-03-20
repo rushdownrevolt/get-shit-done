@@ -6,11 +6,56 @@
   "content": [
     {
       "type": "text",
-      "value": "Placeholder content -- this lesson will be populated in a later phase.",
-      "focus": "Placeholder.",
-      "bridge": "Content coming soon."
+      "value": "You have now studied every major subsystem of GSD-2: the dispatch pipeline that reads state from disk and selects the next action, the context engineering that builds focused prompts for fresh agent sessions, the auto loop that orchestrates execution with graduated error handling, the git isolation that keeps autonomous commits safe through worktrees and squash merges, and the skill discovery that lets agents load project-specific expertise on demand. In this final lesson, we connect these pieces into a single mental model and see how they work together through a complete autonomous cycle.",
+      "focus": "Every subsystem serves one goal: making autonomous, multi-session execution reliable.",
+      "bridge": "Let's start with the sharpest contrast: what changed between v1 and v2."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "GSD v1 (Prompt Framework)          GSD-2 (Agent Application)\n─────────────────────────          ───────────────────────────\nUser loads GSD-WORKFLOW.md    -->   Agent reads .gsd/ directory\nUser tracks current phase     -->   deriveState computes phase\nUser decides what to do next  -->   resolveDispatch selects action\nUser manages context window   -->   Fresh sessions, auto context\nUser runs commands manually   -->   Auto loop dispatches units\nUser commits and pushes       -->   Worktree isolation, squash merge\nNo crash recovery             -->   Lock file + session JSONL\nNo stuck detection            -->   Graduated counter (3/5)\nNo extensibility              -->   Skills + extension manifest\nPhases/plans in markdown      -->   Milestones/slices/tasks in .gsd/",
+      "highlight": [1, 2, 3, 4, 5],
+      "explanation": "This comparison captures the fundamental shift. Every row shows a manual v1 activity replaced by an automated v2 mechanism. The user went from being the executor to being the director. GSD-2 did not change the methodology -- it automated the methodology. The same concepts (plan, execute, verify) exist in both versions. The difference is who does the work."
+    },
+    {
+      "type": "text",
+      "value": "The v1-to-v2 shift is not just automation -- it is a change in the unit of work. In v1, the unit was a session: the user loaded context, worked until the context window filled up, and started over. In v2, the unit is a task: a precisely scoped piece of work that fits in one context window by design. This reframing is what makes autonomous execution possible. A task has a plan file, a verification gate, and a summary artifact. The agent does not need to know the project history -- it needs the task plan and enough context to execute. When it finishes, the system derives the new state and dispatches the next task. The user never touches the context window.",
+      "focus": "v1's unit of work was a session. v2's unit of work is a task -- scoped to fit one context window.",
+      "bridge": "Let's trace a complete autonomous cycle to see every subsystem in action."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "User runs: /gsd auto\n\n1. STARTUP\n   - Write auto.lock (crash recovery)\n   - Snapshot skills (skill discovery)\n   - Create/enter worktree (git isolation)\n   - Capture integration branch\n\n2. LOOP ITERATION (repeats for each unit)\n   a. deriveState        --> reads .gsd/ files, computes phase\n   b. resolveDispatch    --> matches phase to dispatch rule\n   c. Build prompt       --> inlines context, task plan, decisions\n   d. Fresh session      --> new context window, system prompt\n   e. Agent executes     --> writes code, runs tests, produces artifact\n   f. Commit work        --> smart staging, conventional commit message\n   g. Verification gate  --> checks artifact exists, runs checks\n   h. Post-unit          --> update state, check for milestone transition\n\n3. COMPLETION\n   - Squash merge milestone branch to integration branch\n   - Teardown worktree\n   - Clear auto.lock\n   - Desktop notification: \"Milestone complete!\"",
+      "highlight": [1, 9, 10, 11, 12, 21],
+      "explanation": "This is the complete autonomous cycle. Startup initializes the safety systems (lock, worktree, skills). Each loop iteration follows the five-phase pipeline from auto-loop.ts. On completion, the worktree is merged and torn down. Notice how every subsystem has a role: crash recovery protects startup/shutdown, context engineering builds the prompt in step 2c, the dispatch pipeline drives 2a-2b, auto mode orchestrates the entire loop, and git isolation manages commits and merges."
+    },
+    {
+      "type": "text",
+      "value": "The key insight is that every subsystem exists to solve a specific failure mode of autonomous execution. Without state derivation from disk, the system would lose its position when the context window fills up. Without fresh sessions, accumulated context would degrade agent quality over time. Without worktree isolation, a bad agent session could corrupt the main branch. Without crash recovery, a process crash would leave the project in an unknown state. Without stuck detection, a failing agent would retry forever. Without skills, the agent would have no way to learn project-specific conventions. Each subsystem is a response to a real problem encountered during development.",
+      "focus": "Each subsystem solves a specific failure mode: state loss, context decay, git corruption, crashes, stuck loops.",
+      "bridge": "This brings us to the architectural principle that ties everything together."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "GSD-2 Architectural Principles:\n\n1. STATE ON DISK\n   State lives in files, not memory. deriveState reads .gsd/\n   on every iteration. STATE.md is a cache, not truth.\n\n2. FRESH SESSIONS\n   Every task gets a new context window. No accumulated state,\n   no degraded quality. The prompt IS the context.\n\n3. GRADUATED RECOVERY\n   1 error: retry. 2 errors: invalidate caches. 3 errors: stop.\n   3 same-unit: check artifact. 5 same-unit: hard stop.\n\n4. ISOLATION BY DEFAULT\n   Worktree per milestone. Squash merge on completion.\n   200 agent commits become 1 clean commit on main.\n\n5. DECLARATIVE DISPATCH\n   Rules table, not if-else chain. First match wins.\n   Add a phase by adding a rule, not editing control flow.\n\n6. ON-DEMAND EXPERTISE\n   Skills discovered at runtime, loaded by agent judgment.\n   The system adapts to the project, not the other way around.",
+      "highlight": [1, 3, 7, 11, 16, 20, 24],
+      "explanation": "These six principles are the architectural DNA of GSD-2. They are not written in a design document -- they emerged from solving real problems during autonomous execution. Each principle prevents a specific class of failure and enables a specific capability. Together, they make it possible for an AI agent to execute complex, multi-session software projects with minimal human intervention."
+    },
+    {
+      "type": "text",
+      "value": "Understanding these principles lets you predict how GSD-2 will behave in new situations. If you encounter a problem where the agent seems stuck, you know to check the stuck detection counter and the expected artifact. If a milestone's commits are messy, you know they will be squash-merged on completion. If you need the agent to follow your project's conventions, you know to create a skill. If the system crashes mid-execution, you know the lock file and session JSONL will enable recovery. The principles are not abstract -- they are operational knowledge that makes you effective at directing autonomous work.",
+      "focus": "The principles are operational: they tell you what to expect and where to look when things go wrong.",
+      "bridge": "One final perspective on what GSD-2 really is."
+    },
+    {
+      "type": "text",
+      "value": "GSD-2 is a methodology that became executable. Every concept from the original GSD-WORKFLOW.md -- phases, plans, execution, verification -- still exists. But instead of a human reading the methodology and following it manually, an application reads the methodology's artifacts from disk and executes them autonomously. The Milestone/Slice/Task hierarchy makes work dispatchable. The dispatch pipeline makes decisions automatic. The auto loop makes execution continuous. Git isolation makes commits safe. Skills make the agent adaptive. You now have a complete mental model of how an AI agent application is built -- not in theory, but in practice, with real code. The mini-project in the next section will give you a chance to exercise this understanding.",
+      "focus": "GSD-2 is a methodology that became executable -- same concepts, automated execution.",
+      "bridge": "Next up: the mini-project where you apply what you have learned."
     }
   ],
   "conceptMap": "synthesis",
-  "successCriteria": "You can connect all GSD-2 concepts into a unified mental model and compare v1 with v2."
+  "successCriteria": "You can connect all GSD-2 subsystems into a unified mental model, explain the v1 vs v2 comparison for each capability, trace a complete autonomous cycle from /gsd auto to milestone completion, and articulate the six architectural principles that make autonomous execution reliable."
 }
