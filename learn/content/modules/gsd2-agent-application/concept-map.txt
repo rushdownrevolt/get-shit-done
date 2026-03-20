@@ -1,0 +1,56 @@
+  GSD-2 -- The Agent Application
+        |
+        v
+  +-------------------------+
+  | Overview                |
+  | (v1->v2 evolution,      |
+  |  Milestone/Slice/Task   |
+  |  hierarchy)             |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Dispatch Pipeline       |
+  | (deriveState,           |
+  |  resolveDispatch,       |
+  |  unit dispatch)         |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Context Engineering     |
+  | (Fresh sessions, prompt |
+  |  pre-loading, .gsd/     |
+  |  artifacts, inlining)   |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Auto Mode               |
+  | (Auto loop, crash       |
+  |  recovery, stuck        |
+  |  detection, timeout)    |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Git & Worktrees         |
+  | (Branch-per-milestone,  |
+  |  squash merge,          |
+  |  worktree isolation)    |
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Skills & Extensions     |
+  | (Skill discovery,       |
+  |  extension manifest,    |
+  |  custom skill authoring)|
+  +-------------------------+
+        |
+        v
+  +-------------------------+
+  | Synthesis               |
+  | (v1 vs v2 mental model, |
+  |  all pieces connected)  |
+  +-------------------------+

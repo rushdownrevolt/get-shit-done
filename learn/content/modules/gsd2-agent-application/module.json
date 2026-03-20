@@ -1,0 +1,16 @@
+{
+  "id": "gsd2-agent-application",
+  "title": "GSD-2 -- The Agent Application",
+  "description": "Learn how GSD evolved from a prompt framework into a standalone agent CLI -- dispatch pipeline, state machine, auto mode, context engineering, and extensibility through skills.",
+  "order": 6,
+  "sectionMap": {
+    "overview": "Overview",
+    "dispatch-pipeline": "Dispatch Pipeline",
+    "context-engineering": "Context Engineering",
+    "auto-mode": "Auto Mode",
+    "git-worktrees": "Git & Worktrees",
+    "skills-extensions": "Skills & Extensions",
+    "synthesis": "Synthesis",
+    "mini-project": "Mini-Project"
+  }
+}
