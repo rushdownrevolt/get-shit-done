@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships five modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), Planning & State (planning system), Agent Orchestration (subagent execution engine), and Quality & Feedback Loops (verification and debugging). Features a welcome screen, module picker with progress tracking, and context-dependent navigation. Also ships an AI-ready curriculum export (`docs/ai-curriculum/`) — a self-contained master document and per-module docs that let an LLM learn GSD by reading structured markdown.
+A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships six modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), Planning & State (planning system), Agent Orchestration (subagent execution engine), Quality & Feedback Loops (verification and debugging), and GSD-2: The Agent Application (the evolution from prompt framework to standalone CLI). Features a welcome screen, module picker with progress tracking, and context-dependent navigation. Also ships an AI-ready curriculum export (`docs/ai-curriculum/`) — a self-contained master document and per-module docs that let an LLM learn GSD by reading structured markdown.
 
 ## Core Value
 
@@ -61,6 +61,15 @@ The learner can confidently modify and extend GSD for their own needs, validated
 
 <!-- Next milestone scope -->
 
+## Current Milestone: v7.0 GSD-2 — The Agent Application
+
+**Goal:** Teach learners how GSD evolved from a prompt framework (v1) into a standalone agent CLI (v2), covering the dispatch pipeline, state machine, auto mode, context engineering, and extensibility through skills.
+
+**Target features:**
+- Module 6: GSD-2 — The Agent Application (lessons + mini-project)
+- v6→v7 progress migration for Module 6 tracking
+- AI curriculum export updated with Module 6 content
+
 ### Out of Scope
 
 - Web UI or browser-based experience — terminal only
@@ -82,6 +91,8 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - AI curriculum: ~4,900 LOC generated markdown (5 per-module docs + 1 master README)
 - 125+ tests passing (renderer, navigator, progress, verifier, hints, feedback, markdown-renderer)
 - Module 3 teaches the planning system that built gsd-learn itself (meta-recursive)
+- GSD-2 (v2.35.0) installed globally via `npm install -g gsd-pi` — source at `C:/Users/18182/AppData/Roaming/npm/node_modules/gsd-pi/`
+- GSD-2 is a TypeScript CLI built on Pi SDK; source files for lessons live in `src/resources/extensions/gsd/` (prompts, templates, skills, auto mode)
 
 ## Constraints
 
@@ -117,4 +128,4 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Heading-level bump for master README | Simple regex bumps all headings so modules nest under a single h1; avoids AST complexity | ✓ Good |
 
 ---
-*Last updated: 2026-03-16 after v6.0 milestone*
+*Last updated: 2026-03-19 after v7.0 milestone start*
