@@ -1,5 +1,20 @@
 {
-  "title": "GSD-2 Architecture",
-  "description": "Placeholder -- mini-project spec will be defined in Phase 29.",
-  "checks": []
+  "id": "gsd2-agent-application-project",
+  "moduleId": "gsd2-agent-application",
+  "title": "Add a Dispatch Loop to Skeptic Reviews",
+  "description": "Extend your skeptic workflow with a dispatch loop -- inspired by GSD-2's auto mode, it reads project state to decide what to review next, dispatches focused review subagents with scoped context, tracks what has been reviewed, and loops until coverage is complete",
+  "artifacts": [
+    {
+      "description": "Skeptic workflow with dispatch loop",
+      "path": "~/.claude/get-shit-done/workflows/skeptic.md",
+      "checks": [
+        { "pattern": "state|status|position|progress|current.*(phase|step|stage)", "description": "Reads or tracks project state to decide what to review next" },
+        { "pattern": "dispatch|route|send|delegate|assign.*task|hand.*off|invoke.*(agent|review)", "description": "Has dispatch logic that routes work to focused review subagents" },
+        { "pattern": "context|scope|focus|relevant.*file|narrow|filter|inject.*prompt", "description": "Injects scoped context into each dispatched review (not full project)" },
+        { "pattern": "track|coverage|reviewed|visited|completed|checked.*(area|file|module)|progress.*map", "description": "Tracks what has been reviewed to avoid duplication" },
+        { "pattern": "loop|repeat|iterate|cycle|until.*done|until.*complete|while.*remain|next.*round", "description": "Loops or iterates until review coverage is complete" },
+        { "pattern": "done|complete|finish|exit|stop|termin|all.*reviewed|coverage.*100|no.*remaining", "description": "Has a termination condition that ends the dispatch loop" }
+      ]
+    }
+  ]
 }
