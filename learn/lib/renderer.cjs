@@ -514,7 +514,7 @@ function renderModulePicker(modules, progressData) {
  * @returns {string} Formatted navigation footer string.
  */
 function renderNavigationFooter(opts) {
-  const keys = ['[w] Next', '[q] Back', '[e] Skip lesson', '[c] Copy', '[m] Modules'];
+  const keys = ['[→/w] Next', '[←/q] Back', '[e] Skip lesson', '[c] Copy', '[m] Modules'];
   if (opts && opts.isMiniProjectStep) {
     keys.push('[h] Hint');
   }

@@ -43,9 +43,9 @@ function waitForKey() {
 
     const handler = (str, key) => {
       if (!key) return;
-      if (key.name === 'w') {
+      if (key.name === 'w' || key.name === 'right') {
         cleanup(); resolve('next');
-      } else if (key.name === 'q') {
+      } else if (key.name === 'q' || key.name === 'left') {
         cleanup(); resolve('prev');
       } else if (key.name === 'e') {
         cleanup(); resolve('skip');

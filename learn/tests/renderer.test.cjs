@@ -55,9 +55,8 @@ describe('renderLesson', () => {
 
   test('includes navigation hint footer', () => {
     const output = renderLesson(lesson, 0, 1);
-    assert.ok(output.includes('[w]'), 'output should contain next hint');
-    assert.ok(output.includes('[q]'), 'output should contain back hint');
-    assert.ok(output.includes('[q]'), 'output should contain quit hint');
+    assert.ok(output.includes('/w]'), 'output should contain next hint');
+    assert.ok(output.includes('/q]'), 'output should contain back hint');
   });
 
   test('includes concept map when lesson has one and moduleDir is provided', () => {
@@ -328,10 +327,10 @@ describe('renderPart', () => {
     assert.ok(!output.includes('Part 2 of 2'), 'should NOT contain old-style Part X of Y label');
   });
 
-  test('includes new navigation footer with [w] [q] [e] [c] [esc]', () => {
+  test('includes new navigation footer with [→/w] [←/q] [e] [c] [esc]', () => {
     const output = renderPart(lesson, 0, 2, 0, 5);
-    assert.ok(output.includes('[w]'), 'should contain [w] key');
-    assert.ok(output.includes('[q]'), 'should contain [q] key');
+    assert.ok(output.includes('/w]'), 'should contain [→/w] key');
+    assert.ok(output.includes('/q]'), 'should contain [←/q] key');
     assert.ok(output.includes('[e]'), 'should contain [e] key');
     assert.ok(output.includes('[c]'), 'should contain [c] key');
     assert.ok(output.includes('[esc]'), 'should contain [esc] key');
@@ -361,7 +360,7 @@ describe('renderPart', () => {
   test('existing renderLesson still exported and works', () => {
     const output = renderLesson(lesson, 1, 5);
     assert.ok(output.includes('Test Lesson Title'), 'renderLesson should still work');
-    assert.ok(output.includes('[w]'), 'renderLesson should still have nav footer');
+    assert.ok(output.includes('/w]'), 'renderLesson should still have nav footer');
   });
 
   // ─── NEW: Progressive Accumulation Tests ──────────────────────────
@@ -642,13 +641,13 @@ describe('renderPart lesson progress footer integration', () => {
   test('renderPart footer appears before nav key hints', () => {
     const output = renderPart(lesson, 0, 1, 2, 6, undefined, 'My Module');
     const footerIdx = output.indexOf('My Module');
-    const navIdx = output.indexOf('[w]');
+    const navIdx = output.indexOf('/w]');
     assert.ok(footerIdx < navIdx, 'module footer should appear before nav hints');
   });
 
   test('renderPart without moduleTitle still works (backward compatible)', () => {
     const output = renderPart(lesson, 0, 1, 2, 6);
-    assert.ok(output.includes('[w]'), 'should still render nav footer');
+    assert.ok(output.includes('/w]'), 'should still render nav footer');
     assert.ok(!output.includes('Command Lifecycle'), 'should not contain module title if not provided');
   });
 });
@@ -681,7 +680,7 @@ describe('renderLesson lesson progress footer integration', () => {
 
   test('renderLesson without moduleTitle still works (backward compatible)', () => {
     const output = renderLesson(lesson, 2, 6);
-    assert.ok(output.includes('[w]'), 'should still render nav footer');
+    assert.ok(output.includes('/w]'), 'should still render nav footer');
     assert.ok(!output.includes('Command Lifecycle'), 'should not contain module title');
   });
 });
@@ -689,10 +688,10 @@ describe('renderLesson lesson progress footer integration', () => {
 // ─── renderNavigationFooter ──────────────────────────────────────────
 
 describe('renderNavigationFooter', () => {
-  test('default footer contains [w], [q], [e], [c], [m], [esc] but NOT [h]', () => {
+  test('default footer contains [→/w], [←/q], [e], [c], [m], [esc] but NOT [h]', () => {
     const output = renderNavigationFooter();
-    assert.ok(output.includes('[w]'), 'should contain [w]');
-    assert.ok(output.includes('[q]'), 'should contain [q]');
+    assert.ok(output.includes('/w]'), 'should contain [→/w]');
+    assert.ok(output.includes('/q]'), 'should contain [←/q]');
     assert.ok(output.includes('[e]'), 'should contain [e]');
     assert.ok(output.includes('[c]'), 'should contain [c]');
     assert.ok(output.includes('[m]'), 'should contain [m]');
