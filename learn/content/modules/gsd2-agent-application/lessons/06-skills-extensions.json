@@ -6,11 +6,56 @@
   "content": [
     {
       "type": "text",
-      "value": "Placeholder content -- this lesson will be populated in a later phase.",
-      "focus": "Placeholder.",
-      "bridge": "Content coming soon."
+      "value": "GSD-2 is not a monolith -- it is a core engine with an extension architecture. The core handles dispatch, state derivation, and auto-mode orchestration. Everything else -- tools, commands, hooks, shortcuts -- comes from extensions registered through a manifest. Skills are a layer on top: reusable expertise packages that agents can load when a task matches their description. A 'test' skill teaches the agent your project's testing conventions. A 'react-best-practices' skill injects React-specific guidance. Skills are discovered at runtime and injected into agent prompts, making GSD-2 adapt to your project without changing its core code.",
+      "focus": "Extensions provide tools and commands. Skills provide expertise that agents load on demand.",
+      "bridge": "Let's see how the extension manifest registers the core GSD workflow engine."
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "value": "{\n  \"id\": \"gsd\",\n  \"name\": \"GSD Workflow\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Core GSD workflow engine -- milestone planning, execution, and tracking\",\n  \"tier\": \"core\",\n  \"requires\": { \"platform\": \">=2.29.0\" },\n  \"provides\": {\n    \"tools\": [\n      \"bash\", \"write\", \"read\", \"edit\",\n      \"gsd_save_decision\", \"gsd_save_summary\",\n      \"gsd_update_requirement\", \"gsd_generate_milestone_id\"\n    ],\n    \"commands\": [\"gsd\", \"kill\", \"worktree\", \"exit\"],\n    \"hooks\": [\"session_start\"],\n    \"shortcuts\": [\"Ctrl+Alt+G\"]\n  }\n}",
+      "highlight": [1, 6, 8],
+      "explanation": "This is extension-manifest.json -- the GSD core extension's registration file. Every extension declares what it provides: tools (available to the agent), commands (available to the user via slash commands), hooks (triggered on events like session_start), and shortcuts (keyboard bindings). The 'tier: core' means this extension is always loaded. Third-party extensions can declare 'tier: optional' and be conditionally loaded based on project needs."
+    },
+    {
+      "type": "text",
+      "value": "The manifest is declarative -- it tells the platform what the extension provides without requiring the platform to understand the implementation. The platform reads the manifest, registers the tools, wires up the commands, and installs the hooks. If you wanted to add a new GSD command, you would add it to the 'commands' array in the manifest and implement the handler function. The manifest is the contract between the extension and the platform.",
+      "focus": "The manifest is a declarative contract: what the extension provides, not how it works.",
+      "bridge": "Skills work differently. They are not loaded by the platform -- they are discovered by the agent."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export interface DiscoveredSkill {\n  name: string;\n  description: string;\n  location: string;\n}\n\nlet baselineSkills: Set<string> | null = null;\n\nexport function snapshotSkills(): void {\n  baselineSkills = new Set(listSkillDirs());\n}\n\nexport function detectNewSkills(): DiscoveredSkill[] {\n  if (!baselineSkills) return [];\n\n  const current = listSkillDirs();\n  const newSkills: DiscoveredSkill[] = [];\n\n  for (const dir of current) {\n    if (baselineSkills.has(dir)) continue;\n\n    const skillMdPath = join(SKILLS_DIR, dir, \"SKILL.md\");\n    if (!existsSync(skillMdPath)) continue;\n\n    const meta = parseSkillFrontmatter(skillMdPath);\n    if (meta) {\n      newSkills.push({\n        name: meta.name || dir,\n        description: meta.description || `Skill: ${dir}`,\n        location: skillMdPath,\n      });\n    }\n  }\n\n  return newSkills;\n}",
+      "highlight": [1, 9, 13, 22],
+      "explanation": "This is the skill discovery system from skill-discovery.ts. At auto-mode start, snapshotSkills records every skill directory that exists. On each subsequent unit, detectNewSkills compares the current directories against the snapshot. Any new directory with a SKILL.md file is a newly installed skill. The skill's name and description come from SKILL.md's YAML frontmatter. New skills are injected into the system prompt via XML so agents in subsequent units can see and use them."
+    },
+    {
+      "type": "text",
+      "value": "The snapshot-and-diff approach is elegant: it requires zero configuration. You install a skill by creating a directory with a SKILL.md file, and the next agent session automatically discovers it. This happens because GSD-2 calls captureAvailableSkills before each unit dispatch. If a task installs a new skill (the 'create-skill' skill teaches agents how to do this), all subsequent tasks in the same auto-mode session will see it. Skills are not plugins that require restart -- they are live-discovered expertise packages.",
+      "focus": "Skills are discovered automatically: create a directory with SKILL.md, and the next agent finds it.",
+      "bridge": "What does a skill actually look like? Let's examine the anatomy."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "skills/\n  test/\n    SKILL.md              # Frontmatter: name, description\n    rules/\n      testing-rules.md    # Injected into agent prompt\n  react-best-practices/\n    SKILL.md\n    rules/\n      component-rules.md\n      hook-rules.md\n  create-skill/\n    SKILL.md              # Meta-skill: teaches how to create skills\n    rules/\n      skill-authoring.md\n\n--- SKILL.md frontmatter ---\n---\nname: test\ndescription: Project testing conventions and test-writing guidance\n---\n\n# Test Skill\nGuidance for writing tests in this project...",
+      "highlight": [1, 3, 4, 17, 18, 19],
+      "explanation": "A skill is a directory containing SKILL.md (with name and description in YAML frontmatter) and a rules/ subdirectory with markdown files. When an agent decides a task matches a skill's description, it reads the SKILL.md file, which acts as a lightweight index. The rules/ files contain the actual expertise -- testing conventions, component patterns, coding standards. The 'create-skill' skill is a meta-skill that teaches agents how to author new skills during auto-mode execution."
+    },
+    {
+      "type": "text",
+      "value": "The skill architecture embodies a key GSD-2 design principle: the agent decides when to use expertise, not the system. The platform discovers skills and lists them in the system prompt. The agent reads the descriptions and decides which ones are relevant to the current task. If a task involves writing tests, the agent loads the 'test' skill. If a task involves React components, it loads 'react-best-practices'. This is not a plugin system where everything is always loaded -- it is an on-demand expertise system where the agent exercises judgment about what knowledge it needs.",
+      "focus": "The agent decides which skills to load based on task relevance -- not the system.",
+      "bridge": "The built-in skills cover common development needs."
+    },
+    {
+      "type": "text",
+      "value": "GSD-2 ships with skills for testing, code review, linting, accessibility, web design, React best practices, GitHub workflows, and more. But the real power is authoring your own. You create a directory in .claude/skills/ with a SKILL.md file and a rules/ directory. The SKILL.md frontmatter has two fields: name and description. The description is what agents use to decide relevance, so write it as a clear capability statement. The rules/ files contain your project-specific guidance -- your coding conventions, your architecture decisions, your testing strategy. Once created, every subsequent agent session can discover and use your skill. Extensions provide the platform's capabilities. Skills provide the project's expertise. Together, they make GSD-2 an agent that gets better at your specific project over time.",
+      "focus": "Extensions are platform capabilities. Skills are project expertise. Together they make GSD-2 adaptive.",
+      "bridge": "Next lesson: we synthesize everything -- dispatch, context, auto mode, git, skills -- into a unified mental model."
     }
   ],
   "conceptMap": "skills-extensions",
-  "successCriteria": "You can describe how GSD-2 discovers skills, uses extension manifests, and supports custom skill authoring."
+  "successCriteria": "You can explain the difference between extensions and skills, describe how skill discovery works (snapshot at start, diff on each unit), identify the anatomy of a SKILL.md file, and explain why skills are agent-loaded rather than system-loaded."
 }
