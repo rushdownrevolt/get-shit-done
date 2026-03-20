@@ -11,6 +11,7 @@
 - ✅ **v4.0 AI-Ready Curriculum** — Phases 16-17 (shipped 2026-03-15)
 - ✅ **v5.0 Agent Orchestration Module** — Phases 18-21 (shipped 2026-03-16)
 - ✅ **v6.0 Quality & Feedback Loops Module** — Phases 22-25 (shipped 2026-03-16)
+- 🚧 **v7.0 GSD-2 — The Agent Application** — Phases 26-30 (in progress)
 
 ## Phases
 
@@ -97,6 +98,70 @@
 
 </details>
 
+### v7.0 GSD-2 — The Agent Application (In Progress)
+
+**Milestone Goal:** Teach learners how GSD evolved from a prompt framework (v1) into a standalone agent CLI (v2), covering dispatch pipeline, state machine, auto mode, context engineering, and extensibility through skills.
+
+- [ ] **Phase 26: Module Infrastructure** - Register Module 6, migrate progress, create lesson files
+- [ ] **Phase 27: Lesson Content (Lessons 1-3)** - Overview, Dispatch Pipeline, Context Engineering
+- [ ] **Phase 28: Lesson Content (Lessons 4-7)** - Auto Mode, Git & Worktrees, Skills & Extensions, Synthesis
+- [ ] **Phase 29: Mini-Project** - Hands-on task with verification and progressive hints
+- [ ] **Phase 30: Export Update** - AI curriculum export with Module 6 content
+
+## Phase Details
+
+### Phase 26: Module Infrastructure
+**Goal**: Module 6 exists in the system and learners can navigate to it
+**Depends on**: Phase 25 (v6.0 complete)
+**Requirements**: INFR-01, INFR-02, INFR-03
+**Success Criteria** (what must be TRUE):
+  1. Module 6 appears in the module picker with correct title "GSD-2 -- The Agent Application" and description
+  2. Existing learner progress from v6.0 is fully preserved after v7 migration (no data loss)
+  3. Lesson JSON files for all 7 lessons + mini-project load and render in the learning shell without errors
+**Plans**: TBD
+
+### Phase 27: Lesson Content (Lessons 1-3)
+**Goal**: Learner understands why GSD-2 exists, how its dispatch pipeline works, and how it engineers context
+**Depends on**: Phase 26
+**Requirements**: LESS-01, LESS-02, LESS-03
+**Success Criteria** (what must be TRUE):
+  1. Lesson 1 teaches the v1-to-v2 evolution story and the Milestone/Slice/Task hierarchy
+  2. Lesson 2 walks through deriveState, resolveDispatch, and unit dispatch with real GSD-2 source snippets
+  3. Lesson 3 explains fresh sessions, prompt pre-loading, .gsd/ artifacts, and inlined context with real examples
+  4. All three lessons render with consistent 8-block pacing (5 text, 3 code) and accurate code snippets from GSD-2 source
+**Plans**: TBD
+
+### Phase 28: Lesson Content (Lessons 4-7)
+**Goal**: Learner understands auto mode, git workflow, extensibility, and how all GSD-2 pieces connect
+**Depends on**: Phase 27
+**Requirements**: LESS-04, LESS-05, LESS-06, LESS-07
+**Success Criteria** (what must be TRUE):
+  1. Lesson 4 teaches the auto loop, crash recovery, stuck detection, and timeout supervision with real source
+  2. Lesson 5 teaches branch-per-milestone, squash merge, and worktree isolation patterns
+  3. Lesson 6 teaches skill discovery, extension manifest, and custom skill authoring
+  4. Lesson 7 synthesizes all concepts with a v1 vs v2 mental model comparison
+  5. All four lessons render correctly with accurate GSD-2 source code snippets
+**Plans**: TBD
+
+### Phase 29: Mini-Project
+**Goal**: Learner demonstrates understanding of GSD-2 architecture through a hands-on building task
+**Depends on**: Phase 28
+**Requirements**: MINI-01, MINI-02, MINI-03
+**Success Criteria** (what must be TRUE):
+  1. Mini-project spec defines a creative task that exercises GSD-2 concepts taught in lessons 1-7
+  2. Structural verification checks validate mini-project completion (pass/fail for each check)
+  3. 5 progressive hints guide the learner from orientation through completion without giving away the answer
+**Plans**: TBD
+
+### Phase 30: Export Update
+**Goal**: AI curriculum includes Module 6 content for LLM consumption
+**Depends on**: Phase 29
+**Requirements**: EXPO-01
+**Success Criteria** (what must be TRUE):
+  1. Export script generates gsd-2-agent-application.md with all 7 lessons, mini-project spec, and hints
+  2. Master README.md includes Module 6 in the table of contents and sequential content
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -130,6 +195,11 @@
 | 23. Lesson Content | v6.0 | 2/2 | Complete | 2026-03-16 |
 | 24. Mini-Project | v6.0 | 1/1 | Complete | 2026-03-16 |
 | 25. Export Update | v6.0 | 1/1 | Complete | 2026-03-16 |
+| 26. Module Infrastructure | v7.0 | 0/? | Not started | - |
+| 27. Lesson Content (Lessons 1-3) | v7.0 | 0/? | Not started | - |
+| 28. Lesson Content (Lessons 4-7) | v7.0 | 0/? | Not started | - |
+| 29. Mini-Project | v7.0 | 0/? | Not started | - |
+| 30. Export Update | v7.0 | 0/? | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*

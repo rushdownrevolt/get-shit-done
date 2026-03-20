@@ -54,26 +54,26 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | — | Pending |
-| INFR-02 | — | Pending |
-| INFR-03 | — | Pending |
-| LESS-01 | — | Pending |
-| LESS-02 | — | Pending |
-| LESS-03 | — | Pending |
-| LESS-04 | — | Pending |
-| LESS-05 | — | Pending |
-| LESS-06 | — | Pending |
-| LESS-07 | — | Pending |
-| MINI-01 | — | Pending |
-| MINI-02 | — | Pending |
-| MINI-03 | — | Pending |
-| EXPO-01 | — | Pending |
+| INFR-01 | Phase 26 | Pending |
+| INFR-02 | Phase 26 | Pending |
+| INFR-03 | Phase 26 | Pending |
+| LESS-01 | Phase 27 | Pending |
+| LESS-02 | Phase 27 | Pending |
+| LESS-03 | Phase 27 | Pending |
+| LESS-04 | Phase 28 | Pending |
+| LESS-05 | Phase 28 | Pending |
+| LESS-06 | Phase 28 | Pending |
+| LESS-07 | Phase 28 | Pending |
+| MINI-01 | Phase 29 | Pending |
+| MINI-02 | Phase 29 | Pending |
+| MINI-03 | Phase 29 | Pending |
+| EXPO-01 | Phase 30 | Pending |
 
 **Coverage:**
 - v7.0 requirements: 14 total
-- Mapped to phases: 0
-- Unmapped: 14 ⚠️
+- Mapped to phases: 14
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after initial definition*
+*Last updated: 2026-03-19 after roadmap creation*
