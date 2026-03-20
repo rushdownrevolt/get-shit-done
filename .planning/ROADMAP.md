@@ -214,7 +214,7 @@ Plans:
 | 27. Lesson Content (Lessons 1-3) | v7.0 | 3/3 | Complete | 2026-03-20 |
 | 28. Lesson Content (Lessons 4-7) | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
 | 29. Mini-Project | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 30. Export Update | v7.0 | 1/1 | Complete | 2026-03-20 |
+| 30. Export Update | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
