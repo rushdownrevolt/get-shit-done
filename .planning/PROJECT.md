@@ -56,19 +56,13 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ Module 5: Quality & Feedback Loops with 8 lessons covering verify-work, UAT, skeptic, debug, gap closure, milestone audit — v6.0
 - ✓ v5→v6 progress migration for Module 5 tracking — v6.0
 - ✓ AI curriculum export updated with Module 5 content — v6.0
+- ✓ Module 6: GSD-2 — The Agent Application with 8 lessons covering dispatch pipeline, auto mode, git worktrees, skills/extensions, context engineering — v7.0
+- ✓ v6→v7 progress migration for Module 6 tracking — v7.0
+- ✓ AI curriculum export updated with Module 6 content — v7.0
 
 ### Active
 
 <!-- Next milestone scope -->
-
-## Current Milestone: v7.0 GSD-2 — The Agent Application
-
-**Goal:** Teach learners how GSD evolved from a prompt framework (v1) into a standalone agent CLI (v2), covering the dispatch pipeline, state machine, auto mode, context engineering, and extensibility through skills.
-
-**Target features:**
-- Module 6: GSD-2 — The Agent Application (lessons + mini-project)
-- v6→v7 progress migration for Module 6 tracking
-- AI curriculum export updated with Module 6 content
 
 ### Out of Scope
 
@@ -87,9 +81,9 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - GSD is a zero-dependency Node.js project using CommonJS modules
 - GSD's architecture has TWO layers: (1) markdown layer (slash commands + workflows) and (2) Node.js layer (gsd-tools.cjs + lib modules)
 - The codebase map at `.planning/codebase/` provides detailed architecture, stack, conventions, and structure docs
-- Shipped: ~8,200 LOC (Node.js/JSON), 5 modules, 35 lessons total, 5 mini-projects
-- AI curriculum: ~4,900 LOC generated markdown (5 per-module docs + 1 master README)
-- 125+ tests passing (renderer, navigator, progress, verifier, hints, feedback, markdown-renderer)
+- Shipped: ~10,300 LOC (Node.js/JSON), 6 modules, 43 lessons total, 6 mini-projects
+- AI curriculum: ~5,600 LOC generated markdown (6 per-module docs + 1 master README)
+- 300 tests passing (renderer, navigator, progress, verifier, hints, feedback, markdown-renderer)
 - Module 3 teaches the planning system that built gsd-learn itself (meta-recursive)
 - GSD-2 (v2.35.0) installed globally via `npm install -g gsd-pi` — source at `C:/Users/18182/AppData/Roaming/npm/node_modules/gsd-pi/`
 - GSD-2 is a TypeScript CLI built on Pi SDK; source files for lessons live in `src/resources/extensions/gsd/` (prompts, templates, skills, auto mode)
@@ -126,6 +120,8 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | Artifact-persistence mini-project | Extends existing skeptic command rather than creating new artifacts; teaches read-previous/write-new pattern through a tool learner already built | ✓ Good |
 | TDD for markdown renderer | Pure function rendering engine tested in isolation before wiring to export script | ✓ Good |
 | Heading-level bump for master README | Simple regex bumps all headings so modules nest under a single h1; avoids AST complexity | ✓ Good |
+| GSD-2 source as external content | Module 6 uses real snippets from npm-installed gsd-pi package rather than parsing own codebase; works because GSD-2 is installed globally | ✓ Good |
+| Dispatch-loop mini-project | Learner extends skeptic with auto-mode-inspired state machine; exercises concepts from all 7 lessons | ✓ Good |
 
 ---
-*Last updated: 2026-03-19 after v7.0 milestone start*
+*Last updated: 2026-03-20 after v7.0 milestone*
