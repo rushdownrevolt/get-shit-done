@@ -6,11 +6,56 @@
   "content": [
     {
       "type": "text",
-      "value": "Placeholder content -- this lesson will be populated in a later phase.",
-      "focus": "Placeholder.",
-      "bridge": "Content coming soon."
+      "value": "GSD-2 gives every unit of work -- every plan-slice, execute-task, complete-slice -- a fresh agent session. The previous session's context is gone. This sounds like a limitation, but it is the core design decision that makes autonomous execution reliable. A fresh session has no accumulated confusion, no stale assumptions, no degraded reasoning from context pressure. The tradeoff: everything the agent needs must be explicitly loaded into the new session. GSD-2 solves this with context engineering -- constructing precisely targeted prompts that contain exactly what the agent needs, nothing more.",
+      "focus": "Fresh sessions are not a limitation -- they are the design. No accumulated confusion.",
+      "bridge": "The prompt loader is the machinery that builds these targeted prompts."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export function loadPrompt(\n  name: string,\n  vars: Record<string, string> = {}\n): string {\n  let content = templateCache.get(name);\n  if (content === undefined) {\n    const path = join(promptsDir, `${name}.md`);\n    content = readFileSync(path, \"utf-8\");\n    templateCache.set(name, content);\n  }\n  // ... substitute {{variableName}} placeholders with provided values\n}",
+      "highlight": [1, 3, 4],
+      "explanation": "loadPrompt from prompt-loader.ts reads markdown templates and substitutes {{variable}} placeholders. Templates are eagerly cached at module init -- this prevents a running session from being invalidated when another gsd launch overwrites the template files. The templates live in prompts/ and use {{variableName}} syntax for context injection."
+    },
+    {
+      "type": "text",
+      "value": "Each unit type has its own prompt template. The execute-task template tells the agent exactly which task to execute, where the plan file lives, what prior task summaries exist, and what verification to run. The plan-slice template tells the planner what slice to decompose, what research exists, and what the executor's context window size is. These templates are not generic instructions -- they are specialized dispatch prompts with inlined file content, precomputed constraints, and explicit contracts.",
+      "focus": "Each unit type gets a specialized template with inlined content -- not generic instructions.",
+      "bridge": "Here is what an execute-task dispatch prompt actually looks like."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "## UNIT: Execute Task {{taskId}} (\"{{taskTitle}}\") -- Slice {{sliceId}}\n\nA researcher explored the codebase and a planner decomposed the work --\nyou are the executor. The task plan below is your authoritative contract.\nIt contains the specific files, steps, and verification you need.\nDon't re-research or re-plan -- build what the plan says, verify it\nworks, and document what happened.\n\n{{taskPlanInline}}\n\n## Backing Source Artifacts\n- Slice plan: `{{planPath}}`\n- Task plan source: `{{taskPlanPath}}`\n- Prior task summaries in this slice:\n{{priorTaskLines}}",
+      "highlight": [1, 4, 5, 9],
+      "explanation": "This is from execute-task.md -- a real dispatch prompt. Notice the {{taskPlanInline}} placeholder: the entire task plan is inlined directly into the prompt. The agent never reads the plan file from disk -- it receives the content pre-loaded. {{priorTaskLines}} inlines summaries from prior tasks in the slice, giving the executor context on what's already built."
+    },
+    {
+      "type": "text",
+      "value": "The key insight is inlining. GSD-2's prompt builders do not tell the agent 'read this file' -- they read the file themselves and inject the content into the prompt. The plan-slice prompt inlines the roadmap, the milestone context, the research doc, dependency slice summaries, and the requirements file. The execute-task prompt inlines the task plan and prior task summaries. By the time the fresh agent session starts, everything it needs is already in its context window. No file-reading required. No exploration. Just execute.",
+      "focus": "Prompt builders read files and inject content -- the agent gets everything pre-loaded.",
+      "bridge": "The prompt builders also compute and inject context budgets."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "function formatExecutorConstraints(): string {\n  let windowTokens: number;\n  try {\n    const prefs = loadEffectiveGSDPreferences();\n    windowTokens = resolveExecutorContextWindow(undefined, prefs?.preferences);\n  } catch {\n    windowTokens = 200_000; // safe default\n  }\n  const budgets = computeBudgets(windowTokens);\n  const { min, max } = budgets.taskCountRange;\n  return [\n    `The agent that executes each task has a **${execWindowK}K token** context window.`,\n    `- Recommended task count for this slice: **${min}--${max} tasks**`,\n    `- Each task gets ~${perTaskBudgetK}K chars of inline context`,\n  ].join(\"\\n\");\n}",
+      "highlight": [1, 9, 12, 13],
+      "explanation": "This is from auto-prompts.ts. When building the plan-slice prompt, GSD-2 computes how many tasks the executor's context window can handle and injects that constraint into the planner's prompt. The planner never guesses -- it receives computed budget limits based on the actual model's context window. This is context engineering in action: deriving constraints from configuration and pre-loading them."
+    },
+    {
+      "type": "text",
+      "value": "Context engineering is what transforms fresh sessions from a liability into an advantage. Without it, every new agent session would need to explore the codebase, read the project history, and figure out what to do. With it, the agent receives a precisely constructed prompt containing its task, its context, its constraints, and its verification criteria. The .gsd/ directory provides the raw material -- roadmaps, plans, summaries, decisions. The prompt builders read this material, distill it, and inject it. The templates structure it into a coherent contract.",
+      "focus": "The .gsd/ directory provides raw material. Prompt builders distill and inject it.",
+      "bridge": "Let's review the full context engineering pipeline."
+    },
+    {
+      "type": "text",
+      "value": "The context engineering pipeline: prompt templates define the structure for each unit type with {{variable}} placeholders. Prompt builder functions read .gsd/ artifacts -- roadmaps, plans, summaries, research, decisions -- and compute derived values like context budgets and task count ranges. loadPrompt substitutes the placeholders with the built values, producing a complete dispatch prompt. The auto-loop injects this prompt into a fresh agent session. The agent executes with full context, never needing to explore or discover. Next, we will see how auto-mode uses this pipeline to execute continuously without human intervention.",
+      "focus": "Templates define structure. Builders read artifacts and compute values. loadPrompt assembles the prompt.",
+      "bridge": "Next lesson: auto mode -- the loop that drives continuous autonomous execution."
     }
   ],
   "conceptMap": "context-engineering",
-  "successCriteria": "You can explain how GSD-2 uses fresh sessions, prompt pre-loading, and .gsd/ artifacts for context engineering."
+  "successCriteria": "You can explain how GSD-2 uses fresh sessions as a design advantage, describe how prompt templates and prompt builders work together, explain what inlining means and why it matters, and identify how context budgets are computed and injected."
 }
