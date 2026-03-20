@@ -162,7 +162,9 @@ Plans:
   1. Mini-project spec defines a creative task that exercises GSD-2 concepts taught in lessons 1-7
   2. Structural verification checks validate mini-project completion (pass/fail for each check)
   3. 5 progressive hints guide the learner from orientation through completion without giving away the answer
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 29-01-PLAN.md — Create dispatch-loop mini-project spec, hints, and lesson content
 
 ### Phase 30: Export Update
 **Goal**: AI curriculum includes Module 6 content for LLM consumption
@@ -209,7 +211,7 @@ Plans:
 | 26. Module Infrastructure | v7.0 | 1/1 | Complete | 2026-03-20 |
 | 27. Lesson Content (Lessons 1-3) | v7.0 | 3/3 | Complete | 2026-03-20 |
 | 28. Lesson Content (Lessons 4-7) | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 29. Mini-Project | v7.0 | 0/? | Not started | - |
+| 29. Mini-Project | v7.0 | 0/1 | Not started | - |
 | 30. Export Update | v7.0 | 0/? | Not started | - |
 
 ---
