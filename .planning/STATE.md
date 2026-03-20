@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: GSD-2 — The Agent Application
 status: unknown
-last_updated: "2026-03-20T03:25:38.414Z"
+last_updated: "2026-03-20T03:37:54.235Z"
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 4
+  completed_plans: 3
 ---
 
 # Project State
@@ -18,12 +18,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Phase 26 — Module Infrastructure
+**Current focus:** Phase 27 — Lesson Content (Lessons 1-3)
 
 ## Current Position
 
-Phase: 26 (Module Infrastructure) — COMPLETE
-Plan: 1 of 1 (all complete)
+Phase: 27 (Lesson Content (Lessons 1-3)) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Plan: 1 of 1 (all complete)
 - 8 blocks per lesson (5 text, 3 code) established as consistent pacing pattern
 - GSD-2 source files live at C:/Users/18182/AppData/Roaming/npm/node_modules/gsd-pi/src/resources/
 - [Phase 26]: Skeleton lessons use single placeholder text block with focus/bridge for validation
+- [Phase 27]: Used real deriveState, DISPATCH_RULES, and resolveDispatch source snippets from GSD-2
 
 ### Roadmap Evolution
 
@@ -71,3 +72,5 @@ Plan: 1 of 1 (all complete)
 | 7 | Update footer: remove part counter, add colon, add subtitle | 2026-03-13 | 88aa930 | [7-update-footer-remove-part-counter-add-co](./quick/7-update-footer-remove-part-counter-add-co/) |
 | 8 | Fix copy bug: Cannot read properties of undefined | 2026-03-15 | 1f53f5d | [8-fix-copy-bug-cannot-read-properties-of-u](./quick/8-fix-copy-bug-cannot-read-properties-of-u/) |
 | Phase 26 P01 | 2min | 2 tasks | 13 files |
+| Phase 27 P01 | 1min | 1 tasks | 1 files |
+| Phase 27 P02 | 1min | 1 tasks | 1 files |
