@@ -9,9 +9,9 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Module 6 registered in module registry with title, description, and section map
-- [ ] **INFR-02**: v6→v7 progress migration preserves all existing module completion data
-- [ ] **INFR-03**: Module 6 lesson JSON files load and render correctly in the learning shell
+- [x] **INFR-01**: Module 6 registered in module registry with title, description, and section map
+- [x] **INFR-02**: v6→v7 progress migration preserves all existing module completion data
+- [x] **INFR-03**: Module 6 lesson JSON files load and render correctly in the learning shell
 
 ### Lessons
 
@@ -54,9 +54,9 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | Phase 26 | Pending |
-| INFR-02 | Phase 26 | Pending |
-| INFR-03 | Phase 26 | Pending |
+| INFR-01 | Phase 26 | Complete |
+| INFR-02 | Phase 26 | Complete |
+| INFR-03 | Phase 26 | Complete |
 | LESS-01 | Phase 27 | Pending |
 | LESS-02 | Phase 27 | Pending |
 | LESS-03 | Phase 27 | Pending |

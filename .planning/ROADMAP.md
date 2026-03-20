@@ -102,7 +102,7 @@
 
 **Milestone Goal:** Teach learners how GSD evolved from a prompt framework (v1) into a standalone agent CLI (v2), covering dispatch pipeline, state machine, auto mode, context engineering, and extensibility through skills.
 
-- [ ] **Phase 26: Module Infrastructure** - Register Module 6, migrate progress, create lesson files
+- [x] **Phase 26: Module Infrastructure** - Register Module 6, migrate progress, create lesson files (completed 2026-03-20)
 - [ ] **Phase 27: Lesson Content (Lessons 1-3)** - Overview, Dispatch Pipeline, Context Engineering
 - [ ] **Phase 28: Lesson Content (Lessons 4-7)** - Auto Mode, Git & Worktrees, Skills & Extensions, Synthesis
 - [ ] **Phase 29: Mini-Project** - Hands-on task with verification and progressive hints
@@ -197,7 +197,7 @@ Plans:
 | 23. Lesson Content | v6.0 | 2/2 | Complete | 2026-03-16 |
 | 24. Mini-Project | v6.0 | 1/1 | Complete | 2026-03-16 |
 | 25. Export Update | v6.0 | 1/1 | Complete | 2026-03-16 |
-| 26. Module Infrastructure | v7.0 | 0/1 | Not started | - |
+| 26. Module Infrastructure | 1/1 | Complete   | 2026-03-20 | - |
 | 27. Lesson Content (Lessons 1-3) | v7.0 | 0/? | Not started | - |
 | 28. Lesson Content (Lessons 4-7) | v7.0 | 0/? | Not started | - |
 | 29. Mini-Project | v7.0 | 0/? | Not started | - |
