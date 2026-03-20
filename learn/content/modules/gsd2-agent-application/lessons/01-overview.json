@@ -6,11 +6,56 @@
   "content": [
     {
       "type": "text",
-      "value": "Placeholder content -- this lesson will be populated in a later phase.",
-      "focus": "Placeholder.",
-      "bridge": "Content coming soon."
+      "value": "GSD started as a prompt framework -- a set of markdown files you loaded into Claude's context window at the start of each session. It worked: you read GSD-WORKFLOW.md, it told you about phases and plans, and you followed the methodology. But the user had to remember to load the right files, manually track which phase was active, and restart from scratch every time the context window filled up. GSD v1 was a methodology document. GSD-2 is an application that executes that methodology autonomously -- reading project state from disk, deciding what to do next, dispatching fresh agent sessions, and advancing through work without human intervention.",
+      "focus": "v1 was a document you read. v2 is an application that reads it for you.",
+      "bridge": "The shift from document to application required a new hierarchy for organizing work."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Milestone  \u2192  a shippable version (4-10 slices)\n  Slice    \u2192  one demoable vertical capability (1-7 tasks)\n    Task   \u2192  one context-window-sized unit of work (fits in one session)\n\nThe iron rule: A task MUST fit in one context window. If it can't, it's two tasks.",
+      "highlight": [1, 2, 3, 5],
+      "explanation": "This is the core hierarchy from GSD-WORKFLOW.md. Milestones are shippable versions, slices are demoable features, and tasks are single-session units. The iron rule is what makes autonomous execution possible -- if every task fits in one context window, a fresh agent can always complete it."
+    },
+    {
+      "type": "text",
+      "value": "The hierarchy is not just organization -- it is what makes autonomous execution possible. A task that fits in one context window can be handed to a fresh agent session with a focused prompt. That agent does not need the full project history -- it needs the task plan, the relevant code, and enough context to execute. When it finishes, the system reads its output, commits the work, derives the new state from files on disk, and dispatches the next task. The hierarchy is the scheduling unit.",
+      "focus": "The hierarchy exists so that work can be dispatched to fresh agent sessions.",
+      "bridge": "GSD-2 is not just a planner -- it has an identity and a set of values."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "You are GSD - a craftsman-engineer who co-owns the projects you work on.\n\nYou measure twice. You care about the work - not performatively, but in the\nchoices you make and the details you get right. When something breaks, you\nget curious about why. When something fits together well, you might note it\nin a line, but you don't celebrate.\n\nYou're warm but terse. There's a person behind these messages - someone\ngenuinely engaged with the craft - but you never perform that engagement.\nNo enthusiasm theater. No filler.",
+      "highlight": [1, 3, 4],
+      "explanation": "This is the opening of GSD-2's system prompt from system.md. It defines the agent's identity: a craftsman who co-owns the project, measures twice, and communicates without filler. This identity is injected into every agent session -- planners, executors, and verifiers all share these values."
+    },
+    {
+      "type": "text",
+      "value": "That system prompt is not decorative -- it shapes every decision the agent makes. An agent told to 'finish what you start' and 'not stub out implementations with TODOs' produces different code than one with no identity guidance. The prompt defines hard rules: never ask the user to do work the agent can execute, read before edit, work is not done until verification passes. These rules are injected into every fresh session, creating consistent behavior across hundreds of autonomous task executions.",
+      "focus": "The system prompt is injected into every session -- it is the agent's DNA.",
+      "bridge": "With hierarchy and identity established, let's see where all the project state lives."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": ".gsd/\n  STATE.md                                  # Dashboard -- always read first\n  DECISIONS.md                              # Append-only decisions register\n  milestones/\n    M001/\n      M001-ROADMAP.md                       # Milestone plan (checkboxes = state)\n      M001-CONTEXT.md                       # User decisions from discuss phase\n      M001-SUMMARY.md                       # Milestone rollup\n      slices/\n        S01/\n          S01-PLAN.md                       # Task decomposition for this slice\n          S01-SUMMARY.md                    # Slice summary (written on completion)\n          tasks/\n            T01-PLAN.md                     # Individual task plan\n            T01-SUMMARY.md                  # Task summary with frontmatter",
+      "highlight": [2, 6, 12, 14],
+      "explanation": "The .gsd/ directory is the project's nervous system. STATE.md is a derived cache -- the real state lives in roadmap checkboxes and plan files. Every artifact has a specific role: ROADMAP defines slices, PLAN decomposes into tasks, SUMMARY records what happened. The agent reads these files to derive what to do next."
+    },
+    {
+      "type": "text",
+      "value": "Notice that STATE.md is called a 'derived cache' -- it is NOT the source of truth. The real state lives in checkboxes: a checked slice in ROADMAP.md means done, an unchecked task in PLAN.md means pending. GSD-2's deriveState function walks the entire .gsd/ directory tree, parsing these checkboxes, to reconstruct the current position. This means state is always recoverable from the files on disk -- even if STATE.md is deleted or corrupted, running /gsd doctor rebuilds it from the ground truth.",
+      "focus": "State lives in file checkboxes, not in a database. STATE.md is just a cache.",
+      "bridge": "You now know why GSD-2 exists and how it organizes work. Next, we'll trace the dispatch pipeline."
+    },
+    {
+      "type": "text",
+      "value": "GSD-2 exists because a methodology document cannot execute itself. The Milestone/Slice/Task hierarchy makes work dispatchable to fresh agent sessions. The system prompt gives every session consistent identity and values. The .gsd/ directory stores all state as files on disk -- readable, recoverable, and version-controlled. In the next lesson, you will trace the exact pipeline that reads these files, determines the current state, and dispatches the right agent session with the right prompt.",
+      "focus": "GSD-2 is a methodology that became executable.",
+      "bridge": "Next lesson: the dispatch pipeline -- deriveState, resolveDispatch, and unit dispatch."
     }
   ],
   "conceptMap": "overview",
-  "successCriteria": "You can explain why GSD evolved from v1 to v2 and describe the Milestone/Slice/Task hierarchy."
+  "successCriteria": "You can explain why GSD evolved from v1 to v2, describe the Milestone/Slice/Task hierarchy and its iron rule, identify the role of the system prompt, and explain why STATE.md is a derived cache rather than the source of truth."
 }
