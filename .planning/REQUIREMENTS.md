@@ -31,7 +31,7 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 
 ### Export
 
-- [ ] **EXPO-01**: AI curriculum export updated with Module 6 content (gsd-2-agent-application.md + master README)
+- [x] **EXPO-01**: AI curriculum export updated with Module 6 content (gsd-2-agent-application.md + master README)
 
 ## Future Requirements
 
@@ -67,7 +67,7 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 | MINI-01 | Phase 29 | Complete |
 | MINI-02 | Phase 29 | Complete |
 | MINI-03 | Phase 29 | Complete |
-| EXPO-01 | Phase 30 | Pending |
+| EXPO-01 | Phase 30 | Complete |
 
 **Coverage:**
 - v7.0 requirements: 14 total

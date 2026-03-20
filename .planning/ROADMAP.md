@@ -11,7 +11,7 @@
 - ✅ **v4.0 AI-Ready Curriculum** — Phases 16-17 (shipped 2026-03-15)
 - ✅ **v5.0 Agent Orchestration Module** — Phases 18-21 (shipped 2026-03-16)
 - ✅ **v6.0 Quality & Feedback Loops Module** — Phases 22-25 (shipped 2026-03-16)
-- 🚧 **v7.0 GSD-2 — The Agent Application** — Phases 26-30 (in progress)
+- ✅ **v7.0 GSD-2 — The Agent Application** — Phases 26-30 (shipped 2026-03-20)
 
 ## Phases
 
@@ -98,7 +98,7 @@
 
 </details>
 
-### v7.0 GSD-2 — The Agent Application (In Progress)
+### v7.0 GSD-2 — The Agent Application (Shipped 2026-03-20)
 
 **Milestone Goal:** Teach learners how GSD evolved from a prompt framework (v1) into a standalone agent CLI (v2), covering dispatch pipeline, state machine, auto mode, context engineering, and extensibility through skills.
 
@@ -106,7 +106,7 @@
 - [x] **Phase 27: Lesson Content (Lessons 1-3)** - Overview, Dispatch Pipeline, Context Engineering (completed 2026-03-20)
 - [x] **Phase 28: Lesson Content (Lessons 4-7)** - Auto Mode, Git & Worktrees, Skills & Extensions, Synthesis (completed 2026-03-20)
 - [x] **Phase 29: Mini-Project** - Hands-on task with verification and progressive hints (completed 2026-03-20)
-- [ ] **Phase 30: Export Update** - AI curriculum export with Module 6 content
+- [x] **Phase 30: Export Update** - AI curriculum export with Module 6 content (completed 2026-03-20)
 
 ## Phase Details
 
@@ -175,7 +175,7 @@ Plans:
   2. Master README.md includes Module 6 in the table of contents and sequential content
 **Plans**: 1 plan
 Plans:
-- [ ] 30-01-PLAN.md — Run export script to generate Module 6 AI curriculum
+- [x] 30-01-PLAN.md — Run export script to generate Module 6 AI curriculum
 
 ## Progress
 
@@ -214,7 +214,7 @@ Plans:
 | 27. Lesson Content (Lessons 1-3) | v7.0 | 3/3 | Complete | 2026-03-20 |
 | 28. Lesson Content (Lessons 4-7) | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
 | 29. Mini-Project | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 30. Export Update | v7.0 | 0/1 | Not started | - |
+| 30. Export Update | v7.0 | 1/1 | Complete | 2026-03-20 |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
