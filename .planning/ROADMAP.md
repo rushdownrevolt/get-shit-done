@@ -118,7 +118,9 @@
   1. Module 6 appears in the module picker with correct title "GSD-2 -- The Agent Application" and description
   2. Existing learner progress from v6.0 is fully preserved after v7 migration (no data loss)
   3. Lesson JSON files for all 7 lessons + mini-project load and render in the learning shell without errors
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 26-01-PLAN.md — Register Module 6, add v6-to-v7 migration, create skeleton lesson JSONs
 
 ### Phase 27: Lesson Content (Lessons 1-3)
 **Goal**: Learner understands why GSD-2 exists, how its dispatch pipeline works, and how it engineers context
@@ -195,7 +197,7 @@
 | 23. Lesson Content | v6.0 | 2/2 | Complete | 2026-03-16 |
 | 24. Mini-Project | v6.0 | 1/1 | Complete | 2026-03-16 |
 | 25. Export Update | v6.0 | 1/1 | Complete | 2026-03-16 |
-| 26. Module Infrastructure | v7.0 | 0/? | Not started | - |
+| 26. Module Infrastructure | v7.0 | 0/1 | Not started | - |
 | 27. Lesson Content (Lessons 1-3) | v7.0 | 0/? | Not started | - |
 | 28. Lesson Content (Lessons 4-7) | v7.0 | 0/? | Not started | - |
 | 29. Mini-Project | v7.0 | 0/? | Not started | - |
