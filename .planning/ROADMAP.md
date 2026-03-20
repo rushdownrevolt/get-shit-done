@@ -173,7 +173,9 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Export script generates gsd-2-agent-application.md with all 7 lessons, mini-project spec, and hints
   2. Master README.md includes Module 6 in the table of contents and sequential content
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 30-01-PLAN.md — Run export script to generate Module 6 AI curriculum
 
 ## Progress
 
@@ -212,7 +214,7 @@ Plans:
 | 27. Lesson Content (Lessons 1-3) | v7.0 | 3/3 | Complete | 2026-03-20 |
 | 28. Lesson Content (Lessons 4-7) | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
 | 29. Mini-Project | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 30. Export Update | v7.0 | 0/? | Not started | - |
+| 30. Export Update | v7.0 | 0/1 | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
