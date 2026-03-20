@@ -147,7 +147,12 @@ Plans:
   3. Lesson 6 teaches skill discovery, extension manifest, and custom skill authoring
   4. Lesson 7 synthesizes all concepts with a v1 vs v2 mental model comparison
   5. All four lessons render correctly with accurate GSD-2 source code snippets
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 28-01-PLAN.md — Lesson 4: Auto Mode (auto loop, crash recovery, stuck detection)
+- [ ] 28-02-PLAN.md — Lesson 5: Git & Worktrees (isolation modes, worktree lifecycle, squash merge)
+- [ ] 28-03-PLAN.md — Lesson 6: Skills & Extensions (manifest, discovery, custom authoring)
+- [ ] 28-04-PLAN.md — Lesson 7: GSD-2 Architecture Synthesis (v1 vs v2, full cycle, principles)
 
 ### Phase 29: Mini-Project
 **Goal**: Learner demonstrates understanding of GSD-2 architecture through a hands-on building task
@@ -202,8 +207,8 @@ Plans:
 | 24. Mini-Project | v6.0 | 1/1 | Complete | 2026-03-16 |
 | 25. Export Update | v6.0 | 1/1 | Complete | 2026-03-16 |
 | 26. Module Infrastructure | v7.0 | 1/1 | Complete | 2026-03-20 |
-| 27. Lesson Content (Lessons 1-3) | 3/3 | Complete    | 2026-03-20 | - |
-| 28. Lesson Content (Lessons 4-7) | v7.0 | 0/? | Not started | - |
+| 27. Lesson Content (Lessons 1-3) | v7.0 | 3/3 | Complete | 2026-03-20 |
+| 28. Lesson Content (Lessons 4-7) | v7.0 | 0/4 | Not started | - |
 | 29. Mini-Project | v7.0 | 0/? | Not started | - |
 | 30. Export Update | v7.0 | 0/? | Not started | - |
 
