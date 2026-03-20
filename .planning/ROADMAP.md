@@ -131,7 +131,11 @@ Plans:
   2. Lesson 2 walks through deriveState, resolveDispatch, and unit dispatch with real GSD-2 source snippets
   3. Lesson 3 explains fresh sessions, prompt pre-loading, .gsd/ artifacts, and inlined context with real examples
   4. All three lessons render with consistent 8-block pacing (5 text, 3 code) and accurate code snippets from GSD-2 source
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 27-01-PLAN.md — Lesson 1: Why GSD-2 Exists (v1-to-v2 evolution, hierarchy, agent identity)
+- [ ] 27-02-PLAN.md — Lesson 2: The Dispatch Pipeline (deriveState, resolveDispatch, unit dispatch)
+- [ ] 27-03-PLAN.md — Lesson 3: Context Engineering (fresh sessions, prompt loading, inlined context)
 
 ### Phase 28: Lesson Content (Lessons 4-7)
 **Goal**: Learner understands auto mode, git workflow, extensibility, and how all GSD-2 pieces connect
@@ -197,8 +201,8 @@ Plans:
 | 23. Lesson Content | v6.0 | 2/2 | Complete | 2026-03-16 |
 | 24. Mini-Project | v6.0 | 1/1 | Complete | 2026-03-16 |
 | 25. Export Update | v6.0 | 1/1 | Complete | 2026-03-16 |
-| 26. Module Infrastructure | 1/1 | Complete    | 2026-03-20 | - |
-| 27. Lesson Content (Lessons 1-3) | v7.0 | 0/? | Not started | - |
+| 26. Module Infrastructure | v7.0 | 1/1 | Complete | 2026-03-20 |
+| 27. Lesson Content (Lessons 1-3) | v7.0 | 0/3 | Not started | - |
 | 28. Lesson Content (Lessons 4-7) | v7.0 | 0/? | Not started | - |
 | 29. Mini-Project | v7.0 | 0/? | Not started | - |
 | 30. Export Update | v7.0 | 0/? | Not started | - |
