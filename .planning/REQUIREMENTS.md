@@ -15,7 +15,7 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 
 ### Lessons
 
-- [ ] **LESS-01**: Lesson 1 (Overview) teaches why GSD-2 exists, v1→v2 evolution, Milestone→Slice→Task hierarchy
+- [x] **LESS-01**: Lesson 1 (Overview) teaches why GSD-2 exists, v1→v2 evolution, Milestone→Slice→Task hierarchy
 - [x] **LESS-02**: Lesson 2 (Dispatch Pipeline) teaches state machine, deriveState→resolveDispatch, unit dispatch
 - [ ] **LESS-03**: Lesson 3 (Context Engineering) teaches fresh sessions, prompt pre-loading, .gsd/ artifacts, inlined context
 - [ ] **LESS-04**: Lesson 4 (Auto Mode) teaches the auto loop, crash recovery, stuck detection, timeout supervision
@@ -57,7 +57,7 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 | INFR-01 | Phase 26 | Complete |
 | INFR-02 | Phase 26 | Complete |
 | INFR-03 | Phase 26 | Complete |
-| LESS-01 | Phase 27 | Pending |
+| LESS-01 | Phase 27 | Complete |
 | LESS-02 | Phase 27 | Complete |
 | LESS-03 | Phase 27 | Pending |
 | LESS-04 | Phase 28 | Pending |
