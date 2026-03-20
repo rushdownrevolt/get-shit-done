@@ -19,7 +19,7 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 - [x] **LESS-02**: Lesson 2 (Dispatch Pipeline) teaches state machine, deriveState→resolveDispatch, unit dispatch
 - [x] **LESS-03**: Lesson 3 (Context Engineering) teaches fresh sessions, prompt pre-loading, .gsd/ artifacts, inlined context
 - [x] **LESS-04**: Lesson 4 (Auto Mode) teaches the auto loop, crash recovery, stuck detection, timeout supervision
-- [ ] **LESS-05**: Lesson 5 (Git & Worktrees) teaches branch-per-milestone, squash merge, worktree isolation
+- [x] **LESS-05**: Lesson 5 (Git & Worktrees) teaches branch-per-milestone, squash merge, worktree isolation
 - [x] **LESS-06**: Lesson 6 (Skills & Extensions) teaches skill discovery, extension manifest, custom skill authoring
 - [x] **LESS-07**: Lesson 7 (Synthesis) teaches how all pieces connect, v1 vs v2 mental model comparison
 
@@ -61,7 +61,7 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 | LESS-02 | Phase 27 | Complete |
 | LESS-03 | Phase 27 | Complete |
 | LESS-04 | Phase 28 | Complete |
-| LESS-05 | Phase 28 | Pending |
+| LESS-05 | Phase 28 | Complete |
 | LESS-06 | Phase 28 | Complete |
 | LESS-07 | Phase 28 | Complete |
 | MINI-01 | Phase 29 | Pending |
