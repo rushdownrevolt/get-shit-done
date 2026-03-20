@@ -1,16 +1,58 @@
 {
-  "id": "mini-project",
-  "title": "Mini-Project: GSD-2 Architecture",
+  "id": "gsd2-mini-project",
+  "title": "Mini-Project: Dispatch Loop for Skeptic Reviews",
   "lessonNumber": 8,
-  "objective": "Apply your understanding of GSD-2 architecture in a hands-on building exercise.",
+  "objective": "Apply GSD-2 architecture concepts (state machine, dispatch pipeline, context engineering, auto mode) to extend the skeptic workflow with a dispatch loop that reads state, routes focused reviews, and tracks coverage until complete",
   "content": [
     {
       "type": "text",
-      "value": "Placeholder content -- this lesson will be populated in a later phase.",
-      "focus": "Placeholder.",
-      "bridge": "Content coming soon."
+      "value": "Look at the skeptic command you have built across five modules. In Module 1 you wrote the command spec. In Module 2 you added the handler. In Module 3 you made findings persist. In Module 4 you added orchestration with parallel review subagents and aggregation. In Module 5 you added quality verification that checks the review's own output.\n\nBut every time you run skeptic, it executes the same steps in the same order. It does not look at what it already reviewed. It does not decide what to focus on next based on project state. It does not scope its context to the area under review. Compare that to GSD-2's auto mode from Lesson 4: auto mode reads state from disk, decides what task to dispatch, gives that task only the context it needs, marks it complete, and loops until the milestone is done.\n\nModule 6 closes this gap. You will add a dispatch loop to your skeptic workflow -- a mechanism that reads review state, decides what area to review next, dispatches a focused review with scoped context, tracks coverage, and repeats until all areas are reviewed. This is the auto mode pattern applied to code review.",
+      "focus": "The skeptic journey across 6 modules -- now adding GSD-2's dispatch loop pattern",
+      "bridge": "Here is how to check your progress as you build."
+    },
+    {
+      "type": "text",
+      "value": "Run the verify command any time to check your structural progress. Run the hint command when you need a nudge. You can use both as many times as you like.\n\nThis project modifies your existing skeptic workflow file, so the verify command checks it for dispatch loop patterns. If something goes wrong with the workflow, you can git checkout the original from your previous work:\n\n  git checkout -- ~/.claude/get-shit-done/workflows/skeptic.md",
+      "focus": "Verify and hint workflow, with git safety net",
+      "bridge": "Here is the template you will integrate into your existing workflow."
+    },
+    {
+      "type": "text",
+      "value": "Below is a workflow template that adds a dispatch loop to your existing skeptic workflow. Press C to copy, then integrate it into your workflow at ~/.claude/get-shit-done/workflows/skeptic.md. The key addition is a dispatch loop mechanism that replaces static review steps with a dynamic cycle: read state, pick next area, dispatch focused review, update tracking, repeat.\n\nPlace this mechanism so it controls how reviews are dispatched -- it can replace or wrap your existing wave-based review steps from Module 4. The specific review areas, context scoping strategy, and loop structure are yours to customize.",
+      "focus": "Introducing the dispatch loop template",
+      "bridge": "The template follows below."
+    },
+    {
+      "type": "code",
+      "language": "xml",
+      "value": "<!-- Dispatch loop for skeptic reviews (inspired by GSD-2 auto mode) -->\n\n<step name=\"dispatch_loop\">\n**Dispatch focused reviews in a loop until coverage is complete.**\n\n## State Tracking\nMaintain a coverage map of review areas and their status:\n- architecture: pending\n- conventions: pending\n- dependencies: pending\n- error-handling: pending\n(Add or remove areas based on the project under review)\n\n## Dispatch Logic\nFor each iteration of the loop:\n1. Read the coverage map to find the next pending area\n2. Route to a focused review for that specific area\n3. Provide scoped context -- only files and patterns relevant to this area\n\n## Context Scoping\nEach dispatched review receives narrowed context:\n- Filter files to only those relevant to the review area\n- Inject area-specific review criteria\n- Do NOT pass the entire project -- scope to what matters\n\n## Coverage Tracking\nAfter each dispatched review completes:\n- Mark the area as reviewed in the coverage map\n- Record findings from this review pass\n- Check if unreviewed areas remain\n\n## Loop Continuation\nRepeat the dispatch cycle:\n- If pending areas remain -> dispatch next review\n- If all areas are reviewed -> exit loop, proceed to aggregation\n- Termination: all areas marked complete or coverage threshold met\n</step>",
+      "focus": "Dispatch loop step with state tracking, dispatch logic, context scoping, coverage tracking, and termination"
+    },
+    {
+      "type": "text",
+      "value": "Make it yours. The six structural requirements that verification checks for are:\n\n1. State tracking -- reads or tracks project state to decide what to review next\n2. Dispatch logic -- routes work to focused review subagents\n3. Context scoping -- injects scoped context into each dispatched review (not full project)\n4. Coverage tracking -- tracks what has been reviewed to avoid duplication\n5. Loop iteration -- loops or iterates until review coverage is complete\n6. Termination condition -- has a condition that ends the dispatch loop\n\nEverything else -- the specific review areas, how context is scoped, the loop mechanism, whether you use a counter or a map or a checklist, how many iterations, what triggers termination -- is your creative decision. Verification checks structure, not content.",
+      "focus": "Six structural requirements with creative freedom for everything else",
+      "bridge": "Here is exactly what you need to deliver."
+    },
+    {
+      "type": "project",
+      "task": "Extend your skeptic workflow with a dispatch loop -- a mechanism that reads review state, decides what area to review next, dispatches focused reviews with scoped context, tracks coverage, and loops until all areas are reviewed.",
+      "deliverables": [
+        "Updated workflow at ~/.claude/get-shit-done/workflows/skeptic.md with a dispatch loop mechanism",
+        "Running /gsd:skeptic dispatches focused reviews iteratively based on state, with scoped context and coverage tracking"
+      ],
+      "verifyCommand": "node learn/bin/gsd-learn.cjs --verify --module=gsd2-agent-application",
+      "hintCommand": "node learn/bin/gsd-learn.cjs --hint --module=gsd2-agent-application",
+      "focus": "Project deliverables and verification commands",
+      "bridge": "Complete both deliverables and run verify to confirm your module mastery."
+    },
+    {
+      "type": "text",
+      "value": "With this mini-project complete, you have finished Module 6: GSD-2 -- The Agent Application. Step back and see the full arc: from understanding why GSD evolved into an autonomous agent, through the dispatch pipeline, context engineering, auto mode, git workflows, skills and extensions, and the synthesis of how all pieces connect -- you have learned how a methodology document became a self-driving application.\n\nAnd now you have applied the core pattern. Your skeptic command no longer runs the same steps in the same order -- it reads state, decides what to do next, dispatches focused work with scoped context, tracks progress, and loops until done. That is the dispatch loop. That is what makes GSD-2 autonomous. And now your skeptic embodies the same pattern.\n\nSix modules complete. Your skeptic started as a simple command spec in Module 1. Now it has a handler, persistent findings, orchestrated parallel reviews, quality verification, and an autonomous dispatch loop. Each module added a layer of capability -- just like GSD evolved from v1 to v2. Module 6 complete.",
+      "focus": "Module 6 completion -- the dispatch loop pattern applied from GSD-2 to the skeptic workflow",
+      "bridge": "Module 6 complete. Your skeptic workflow now dispatches focused reviews autonomously using the same pattern as GSD-2's auto mode."
     }
   ],
   "conceptMap": "mini-project",
-  "successCriteria": "You have completed the mini-project exercise demonstrating your understanding of GSD-2 architecture."
+  "successCriteria": "Running --verify --module=gsd2-agent-application shows all checks passing for the skeptic workflow (state tracking, dispatch logic, context scoping, coverage tracking, loop iteration, termination condition). Your skeptic command now dispatches focused reviews autonomously, completing the GSD-2 architecture module."
 }
