@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: GSD-2 — The Agent Application
 status: unknown
-last_updated: "2026-03-20T03:41:38.113Z"
+last_updated: "2026-03-20T03:53:21.119Z"
 progress:
   total_phases: 5
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 3
+  total_plans: 8
+  completed_plans: 8
 ---
 
 # Project State
@@ -18,12 +18,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Phase 27 — Lesson Content (Lessons 1-3)
+**Current focus:** Phase 28 — Lesson Content (Lessons 4-7)
 
 ## Current Position
 
-Phase: 27 (Lesson Content (Lessons 1-3)) — EXECUTING
-Plan: 3 of 3
+Phase: 28 (Lesson Content (Lessons 4-7)) — EXECUTING
+Plan: 2 of 4
 
 ## Performance Metrics
 
@@ -53,6 +53,8 @@ Plan: 3 of 3
 - [Phase 26]: Skeleton lessons use single placeholder text block with focus/bridge for validation
 - [Phase 27]: Used real deriveState, DISPATCH_RULES, and resolveDispatch source snippets from GSD-2
 - [Phase 27]: Used real GSD-2 source snippets from prompt-loader.ts, execute-task.md, and auto-prompts.ts for context engineering lesson
+- [Phase 28]: Used real GSD-2 source snippets from skill-discovery.ts and extension-manifest.json for Lesson 6
+- [Phase 28]: Used real autoLoop, writeLock, and sameUnitCount source snippets from GSD-2 for Lesson 4
 
 ### Roadmap Evolution
 
@@ -76,3 +78,5 @@ Plan: 3 of 3
 | Phase 27 P01 | 1min | 1 tasks | 1 files |
 | Phase 27 P02 | 1min | 1 tasks | 1 files |
 | Phase 27 P03 | 2min | 1 tasks | 1 files |
+| Phase 28 P03 | 1min | 1 tasks | 1 files |
+| Phase 28 P01 | 1min | 1 tasks | 1 files |

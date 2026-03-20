@@ -104,7 +104,7 @@
 
 - [x] **Phase 26: Module Infrastructure** - Register Module 6, migrate progress, create lesson files (completed 2026-03-20)
 - [x] **Phase 27: Lesson Content (Lessons 1-3)** - Overview, Dispatch Pipeline, Context Engineering (completed 2026-03-20)
-- [ ] **Phase 28: Lesson Content (Lessons 4-7)** - Auto Mode, Git & Worktrees, Skills & Extensions, Synthesis
+- [x] **Phase 28: Lesson Content (Lessons 4-7)** - Auto Mode, Git & Worktrees, Skills & Extensions, Synthesis (completed 2026-03-20)
 - [ ] **Phase 29: Mini-Project** - Hands-on task with verification and progressive hints
 - [ ] **Phase 30: Export Update** - AI curriculum export with Module 6 content
 
@@ -208,7 +208,7 @@ Plans:
 | 25. Export Update | v6.0 | 1/1 | Complete | 2026-03-16 |
 | 26. Module Infrastructure | v7.0 | 1/1 | Complete | 2026-03-20 |
 | 27. Lesson Content (Lessons 1-3) | v7.0 | 3/3 | Complete | 2026-03-20 |
-| 28. Lesson Content (Lessons 4-7) | v7.0 | 0/4 | Not started | - |
+| 28. Lesson Content (Lessons 4-7) | 4/4 | Complete   | 2026-03-20 | - |
 | 29. Mini-Project | v7.0 | 0/? | Not started | - |
 | 30. Export Update | v7.0 | 0/? | Not started | - |
 
