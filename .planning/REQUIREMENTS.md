@@ -25,9 +25,9 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 
 ### Mini-Project
 
-- [ ] **MINI-01**: Mini-project spec defines a hands-on task extending the learner's GSD knowledge
-- [ ] **MINI-02**: Structural verification checks validate mini-project completion
-- [ ] **MINI-03**: 5 progressive hints guide learner through mini-project
+- [x] **MINI-01**: Mini-project spec defines a hands-on task extending the learner's GSD knowledge
+- [x] **MINI-02**: Structural verification checks validate mini-project completion
+- [x] **MINI-03**: 5 progressive hints guide learner through mini-project
 
 ### Export
 
@@ -64,9 +64,9 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 | LESS-05 | Phase 28 | Complete |
 | LESS-06 | Phase 28 | Complete |
 | LESS-07 | Phase 28 | Complete |
-| MINI-01 | Phase 29 | Pending |
-| MINI-02 | Phase 29 | Pending |
-| MINI-03 | Phase 29 | Pending |
+| MINI-01 | Phase 29 | Complete |
+| MINI-02 | Phase 29 | Complete |
+| MINI-03 | Phase 29 | Complete |
 | EXPO-01 | Phase 30 | Pending |
 
 **Coverage:**

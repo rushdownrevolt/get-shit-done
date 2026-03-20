@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: GSD-2 — The Agent Application
-status: unknown
-last_updated: "2026-03-20T03:57:32.224Z"
+status: executing
+last_updated: "2026-03-20T04:05:00Z"
 progress:
   total_phases: 5
-  completed_phases: 3
-  total_plans: 8
-  completed_plans: 8
+  completed_phases: 4
+  total_plans: 9
+  completed_plans: 9
 ---
 
 # Project State
@@ -18,12 +18,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Phase 28 — Lesson Content (Lessons 4-7)
+**Current focus:** Phase 30 — Export Update
 
 ## Current Position
 
-Phase: 28 (Lesson Content (Lessons 4-7)) — EXECUTING
-Plan: 4 of 4 -- PHASE COMPLETE
+Phase: 30 (Export Update) — NOT STARTED
+Plan: 0 of ?
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Plan: 4 of 4 -- PHASE COMPLETE
 - [Phase 27]: Used real GSD-2 source snippets from prompt-loader.ts, execute-task.md, and auto-prompts.ts for context engineering lesson
 - [Phase 28]: Used real GSD-2 source snippets from skill-discovery.ts and extension-manifest.json for Lesson 6
 - [Phase 28]: Used real autoLoop, writeLock, and sameUnitCount source snippets from GSD-2 for Lesson 4
+- [Phase 29]: Dispatch loop as mini-project task -- exercises state machine, dispatch, context, auto mode from all 7 lessons
 
 ### Roadmap Evolution
 
@@ -82,3 +83,4 @@ Plan: 4 of 4 -- PHASE COMPLETE
 | Phase 28 P02 | 1min | 1 tasks | 1 files |
 | Phase 28 P01 | 1min | 1 tasks | 1 files |
 | Phase 28 P04 | 1min | 1 tasks | 1 files |
+| Phase 29 P01 | 2min | 2 tasks | 3 files |
