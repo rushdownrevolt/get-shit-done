@@ -1,0 +1,16 @@
+{
+  "id": "synthesis",
+  "title": "GSD-2 Architecture Synthesis",
+  "lessonNumber": 7,
+  "objective": "Connect all GSD-2 concepts into a unified mental model and compare the v1 prompt framework with the v2 agent application.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Placeholder content -- this lesson will be populated in a later phase.",
+      "focus": "Placeholder.",
+      "bridge": "Content coming soon."
+    }
+  ],
+  "conceptMap": "synthesis",
+  "successCriteria": "You can connect all GSD-2 concepts into a unified mental model and compare v1 with v2."
+}

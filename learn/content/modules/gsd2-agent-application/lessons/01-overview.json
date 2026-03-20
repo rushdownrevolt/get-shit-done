@@ -1,0 +1,16 @@
+{
+  "id": "overview",
+  "title": "Why GSD-2 Exists",
+  "lessonNumber": 1,
+  "objective": "Understand why GSD evolved from a prompt framework (v1) into a standalone agent CLI (v2) and learn the Milestone/Slice/Task hierarchy.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Placeholder content -- this lesson will be populated in a later phase.",
+      "focus": "Placeholder.",
+      "bridge": "Content coming soon."
+    }
+  ],
+  "conceptMap": "overview",
+  "successCriteria": "You can explain why GSD evolved from v1 to v2 and describe the Milestone/Slice/Task hierarchy."
+}

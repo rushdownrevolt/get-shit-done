@@ -1,0 +1,16 @@
+{
+  "id": "dispatch-pipeline",
+  "title": "The Dispatch Pipeline",
+  "lessonNumber": 2,
+  "objective": "Trace how GSD-2 derives project state with deriveState, selects the next action with resolveDispatch, and executes it through unit dispatch.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Placeholder content -- this lesson will be populated in a later phase.",
+      "focus": "Placeholder.",
+      "bridge": "Content coming soon."
+    }
+  ],
+  "conceptMap": "dispatch-pipeline",
+  "successCriteria": "You can trace the dispatch pipeline from deriveState through resolveDispatch to unit dispatch."
+}

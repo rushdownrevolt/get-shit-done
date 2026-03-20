@@ -1,0 +1,16 @@
+{
+  "id": "git-worktrees",
+  "title": "Git & Worktrees",
+  "lessonNumber": 5,
+  "objective": "Learn branch-per-milestone, squash merge, and worktree isolation patterns that GSD-2 uses for safe parallel work.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Placeholder content -- this lesson will be populated in a later phase.",
+      "focus": "Placeholder.",
+      "bridge": "Content coming soon."
+    }
+  ],
+  "conceptMap": "git-worktrees",
+  "successCriteria": "You can explain branch-per-milestone, squash merge, and worktree isolation patterns."
+}

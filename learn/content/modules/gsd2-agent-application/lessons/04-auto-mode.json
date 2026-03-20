@@ -1,0 +1,16 @@
+{
+  "id": "auto-mode",
+  "title": "Auto Mode",
+  "lessonNumber": 4,
+  "objective": "Understand the auto loop, crash recovery, stuck detection, and timeout supervision that enable hands-free execution.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Placeholder content -- this lesson will be populated in a later phase.",
+      "focus": "Placeholder.",
+      "bridge": "Content coming soon."
+    }
+  ],
+  "conceptMap": "auto-mode",
+  "successCriteria": "You can describe the auto loop, crash recovery, stuck detection, and timeout supervision mechanisms."
+}

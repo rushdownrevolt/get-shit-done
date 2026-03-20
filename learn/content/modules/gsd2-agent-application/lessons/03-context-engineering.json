@@ -1,0 +1,16 @@
+{
+  "id": "context-engineering",
+  "title": "Context Engineering",
+  "lessonNumber": 3,
+  "objective": "Learn how GSD-2 engineers context through fresh sessions, prompt pre-loading, .gsd/ artifacts, and inlined context strategies.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Placeholder content -- this lesson will be populated in a later phase.",
+      "focus": "Placeholder.",
+      "bridge": "Content coming soon."
+    }
+  ],
+  "conceptMap": "context-engineering",
+  "successCriteria": "You can explain how GSD-2 uses fresh sessions, prompt pre-loading, and .gsd/ artifacts for context engineering."
+}

@@ -1,0 +1,16 @@
+{
+  "id": "skills-extensions",
+  "title": "Skills & Extensions",
+  "lessonNumber": 6,
+  "objective": "Discover how GSD-2 discovers skills, uses extension manifests, and supports custom skill authoring.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Placeholder content -- this lesson will be populated in a later phase.",
+      "focus": "Placeholder.",
+      "bridge": "Content coming soon."
+    }
+  ],
+  "conceptMap": "skills-extensions",
+  "successCriteria": "You can describe how GSD-2 discovers skills, uses extension manifests, and supports custom skill authoring."
+}
