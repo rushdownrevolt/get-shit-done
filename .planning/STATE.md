@@ -87,3 +87,4 @@ Plan: 1 of 1 (done)
 | Phase 28 P04 | 1min | 1 tasks | 1 files |
 | Phase 29 P01 | 2min | 2 tasks | 3 files |
 | Phase 30 P01 | 1min | 1 tasks | 2 files |
+| 260320-efb | Add arrow key navigation (left/right) alongside q/w keys | 2026-03-20 | d329a52 | [260320-efb-add-arrow-key-navigation-left-right-alon](./quick/260320-efb-add-arrow-key-navigation-left-right-alon/) |
