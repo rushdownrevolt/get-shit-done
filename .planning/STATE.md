@@ -79,5 +79,6 @@ Plan: 4 of 4 -- PHASE COMPLETE
 | Phase 27 P02 | 1min | 1 tasks | 1 files |
 | Phase 27 P03 | 2min | 1 tasks | 1 files |
 | Phase 28 P03 | 1min | 1 tasks | 1 files |
+| Phase 28 P02 | 1min | 1 tasks | 1 files |
 | Phase 28 P01 | 1min | 1 tasks | 1 files |
 | Phase 28 P04 | 1min | 1 tasks | 1 files |

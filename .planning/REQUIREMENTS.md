@@ -21,7 +21,7 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 - [x] **LESS-04**: Lesson 4 (Auto Mode) teaches the auto loop, crash recovery, stuck detection, timeout supervision
 - [ ] **LESS-05**: Lesson 5 (Git & Worktrees) teaches branch-per-milestone, squash merge, worktree isolation
 - [x] **LESS-06**: Lesson 6 (Skills & Extensions) teaches skill discovery, extension manifest, custom skill authoring
-- [ ] **LESS-07**: Lesson 7 (Synthesis) teaches how all pieces connect, v1 vs v2 mental model comparison
+- [x] **LESS-07**: Lesson 7 (Synthesis) teaches how all pieces connect, v1 vs v2 mental model comparison
 
 ### Mini-Project
 
@@ -63,7 +63,7 @@ Requirements for Module 6: GSD-2 — The Agent Application.
 | LESS-04 | Phase 28 | Complete |
 | LESS-05 | Phase 28 | Pending |
 | LESS-06 | Phase 28 | Complete |
-| LESS-07 | Phase 28 | Pending |
+| LESS-07 | Phase 28 | Complete |
 | MINI-01 | Phase 29 | Pending |
 | MINI-02 | Phase 29 | Pending |
 | MINI-03 | Phase 29 | Pending |
