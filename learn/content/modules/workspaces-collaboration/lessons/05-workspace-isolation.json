@@ -2,15 +2,57 @@
   "id": "workspace-isolation",
   "title": "Workspace Isolation",
   "lessonNumber": 5,
-  "objective": "Placeholder — content will be added in Phase 34.",
+  "objective": "Understand how workspaces isolate workstreams to avoid conflicts -- file ownership, .gsd/ separation, and branch scoping. Learn the three layers of isolation that prevent parallel workstreams from interfering with each other.",
   "content": [
     {
       "type": "text",
-      "value": "This lesson will cover how workspaces avoid conflicts between parallel workstreams.",
-      "focus": "Workspace isolation prevents workstreams from interfering with each other.",
-      "bridge": "Next, you will learn about workspace lifecycle."
+      "value": "When you run parallel workstreams, three things can go wrong: file conflicts (two workstreams editing the same file), branch pollution (commits from different workstreams interleaving on the same branch), and state corruption (two workstreams writing to the same .gsd/ directory). GSD prevents all three through isolation -- each worktree gets its own directory, its own branch, and its own .gsd/ state. This lesson examines how each layer works, starting with directory isolation.",
+      "focus": "Parallel workstreams risk file conflicts, branch pollution, and state corruption. Isolation prevents all three.",
+      "bridge": "Let's see the path helpers that define where each worktree lives on disk."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export function worktreesDir(basePath: string): string {\n  return join(basePath, \".gsd\", \"worktrees\");\n}\n\nexport function worktreePath(\n  basePath: string,\n  name: string,\n): string {\n  return join(worktreesDir(basePath), name);\n}",
+      "highlight": [2, 8, 9]
+    },
+    {
+      "type": "text",
+      "value": "Directory isolation is the foundation. Every worktree lives under .gsd/worktrees/<name>/ -- a full working copy of the project at its own path. worktreesDir() returns the container directory, and worktreePath() returns the specific worktree's location. Because each worktree has its own directory, two workstreams can edit the same logical file without conflicting -- they are editing different physical files in different directories. No file locking, no merge-on-save, just separate copies.",
+      "focus": "Each worktree is a full working copy in its own directory under .gsd/worktrees/<name>/.",
+      "bridge": "Directory isolation handles files. Branch isolation handles git history."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export function worktreeBranchName(\n  name: string,\n): string {\n  return `worktree/${name}`;\n}\n\n// Inside createWorktree():\nconst branchAlreadyExists =\n  nativeBranchExists(basePath, branch);\n\nif (branchAlreadyExists) {\n  const worktreeEntries =\n    nativeWorktreeList(basePath);\n  const branchInUse = worktreeEntries.some(\n    entry => entry.branch === branch,\n  );\n\n  if (branchInUse) {\n    throw new GSDError(\n      GSD_LOCK_HELD,\n      `Branch \"${branch}\" is already in use ` +\n      `by another worktree.`,\n    );\n  }\n}",
+      "highlight": [4, 14, 15, 16, 18, 19, 20]
+    },
+    {
+      "type": "text",
+      "value": "Branch isolation ensures each worktree gets a dedicated branch named worktree/<name>. The worktreeBranchName() function generates this name from the worktree name. During creation, GSD validates that no other worktree is already using that branch -- if branchInUse is true, it throws an error. This prevents two worktrees from sharing a branch, which would cause their commits to interleave and their git histories to collide. Each workstream has a clean, linear commit history on its own branch.",
+      "focus": "Each worktree gets branch worktree/<name>, and GSD validates no two worktrees share a branch.",
+      "bridge": "Directory and branch isolation handle files and git. The third layer handles .gsd/ state."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "/**\n * Sync .gsd/ state from the main repo into the\n * worktree.\n *\n * Only adds missing content -- never overwrites\n * existing files in the worktree (the worktree's\n * execution state is authoritative for in-progress\n * work).\n */\nexport function syncGsdStateToWorktree(\n  mainBasePath: string,\n  worktreePath_: string,\n): { synced: string[] } {\n  const mainGsd = gsdRoot(mainBasePath);\n  const wtGsd = gsdRoot(worktreePath_);\n  const synced: string[] = [];\n  // ...\n}",
+      "highlight": [5, 6, 7, 8, 10, 11, 12]
+    },
+    {
+      "type": "text",
+      "value": "The third layer is .gsd/ state isolation. Each worktree has its own .gsd/ directory containing milestones, roadmaps, decisions, and other planning artifacts. State syncs one-way from main to worktree using syncGsdStateToWorktree(), which only adds missing content -- it never overwrites existing files. The comment says it clearly: the worktree's execution state is authoritative for in-progress work. This means if you modify a ROADMAP.md in your worktree, the main repo's version will not clobber it during sync. Two workstreams can evolve their planning state independently without corrupting each other.",
+      "focus": "Each worktree has its own .gsd/ directory. State syncs one-way (additive only, never overwrites).",
+      "bridge": "Let's bring all three layers together."
+    },
+    {
+      "type": "text",
+      "value": "Workspace isolation works through three reinforcing layers. Directory isolation gives each worktree its own working copy under .gsd/worktrees/<name>/, so file edits never collide. Branch isolation assigns each worktree a dedicated worktree/<name> branch with validation that prevents branch sharing. State isolation gives each worktree its own .gsd/ directory with one-way additive sync from main -- the worktree's state is authoritative for in-progress work. Together, these layers mean you can run multiple parallel workstreams with confidence that they will not interfere with each other. In the next lesson, you will learn the lifecycle that creates, manages, and merges these isolated workspaces.",
+      "focus": "Three layers: directory (separate copies), branch (dedicated branches), state (one-way sync).",
+      "bridge": "Next, you will learn the workspace lifecycle: create, switch, complete, and resume."
     }
   ],
-  "conceptMap": {},
-  "successCriteria": []
+  "conceptMap": "workspace-isolation",
+  "successCriteria": "You can explain directory isolation (separate working copies under .gsd/worktrees/), branch isolation (dedicated worktree/<name> branches with branchInUse validation), and state isolation (one-way additive sync where the worktree is authoritative for in-progress work), and describe why these three layers prevent file conflicts, branch pollution, and state corruption."
 }

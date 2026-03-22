@@ -2,15 +2,57 @@
   "id": "workspace-lifecycle",
   "title": "Workspace Lifecycle",
   "lessonNumber": 6,
-  "objective": "Placeholder — content will be added in Phase 34.",
+  "objective": "Understand the full workspace lifecycle: create, switch, complete (merge), and resume. Learn how GSD auto-commits before transitions, how switch/return tracks the original directory, and how WorktreeResolver automates the lifecycle for auto-mode.",
   "content": [
     {
       "type": "text",
-      "value": "This lesson will cover the full workspace lifecycle: create, switch, complete, and resume.",
-      "focus": "Understanding the lifecycle lets you manage workstreams from creation to completion.",
-      "bridge": "Next, you will learn about collaboration patterns."
+      "value": "A workspace has four lifecycle phases: create (set up the isolated environment), switch (move between worktrees), complete (merge back to main), and resume (re-enter an existing worktree). Each phase builds on the isolation you learned in the previous lesson -- create sets up the three isolation layers, switch preserves them while moving between worktrees, complete reconciles them back to main, and resume re-enters an existing worktree without losing state. Let's trace through each phase.",
+      "focus": "Four lifecycle phases: create, switch, complete (merge), and resume.",
+      "bridge": "Here is the handleCreate function that sets up a new worktree."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "async function handleCreate(\n  basePath: string,\n  name: string,\n  ctx: ExtensionCommandContext,\n): Promise<void> {\n  // Auto-commit dirty files before leaving\n  // current workspace\n  const commitMsg = autoCommitCurrentBranch(\n    basePath, \"worktree-switch\", name,\n  );\n\n  // Create from the main tree\n  const mainBase = originalCwd ?? basePath;\n  const info = createWorktree(mainBase, name);\n\n  // Run post-create hook -- e.g. copy .env,\n  // symlink assets\n  const hookError = runWorktreePostCreateHook(\n    mainBase, info.path,\n  );\n\n  // Track original cwd before switching\n  if (!originalCwd) originalCwd = basePath;\n  process.chdir(info.path);\n}",
+      "highlight": [6, 7, 8, 14, 16, 17, 18, 23, 24]
+    },
+    {
+      "type": "text",
+      "value": "The create flow does four things in sequence. First, it auto-commits any dirty files on the current branch -- this prevents uncommitted work from being lost when you switch away. Second, it calls createWorktree() which sets up the directory, branch, and runs git worktree add. Third, it runs a post-create hook for environment setup -- copying .env files, symlinking shared assets, or anything else your project needs in a fresh worktree. Fourth, it tracks the original working directory (originalCwd) and chdir's into the new worktree. That originalCwd is the key to the return command.",
+      "focus": "Create: auto-commit dirty files, create worktree, run post-create hook, chdir into worktree.",
+      "bridge": "The /worktree command provides the full set of lifecycle operations."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Usage:\n  /worktree <name>          create and switch into a new worktree\n  /worktree switch <name>   switch into an existing worktree\n  /worktree return          switch back to the main project tree\n  /worktree list            list all worktrees\n  /worktree merge [name] [target]   merge worktree into target branch\n  /worktree remove <name|all>       remove a worktree and its branch",
+      "highlight": [2, 3, 4, 6]
+    },
+    {
+      "type": "text",
+      "value": "The /worktree command (aliased as /wt) covers the entire lifecycle. The create-or-switch behavior is smart: if you run /worktree auth-refactor and that worktree exists, it switches to it; if it does not exist, it creates it. The return command takes you back to the main project tree by restoring the originalCwd that was saved during create. GSD tracks this so return always works, even after multiple switches between worktrees. The list command shows all active worktrees with their branches and paths, highlighting which one you are currently in.",
+      "focus": "Switch moves to an existing worktree; return restores originalCwd to go back to main.",
+      "bridge": "For auto-mode, WorktreeResolver manages the lifecycle automatically."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export interface WorktreeResolverDeps {\n  isInAutoWorktree: (\n    basePath: string,\n  ) => boolean;\n  getIsolationMode: () =>\n    \"worktree\" | \"branch\" | \"none\";\n  mergeMilestoneToMain: (\n    basePath: string,\n    milestoneId: string,\n    roadmapContent: string,\n  ) => { pushed: boolean };\n  syncWorktreeStateBack: (\n    mainBasePath: string,\n    worktreePath: string,\n    milestoneId: string,\n  ) => { synced: string[] };\n  teardownAutoWorktree: (\n    basePath: string,\n    milestoneId: string,\n    opts?: { preserveBranch?: boolean },\n  ) => void;\n  createAutoWorktree: (\n    basePath: string,\n    milestoneId: string,\n  ) => string;\n  enterAutoWorktree: (\n    basePath: string,\n    milestoneId: string,\n  ) => string;\n}",
+      "highlight": [1, 5, 6, 7, 12, 17, 22, 26]
+    },
+    {
+      "type": "text",
+      "value": "In auto-mode, the WorktreeResolver orchestrates the lifecycle automatically at milestone boundaries. Its dependency interface reveals the full set of operations: createAutoWorktree and enterAutoWorktree handle creation and resumption, mergeMilestoneToMain brings completed work back via squash merge, syncWorktreeStateBack copies worktree state to the project root before teardown, and teardownAutoWorktree removes the worktree directory and optionally the branch. The getIsolationMode function returns 'worktree', 'branch', or 'none' -- the resolver adapts its behavior to whichever mode is configured.",
+      "focus": "WorktreeResolver automates the lifecycle for auto-mode: create, enter, merge, sync, teardown.",
+      "bridge": "Let's bring the full lifecycle together."
+    },
+    {
+      "type": "text",
+      "value": "The workspace lifecycle is create, switch/return, merge, and remove. Create auto-commits dirty files, sets up the isolated environment, runs post-create hooks, and tracks the original directory. Switch and return let you move between worktrees while preserving state -- the smart create-or-switch behavior means /worktree <name> always does the right thing. Merge brings work back to main via squash merge, syncing state back to the project root first. In auto-mode, WorktreeResolver manages this entire lifecycle automatically, adapting to the configured isolation mode. In the next lesson, you will learn collaboration patterns -- how review feedback loops and multi-runtime coordination work across workspaces.",
+      "focus": "Lifecycle: create -> switch/return -> merge -> remove. Auto-mode manages it via WorktreeResolver.",
+      "bridge": "Next, you will learn collaboration patterns: review feedback, multi-runtime coordination, and when to use workstreams vs sequential milestones."
     }
   ],
-  "conceptMap": {},
-  "successCriteria": []
+  "conceptMap": "workspace-lifecycle",
+  "successCriteria": "You can explain the four lifecycle phases (create, switch, complete, resume), describe what auto-commit does before create and switch, explain how originalCwd enables the return command, and describe how WorktreeResolver automates the lifecycle for auto-mode across worktree, branch, and none isolation modes."
 }

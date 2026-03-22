@@ -2,15 +2,57 @@
   "id": "collaboration-patterns",
   "title": "Collaboration Patterns",
   "lessonNumber": 7,
-  "objective": "Placeholder — content will be added in Phase 34.",
+  "objective": "Understand collaboration patterns in GSD: review feedback loops (read-only structured analysis), multi-runtime coordination (file-system protocol via .gsd/ state), and when to choose workstreams vs sequential milestones.",
   "content": [
     {
       "type": "text",
-      "value": "This lesson will cover collaboration patterns including review feedback and multi-runtime coordination.",
-      "focus": "Collaboration patterns combine review, runtime coordination, and feedback loops.",
+      "value": "Collaboration in GSD goes beyond parallel workstreams. It is about structured feedback loops and coordinated work across different AI runtimes. Three patterns make this work: review feedback (read-only analysis that feeds back into development), multi-runtime coordination (different AI tools sharing state through the file system), and the workstreams vs milestones decision (knowing when parallel isolation adds value vs when sequential is simpler). Let's start with the review pattern.",
+      "focus": "Three collaboration patterns: review feedback, multi-runtime coordination, workstreams vs milestones.",
+      "bridge": "Here is the review skill's core contract."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<core_principle>\n**FIND REAL ISSUES, NOT STYLE NITS.** Focus on\nproblems that cause bugs, security vulnerabilities,\nperformance degradation, or maintainability pain.\nAvoid nitpicking formatting or subjective style\npreferences unless they harm readability.\n</core_principle>\n\n<analysis_only_rule>\n**THIS SKILL IS READ-ONLY. DO NOT MODIFY CODE.**\n\nThe purpose is to review and report findings.\nMaking changes during review conflates the\nreviewer and author roles. Present findings and\nlet the user decide what to act on.\n</analysis_only_rule>",
+      "highlight": [2, 10, 12, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "The /review skill is read-only by design -- the reviewer never modifies code. This separation of roles is critical for collaboration: one AI runtime writes code, another reviews it, and neither steps on the other's work. The review analyzes diffs across five categories (security, performance, bugs, code quality, test coverage gaps) and produces structured output with severity ratings, file paths, line numbers, and concrete suggestions. This structured feedback feeds back into the development loop -- the author can address findings in priority order, starting with CRITICAL and HIGH severity issues.",
+      "focus": "Review is read-only: reviewer and author roles are separated. Structured output feeds back into development.",
+      "bridge": "The second pattern is multi-runtime coordination."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export interface WorktreeResolverDeps {\n  getIsolationMode: () =>\n    \"worktree\" | \"branch\" | \"none\";\n  mergeMilestoneToMain: (\n    basePath: string,\n    milestoneId: string,\n    roadmapContent: string,\n  ) => { pushed: boolean };\n  syncWorktreeStateBack: (\n    mainBasePath: string,\n    worktreePath: string,\n    milestoneId: string,\n  ) => { synced: string[] };\n}",
+      "highlight": [2, 3, 4, 9, 10, 11]
+    },
+    {
+      "type": "text",
+      "value": "Multi-runtime coordination means different AI runtimes -- Claude Code, Cursor CLI, Gemini CLI, or any tool that understands GSD -- can work on the same project. They coordinate through the file system, not through APIs. The .gsd/ directory is the shared protocol: STATE.md tracks position, ROADMAP.md tracks progress, milestone directories contain plans and summaries. WorktreeResolver ensures consistency by syncing worktree state back to the project root (syncWorktreeStateBack) after each milestone. This means you can start work in one runtime and continue in another -- the .gsd/ state tells the new runtime exactly where things stand.",
+      "focus": "Different AI runtimes coordinate through .gsd/ state files, not APIs. syncWorktreeStateBack ensures consistency.",
+      "bridge": "The third pattern is knowing when to use workstreams vs sequential milestones."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "### When to Use Workstreams vs Sequential Milestones\n\n| Factor             | Sequential Milestones     | Parallel Workstreams       |\n|--------------------|---------------------------|----------------------------|\n| Work independence  | Tasks depend on each other | Tasks are independent      |\n| Risk tolerance     | Low -- linear progress    | Higher -- merge complexity |\n| Project size       | Small-medium              | Medium-large               |\n| Exploration needed | No -- path is clear       | Yes -- prototyping/spikes  |\n| Team/runtime count | Single runtime            | Multiple runtimes          |\n| Merge overhead     | None                      | Squash merge per worktree  |\n\nRule of thumb: if you would create a feature branch\nin plain git, use a workstream. If you would just\nkeep committing to main, use sequential milestones.",
+      "highlight": [1, 3, 4, 5, 6, 12, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "Sequential milestones are the default and work well for most projects. They are simpler -- no merge overhead, no branch management, linear progress. Workstreams add value in specific situations: when tasks are genuinely independent (e.g., frontend and backend can be built in parallel), when you need to explore alternatives without disrupting main (prototyping spikes), or when multiple runtimes need isolated workspaces. The merge overhead is real -- each worktree requires a squash merge, and conflicts may need LLM-guided resolution. Use workstreams when the isolation benefit clearly outweighs the merge cost.",
+      "focus": "Sequential milestones are the default. Use workstreams when tasks are independent and isolation outweighs merge cost.",
+      "bridge": "Let's bring all three collaboration patterns together."
+    },
+    {
+      "type": "text",
+      "value": "GSD supports three collaboration patterns. Review feedback provides read-only structured analysis across security, performance, bugs, and quality -- the reviewer never modifies code, maintaining clean role separation. Multi-runtime coordination lets different AI tools work on the same project through .gsd/ state files as a shared file-system protocol, with syncWorktreeStateBack ensuring consistency across transitions. The workstreams vs milestones decision comes down to a rule of thumb: if tasks are independent and you would create a feature branch in plain git, use a workstream; if you would keep committing to main, use sequential milestones. In the next lesson, you will apply everything you have learned in a hands-on mini-project.",
+      "focus": "Three patterns: review feedback (read-only), multi-runtime coordination (file-system protocol), workstreams vs milestones (branch in git = workstream).",
       "bridge": "Next, you will apply these concepts in a mini-project."
     }
   ],
-  "conceptMap": {},
-  "successCriteria": []
+  "conceptMap": "collaboration-patterns",
+  "successCriteria": "You can explain the review feedback pattern (read-only analysis with severity-based structured output), describe how multi-runtime coordination works through .gsd/ state files as a shared protocol, and articulate when to use workstreams vs sequential milestones using the rule of thumb: feature branch in git = workstream, committing to main = sequential milestones."
 }
