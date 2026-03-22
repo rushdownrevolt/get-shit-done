@@ -1,79 +1,103 @@
 # Requirements: GSD Learn
 
-**Defined:** 2026-03-19
+**Defined:** 2026-03-22
 **Core Value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
 
-## v7.0 Requirements
+## v8.0 Requirements
 
-Requirements for Module 6: GSD-2 — The Agent Application.
+Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 features and adds Module 7.
 
-### Infrastructure
+### Module 1 Updates (New Commands)
 
-- [x] **INFR-01**: Module 6 registered in module registry with title, description, and section map
-- [x] **INFR-02**: v6→v7 progress migration preserves all existing module completion data
-- [x] **INFR-03**: Module 6 lesson JSON files load and render correctly in the learning shell
+- [ ] **CMD-01**: Learner understands `/gsd:fast` — executing trivial tasks without planning overhead
+- [ ] **CMD-02**: Learner understands `/gsd:next` — automatic workflow progression to the next logical step
+- [ ] **CMD-03**: Learner understands `/gsd:ship` — creating PRs from verified work with auto-generated bodies
 
-### Lessons
+### Module 3 Updates (Planning Enhancements)
 
-- [x] **LESS-01**: Lesson 1 (Overview) teaches why GSD-2 exists, v1→v2 evolution, Milestone→Slice→Task hierarchy
-- [x] **LESS-02**: Lesson 2 (Dispatch Pipeline) teaches state machine, deriveState→resolveDispatch, unit dispatch
-- [x] **LESS-03**: Lesson 3 (Context Engineering) teaches fresh sessions, prompt pre-loading, .gsd/ artifacts, inlined context
-- [x] **LESS-04**: Lesson 4 (Auto Mode) teaches the auto loop, crash recovery, stuck detection, timeout supervision
-- [x] **LESS-05**: Lesson 5 (Git & Worktrees) teaches branch-per-milestone, squash merge, worktree isolation
-- [x] **LESS-06**: Lesson 6 (Skills & Extensions) teaches skill discovery, extension manifest, custom skill authoring
-- [x] **LESS-07**: Lesson 7 (Synthesis) teaches how all pieces connect, v1 vs v2 mental model comparison
+- [ ] **PLN-01**: Learner understands decision IDs and discuss-to-plan traceability
+- [ ] **PLN-02**: Learner understands CLAUDE.md compliance as plan-checker Dimension 10
 
-### Mini-Project
+### Module 4 Updates (Agent Enhancements)
 
-- [x] **MINI-01**: Mini-project spec defines a hands-on task extending the learner's GSD knowledge
-- [x] **MINI-02**: Structural verification checks validate mini-project completion
-- [x] **MINI-03**: 5 progressive hints guide learner through mini-project
+- [ ] **AGT-01**: Learner understands advisor mode — parallel research agents evaluating uncertain areas during discussion
 
-### Export
+### Module 5 Updates (Quality Enhancements)
 
-- [x] **EXPO-01**: AI curriculum export updated with Module 6 content (gsd-2-agent-application.md + master README)
+- [ ] **QUA-01**: Learner understands enhanced verification techniques (data-flow tracing, behavioral spot-checks, environment audits)
+- [ ] **QUA-02**: Learner understands stub detection — verifier identifies incomplete implementations
+- [ ] **QUA-03**: Learner understands cross-phase regression gate in execute-phase
+- [ ] **QUA-04**: Learner understands security hardening via centralized security.cjs module (path traversal prevention)
+
+### Module 6 Updates (GSD-2 Enhancements)
+
+- [ ] **G2-01**: Learner understands multi-runtime support (Cursor CLI, Gemini CLI alongside Claude Code)
+- [ ] **G2-02**: Learner understands `/gsd:forensics` — post-mortem investigation for failed workflows
+- [ ] **G2-03**: Learner understands developer profiling pipeline (`/gsd:profile-user`)
+
+### Module 7 Infrastructure
+
+- [ ] **INFR-01**: Module 7 registered in module system with correct ID, name, and lesson count
+- [ ] **INFR-02**: v7→v8 progress migration preserves existing module completion data
+- [ ] **INFR-03**: Module 7 skeleton lessons created with placeholder content for validation
+
+### Module 7 Content (Workspaces & Collaboration)
+
+- [ ] **WRK-01**: Learner understands workstream namespacing — parallel milestone development via `/gsd:workstreams`
+- [ ] **WRK-02**: Learner understands multi-project workspace management from a single root
+- [ ] **WRK-03**: Learner understands cross-AI peer review via `/gsd:review`
+- [ ] **WRK-04**: Learner understands workspace isolation and how workstreams avoid conflicts
+- [ ] **WRK-05**: Learner understands workspace lifecycle (create, switch, complete, resume)
+- [ ] **WRK-06**: Learner understands collaboration patterns (review feedback, multi-runtime coordination)
+- [ ] **WRK-07**: Learner understands when to use workstreams vs sequential milestones
+
+### Module 7 Mini-Project
+
+- [ ] **MINI-01**: Mini-project extends skeptic with a cross-AI review orchestrator
+- [ ] **MINI-02**: Mini-project verification spec checks for review pipeline implementation
+- [ ] **MINI-03**: 5 progressive hints guide learner through the review orchestrator build
+
+### Export Update
+
+- [ ] **EXPO-01**: AI curriculum export updated with Module 7 content (workspaces-collaboration.md)
+- [ ] **EXPO-02**: Master README updated to include Module 7 in sequential curriculum
+- [ ] **EXPO-03**: All updated module content reflected in per-module markdown docs
 
 ## Future Requirements
 
-### Advanced GSD-2
+### Advanced Workspace Features
 
-- **ADV-01**: Lesson on parallel orchestration and multi-worker auto mode
-- **ADV-02**: Lesson on headless mode and CI/CD integration
-- **ADV-03**: Lesson on cost management and token optimization profiles
+- **FUT-01**: Learner understands workspace merging strategies
+- **FUT-02**: Learner understands conflict resolution between workstreams
+
+### Additional Commands Coverage
+
+- **FUT-03**: Lessons for `/gsd:plant-seed`, `/gsd:pr-branch`, `/gsd:audit-uat`
+- **FUT-04**: Lessons for `/gsd:milestone-summary`, `/gsd:profile-user` deep dive
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Teaching GSD-2 installation/setup | Module teaches architecture concepts, not user onboarding |
-| Live GSD-2 execution within lessons | gsd-learn is read-only teaching; learner runs GSD-2 separately |
-| GSD-2 migration tooling | Migration is a GSD-2 feature, not a teaching topic |
-| Parallel orchestration deep-dive | Complex topic deferred to future module |
+| MCP tool awareness for subagents | Too implementation-specific for teaching module |
+| Workstream-aware planning state details | Internal state management, not learner-facing concept |
+| Interactive installer internals | Installation mechanics, not GSD workflow concepts |
+| Temp file reaper implementation | Maintenance feature, not conceptual teaching point |
+| WAITING.json signals | Internal machine-readable format, not user-facing |
 
 ## Traceability
 
+Updated during roadmap creation.
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | Phase 26 | Complete |
-| INFR-02 | Phase 26 | Complete |
-| INFR-03 | Phase 26 | Complete |
-| LESS-01 | Phase 27 | Complete |
-| LESS-02 | Phase 27 | Complete |
-| LESS-03 | Phase 27 | Complete |
-| LESS-04 | Phase 28 | Complete |
-| LESS-05 | Phase 28 | Complete |
-| LESS-06 | Phase 28 | Complete |
-| LESS-07 | Phase 28 | Complete |
-| MINI-01 | Phase 29 | Complete |
-| MINI-02 | Phase 29 | Complete |
-| MINI-03 | Phase 29 | Complete |
-| EXPO-01 | Phase 30 | Complete |
+| — | — | — |
 
 **Coverage:**
-- v7.0 requirements: 14 total
-- Mapped to phases: 14
-- Unmapped: 0
+- v8.0 requirements: 26 total
+- Mapped to phases: 0
+- Unmapped: 26
 
 ---
-*Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after roadmap creation*
+*Requirements defined: 2026-03-22*
+*Last updated: 2026-03-22 after initial definition*
