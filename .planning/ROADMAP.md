@@ -147,10 +147,11 @@ Plans:
   1. Module 7 "Workspaces & Collaboration" appears in the module picker with correct name and lesson count
   2. Existing v7 progress data migrates to v8 format preserving all module completion states
   3. Learner can navigate into Module 7 and see placeholder skeleton lessons without errors
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 32-01: TBD
+- [ ] 32-01-PLAN.md — Register Module 7 and add v7-to-v8 progress migration with tests
+- [ ] 32-02-PLAN.md — Create 8 skeleton lessons with placeholder content
 
 ### Phase 33: Module 7 Content (Lessons 1-3)
 **Goal**: Learners understand workstream namespacing, multi-project workspaces, and cross-AI peer review through interactive lessons
@@ -247,7 +248,7 @@ Phases execute in numeric order: 31 → 32 → 33 → 34 → 35 → 36
 | 29. Mini-Project | v7.0 | 1/1 | Complete | 2026-03-20 |
 | 30. Export Update | v7.0 | 1/1 | Complete | 2026-03-20 |
 | 31. Existing Module Updates | v8.0 | 2/2 | Complete    | 2026-03-22 |
-| 32. Module 7 Infrastructure | v8.0 | 0/1 | Not started | - |
+| 32. Module 7 Infrastructure | v8.0 | 0/2 | Not started | - |
 | 33. Module 7 Content (Lessons 1-3) | v8.0 | 0/1 | Not started | - |
 | 34. Module 7 Content (Lessons 4-7) | v8.0 | 0/1 | Not started | - |
 | 35. Module 7 Mini-Project | v8.0 | 0/1 | Not started | - |
