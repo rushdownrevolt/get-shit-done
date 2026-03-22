@@ -20,20 +20,20 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 
 ### Module 4 Updates (Agent Enhancements)
 
-- [ ] **AGT-01**: Learner understands advisor mode — parallel research agents evaluating uncertain areas during discussion
+- [x] **AGT-01**: Learner understands advisor mode — parallel research agents evaluating uncertain areas during discussion
 
 ### Module 5 Updates (Quality Enhancements)
 
-- [ ] **QUA-01**: Learner understands enhanced verification techniques (data-flow tracing, behavioral spot-checks, environment audits)
-- [ ] **QUA-02**: Learner understands stub detection — verifier identifies incomplete implementations
-- [ ] **QUA-03**: Learner understands cross-phase regression gate in execute-phase
-- [ ] **QUA-04**: Learner understands security hardening via centralized security.cjs module (path traversal prevention)
+- [x] **QUA-01**: Learner understands enhanced verification techniques (data-flow tracing, behavioral spot-checks, environment audits)
+- [x] **QUA-02**: Learner understands stub detection — verifier identifies incomplete implementations
+- [x] **QUA-03**: Learner understands cross-phase regression gate in execute-phase
+- [x] **QUA-04**: Learner understands security hardening via centralized security.cjs module (path traversal prevention)
 
 ### Module 6 Updates (GSD-2 Enhancements)
 
-- [ ] **G2-01**: Learner understands multi-runtime support (Cursor CLI, Gemini CLI alongside Claude Code)
-- [ ] **G2-02**: Learner understands `/gsd:forensics` — post-mortem investigation for failed workflows
-- [ ] **G2-03**: Learner understands developer profiling pipeline (`/gsd:profile-user`)
+- [x] **G2-01**: Learner understands multi-runtime support (Cursor CLI, Gemini CLI alongside Claude Code)
+- [x] **G2-02**: Learner understands `/gsd:forensics` — post-mortem investigation for failed workflows
+- [x] **G2-03**: Learner understands developer profiling pipeline (`/gsd:profile-user`)
 
 ### Module 7 Infrastructure
 
@@ -94,14 +94,14 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 | CMD-03 | Phase 31 | Complete |
 | PLN-01 | Phase 31 | Complete |
 | PLN-02 | Phase 31 | Complete |
-| AGT-01 | Phase 31 | Pending |
-| QUA-01 | Phase 31 | Pending |
-| QUA-02 | Phase 31 | Pending |
-| QUA-03 | Phase 31 | Pending |
-| QUA-04 | Phase 31 | Pending |
-| G2-01 | Phase 31 | Pending |
-| G2-02 | Phase 31 | Pending |
-| G2-03 | Phase 31 | Pending |
+| AGT-01 | Phase 31 | Complete |
+| QUA-01 | Phase 31 | Complete |
+| QUA-02 | Phase 31 | Complete |
+| QUA-03 | Phase 31 | Complete |
+| QUA-04 | Phase 31 | Complete |
+| G2-01 | Phase 31 | Complete |
+| G2-02 | Phase 31 | Complete |
+| G2-03 | Phase 31 | Complete |
 | INFR-01 | Phase 32 | Pending |
 | INFR-02 | Phase 32 | Pending |
 | INFR-03 | Phase 32 | Pending |
