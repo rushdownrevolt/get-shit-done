@@ -110,7 +110,7 @@
 
 </details>
 
-### 🚧 v8.0 GSD v1.26-1.28 Module Updates (In Progress)
+### v8.0 GSD v1.26-1.28 Module Updates (In Progress)
 
 **Milestone Goal:** Update existing GSD Learn modules for features added in GSD v1.26-1.28 and add Module 7: Workspaces & Collaboration
 
@@ -133,11 +133,11 @@
   3. Learner launching Module 4 sees a lesson covering advisor mode with parallel research agents
   4. Learner launching Module 5 sees lessons covering enhanced verification (data-flow tracing, stub detection, regression gate, security hardening)
   5. Learner launching Module 6 sees lessons covering multi-runtime support, forensics debugging, and developer profiling
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 31-01: TBD
-- [ ] 31-02: TBD
+- [ ] 31-01-PLAN.md — Add 5 lessons to Modules 1 and 3 (fast, next, ship, decision IDs, CLAUDE.md compliance)
+- [ ] 31-02-PLAN.md — Add 8 lessons to Modules 4, 5, and 6 (advisor mode, verification, security, multi-runtime, forensics, profiling)
 
 ### Phase 32: Module 7 Infrastructure
 **Goal**: Module 7 is registered, progress migration works, and skeleton lessons validate the module pipeline
