@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: GSD v1.26-1.28 Module Updates
-status: Ready to plan
-last_updated: "2026-03-22T22:37:34.384Z"
+status: Phase complete — ready for verification
+last_updated: "2026-03-22T22:45:49.769Z"
 progress:
   total_phases: 6
-  completed_phases: 5
-  total_plans: 7
-  completed_plans: 7
+  completed_phases: 6
+  total_plans: 8
+  completed_plans: 8
 ---
 
 # Project State
@@ -18,12 +18,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** The learner can confidently modify and extend GSD for their own needs, validated by their ability to achieve creative results with GSD commands.
-**Current focus:** Phase 35 — Module 7 Mini-Project
+**Current focus:** Phase 36 — Export Update
 
 ## Current Position
 
-Phase: 36
-Plan: Not started
+Phase: 36 (Export Update) — EXECUTING
+Plan: 1 of 1
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Plan: Not started
 - [Phase 33]: Extracted WorktreeDiffSummary for Lesson 2 merge explanation instead of full merge handler
 - [Phase 34]: Used worktreesDir/worktreePath helpers for isolation code snippet; extracted WorktreeResolverDeps for both lifecycle and collaboration lessons
 - [Phase 35]: Followed established mini-project pattern from Modules 5 and 6 exactly
+- [Phase 36]: No script changes needed for export — export-docs.cjs auto-discovers modules
 
 ### Roadmap Evolution
 
@@ -87,3 +88,4 @@ Plan: Not started
 | Phase 33 P01 | 3min | 1 tasks | 4 files |
 | Phase 34 P01 | 2min | 1 tasks | 3 files |
 | Phase 35 P01 | 2min | 1 tasks | 3 files |
+| Phase 36 P01 | 1min | 1 tasks | 7 files |

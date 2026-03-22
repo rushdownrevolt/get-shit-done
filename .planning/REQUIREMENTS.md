@@ -59,9 +59,9 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 
 ### Export Update
 
-- [ ] **EXPO-01**: AI curriculum export updated with Module 7 content (workspaces-collaboration.md)
-- [ ] **EXPO-02**: Master README updated to include Module 7 in sequential curriculum
-- [ ] **EXPO-03**: All updated module content reflected in per-module markdown docs
+- [x] **EXPO-01**: AI curriculum export updated with Module 7 content (workspaces-collaboration.md)
+- [x] **EXPO-02**: Master README updated to include Module 7 in sequential curriculum
+- [x] **EXPO-03**: All updated module content reflected in per-module markdown docs
 
 ## Future Requirements
 
@@ -115,9 +115,9 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 | MINI-01 | Phase 35 | Complete |
 | MINI-02 | Phase 35 | Complete |
 | MINI-03 | Phase 35 | Complete |
-| EXPO-01 | Phase 36 | Pending |
-| EXPO-02 | Phase 36 | Pending |
-| EXPO-03 | Phase 36 | Pending |
+| EXPO-01 | Phase 36 | Complete |
+| EXPO-02 | Phase 36 | Complete |
+| EXPO-03 | Phase 36 | Complete |
 
 **Coverage:**
 - v8.0 requirements: 26 total
