@@ -6,7 +6,7 @@ const path = require('path');
 const PROGRESS_PATH = path.join('.planning', 'learn', 'progress.json');
 
 const DEFAULT_PROGRESS = {
-  version: 7,
+  version: 8,
   currentModule: null,
   currentLesson: 0,
   modules: {},
@@ -156,6 +156,27 @@ function migrateV6toV7(progress) {
 }
 
 /**
+ * Migrate v7 progress data to v8 schema.
+ * Adds workspaces-collaboration module entry with default state if not present.
+ * If already v8 or higher, returns unchanged (idempotent).
+ *
+ * @param {object} progress - Progress object to migrate.
+ * @returns {object} Migrated progress object (v8).
+ */
+function migrateV7toV8(progress) {
+  if (progress.version >= 8) { return progress; }
+  return {
+    version: 8,
+    currentModule: progress.currentModule,
+    currentLesson: progress.currentLesson,
+    modules: {
+      ...progress.modules,
+      'workspaces-collaboration': progress.modules['workspaces-collaboration'] || { started: false, completed: false, lessonsCompleted: {} },
+    },
+  };
+}
+
+/**
  * Determine if this is the user's first run.
  * Returns true if no module has been started yet.
  *
@@ -213,6 +234,11 @@ function loadProgress(cwd) {
       progress = migrateV6toV7(progress);
     }
 
+    // Auto-migrate v7 to v8
+    if (progress.version < 8) {
+      progress = migrateV7toV8(progress);
+    }
+
     // Save once if any migration occurred
     if (progress.version !== originalVersion) {
       saveProgress(cwd, progress);
@@ -231,4 +257,4 @@ function saveProgress(cwd, progress) {
   fs.writeFileSync(filePath, JSON.stringify(progress, null, 2), 'utf-8');
 }
 
-module.exports = { loadProgress, saveProgress, migrateV1toV2, migrateV2toV3, migrateV3toV4, migrateV4toV5, migrateV5toV6, migrateV6toV7, isFirstRun };
+module.exports = { loadProgress, saveProgress, migrateV1toV2, migrateV2toV3, migrateV3toV4, migrateV4toV5, migrateV5toV6, migrateV6toV7, migrateV7toV8, isFirstRun };

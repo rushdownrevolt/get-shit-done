@@ -1,0 +1,16 @@
+{
+  "id": "workspaces-collaboration",
+  "title": "Workspaces & Collaboration",
+  "description": "Learn how GSD enables parallel development with workstream namespacing, multi-project workspaces, and cross-AI peer review — collaboration patterns that scale beyond single-milestone execution.",
+  "order": 7,
+  "sectionMap": {
+    "overview": "Overview",
+    "workstream-namespacing": "Workstream Namespacing",
+    "multi-project-workspaces": "Multi-Project Workspaces",
+    "cross-ai-peer-review": "Cross-AI Peer Review",
+    "workspace-isolation": "Workspace Isolation",
+    "workspace-lifecycle": "Workspace Lifecycle",
+    "collaboration-patterns": "Collaboration Patterns",
+    "mini-project": "Mini-Project"
+  }
+}
