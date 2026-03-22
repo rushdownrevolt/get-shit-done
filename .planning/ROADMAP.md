@@ -161,10 +161,10 @@ Plans:
   1. Learner can navigate Module 7 Lesson 1 and understand workstream namespacing via /gsd:workstreams with real source snippets
   2. Learner can navigate Module 7 Lesson 2 and understand multi-project workspace management from a single root
   3. Learner can navigate Module 7 Lesson 3 and understand cross-AI peer review via /gsd:review
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 33-01: TBD
+- [ ] 33-01-PLAN.md — Replace skeleton lessons 1-4 with full 8-block content (overview, workstream namespacing, multi-project workspaces, cross-AI peer review)
 
 ### Phase 34: Module 7 Content (Lessons 4-7)
 **Goal**: Learners understand workspace isolation, lifecycle management, collaboration patterns, and workstream decision-making
