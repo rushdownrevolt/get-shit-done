@@ -1,0 +1,58 @@
+{
+  "id": "fast-command",
+  "title": "The Fast Lane",
+  "lessonNumber": 7,
+  "objective": "Understand how /gsd:fast skips planning overhead for trivial tasks, executing inline without subagents, plans, or verification -- and when to use it versus /gsd:quick.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Sometimes you need to fix a typo, update a config value, or add a missing import. These are trivial tasks -- under 5 minutes, touching 3 files or fewer, needing zero research. For these, /gsd:quick's planning overhead (create PLAN.md, spawn subagents, run verification) is overkill. That's where /gsd:fast comes in. It's the fastest path from intent to committed code in GSD.",
+      "focus": "When /gsd:fast is the right tool",
+      "bridge": "Let's see exactly what fast promises -- and what it skips."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<purpose>\nExecute a trivial task inline without subagent overhead. No PLAN.md, no Task spawning,\nno research, no plan checking. Just: understand -> do -> commit -> log.\n\nFor tasks like: fix a typo, update a config value, add a missing import, rename a\nvariable, commit uncommitted work, add a .gitignore entry, bump a version number.\n\nUse /gsd:quick for anything that needs multi-step planning or research.\n</purpose>",
+      "highlight": [2, 3, 8]
+    },
+    {
+      "type": "text",
+      "value": "The purpose section makes the contract explicit: no PLAN.md, no Task spawning, no research, no plan checking. Compare this to /gsd:quick, which creates a plan, spawns a planner subagent, runs a plan checker, then spawns an executor subagent. The fast workflow does everything inline in the current context -- Claude reads the file, makes the change, commits, and logs it. The entire operation targets under 2 minutes of wall time.",
+      "focus": "No subagents, no planning -- everything inline",
+      "bridge": "But how does it know whether a task is truly trivial?"
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<step name=\"scope_check\">\n**Before doing anything, verify this is actually trivial.**\n\nA task is trivial if it can be completed in:\n- <= 3 file edits\n- <= 1 minute of work\n- No new dependencies or architecture changes\n- No research needed\n\nIf the task seems non-trivial (multi-file refactor, new feature, needs research),\nsay:\n\n```\nThis looks like it needs planning. Use /gsd:quick instead:\n  /gsd:quick \"{task description}\"\n```\n\nAnd stop.\n</step>",
+      "highlight": [4, 5, 6, 7]
+    },
+    {
+      "type": "text",
+      "value": "The scope check is a guardrail, not a suggestion. If the task needs more than 3 file edits, introduces new dependencies, or requires research, /gsd:fast redirects you to /gsd:quick. This prevents the temptation to use the fast path for work that actually needs planning. The criteria are concrete and checkable: file count, time estimate, dependency changes, research needs. No ambiguity.",
+      "focus": "Hard guardrails prevent misuse",
+      "bridge": "When the task passes the scope check, execution is remarkably simple."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<step name=\"execute_inline\">\nDo the work directly:\n\n1. Read the relevant file(s)\n2. Make the change(s)\n3. Verify the change works (run existing tests if applicable, or do a quick sanity check)\n\n**No PLAN.md.** Just do it.\n</step>\n\n<guardrails>\n- NEVER spawn a Task/subagent -- this runs inline\n- NEVER create PLAN.md or SUMMARY.md files\n- NEVER run research or plan-checking\n- If the task takes more than 3 file edits, STOP and redirect to /gsd:quick\n- If you're unsure how to implement it, STOP and redirect to /gsd:quick\n</guardrails>",
+      "highlight": [2, 3, 4, 8, 11, 12, 13]
+    },
+    {
+      "type": "text",
+      "value": "Notice the pattern: read, change, verify -- three steps, no ceremony. The guardrails section reinforces this with NEVER rules. No subagents, no planning artifacts, no research. If uncertainty creeps in during execution, the workflow stops and redirects. This is a key design principle in GSD: each command has a clear scope boundary, and crossing it means switching to a different command rather than stretching the current one.",
+      "focus": "Clear scope boundaries between commands",
+      "bridge": "The tradeoff is explicit: speed versus safety."
+    },
+    {
+      "type": "text",
+      "value": "Here's the GSD command spectrum from fastest to most thorough: /gsd:fast (no planning, no verification, single-agent inline), /gsd:quick (lightweight planning, executor subagent, optional verification), and the full /gsd:execute-phase pipeline (research, planning, plan-checking, parallel execution, verification). Each level adds safety at the cost of speed. /gsd:fast trades all safety mechanisms for raw speed -- appropriate only when the task is genuinely trivial. If you're unsure which to use, /gsd:quick is the safe default. /gsd:fast is for when you're certain.",
+      "focus": "The speed-safety spectrum across GSD commands",
+      "bridge": "Next, we'll see how /gsd:next eliminates the decision of which command to run."
+    }
+  ],
+  "conceptMap": "fast-command",
+  "successCriteria": "You can explain how /gsd:fast differs from /gsd:quick (no planning, no subagents, no verification), describe the scope check criteria (3 files, 1 minute, no dependencies, no research), and articulate the speed-safety tradeoff across GSD commands."
+}

@@ -1,0 +1,58 @@
+{
+  "id": "ship-command",
+  "title": "Ship It",
+  "lessonNumber": 9,
+  "objective": "Understand how /gsd:ship creates pull requests from verified work, auto-generating rich PR bodies from planning artifacts and running pre-flight safety checks before pushing.",
+  "content": [
+    {
+      "type": "text",
+      "value": "You've discussed, planned, executed, and verified a phase. The code works, tests pass, and SUMMARY.md files document what was built. Now it's time to ship -- create a pull request that communicates all of this to reviewers. /gsd:ship automates PR creation by reading GSD's planning artifacts to generate a rich PR body, running pre-flight safety checks, and using the GitHub CLI to create the PR. No manual PR descriptions needed.",
+      "focus": "What /gsd:ship automates",
+      "bridge": "Before creating anything, /gsd:ship runs safety checks."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<step name=\"preflight_checks\">\nVerify the work is ready to ship:\n\n1. **Verification passed?**\n   ```bash\n   VERIFICATION=$(cat ${PHASE_DIR}/*-VERIFICATION.md 2>/dev/null)\n   ```\n   Check for `status: passed` or `status: human_needed` (with human approval).\n   If no VERIFICATION.md or status is `gaps_found`: warn and ask user to confirm.\n\n2. **Clean working tree?**\n   ```bash\n   git status --short\n   ```\n   If uncommitted changes exist: ask user to commit or stash first.\n\n3. **On correct branch?**\n   ```bash\n   CURRENT_BRANCH=$(git branch --show-current)\n   ```\n   If on `main`/`master`: warn -- should be on a feature branch.\n\n4. **Remote configured?**\n   ```bash\n   git remote -v | head -2\n   ```\n   Detect `origin` remote. If no remote: error -- can't create PR.\n\n5. **`gh` CLI available?**\n   ```bash\n   which gh && gh auth status 2>&1\n   ```\n   If `gh` not found or not authenticated: provide setup instructions and exit.\n</step>",
+      "highlight": [1, 4, 10, 14, 18, 22, 27]
+    },
+    {
+      "type": "text",
+      "value": "Five pre-flight checks run before anything touches GitHub. Verification status is checked first -- shipping unverified work requires explicit user confirmation. Clean working tree prevents accidental inclusion of uncommitted changes. Branch verification catches the common mistake of trying to PR from main. Remote and gh CLI checks ensure the infrastructure exists. Each check either passes silently or stops with a clear message. No silent failures.",
+      "focus": "Five safety gates before shipping",
+      "bridge": "With pre-flight passed, /gsd:ship generates the PR body from existing artifacts."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<step name=\"generate_pr_body\">\nAuto-generate a rich PR body from planning artifacts:\n\n**1. Title:**\n```\nPhase {phase_number}: {phase_name}\n```\n\n**2. Summary section:**\nRead ROADMAP.md for phase goal. Read VERIFICATION.md for verification status.\n\n```markdown\n## Summary\n\n**Phase {N}: {Name}**\n**Goal:** {goal from ROADMAP.md}\n**Status:** Verified\n\n{One paragraph synthesized from SUMMARY.md files -- what was built}\n```\n\n**3. Changes section:**\nFor each SUMMARY.md in the phase directory:\n```markdown\n## Changes\n\n### Plan {plan_id}: {plan_name}\n{one_liner from SUMMARY.md frontmatter}\n\n**Key files:**\n{key-files.created and key-files.modified from SUMMARY.md frontmatter}\n```\n</step>",
+      "highlight": [2, 9, 10, 21, 22]
+    },
+    {
+      "type": "text",
+      "value": "The PR body is not written from scratch -- it's assembled from artifacts that already exist. ROADMAP.md provides the phase goal. VERIFICATION.md provides the verification status. Each SUMMARY.md contributes its one-liner description and key files list. This means every PR body is consistent, complete, and accurate -- it reflects what actually happened, not what someone remembers happening. The artifact chain from discuss through ship creates end-to-end traceability.",
+      "focus": "PR bodies assembled from existing artifacts",
+      "bridge": "The final step creates the PR using the GitHub CLI."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<step name=\"create_pr\">\nCreate the PR using the generated body:\n\n```bash\ngh pr create \\\n  --title \"Phase ${PHASE_NUMBER}: ${PHASE_NAME}\" \\\n  --body \"${PR_BODY}\" \\\n  --base main\n```\n\nIf `--draft` flag was passed: add `--draft`.\n\nReport: \"PR #{number} created: {url}\"\n</step>\n\n<step name=\"track_shipping\">\nUpdate STATE.md to reflect the shipping action:\n\n```bash\nnode \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" state update \"Status\" \\\n  \"Phase ${PHASE_NUMBER} shipped -- PR #${PR_NUMBER}\"\n```\n</step>",
+      "highlight": [4, 5, 6, 7, 12, 18, 19]
+    },
+    {
+      "type": "text",
+      "value": "The gh CLI does the heavy lifting of PR creation. After the PR is created, STATE.md is updated to reflect the shipping action -- maintaining the audit trail. /gsd:ship also offers optional code review routing: skip review, self-review, or request review from a teammate. This flexibility lets solo developers ship quickly while teams can enforce review workflows.",
+      "focus": "gh CLI creates the PR, STATE.md records it",
+      "bridge": "The full pipeline is now visible: discuss, plan, execute, verify, ship."
+    },
+    {
+      "type": "text",
+      "value": "/gsd:ship closes the GSD lifecycle loop. The full pipeline runs: /gsd:discuss-phase captures decisions, /gsd:plan-phase creates executable plans, /gsd:execute-phase builds the code, /gsd:verify-work confirms correctness, and /gsd:ship turns it all into a PR. Each step reads artifacts from previous steps, so no information is lost. The PR body proves this -- it contains the phase goal from ROADMAP.md, verification status from the checker, and change details from SUMMARY.md files. Reviewers see not just what changed, but why it changed and how it was verified.",
+      "focus": "The complete GSD lifecycle from discuss to ship",
+      "bridge": "In the mini-project, you'll build your own command that follows this same lifecycle pattern."
+    }
+  ],
+  "conceptMap": "ship-command",
+  "successCriteria": "You can describe the 5 pre-flight safety checks /gsd:ship runs before creating a PR, explain how the PR body is auto-generated from planning artifacts (ROADMAP.md, VERIFICATION.md, SUMMARY.md), and trace the full GSD lifecycle from discuss through ship."
+}

@@ -9,6 +9,9 @@
     "workflow": "Workflow",
     "dispatch": "Dispatch Chain",
     "bridge": "Bridge",
+    "fast-command": "Fast Lane",
+    "next-command": "Auto Progression",
+    "ship-command": "Ship It",
     "mini-project": "Mini-Project"
   }
 }

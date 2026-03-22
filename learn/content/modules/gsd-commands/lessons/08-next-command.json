@@ -1,0 +1,58 @@
+{
+  "id": "next-command",
+  "title": "Automatic Progression",
+  "lessonNumber": 8,
+  "objective": "Understand how /gsd:next reads project state and automatically determines which GSD command to run next, eliminating the cognitive load of remembering the workflow progression.",
+  "content": [
+    {
+      "type": "text",
+      "value": "GSD projects follow a progression: discuss a phase, plan it, execute it, verify the work, complete the phase, then move to the next one. But remembering where you left off and which command to run next adds cognitive load -- especially when you return after a break. /gsd:next solves this by reading the project state and automatically dispatching to the correct next command. You type one command; GSD figures out the rest.",
+      "focus": "Why automatic progression matters",
+      "bridge": "It all starts with reading the project state."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<purpose>\nDetect current project state and automatically advance to the next logical GSD workflow step.\nReads project state to determine: discuss -> plan -> execute -> verify -> complete progression.\n</purpose>\n\n<step name=\"detect_state\">\nRead project state to determine current position:\n\n```bash\n# Get state snapshot\nnode \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" state json 2>/dev/null || echo \"{}\"\n```\n\nAlso read:\n- `.planning/STATE.md` -- current phase, progress, plan counts\n- `.planning/ROADMAP.md` -- milestone structure and phase list\n\nExtract:\n- `current_phase` -- which phase is active\n- `plan_of` / `plans_total` -- plan execution progress\n- `progress` -- overall percentage\n- `status` -- active, paused, etc.\n</step>",
+      "highlight": [2, 3, 10, 16, 17, 18, 19]
+    },
+    {
+      "type": "text",
+      "value": "The detect_state step loads everything GSD knows about the project: which phase is active, how many plans are complete, overall progress percentage, and whether work is paused. This is the same state that STATE.md tracks persistently across sessions. By reading it programmatically, /gsd:next can make an informed decision about what comes next without asking you anything.",
+      "focus": "State drives all decisions",
+      "bridge": "With state loaded, the decision tree determines the next action."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<step name=\"determine_next_action\">\nApply routing rules based on state:\n\n**Route 1: No phases exist yet -> discuss**\nIf ROADMAP has phases but no phase directories exist on disk:\n-> Next action: `/gsd:discuss-phase <first-phase>`\n\n**Route 2: Phase exists but has no CONTEXT.md or RESEARCH.md -> discuss**\nIf the current phase directory exists but has neither CONTEXT.md nor RESEARCH.md:\n-> Next action: `/gsd:discuss-phase <current-phase>`\n\n**Route 3: Phase has context but no plans -> plan**\nIf the current phase has CONTEXT.md (or RESEARCH.md) but no PLAN.md files:\n-> Next action: `/gsd:plan-phase <current-phase>`\n\n**Route 4: Phase has plans but incomplete summaries -> execute**\nIf plans exist but not all have matching summaries:\n-> Next action: `/gsd:execute-phase <current-phase>`\n\n**Route 5: All plans have summaries -> verify and complete**\nIf all plans in the current phase have summaries:\n-> Next action: `/gsd:verify-work` then `/gsd:complete-phase`\n\n**Route 6: Phase complete, next phase exists -> advance**\nIf the current phase is complete and the next phase exists in ROADMAP:\n-> Next action: `/gsd:discuss-phase <next-phase>`\n\n**Route 7: All phases complete -> complete milestone**\nIf all phases are complete:\n-> Next action: `/gsd:complete-milestone`\n</step>",
+      "highlight": [4, 8, 12, 16, 20, 24, 28]
+    },
+    {
+      "type": "text",
+      "value": "The decision tree has 8 routes, and each maps a project state to exactly one GSD command. The logic follows the natural GSD lifecycle: discuss, plan, execute, verify, complete. Route 1 handles brand-new phases. Routes 2-5 handle the progression within a single phase. Route 6 advances across phases. Route 7 completes the entire milestone. Route 8 (not shown) handles paused projects by routing to /gsd:resume-work. Every possible state maps to a clear next action.",
+      "focus": "8 routes covering every possible project state",
+      "bridge": "Once the route is determined, /gsd:next doesn't ask -- it acts."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<step name=\"show_and_execute\">\nDisplay the determination:\n\n```\n## GSD Next\n\n**Current:** Phase [N] -- [name] | [progress]%\n**Status:** [status description]\n\n> **Next step:** `/gsd:[command] [args]`\n  [One-line explanation of why this is the next step]\n```\n\nThen immediately invoke the determined command via SlashCommand.\nDo not ask for confirmation -- the whole point of `/gsd:next` is zero-friction advancement.\n</step>",
+      "highlight": [6, 7, 9, 10, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "The key line is 'Do not ask for confirmation.' /gsd:next is designed for zero-friction advancement. It shows you what it detected and what it's about to do, then immediately invokes the command. This is what makes it a true progression command rather than just a status display. Combined with GSD's auto-advance feature, /gsd:next can chain entire sequences: discuss, plan, execute, verify -- all from a single invocation.",
+      "focus": "Zero-friction: show then execute, never ask",
+      "bridge": "The progression chain reduces the developer's job to one decision: start."
+    },
+    {
+      "type": "text",
+      "value": "/gsd:next embodies a core GSD principle: the system should know where you are and what comes next. By encoding the discuss-plan-execute-verify-complete lifecycle into routing rules, it transforms a multi-step workflow into a single repeatable command. Type /gsd:next, and GSD handles the rest. This is especially powerful when returning to a project after days or weeks -- instead of reading STATE.md and figuring out the next step, you let the state-driven dispatch do it for you.",
+      "focus": "State-driven dispatch as a core GSD principle",
+      "bridge": "Next, we'll see how /gsd:ship closes the loop by turning verified work into a pull request."
+    }
+  ],
+  "conceptMap": "next-command",
+  "successCriteria": "You can explain how /gsd:next reads project state to determine the current position, describe the 8-route decision tree that maps states to commands, and articulate why zero-friction dispatch (no confirmation) is central to the command's design."
+}
