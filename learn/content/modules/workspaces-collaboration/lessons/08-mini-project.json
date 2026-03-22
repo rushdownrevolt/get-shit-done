@@ -1,16 +1,58 @@
 {
-  "id": "mini-project",
+  "id": "workspaces-collaboration-mini-project",
   "title": "Mini-Project: Cross-AI Review Orchestrator",
   "lessonNumber": 8,
-  "objective": "Placeholder — content will be added in Phase 35.",
+  "objective": "Apply workspace and collaboration concepts to extend skeptic with a cross-AI review orchestrator that dispatches reviews to multiple AI runtimes, aggregates results, and formats combined output",
   "content": [
     {
       "type": "text",
-      "value": "This mini-project will challenge you to build a cross-AI review orchestrator extending the skeptic pattern.",
-      "focus": "You will apply workspace and collaboration concepts to build a review pipeline.",
-      "bridge": "Completing this project validates your understanding of workspaces and collaboration."
+      "value": "Look at the skeptic command you have built across six modules. In Module 1 you wrote the command spec. In Module 2 you added the handler. In Module 3 you made findings persist. In Module 4 you added orchestration with parallel review subagents. In Module 5 you added quality verification that checks the review's own output. In Module 6 you added a dispatch loop that reads state, routes focused reviews, and tracks coverage.\n\nBut every review dispatched by your skeptic goes to a single AI runtime -- Claude. Compare that to GSD's /gsd:review command from Lesson 3: it dispatches the same review prompt to multiple AI runtimes (Claude, Cursor, Gemini) and combines their perspectives. Different runtimes catch different things. One spots architectural issues, another catches convention violations, a third finds edge cases.\n\nModule 7 closes this gap. You will add a cross-AI review orchestrator to your skeptic workflow -- a mechanism that dispatches review requests to multiple AI runtimes (not just Claude), collects their findings, aggregates results with attribution, and formats a unified review report. This is the cross-AI peer review pattern applied to your skeptic.",
+      "focus": "The skeptic journey across 7 modules -- Module 1 command spec, Module 2 handler, Module 3 persistence, Module 4 orchestration, Module 5 quality verification, Module 6 dispatch loop. Now adding cross-AI review dispatch.",
+      "bridge": "Here is how to check your progress as you build."
+    },
+    {
+      "type": "text",
+      "value": "Run the verify command any time to check your structural progress. Run the hint command when you need a nudge. You can use both as many times as you like.\n\nThis project modifies your existing skeptic workflow file, so the verify command checks it for cross-AI review patterns. If something goes wrong with the workflow, you can git checkout the original from your previous work:\n\n  git checkout -- ~/.claude/get-shit-done/workflows/skeptic.md",
+      "focus": "Verify and hint workflow, with git safety net",
+      "bridge": "Here is the template you will integrate into your existing workflow."
+    },
+    {
+      "type": "text",
+      "value": "Below is a workflow template that adds a cross-AI review orchestrator to your existing skeptic workflow. Press C to copy, then integrate it into your workflow at ~/.claude/get-shit-done/workflows/skeptic.md. The key addition is a cross-AI review step that dispatches review requests to multiple AI runtimes (not just Claude), collects their findings, and merges them into unified output. Place this after or within the dispatch loop from Module 6.\n\nThe specific runtimes, invocation methods, deduplication strategy, and report format are yours to customize.",
+      "focus": "Introducing the cross-AI review orchestrator template",
+      "bridge": "The template follows below."
+    },
+    {
+      "type": "code",
+      "language": "xml",
+      "value": "<!-- Cross-AI review orchestrator (inspired by /gsd:review multi-runtime pattern) -->\n\n<step name=\"cross_ai_review\">\n**Dispatch reviews to multiple AI runtimes and aggregate their findings.**\n\n## Runtime Registry\nList of AI runtimes to dispatch reviews to:\n- claude: Primary review runtime\n- cursor: Secondary review runtime\n- gemini: Tertiary review runtime\n(Add or remove runtimes based on availability)\n\n## Dispatch to Runtimes\nFor each runtime in the registry:\n1. Format a review prompt with the scoped context from the dispatch loop\n2. Invoke the runtime with the formatted prompt\n3. Collect the runtime's response and findings\n\n## Result Aggregation\nMerge findings from all runtimes:\n- Deduplicate overlapping findings from different runtimes\n- Note which runtime produced each finding (attribution)\n- Reconcile conflicting assessments across runtimes\n\n## Output Formatting\nProduce a unified review report:\n- Per-runtime sections showing each runtime's individual findings\n- Combined findings summary with deduplicated results\n- Attribution markers indicating the source runtime for each finding\n</step>",
+      "focus": "Cross-AI review step with runtime registry, multi-runtime dispatch, result aggregation with deduplication and attribution, and formatted output"
+    },
+    {
+      "type": "text",
+      "value": "Make it yours. The six structural requirements that verification checks for are:\n\n1. Runtime registry -- defines or lists multiple AI runtimes to dispatch to\n2. Multi-runtime dispatch -- sends review requests to more than one runtime\n3. Result collection -- collects or receives responses from dispatched runtimes\n4. Result aggregation -- merges or combines findings from multiple sources\n5. Runtime attribution -- tracks which runtime produced which finding\n6. Output formatting -- produces formatted combined review output\n\nEverything else -- the specific runtimes you list, how you invoke them, your deduplication strategy, the report format, whether you add runtime-specific review prompts or use the same prompt for all -- is your creative decision. Verification checks structure, not content.",
+      "focus": "Six structural requirements with creative freedom for everything else",
+      "bridge": "Here is exactly what you need to deliver."
+    },
+    {
+      "type": "project",
+      "task": "Extend your skeptic workflow with a cross-AI review orchestrator -- a mechanism that dispatches review requests to multiple AI runtimes (claude, cursor, gemini), collects their findings, aggregates results with deduplication and attribution, and formats a unified review report.",
+      "deliverables": [
+        "Updated workflow at ~/.claude/get-shit-done/workflows/skeptic.md with a cross-AI review orchestrator",
+        "Running /gsd:skeptic dispatches reviews to multiple AI runtimes and produces a unified report with per-runtime attribution"
+      ],
+      "verifyCommand": "node learn/bin/gsd-learn.cjs --verify --module=workspaces-collaboration",
+      "hintCommand": "node learn/bin/gsd-learn.cjs --hint --module=workspaces-collaboration",
+      "focus": "Project deliverables and verification commands",
+      "bridge": "Complete both deliverables and run verify to confirm your module mastery."
+    },
+    {
+      "type": "text",
+      "value": "With this mini-project complete, you have finished Module 7: Workspaces & Collaboration. Step back and see the full arc across seven modules.\n\nIn Module 1 you wrote a command spec -- a blueprint. In Module 2 you built the handler that executes it. In Module 3 you added persistence so findings accumulate. In Module 4 you orchestrated parallel review subagents. In Module 5 you verified the quality of your own review output. In Module 6 you added an autonomous dispatch loop. And now in Module 7 you have added cross-AI review -- dispatching to multiple runtimes, collecting diverse perspectives, and merging them into a unified report.\n\nYour skeptic started as a single command spec. Now it is a multi-runtime review orchestrator with persistence, parallel execution, quality verification, autonomous dispatch, and cross-AI collaboration. Seven modules. Seven layers. Each one built on the last. Module 7 complete.",
+      "focus": "Module 7 completion -- full arc across all 7 modules, skeptic now does cross-AI review",
+      "bridge": "Module 7 complete. Your skeptic workflow now orchestrates cross-AI reviews across multiple runtimes."
     }
   ],
-  "conceptMap": {},
-  "successCriteria": []
+  "conceptMap": "mini-project",
+  "successCriteria": "Running --verify --module=workspaces-collaboration shows all 6 checks passing for the skeptic workflow (runtime registry, multi-runtime dispatch, result collection, result aggregation, runtime attribution, output formatting). Your skeptic command now dispatches reviews to multiple AI runtimes and produces unified output, completing the workspaces and collaboration module."
 }

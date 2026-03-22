@@ -1,0 +1,20 @@
+{
+  "id": "workspaces-collaboration-project",
+  "moduleId": "workspaces-collaboration",
+  "title": "Add Cross-AI Review Orchestration to Skeptic",
+  "description": "Extend your skeptic workflow with a cross-AI review orchestrator that dispatches reviews to multiple AI runtimes, aggregates findings with attribution, and formats a unified review report",
+  "artifacts": [
+    {
+      "description": "Skeptic workflow with cross-AI review orchestration",
+      "path": "~/.claude/get-shit-done/workflows/skeptic.md",
+      "checks": [
+        { "pattern": "runtime|provider|model|engine|ai.*(list|registry|config)|claude.*gemini|gemini.*claude|cursor.*claude|multiple.*ai", "description": "Defines or lists multiple AI runtimes to dispatch reviews to" },
+        { "pattern": "dispatch.*runtime|send.*runtime|invoke.*(claude|gemini|cursor)|call.*(model|provider|runtime)|multi.*(runtime|model|provider)", "description": "Dispatches review requests to multiple AI runtimes" },
+        { "pattern": "collect|receive|gather|response.*from|result.*from|output.*from|findings.*from", "description": "Collects responses from dispatched runtimes" },
+        { "pattern": "aggregat|merg|combin|unif|consolidat|dedup|reconcil", "description": "Aggregates or merges findings from multiple review sources" },
+        { "pattern": "attribut|source|origin|from.*(claude|gemini|cursor|runtime)|which.*runtime|runtime.*produc", "description": "Tracks which runtime produced each finding" },
+        { "pattern": "format|report|output.*section|summary.*finding|present.*result|unified.*output", "description": "Produces formatted combined review output" }
+      ]
+    }
+  ]
+}
