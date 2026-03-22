@@ -1,0 +1,16 @@
+{
+  "id": "cross-ai-peer-review",
+  "title": "Cross-AI Peer Review",
+  "lessonNumber": 4,
+  "objective": "Placeholder — content will be added in Phase 33.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This lesson will cover cross-AI peer review via /gsd:review for multi-model code evaluation.",
+      "focus": "Cross-AI review dispatches your work to multiple AI models for independent feedback.",
+      "bridge": "Next, you will learn about workspace isolation."
+    }
+  ],
+  "conceptMap": {},
+  "successCriteria": []
+}

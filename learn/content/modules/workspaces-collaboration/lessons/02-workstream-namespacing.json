@@ -1,0 +1,16 @@
+{
+  "id": "workstream-namespacing",
+  "title": "Workstream Namespacing",
+  "lessonNumber": 2,
+  "objective": "Placeholder — content will be added in Phase 33.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This lesson will cover workstream namespacing via /gsd:workstreams for parallel milestone development.",
+      "focus": "Workstream namespacing isolates parallel work into named branches.",
+      "bridge": "Next, you will learn about multi-project workspaces."
+    }
+  ],
+  "conceptMap": {},
+  "successCriteria": []
+}

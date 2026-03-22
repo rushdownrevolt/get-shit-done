@@ -1,0 +1,16 @@
+{
+  "id": "workspace-lifecycle",
+  "title": "Workspace Lifecycle",
+  "lessonNumber": 6,
+  "objective": "Placeholder — content will be added in Phase 34.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This lesson will cover the full workspace lifecycle: create, switch, complete, and resume.",
+      "focus": "Understanding the lifecycle lets you manage workstreams from creation to completion.",
+      "bridge": "Next, you will learn about collaboration patterns."
+    }
+  ],
+  "conceptMap": {},
+  "successCriteria": []
+}

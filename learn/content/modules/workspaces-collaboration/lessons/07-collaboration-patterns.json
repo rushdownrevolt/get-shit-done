@@ -1,0 +1,16 @@
+{
+  "id": "collaboration-patterns",
+  "title": "Collaboration Patterns",
+  "lessonNumber": 7,
+  "objective": "Placeholder — content will be added in Phase 34.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This lesson will cover collaboration patterns including review feedback and multi-runtime coordination.",
+      "focus": "Collaboration patterns combine review, runtime coordination, and feedback loops.",
+      "bridge": "Next, you will apply these concepts in a mini-project."
+    }
+  ],
+  "conceptMap": {},
+  "successCriteria": []
+}

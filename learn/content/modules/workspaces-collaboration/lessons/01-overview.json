@@ -1,0 +1,16 @@
+{
+  "id": "overview",
+  "title": "Workspaces & Collaboration Overview",
+  "lessonNumber": 1,
+  "objective": "Placeholder — content will be added in Phase 33.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This lesson will cover an overview of workspace and collaboration features in GSD.",
+      "focus": "Workspaces enable parallel development beyond sequential milestones.",
+      "bridge": "Next, you will learn about workstream namespacing."
+    }
+  ],
+  "conceptMap": {},
+  "successCriteria": []
+}

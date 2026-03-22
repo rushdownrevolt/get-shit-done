@@ -1,0 +1,16 @@
+{
+  "id": "workspace-isolation",
+  "title": "Workspace Isolation",
+  "lessonNumber": 5,
+  "objective": "Placeholder — content will be added in Phase 34.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This lesson will cover how workspaces avoid conflicts between parallel workstreams.",
+      "focus": "Workspace isolation prevents workstreams from interfering with each other.",
+      "bridge": "Next, you will learn about workspace lifecycle."
+    }
+  ],
+  "conceptMap": {},
+  "successCriteria": []
+}

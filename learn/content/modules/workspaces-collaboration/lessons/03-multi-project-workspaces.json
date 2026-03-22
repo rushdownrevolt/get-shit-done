@@ -1,0 +1,16 @@
+{
+  "id": "multi-project-workspaces",
+  "title": "Multi-Project Workspaces",
+  "lessonNumber": 3,
+  "objective": "Placeholder — content will be added in Phase 33.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This lesson will cover managing multiple projects from a single workspace root.",
+      "focus": "Multi-project workspaces let you manage several repos from one GSD instance.",
+      "bridge": "Next, you will learn about cross-AI peer review."
+    }
+  ],
+  "conceptMap": {},
+  "successCriteria": []
+}

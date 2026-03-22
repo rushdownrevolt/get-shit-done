@@ -1,0 +1,16 @@
+{
+  "id": "mini-project",
+  "title": "Mini-Project: Cross-AI Review Orchestrator",
+  "lessonNumber": 8,
+  "objective": "Placeholder — content will be added in Phase 35.",
+  "content": [
+    {
+      "type": "text",
+      "value": "This mini-project will challenge you to build a cross-AI review orchestrator extending the skeptic pattern.",
+      "focus": "You will apply workspace and collaboration concepts to build a review pipeline.",
+      "bridge": "Completing this project validates your understanding of workspaces and collaboration."
+    }
+  ],
+  "conceptMap": {},
+  "successCriteria": []
+}
