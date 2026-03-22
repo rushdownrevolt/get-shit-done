@@ -201,10 +201,10 @@ Plans:
   1. Running export script produces docs/ai-curriculum/workspaces-collaboration.md with full Module 7 content
   2. Master README includes Module 7 in the sequential curriculum with correct heading structure
   3. All updated module docs (Modules 1, 3, 4, 5, 6) reflect the new v1.26-1.28 lesson content
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 36-01: TBD
+- [ ] 36-01-PLAN.md — Regenerate AI curriculum export with Module 7 and v8.0 updates
 
 ## Progress
 
