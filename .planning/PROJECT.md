@@ -70,7 +70,7 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ Update Module 5 lessons for enhanced verification, stub detection, regression gate, security hardening — v8.0 Phase 31
 - ✓ Update Module 6 lessons for multi-runtime, forensics, developer profiling — v8.0 Phase 31
 - New Module 7: Workspaces & Collaboration (workstream namespacing, multi-project workspaces, cross-AI peer review)
-- Module 7 infrastructure (v7→v8 progress migration, module registration)
+- ✓ Module 7 infrastructure (v7→v8 progress migration, module registration) — v8.0 Phase 32
 - AI curriculum export updated with all module changes
 
 ## Current Milestone: v8.0 GSD v1.26-1.28 Module Updates
