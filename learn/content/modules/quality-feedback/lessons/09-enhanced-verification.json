@@ -1,0 +1,58 @@
+{
+  "id": "enhanced-verification",
+  "title": "Enhanced Verification",
+  "lessonNumber": 9,
+  "objective": "Explain data-flow tracing, behavioral spot-checks, and environment audits as verification techniques that go beyond basic test-passing.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Basic verification asks: do the tests pass? Enhanced verification asks: does data actually flow from source to destination? A component can pass all its unit tests while rendering an empty list because the API call never fires. A database query can return correct results while the component never imports the function that calls it. Enhanced verification catches these gaps through three techniques: data-flow tracing, behavioral spot-checks, and environment audits. Each targets a different class of silent failure.",
+      "focus": "Tests passing does not mean the feature works -- data must flow end to end.",
+      "bridge": "The first technique traces data from its origin to where the user sees it."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From verify-phase.md — Data-Flow Tracing:\n\nverify-phase checks each must_haves level:\n\n1. Truths - observable behaviors that must be TRUE:\n   \"User can see existing messages\"\n   \"User can send a message\"\n   \"Messages persist across refresh\"\n\n2. Artifacts - files that must EXIST with real content:\n   path: \"src/components/Chat.tsx\"\n   provides: \"Message list rendering\"\n   Check: exists + substantive (not stub) + wired (imported/used)\n\n3. Key links - critical connections verified with grep:\n   from: \"src/components/Chat.tsx\"\n   to: \"/api/chat\"\n   pattern: \"fetch.*api/chat\"\n\n   grep -r \"fetch.*api/chat\" src/components/Chat.tsx\n   FOUND = wired. NOT FOUND = orphaned component.\n\nEvidence-based: grep on actual source, not trust.",
+      "highlight": [4, 10, 15, 19, 21]
+    },
+    {
+      "type": "text",
+      "value": "Data-flow tracing works at three levels. Level 1 (Truths) states what a user must be able to observe -- these are written as plain English sentences like 'User can see existing messages.' Level 2 (Artifacts) identifies the files that make those truths possible and checks that they exist with real content, not stubs. Level 3 (Key Links) verifies that artifacts are actually connected to each other by running grep on source code. A Chat.tsx component that exists and has real content but never calls fetch('/api/chat') is an orphaned component -- it looks complete but does nothing. Key links catch this.",
+      "focus": "Three levels: truths (what users see), artifacts (what exists), key links (what is connected).",
+      "bridge": "The second technique verifies observable behavior through targeted spot-checks."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From verify-phase.md — Behavioral Spot-Checks:\n\nFor each observable truth, determine if the codebase enables it.\n\nStatus:\n  VERIFIED   (all supporting artifacts pass)\n  FAILED     (artifact missing/stub/unwired)\n  UNCERTAIN  (needs human)\n\nFor each truth:\n  identify supporting artifacts ->\n  check artifact status ->\n  check wiring ->\n  determine truth status.\n\nExample:\n  Truth: \"User can see existing messages\"\n  Depends on:\n    Chat.tsx       (renders)\n    /api/chat GET  (provides)\n    Message model  (schema)\n\n  If Chat.tsx is a stub or API returns hardcoded [] -> FAILED\n  If all exist, are substantive, and connected    -> VERIFIED",
+      "highlight": [5, 6, 7, 17, 22, 23]
+    },
+    {
+      "type": "text",
+      "value": "Behavioral spot-checks decompose each truth into its supporting chain. The question is not 'does Chat.tsx exist?' but 'does the chain from Message model through /api/chat GET through Chat.tsx actually deliver messages to the user?' If any link in the chain is broken -- the model has no data, the API returns an empty array, or the component never calls the API -- the truth fails. This is why GSD marks truths as VERIFIED, FAILED, or UNCERTAIN. UNCERTAIN means the automated check cannot determine the answer and a human must look.",
+      "focus": "Spot-checks trace the full chain from data source to user-visible behavior.",
+      "bridge": "The third technique audits the environment to catch deployment-level gaps."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From verify-phase.md — Artifact Verification Levels:\n\n| Exists | Substantive | Wired | Status       |\n|--------|-------------|-------|--------------|\n|  yes   |    yes      |  yes  | VERIFIED     |\n|  yes   |    yes      |  no   | ORPHANED     |\n|  yes   |    no       |   -   | STUB         |\n|  no    |     -       |   -   | MISSING      |\n\nExport-level spot check (WARNING severity):\n\nFor artifacts that pass Level 3, spot-check individual exports:\n- Extract key exported symbols (functions, constants, classes)\n- For each, grep for usage outside the defining file\n- Flag exports with zero external call sites as\n  \"exported but unused\"\n\nThis catches dead stores like setPlan() that exist in a\nwired file but are never actually called.",
+      "highlight": [3, 4, 5, 6, 7, 12, 17]
+    },
+    {
+      "type": "text",
+      "value": "The environment audit extends verification beyond code. It checks that artifacts are not just present but substantive -- a file with 3 lines is likely a stub even if it exists and is imported. The export-level spot-check goes deeper still: even in a file that passes all three levels (exists, substantive, wired), individual exported functions might never be called. A setPlan() function that exists, is exported, and lives in a properly wired module -- but has zero call sites outside its own file -- is dead code that signals incomplete integration.",
+      "focus": "Environment audits catch stubs, dead exports, and deployment-level gaps.",
+      "bridge": "These three techniques together form the enhanced verification system."
+    },
+    {
+      "type": "text",
+      "value": "Enhanced verification is the difference between 'it compiles' and 'it works.' Data-flow tracing ensures connections exist between components. Behavioral spot-checks ensure those connections deliver the right data. Environment audits ensure nothing is a stub or dead code. Together, they catch the most common failure mode in AI-generated code: components that look complete in isolation but are never wired together. The verifier runs these checks automatically after each phase, producing a VERIFICATION.md report with evidence for every finding.",
+      "focus": "Enhanced verification catches the gap between 'code exists' and 'feature works.'",
+      "bridge": "The next lesson covers how the verifier detects another common failure: stub implementations."
+    }
+  ],
+  "conceptMap": "enhanced-verification",
+  "successCriteria": "You can explain the three enhanced verification techniques (data-flow tracing, behavioral spot-checks, environment audits), describe the three artifact levels (exists, substantive, wired), and articulate why grep-based evidence beats trust-based verification."
+}

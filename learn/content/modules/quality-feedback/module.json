@@ -11,6 +11,10 @@
     "gap-closure": "Gap Closure",
     "milestone-audit": "Milestone Audit",
     "synthesis": "Synthesis",
+    "enhanced-verification": "Enhanced Verification",
+    "stub-detection": "Stub Detection",
+    "regression-gate": "Regression Gate",
+    "security-hardening": "Security Hardening",
     "mini-project": "Mini-Project"
   }
 }

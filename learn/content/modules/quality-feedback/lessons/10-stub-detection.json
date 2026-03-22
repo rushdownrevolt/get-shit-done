@@ -1,0 +1,58 @@
+{
+  "id": "stub-detection",
+  "title": "Stub Detection",
+  "lessonNumber": 10,
+  "objective": "Explain how the verifier identifies incomplete implementations -- stubs, TODOs, placeholder code -- that slip through tests but prevent features from working.",
+  "content": [
+    {
+      "type": "text",
+      "value": "A stub is code that exists structurally but does not actually do anything. It might be a function that returns an empty array, a component that renders 'Coming soon', or a handler that logs to console instead of processing data. Stubs are dangerous because they pass basic tests -- the function is callable, the component renders, the handler does not throw. But the feature does not work. Stub detection is the verifier's defense against code that looks complete but delivers nothing.",
+      "focus": "Stubs pass tests but deliver nothing -- automated detection catches them.",
+      "bridge": "What patterns does the verifier look for?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From verify-phase.md — Anti-Pattern Scanning:\n\n| Pattern              | Search                                    | Severity  |\n|----------------------|-------------------------------------------|-----------|\n| TODO/FIXME/XXX/HACK  | grep -n -E \"TODO|FIXME|XXX|HACK\"          | Warning   |\n| Placeholder content  | grep -n -iE \"placeholder|coming soon|     | Blocker   |\n|                      |  will be here\"                            |           |\n| Empty returns        | grep -n -E \"return null|return {}|        | Warning   |\n|                      |  return []|=> {}\"                         |           |\n| Log-only functions   | Functions containing only console.log     | Warning   |\n\nCategorize:\n  Blocker  (prevents goal)\n  Warning  (incomplete)\n  Info     (notable)",
+      "highlight": [4, 5, 6, 7, 8, 9]
+    },
+    {
+      "type": "text",
+      "value": "The verifier scans every file modified in the phase against four stub patterns. TODO and FIXME comments signal work the developer intended to finish but did not. Placeholder content like 'coming soon' is a blocker -- it directly prevents the feature from working. Empty returns (return null, return {}, return []) mean data never reaches the consumer. Log-only functions appear to handle events but discard them. Each pattern maps to a severity: blockers prevent the phase goal from being achieved, warnings indicate incomplete work that may need attention.",
+      "focus": "Four stub patterns at two severity levels: blockers prevent goals, warnings flag gaps.",
+      "bridge": "How does the verifier use these patterns in practice?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From verify-phase.md — Artifact Stub Detection:\n\nArtifact status from verification result:\n- exists=false           -> MISSING\n- issues not empty       -> STUB\n  (check issues for \"Only N lines\" or \"Missing pattern\")\n- passed=true            -> VERIFIED (Levels 1-2 pass)\n\nLevel 3 -- Wired (manual check for artifacts that pass 1-2):\n\ngrep -r \"import.*$artifact_name\" src/ --include=\"*.ts\"\ngrep -r \"$artifact_name\" src/ --include=\"*.ts\" | grep -v \"import\"\n\nWIRED   = imported AND used\nORPHANED = exists but not imported/used\n\nA 3-line file that exports a function signature and\nreturns null is detected as STUB -- it passes the\n\"exists\" check but fails the \"substantive\" check\nbecause its issues array contains \"Only 3 lines.\"",
+      "highlight": [4, 5, 6, 13, 14]
+    },
+    {
+      "type": "text",
+      "value": "The verifier combines grep-based pattern detection with size heuristics. A file with only 3 lines cannot contain a real implementation -- it is flagged as a stub even if it has no TODO comments. The issues array captures what specifically is wrong: 'Only N lines' means the file is too small to be substantive, 'Missing pattern' means expected content (like a specific function name or API call) was not found. This multi-signal approach catches stubs that any single check would miss.",
+      "focus": "Multi-signal detection: pattern matching plus size heuristics catches more stubs.",
+      "bridge": "How are stub findings reported so they get fixed?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From verify-phase.md — Stub Reporting in VERIFICATION.md:\n\nScan Anti-patterns section of the verification report:\n\n## Anti-Patterns Found\n\n| File                        | Pattern           | Severity | Line |\n|-----------------------------|-------------------|----------|------|\n| src/api/comments.ts         | return []          | Warning  | 42   |\n| src/components/Feed.tsx     | placeholder        | Blocker  | 15   |\n| src/utils/format.ts         | TODO               | Warning  | 8    |\n\n## Artifact Status\n\n| Artifact                    | Exists | Substantive | Wired   | Status   |\n|-----------------------------|--------|-------------|---------|----------|\n| src/api/comments.ts         | yes    | no          | -       | STUB     |\n| src/components/Feed.tsx     | yes    | no          | -       | STUB     |\n| src/components/Chat.tsx     | yes    | yes         | yes     | VERIFIED |",
+      "highlight": [5, 7, 8, 9, 13, 15, 16]
+    },
+    {
+      "type": "text",
+      "value": "The VERIFICATION.md report gives a clear, actionable view of every stub. The anti-patterns table shows exact file, pattern matched, severity, and line number. The artifact status table shows which files passed all verification levels and which are stubs. When the verifier finds blockers, it generates fix plans -- targeted tasks that replace the stub with a real implementation. A 'return []' in src/api/comments.ts becomes a task: 'Replace empty return with actual database query.' The stub is not just detected -- it triggers a concrete remediation path.",
+      "focus": "Stub findings produce fix plans with concrete remediation steps.",
+      "bridge": "Stub detection integrates with the broader verification system."
+    },
+    {
+      "type": "text",
+      "value": "Stub detection is one layer in GSD's quality system. It works alongside data-flow tracing (Lesson 9) to catch incomplete implementations. A component might be wired correctly (key links pass) but return empty data (stub detection catches it). Or a component might have real content (stub detection passes) but never be imported (data-flow tracing catches it). Together, these techniques ensure that code is not just present and connected, but actually delivers real data to real users. The next lesson covers how GSD prevents regressions across phases.",
+      "focus": "Stub detection and data-flow tracing are complementary -- each catches what the other misses.",
+      "bridge": "Next, we look at how the regression gate prevents phase N+1 from breaking phase N."
+    }
+  ],
+  "conceptMap": "stub-detection",
+  "successCriteria": "You can list the four stub patterns the verifier scans for (TODO/FIXME, placeholder content, empty returns, log-only functions), explain how size heuristics complement pattern matching, and describe how stub findings are reported and turned into fix plans."
+}

@@ -1,0 +1,58 @@
+{
+  "id": "security-hardening",
+  "title": "Security Hardening",
+  "lessonNumber": 12,
+  "objective": "Explain how the centralized security.cjs module prevents path traversal, prompt injection, and other security issues in an AI-driven tool.",
+  "content": [
+    {
+      "type": "text",
+      "value": "GSD generates markdown files that become LLM system prompts. It reads user-supplied file paths. It executes shell commands. Each of these is a potential attack vector. Path traversal could let a malicious argument escape the project directory. Prompt injection could embed rogue instructions in planning documents. Shell metacharacters could execute arbitrary commands. GSD centralizes all security checks in a single module -- security.cjs -- so every tool calls into one validated, tested defense layer instead of implementing its own ad-hoc checks.",
+      "focus": "Centralized security: one module handles all validation instead of scattered ad-hoc checks.",
+      "bridge": "How does path traversal prevention work?"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// From security.cjs — Path Validation:\n\nfunction validatePath(filePath, baseDir, opts = {}) {\n  if (!filePath || typeof filePath !== 'string') {\n    return { safe: false, resolved: '', error: 'Empty or invalid file path' };\n  }\n\n  // Reject null bytes (can bypass path checks in some environments)\n  if (filePath.includes('\\0')) {\n    return { safe: false, resolved: '', error: 'Path contains null bytes' };\n  }\n\n  // Resolve symlinks in base directory\n  let resolvedBase;\n  try {\n    resolvedBase = fs.realpathSync(path.resolve(baseDir));\n  } catch {\n    resolvedBase = path.resolve(baseDir);\n  }\n\n  // ... resolve the target path ...\n\n  // The resolved path must start with the base directory\n  if (resolvedPath !== resolvedBase &&\n      !normalizedPath.startsWith(normalizedBase)) {\n    return {\n      safe: false,\n      resolved: resolvedPath,\n      error: `Path escapes allowed directory: ${resolvedPath}`\n    };\n  }\n\n  return { safe: true, resolved: resolvedPath };\n}",
+      "highlight": [3, 9, 16, 24, 25]
+    },
+    {
+      "type": "text",
+      "value": "The validatePath function prevents path traversal by resolving the user-supplied path to its absolute form and checking that it falls within the allowed base directory. It handles three edge cases that simpler checks miss: null bytes (which can bypass string-based path checks in some environments), symlinks (which can make a path appear to be inside the base directory while actually pointing outside), and absolute paths (which bypass relative path assumptions). The function resolves symlinks using fs.realpathSync on both the base directory and the target path before comparing.",
+      "focus": "Path validation handles null bytes, symlinks, and absolute paths -- not just ../.",
+      "bridge": "GSD also defends against prompt injection. What does that look like?"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// From security.cjs — Prompt Injection Detection:\n\nconst INJECTION_PATTERNS = [\n  // Direct instruction override attempts\n  /ignore\\s+(all\\s+)?previous\\s+instructions/i,\n  /disregard\\s+(all\\s+)?previous/i,\n  /override\\s+(system|previous)\\s+(prompt|instructions)/i,\n\n  // Role/identity manipulation\n  /you\\s+are\\s+now\\s+(?:a|an|the)\\s+/i,\n  /pretend\\s+(?:you(?:'re| are)\\s+|to\\s+be\\s+)/i,\n\n  // System prompt extraction\n  /(?:print|output|reveal|show)\\s+(?:your\\s+)?(?:system\\s+)?prompt/i,\n\n  // Hidden instruction markers\n  /<\\/?(?:system|assistant|human)>/i,\n  /\\[SYSTEM\\]/i,\n  /\\[INST\\]/i,\n\n  // Exfiltration attempts\n  /(?:send|post|fetch|curl)\\s+(?:to|from)\\s+https?:\\/\\//i,\n];\n\nfunction scanForInjection(text, opts = {}) {\n  const findings = [];\n  for (const pattern of INJECTION_PATTERNS) {\n    if (pattern.test(text)) {\n      findings.push(`Matched injection pattern: ${pattern.source}`);\n    }\n  }\n  return { clean: findings.length === 0, findings };\n}",
+      "highlight": [3, 5, 10, 14, 20, 22, 23]
+    },
+    {
+      "type": "text",
+      "value": "Prompt injection is particularly relevant for GSD because user-supplied text (project descriptions, phase goals, task names) flows into markdown files that become agent system prompts. If a malicious user embeds 'ignore all previous instructions' in a task name, that text would appear in the executor agent's prompt. The scanForInjection function detects five categories of injection: instruction overrides, role manipulation, prompt extraction, hidden instruction markers (XML tags mimicking system boundaries), and exfiltration attempts. This is defense-in-depth -- the primary defense is proper input/output boundaries in agent prompts.",
+      "focus": "User text flows into agent prompts -- injection detection is defense-in-depth.",
+      "bridge": "How do tools actually use security.cjs?"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "value": "// From security.cjs — Convenience Wrapper and Exports:\n\nfunction requireSafePath(filePath, baseDir, label, opts = {}) {\n  const result = validatePath(filePath, baseDir, opts);\n  if (!result.safe) {\n    throw new Error(\n      `${label || 'Path'} validation failed: ${result.error}`\n    );\n  }\n  return result.resolved;\n}\n\nmodule.exports = {\n  // Path safety\n  validatePath,\n  requireSafePath,\n\n  // Prompt injection\n  INJECTION_PATTERNS,\n  scanForInjection,\n  sanitizeForPrompt,\n\n  // Shell safety\n  validateShellArg,\n\n  // JSON safety\n  safeJsonParse,\n\n  // Input validation\n  validatePhaseNumber,\n  validateFieldName,\n};",
+      "highlight": [3, 13, 14, 15, 18, 19, 20, 23, 26]
+    },
+    {
+      "type": "text",
+      "value": "Tools call into security.cjs before performing any file operation or accepting user input. The requireSafePath wrapper is the most common pattern: pass a user-supplied path and a base directory, get back either a safe resolved path or an exception. Other tools use scanForInjection before embedding user text in agent prompts, validateShellArg before constructing shell commands, safeJsonParse before processing JSON input, and validatePhaseNumber before using phase arguments in file path construction. Each function returns structured results (not just true/false) so callers know exactly what failed and why.",
+      "focus": "Every tool calls security.cjs before file operations -- one module, consistent validation.",
+      "bridge": "Why does centralization matter for security?"
+    },
+    {
+      "type": "text",
+      "value": "Centralized security has three advantages over scattered checks. First, consistency: every path validation uses the same null-byte check, symlink resolution, and containment logic. A bug fix in validatePath fixes every tool at once. Second, testability: security.cjs can be unit-tested in isolation with adversarial inputs (paths with ../, null bytes, symlinks) without running the full tool chain. Third, auditability: a security review examines one file, not dozens of scattered checks across the codebase. This pattern -- centralize validation, export functions, call before every operation -- applies to any tool that handles untrusted input, not just GSD.",
+      "focus": "Centralized validation: consistent, testable, auditable -- one file to review and trust.",
+      "bridge": "Security hardening completes the quality feedback module. Next is the mini-project."
+    }
+  ],
+  "conceptMap": "security-hardening",
+  "successCriteria": "You can explain the five threat categories security.cjs addresses (path traversal, prompt injection, shell injection, JSON injection, regex DoS), describe how validatePath prevents traversal through null byte rejection and symlink resolution, and articulate why centralized security is better than scattered ad-hoc checks."
+}

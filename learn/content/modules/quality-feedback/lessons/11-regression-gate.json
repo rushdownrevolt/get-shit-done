@@ -1,0 +1,58 @@
+{
+  "id": "regression-gate",
+  "title": "Regression Gate",
+  "lessonNumber": 11,
+  "objective": "Explain how execute-phase runs cross-phase regression checks before advancing, preventing phase N+1 from silently breaking what phase N delivered.",
+  "content": [
+    {
+      "type": "text",
+      "value": "In a multi-phase project, each phase builds on what previous phases delivered. Phase 1 creates the database schema, Phase 2 builds the API, Phase 3 creates the UI. But Phase 3's changes might break Phase 2's API routes, or Phase 2's migrations might alter Phase 1's schema. Without regression checks, these breakages go undetected until the milestone audit -- by which point the damage is spread across multiple phases and much harder to fix. The regression gate catches these problems immediately, before advancing to the next phase.",
+      "focus": "Multi-phase projects need regression gates -- later phases can silently break earlier ones.",
+      "bridge": "How does execute-phase implement the regression check?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From execute-phase.md — Regression Gate Design:\n\nOrchestrator coordinates, not executes. Each subagent loads\nthe full execute-plan context.\n\nOrchestrator workflow:\n  discover plans ->\n  analyze deps ->\n  group waves ->\n  spawn agents ->\n  handle checkpoints ->\n  collect results\n\nAfter all waves complete, the orchestrator runs verification:\n\n  gsd-verifier -> VERIFICATION.md\n\nThe verifier checks:\n  1. All must_haves from every PLAN.md in the phase\n  2. Artifacts exist, are substantive, and are wired\n  3. Key links verified with grep on actual source\n  4. Anti-patterns scanned (stubs, TODOs, placeholders)\n  5. Requirements coverage from REQUIREMENTS.md",
+      "highlight": [6, 7, 8, 14, 17, 18, 19, 20, 21]
+    },
+    {
+      "type": "text",
+      "value": "The regression gate operates at the boundary between execution and advancement. After all plans in a phase complete, the orchestrator spawns a gsd-verifier agent. This agent does not just check the current phase -- it verifies that previous phase outputs still work by checking must_haves, artifacts, and key links. If Phase 3 altered a file that Phase 2 depends on, the key link verification will catch it: the grep pattern from Phase 2's must_haves will fail against the modified file. The gate blocks advancement until all verification passes.",
+      "focus": "The verifier checks previous phase outputs, not just the current phase.",
+      "bridge": "What happens when the regression gate finds a problem?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From verify-phase.md — Gate Pass/Fail Logic:\n\nDetermine overall status:\n\npassed:\n  All truths VERIFIED\n  All artifacts pass levels 1-3\n  All key links WIRED\n  No blocker anti-patterns\n\ngaps_found:\n  Any truth FAILED\n  Artifact MISSING/STUB\n  Key link NOT_WIRED\n  Or blocker found\n\nhuman_needed:\n  All automated checks pass\n  But human verification items remain\n\nOrchestrator routes:\n  passed      -> update_roadmap (advance to next phase)\n  gaps_found  -> create/execute fixes, re-verify\n  human_needed -> present to user",
+      "highlight": [4, 5, 6, 7, 10, 11, 12, 19, 20, 21]
+    },
+    {
+      "type": "text",
+      "value": "When the gate returns 'gaps_found', the orchestrator does not just stop -- it creates fix plans. The verifier clusters related gaps (e.g., 'API stub + component unwired' becomes one fix plan: 'Wire frontend to backend'), generates targeted tasks with specific files and actions, and orders them by dependency: fix missing artifacts first, then stubs, then wiring, then re-verify. The fix plans execute in the same automated pipeline. Only after all gaps are resolved and re-verification passes does the system advance to the next phase.",
+      "focus": "Failed gates trigger automated fix plans, not manual intervention.",
+      "bridge": "What does the fix plan look like in practice?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From verify-phase.md — Fix Plan Generation:\n\nIf gaps_found:\n\n1. Cluster related gaps:\n   API stub + component unwired -> \"Wire frontend to backend\"\n   Multiple missing artifacts   -> \"Complete core implementation\"\n   Wiring only issues           -> \"Connect existing components\"\n\n2. Generate plan per cluster:\n   Objective, 2-3 tasks (files/action/verify each),\n   re-verify step.\n   Keep focused: single concern per plan.\n\n3. Order by dependency:\n   Fix missing  -> fix stubs -> fix wiring -> verify\n\nOrchestrator routes:\n  passed      -> update roadmap, advance\n  gaps_found  -> create/execute fixes, re-verify\n  human_needed -> present to user for manual check",
+      "highlight": [4, 5, 6, 7, 14]
+    },
+    {
+      "type": "text",
+      "value": "The clustering step is important. Without it, a single broken feature could produce dozens of individual gap findings: missing function, unwired component, stub return, failed truth. Clustering groups these into a coherent fix: 'Wire the comments feature' with tasks that address the function, the component, and the wiring in sequence. This mirrors how a developer would fix the issue -- as one coherent change, not as isolated patches.",
+      "focus": "Clustering groups related gaps into coherent fix plans, not isolated patches.",
+      "bridge": "How does this fit into the broader quality system?"
+    },
+    {
+      "type": "text",
+      "value": "The regression gate is the quality system's boundary enforcer. While stub detection (Lesson 10) catches incomplete code within a phase and enhanced verification (Lesson 9) traces data flow, the regression gate prevents advancement until everything checks out. It enforces the principle that later work must not break earlier work. Combined with atomic commits (each task independently verifiable), wave-based execution (dependency-aware ordering), and the fix-then-re-verify cycle, the regression gate ensures that milestone completion means all phases work together, not just individually.",
+      "focus": "The regression gate enforces: later work must not break earlier work.",
+      "bridge": "The next lesson covers how GSD hardens security through centralized validation."
+    }
+  ],
+  "conceptMap": "regression-gate",
+  "successCriteria": "You can explain when the regression gate runs (after all phase plans complete), what it checks (must_haves, artifacts, key links from current and previous phases), the three possible outcomes (passed, gaps_found, human_needed), and how gaps_found triggers automated fix plan generation."
+}
