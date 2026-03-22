@@ -136,7 +136,7 @@
 **Plans**: 2 plans
 
 Plans:
-- [ ] 31-01-PLAN.md — Add 5 lessons to Modules 1 and 3 (fast, next, ship, decision IDs, CLAUDE.md compliance)
+- [x] 31-01-PLAN.md — Add 5 lessons to Modules 1 and 3 (fast, next, ship, decision IDs, CLAUDE.md compliance)
 - [ ] 31-02-PLAN.md — Add 8 lessons to Modules 4, 5, and 6 (advisor mode, verification, security, multi-runtime, forensics, profiling)
 
 ### Phase 32: Module 7 Infrastructure
@@ -246,7 +246,7 @@ Phases execute in numeric order: 31 → 32 → 33 → 34 → 35 → 36
 | 28. Lesson Content (Lessons 4-7) | v7.0 | 4/4 | Complete | 2026-03-20 |
 | 29. Mini-Project | v7.0 | 1/1 | Complete | 2026-03-20 |
 | 30. Export Update | v7.0 | 1/1 | Complete | 2026-03-20 |
-| 31. Existing Module Updates | v8.0 | 0/2 | Not started | - |
+| 31. Existing Module Updates | v8.0 | 1/2 | In Progress|  |
 | 32. Module 7 Infrastructure | v8.0 | 0/1 | Not started | - |
 | 33. Module 7 Content (Lessons 1-3) | v8.0 | 0/1 | Not started | - |
 | 34. Module 7 Content (Lessons 4-7) | v8.0 | 0/1 | Not started | - |

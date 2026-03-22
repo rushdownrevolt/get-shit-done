@@ -9,14 +9,14 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 
 ### Module 1 Updates (New Commands)
 
-- [ ] **CMD-01**: Learner understands `/gsd:fast` — executing trivial tasks without planning overhead
-- [ ] **CMD-02**: Learner understands `/gsd:next` — automatic workflow progression to the next logical step
-- [ ] **CMD-03**: Learner understands `/gsd:ship` — creating PRs from verified work with auto-generated bodies
+- [x] **CMD-01**: Learner understands `/gsd:fast` — executing trivial tasks without planning overhead
+- [x] **CMD-02**: Learner understands `/gsd:next` — automatic workflow progression to the next logical step
+- [x] **CMD-03**: Learner understands `/gsd:ship` — creating PRs from verified work with auto-generated bodies
 
 ### Module 3 Updates (Planning Enhancements)
 
-- [ ] **PLN-01**: Learner understands decision IDs and discuss-to-plan traceability
-- [ ] **PLN-02**: Learner understands CLAUDE.md compliance as plan-checker Dimension 10
+- [x] **PLN-01**: Learner understands decision IDs and discuss-to-plan traceability
+- [x] **PLN-02**: Learner understands CLAUDE.md compliance as plan-checker Dimension 10
 
 ### Module 4 Updates (Agent Enhancements)
 
@@ -89,11 +89,11 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CMD-01 | Phase 31 | Pending |
-| CMD-02 | Phase 31 | Pending |
-| CMD-03 | Phase 31 | Pending |
-| PLN-01 | Phase 31 | Pending |
-| PLN-02 | Phase 31 | Pending |
+| CMD-01 | Phase 31 | Complete |
+| CMD-02 | Phase 31 | Complete |
+| CMD-03 | Phase 31 | Complete |
+| PLN-01 | Phase 31 | Complete |
+| PLN-02 | Phase 31 | Complete |
 | AGT-01 | Phase 31 | Pending |
 | QUA-01 | Phase 31 | Pending |
 | QUA-02 | Phase 31 | Pending |
