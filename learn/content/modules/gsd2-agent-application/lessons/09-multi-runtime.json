@@ -1,0 +1,58 @@
+{
+  "id": "multi-runtime",
+  "title": "Multi-Runtime Support",
+  "lessonNumber": 9,
+  "objective": "Explain how GSD-2 supports Cursor CLI, Gemini CLI, and other AI runtimes alongside Claude Code through a provider registry and health checking system.",
+  "content": [
+    {
+      "type": "text",
+      "value": "GSD started as a Claude Code-only framework. But different AI models excel at different tasks -- Claude for planning and writing, GPT for certain code patterns, Gemini for large-context analysis. GSD-2 abstracts the runtime layer so you can use any supported AI provider. The system tracks which runtime is executing each unit of work, checks provider health before dispatching, and lets you configure per-phase model preferences. Multi-runtime support means GSD adapts to your available tools rather than locking you into one provider.",
+      "focus": "Multi-runtime: use the right AI model for each task, not one provider for everything.",
+      "bridge": "How does GSD-2 track runtime state for each unit of work?"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "// From unit-runtime.ts — Runtime Phase Tracking:\n\nexport type UnitRuntimePhase =\n  | \"dispatched\"\n  | \"wrapup-warning-sent\"\n  | \"timeout\"\n  | \"recovered\"\n  | \"finalized\"\n  | \"paused\"\n  | \"skipped\";\n\nexport interface AutoUnitRuntimeRecord {\n  version: 1;\n  unitType: string;\n  unitId: string;\n  startedAt: number;\n  updatedAt: number;\n  phase: UnitRuntimePhase;\n  wrapupWarningSent: boolean;\n  continueHereFired: boolean;\n  timeoutAt: number | null;\n  lastProgressAt: number;\n  progressCount: number;\n  lastProgressKind: string;\n  recovery?: ExecuteTaskRecoveryStatus;\n  recoveryAttempts?: number;\n  lastRecoveryReason?: \"idle\" | \"hard\";\n}",
+      "highlight": [3, 12, 18, 22, 23]
+    },
+    {
+      "type": "text",
+      "value": "Every unit of work in GSD-2 has a runtime record that tracks its lifecycle phase -- from dispatched through finalized or timeout. The UnitRuntimePhase type captures the seven possible states: dispatched (agent is working), wrapup-warning-sent (approaching timeout), timeout (exceeded time limit), recovered (restarted after failure), finalized (successfully completed), paused (waiting for human input), and skipped (bypassed). The AutoUnitRuntimeRecord interface tracks progress counts, last progress timestamps, and recovery attempts. This state lives on disk, so the system can resume from any point after a crash.",
+      "focus": "Each unit of work has a lifecycle tracked on disk -- seven phases from dispatch to finalization.",
+      "bridge": "How does the provider health system know which runtimes are available?"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "// From doctor-providers.ts — Provider Health Checking:\n\nexport type ProviderCheckStatus = \"ok\" | \"warning\" | \"error\" | \"unconfigured\";\n\nexport interface ProviderCheckResult {\n  /** Provider id from PROVIDER_REGISTRY (e.g. \"anthropic\") */\n  name: string;\n  /** Human-readable label */\n  label: string;\n  /** Functional grouping */\n  category: ProviderCategory;\n  status: ProviderCheckStatus;\n  message: string;\n  /** Optional extra detail (e.g. which env var to set) */\n  detail?: string;\n  /** True if this provider is actively required by preferences */\n  required: boolean;\n}",
+      "highlight": [3, 5, 12, 17]
+    },
+    {
+      "type": "text",
+      "value": "The doctor-providers module checks every configured provider before GSD-2 starts autonomous execution. Each provider gets a ProviderCheckResult with a clear status: ok (key found and valid), warning (key present but may have issues), error (required but missing), or unconfigured (optional and not set up). The 'required' flag distinguishes providers you have configured in your model preferences from optional ones. Running /gsd doctor shows you which providers are healthy, which are missing keys, and which environment variables to set. No network calls -- it checks key presence in auth.json and environment variables for sub-10ms results.",
+      "focus": "Provider health checks are fast (sub-10ms), local (no network), and actionable (tells you what to fix).",
+      "bridge": "Where does the system learn about available providers?"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "// From key-manager.ts — Provider Registry:\n\nexport type ProviderCategory = \"llm\" | \"tool\" | \"search\" | \"remote\";\n\nexport const PROVIDER_REGISTRY: ProviderInfo[] = [\n  // LLM Providers\n  { id: \"anthropic\",         label: \"Anthropic (Claude)\",\n    category: \"llm\", envVar: \"ANTHROPIC_API_KEY\" },\n  { id: \"openai\",            label: \"OpenAI\",\n    category: \"llm\", envVar: \"OPENAI_API_KEY\" },\n  { id: \"github-copilot\",    label: \"GitHub Copilot\",\n    category: \"llm\", hasOAuth: true },\n  { id: \"google-gemini-cli\", label: \"Google Gemini CLI\",\n    category: \"llm\", hasOAuth: true },\n  { id: \"google\",            label: \"Google (Gemini)\",\n    category: \"llm\", envVar: \"GEMINI_API_KEY\" },\n  { id: \"groq\",              label: \"Groq\",\n    category: \"llm\", envVar: \"GROQ_API_KEY\" },\n  { id: \"xai\",               label: \"xAI (Grok)\",\n    category: \"llm\", envVar: \"XAI_API_KEY\" },\n  { id: \"openrouter\",        label: \"OpenRouter\",\n    category: \"llm\", envVar: \"OPENROUTER_API_KEY\" },\n  // ... plus tool, search, and remote integrations\n];",
+      "highlight": [3, 5, 7, 11, 13]
+    },
+    {
+      "type": "text",
+      "value": "The PROVIDER_REGISTRY is the single source of truth for all supported providers. Each entry specifies an id, human-readable label, category (LLM, tool, search, or remote integration), optional environment variable name, and authentication method (API key or OAuth). Adding a new provider means adding one entry to this array -- no control flow changes needed. The registry pattern mirrors GSD's declarative dispatch philosophy: data structures drive behavior, not if-else chains. Categories let the doctor command group providers logically: LLM providers for model execution, tool providers for integrations like Context7, search providers for web research, and remote providers for notification channels.",
+      "focus": "The provider registry is declarative: add a provider by adding data, not code.",
+      "bridge": "How does this all fit into the GSD-2 architecture?"
+    },
+    {
+      "type": "text",
+      "value": "Multi-runtime support is the natural extension of GSD-2's state-on-disk principle. Because every unit's runtime phase is tracked in a JSON file, the system does not care which AI model executed it -- it cares whether the artifact was produced. The provider registry tells the system what is available. The doctor checks tell the system what is healthy. The model preferences in config tell the system what to use for each phase. And the unit runtime record tracks what actually happened. This separation of concerns means you can switch from Claude to Gemini for a specific phase without changing any workflow code -- you change a config value.",
+      "focus": "Multi-runtime works because state is on disk and dispatch is declarative -- swap models via config.",
+      "bridge": "The next lesson covers how /gsd:forensics investigates when something goes wrong."
+    }
+  ],
+  "conceptMap": "multi-runtime",
+  "successCriteria": "You can explain how the PROVIDER_REGISTRY lists all supported runtimes (Anthropic, OpenAI, GitHub Copilot, Google Gemini CLI, etc.), how provider health checks verify configuration without network calls, and how UnitRuntimePhase tracks each unit's lifecycle across any runtime."
+}

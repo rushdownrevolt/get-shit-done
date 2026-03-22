@@ -11,6 +11,9 @@
     "git-worktrees": "Git & Worktrees",
     "skills-extensions": "Skills & Extensions",
     "synthesis": "Synthesis",
+    "multi-runtime": "Multi-Runtime",
+    "forensics": "Forensics",
+    "developer-profiling": "Developer Profiling",
     "mini-project": "Mini-Project"
   }
 }

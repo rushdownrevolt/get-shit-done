@@ -1,0 +1,58 @@
+{
+  "id": "forensics",
+  "title": "Forensics Debugging",
+  "lessonNumber": 10,
+  "objective": "Explain how /gsd:forensics performs post-mortem investigation of failed or stuck workflows by gathering evidence from git, planning state, and file system artifacts.",
+  "content": [
+    {
+      "type": "text",
+      "value": "When a GSD workflow fails or gets stuck, the question is not 'what broke?' but 'why did it break, and what was the system doing when it happened?' /gsd:forensics is a read-only investigation tool that reconstructs the failure timeline by examining git history, planning artifacts, worktree state, and session reports. It detects anomaly patterns like stuck loops, missing artifacts, abandoned work, and scope drift. The output is a structured diagnostic report with evidence, root cause hypothesis, and specific remediation steps.",
+      "focus": "Forensics reconstructs what happened and why, using evidence from every available source.",
+      "bridge": "What evidence does forensics gather?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From forensics.md — Evidence Gathering:\n\nStep 2: Gather Evidence\n\n2a. Git History:\n  git log --oneline -30\n  git log --format=\"%H %ai %s\" -30     (timestamps for gap analysis)\n  git log --name-only --format=\"\" -20   (detect repeated edits)\n  git status --short                     (uncommitted work)\n  git diff --stat\n\n2b. Planning State:\n  .planning/STATE.md   -- current milestone, phase, progress, blockers\n  .planning/ROADMAP.md -- phase list with status\n  .planning/config.json -- workflow configuration\n\n2c. Phase Artifacts:\n  For each phase: check PLAN.md, SUMMARY.md, VERIFICATION.md,\n  CONTEXT.md, RESEARCH.md existence\n  Track which phases have complete artifact sets vs gaps\n\n2d. Session Reports:\n  .planning/reports/SESSION_REPORT.md -- last outcomes, token estimates\n\n2e. Git Worktree State:\n  git worktree list    (check for orphaned worktrees from crashed agents)",
+      "highlight": [3, 6, 13, 18, 22, 25]
+    },
+    {
+      "type": "text",
+      "value": "Forensics gathers evidence from five sources. Git history reveals the timeline: what was committed, when, and how frequently. Planning state shows where the system thinks it is versus where it actually is. Phase artifacts reveal gaps: a phase with PLAN.md but no SUMMARY.md was started but never finished. Session reports provide the last known good state. Worktree state catches orphaned worktrees from crashed autonomous agents. Each source independently contributes pieces of the puzzle. Together, they reconstruct the full picture of what went wrong.",
+      "focus": "Five evidence sources: git history, planning state, phase artifacts, session reports, worktree state.",
+      "bridge": "How does forensics detect specific failure patterns?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From forensics.md — Anomaly Detection Patterns:\n\nStuck Loop Detection:\n  Signal: Same file appears in 3+ consecutive commits\n  within a short time window.\n  HIGH confidence if commit messages are similar\n  (e.g., \"fix:\", \"fix:\", \"fix:\" on same file)\n  MEDIUM confidence if file appears frequently\n  but messages vary\n\nMissing Artifact Detection:\n  Signal: Phase appears complete but lacks expected artifacts.\n  PLAN.md missing   -> planning step was skipped\n  SUMMARY.md missing -> phase was not properly closed\n  VERIFICATION.md missing -> quality check was skipped\n\nAbandoned Work Detection:\n  Signal: Large gap between last commit and current time,\n  with STATE.md showing mid-execution.\n\nCrash/Interruption Detection:\n  Signal: Uncommitted changes + STATE.md shows\n  mid-execution + orphaned worktrees.\n\nScope Drift Detection:\n  Signal: Recent commits touch files outside the\n  current phase's expected scope.",
+      "highlight": [3, 4, 11, 12, 17, 20, 23]
+    },
+    {
+      "type": "text",
+      "value": "Each anomaly pattern targets a specific failure mode. Stuck loops (the same file committed 3+ times in sequence) indicate an agent retrying the same fix repeatedly. Missing artifacts show where the workflow was skipped or interrupted. Abandoned work (long gap since last commit while STATE.md shows active execution) indicates a crash or manual interruption. Scope drift (commits touching files outside the phase's expected domain) indicates an agent working on the wrong thing. The confidence levels (HIGH, MEDIUM, LOW) help you prioritize which anomalies to investigate first.",
+      "focus": "Five anomaly patterns with confidence levels target the most common failure modes.",
+      "bridge": "What does the forensic report look like?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From forensics.md — Report Structure:\n\n# Forensic Report\n\n**Generated:** {ISO timestamp}\n**Problem:** {user's description}\n\n## Evidence Summary\n\n### Git Activity\n- **Last commit:** {date} -- \"{message}\"\n- **Commits (last 30):** {count}\n- **Time span:** {earliest} -> {latest}\n- **Uncommitted changes:** {yes/no}\n- **Active worktrees:** {count}\n\n### Artifact Completeness\n| Phase | PLAN | CONTEXT | RESEARCH | SUMMARY | VERIFICATION |\n|-------|------|---------|----------|---------|--------------|\n{for each phase: name | yes/no per artifact}\n\n## Anomalies Detected\n### {Anomaly Type} -- {Confidence: HIGH/MEDIUM/LOW}\n**Evidence:** {specific commits, files, or state data}\n**Interpretation:** {what this likely means}\n\n## Root Cause Hypothesis\n{1-3 sentence hypothesis grounded in the anomalies}\n\n## Recommended Actions\n1. {Specific, actionable remediation step}",
+      "highlight": [3, 8, 18, 22, 27, 30]
+    },
+    {
+      "type": "text",
+      "value": "The report follows a disciplined structure: evidence first, interpretation second, action third. The evidence summary presents raw facts from git and planning state without interpretation. The anomalies section maps evidence to known failure patterns with confidence levels. The root cause hypothesis synthesizes anomalies into a 1-3 sentence explanation grounded in the evidence -- not speculation. The recommended actions give specific next steps: a /gsd:execute-phase command to resume, a file to fix, or a worktree to clean up. Absolute paths are redacted for portability.",
+      "focus": "Evidence first, interpretation second, action third -- no speculation without data.",
+      "bridge": "When should you reach for forensics?"
+    },
+    {
+      "type": "text",
+      "value": "Use /gsd:forensics after any unexpected failure: autonomous mode got stuck, a phase failed silently, costs seem unusually high (indicating stuck loops), or the project state feels inconsistent. The command is read-only -- it never modifies project files, only writes the forensic report. This makes it safe to run at any time without fear of making things worse. Forensics embodies the same principle as the rest of GSD's quality system: evidence-based investigation, not guessing. The git history, planning artifacts, and worktree state tell you exactly what happened -- forensics just reads the evidence and presents it clearly.",
+      "focus": "Forensics is read-only and evidence-based -- safe to run anytime something feels wrong.",
+      "bridge": "The next lesson covers how /gsd:profile-user personalizes GSD to your development style."
+    }
+  ],
+  "conceptMap": "forensics",
+  "successCriteria": "You can explain what evidence forensics gathers (git history, planning state, phase artifacts, session reports, worktree state), name the five anomaly detection patterns (stuck loop, missing artifact, abandoned work, crash, scope drift), and describe the report structure from evidence through hypothesis to remediation."
+}

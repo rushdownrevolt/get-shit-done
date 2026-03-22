@@ -1,0 +1,58 @@
+{
+  "id": "developer-profiling",
+  "title": "Developer Profiling",
+  "lessonNumber": 11,
+  "objective": "Explain how /gsd:profile-user builds a developer profile across 8 behavioral dimensions to personalize GSD interactions.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Every Claude conversation starts generic. Claude does not know if you prefer terse commands or detailed explanations, if you evaluate libraries carefully or pick the first popular option, or if you debug by reading stack traces or by adding log statements. /gsd:profile-user analyzes your actual Claude Code sessions to build a profile across 8 behavioral dimensions. This profile is stored locally and used by GSD workflows to calibrate their behavior -- advisor mode adjusts research depth, explanations match your preferred detail level, and suggestions align with your decision style.",
+      "focus": "Developer profiling teaches GSD how you actually work, not how you think you work.",
+      "bridge": "What dimensions does the profiler measure?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From profile-user.md — The 8 Behavioral Dimensions:\n\n| Dimension            | What It Measures                            |\n|----------------------|---------------------------------------------|\n| Communication Style  | How you phrase requests (terse vs. detailed) |\n| Decision Speed       | How you choose between options               |\n| Explanation Depth    | How much explanation you want with code      |\n| Debugging Approach   | How you tackle errors and bugs               |\n| UX Philosophy        | How much you care about design vs. function  |\n| Vendor Philosophy    | How you evaluate libraries and tools         |\n| Frustration Triggers | What makes you correct Claude                |\n| Learning Style       | How you prefer to learn new things           |\n\nData Handling:\n  Reads session files locally (read-only, nothing modified)\n  Analyzes message patterns (not content meaning)\n  Stores profile at $HOME/.claude/get-shit-done/USER-PROFILE.md\n  Nothing is sent to external services\n  Sensitive content (API keys, passwords) automatically excluded",
+      "highlight": [3, 4, 5, 6, 7, 8, 9, 10, 15]
+    },
+    {
+      "type": "text",
+      "value": "The 8 dimensions capture how you work, not what you work on. Communication Style detects whether you give Claude terse commands ('fix the auth bug') or detailed specifications. Decision Speed tracks whether you deliberate between options or pick quickly. Vendor Philosophy is particularly important for advisor mode -- it determines the calibration tier (thorough evaluator gets 3-5 options, pragmatic-fast gets 2-4, opinionated gets 1-2). Frustration Triggers reveal what makes you correct Claude, so the system can avoid those patterns proactively.",
+      "focus": "8 dimensions capture your working style -- each calibrates a different GSD behavior.",
+      "bridge": "How does the profiler gather data to score these dimensions?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From profile-user.md — Data Gathering Pipeline:\n\n1. Initialize:\n   Parse flags: --questionnaire (skip sessions), --refresh\n   Check for existing profile at USER-PROFILE.md\n   If exists: offer View / Refresh / Cancel\n\n2. Consent Gate:\n   Display what will be analyzed\n   User explicitly opts in before any data is read\n\n3. Session Scan:\n   node gsd-tools.cjs scan-sessions --json\n   Found N sessions across M projects\n\n4a. Session Analysis Path:\n   node gsd-tools.cjs profile-sample --json\n   Spawn gsd-user-profiler agent with sampled messages\n   Agent analyzes patterns across all 8 dimensions\n   Returns structured analysis JSON\n\n4b. Questionnaire Path (fallback):\n   8 questions, one per dimension\n   User selects from predefined answer options\n   Answers converted to analysis scores\n\n5. Profile Generation:\n   Analysis -> USER-PROFILE.md",
+      "highlight": [3, 8, 12, 15, 16, 21, 25]
+    },
+    {
+      "type": "text",
+      "value": "The profiling pipeline has a consent gate before reading any data -- the user explicitly opts in. There are two paths: session analysis (the primary path) reads your actual Claude Code sessions and uses a profiler agent to detect patterns across all 8 dimensions. The questionnaire path is a fallback for users without enough session history -- 8 multiple-choice questions, one per dimension. Both paths produce the same structured analysis format. The system also detects 'splits' -- dimensions where you behave differently across projects (e.g., terse in personal projects, detailed at work) -- and asks you to resolve them.",
+      "focus": "Consent first, two data paths (sessions or questionnaire), split detection for cross-project variance.",
+      "bridge": "Where does the profile end up, and how does GSD use it?"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "From profile-user.md — Profile Storage and Usage:\n\nProfile stored at:\n  $HOME/.claude/get-shit-done/USER-PROFILE.md\n\nProfile influences GSD behavior:\n\n1. Advisor Mode (discuss-phase.md):\n   Vendor Philosophy score -> calibration tier\n   conservative/thorough-evaluator -> full_maturity (3-5 options)\n   opinionated -> minimal_decisive (1-2 options)\n   pragmatic-fast -> standard (2-4 options)\n\n2. Explanation Depth:\n   Affects how much context agents provide with code changes\n\n3. Communication Style:\n   Affects prompt tone and verbosity level\n\n4. Frustration Triggers:\n   Agents proactively avoid known pain points\n\nProfile management:\n  --refresh flag rebuilds from latest sessions\n  Backup created at USER-PROFILE.backup.md before refresh\n  View existing profile without reanalyzing",
+      "highlight": [3, 7, 8, 9, 10, 13, 16, 19]
+    },
+    {
+      "type": "text",
+      "value": "The profile is a single markdown file at a known location. Any GSD workflow can read it to calibrate behavior. The most direct integration is with advisor mode: your Vendor Philosophy score determines how many options research agents present. But the influence is broader -- explanation depth affects how verbose agent responses are, communication style affects prompt tone, and frustration triggers let agents avoid patterns that previously caused corrections. The profile is refreshable (--refresh flag) and always backed up before updates.",
+      "focus": "One markdown file influences advisor mode, explanation depth, tone, and trigger avoidance.",
+      "bridge": "What makes this different from a settings file?"
+    },
+    {
+      "type": "text",
+      "value": "The key difference between a developer profile and a settings file is that the profile is inferred from behavior, not configured manually. You do not check a box that says 'I am a thorough evaluator' -- the system observes that you ask clarifying questions, compare multiple libraries, and read documentation before deciding. This means the profile reflects how you actually work, which may differ from how you think you work. Combined with GSD-2's other personalization features (skills for project conventions, config for workflow preferences), developer profiling makes GSD adapt to you rather than requiring you to adapt to it.",
+      "focus": "Profiles are inferred from behavior, not configured -- they reflect how you actually work.",
+      "bridge": "This completes the GSD-2 module. The mini-project will let you apply these concepts."
+    }
+  ],
+  "conceptMap": "developer-profiling",
+  "successCriteria": "You can name the 8 profiling dimensions, explain the two data gathering paths (session analysis and questionnaire), describe how Vendor Philosophy calibrates advisor mode depth, and articulate why behavioral inference differs from manual configuration."
+}
