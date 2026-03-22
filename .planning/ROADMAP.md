@@ -115,7 +115,7 @@
 **Milestone Goal:** Update existing GSD Learn modules for features added in GSD v1.26-1.28 and add Module 7: Workspaces & Collaboration
 
 - [x] **Phase 31: Existing Module Updates** - Update Modules 1, 3, 4, 5, 6 lessons for new GSD v1.26-1.28 features (completed 2026-03-22)
-- [ ] **Phase 32: Module 7 Infrastructure** - Register Module 7, v7-v8 migration, skeleton lessons
+- [x] **Phase 32: Module 7 Infrastructure** - Register Module 7, v7-v8 migration, skeleton lessons (completed 2026-03-22)
 - [ ] **Phase 33: Module 7 Content (Lessons 1-3)** - Workstream namespacing, multi-project workspaces, cross-AI peer review
 - [ ] **Phase 34: Module 7 Content (Lessons 4-7)** - Workspace isolation, lifecycle, collaboration patterns, decision guidance
 - [ ] **Phase 35: Module 7 Mini-Project** - Cross-AI review orchestrator with verification and hints
@@ -150,7 +150,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 32-01-PLAN.md — Register Module 7 and add v7-to-v8 progress migration with tests
+- [x] 32-01-PLAN.md — Register Module 7 and add v7-to-v8 progress migration with tests
 - [x] 32-02-PLAN.md — Create 8 skeleton lessons with placeholder content
 
 ### Phase 33: Module 7 Content (Lessons 1-3)
@@ -248,7 +248,7 @@ Phases execute in numeric order: 31 → 32 → 33 → 34 → 35 → 36
 | 29. Mini-Project | v7.0 | 1/1 | Complete | 2026-03-20 |
 | 30. Export Update | v7.0 | 1/1 | Complete | 2026-03-20 |
 | 31. Existing Module Updates | v8.0 | 2/2 | Complete    | 2026-03-22 |
-| 32. Module 7 Infrastructure | v8.0 | 1/2 | In Progress|  |
+| 32. Module 7 Infrastructure | v8.0 | 2/2 | Complete   | 2026-03-22 |
 | 33. Module 7 Content (Lessons 1-3) | v8.0 | 0/1 | Not started | - |
 | 34. Module 7 Content (Lessons 4-7) | v8.0 | 0/1 | Not started | - |
 | 35. Module 7 Mini-Project | v8.0 | 0/1 | Not started | - |
