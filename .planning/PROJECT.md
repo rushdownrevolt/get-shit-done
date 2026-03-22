@@ -62,7 +62,26 @@ The learner can confidently modify and extend GSD for their own needs, validated
 
 ### Active
 
-<!-- Next milestone scope -->
+<!-- v8.0 scope -->
+
+- Update Module 1 lessons for new GSD v1.26-1.28 slash commands (forensics, fast, ship, next, profile-user, etc.)
+- Update Module 3 lessons for decision IDs, CLAUDE.md compliance (plan-checker Dimension 10)
+- Update Module 4 lessons for advisor mode, cross-AI peer review, MCP tool awareness
+- Update Module 5 lessons for enhanced verification (data-flow tracing, stub detection, regression gate, security hardening)
+- Update Module 6 lessons for multi-runtime support, forensics debugging, developer profiling
+- New Module 7: Workspaces & Collaboration (workstream namespacing, multi-project workspaces, cross-AI peer review)
+- Module 7 infrastructure (v7→v8 progress migration, module registration)
+- AI curriculum export updated with all module changes
+
+## Current Milestone: v8.0 GSD v1.26-1.28 Module Updates
+
+**Goal:** Update existing GSD Learn modules for features added in GSD v1.26-1.28 and add Module 7: Workspaces & Collaboration
+
+**Target features:**
+- Update Modules 1, 3, 4, 5, 6 for new GSD features (10+ new commands, advisor mode, enhanced verification, multi-runtime)
+- New Module 7: Workspaces & Collaboration — workstream namespacing, multi-project workspaces, cross-AI peer review
+- Module 7 infrastructure with v7→v8 progress migration
+- AI curriculum export with all changes
 
 ### Out of Scope
 
@@ -123,5 +142,22 @@ The learner can confidently modify and extend GSD for their own needs, validated
 | GSD-2 source as external content | Module 6 uses real snippets from npm-installed gsd-pi package rather than parsing own codebase; works because GSD-2 is installed globally | ✓ Good |
 | Dispatch-loop mini-project | Learner extends skeptic with auto-mode-inspired state machine; exercises concepts from all 7 lessons | ✓ Good |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd:transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-03-20 after v7.0 milestone*
+*Last updated: 2026-03-22 after v8.0 milestone start*
