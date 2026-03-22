@@ -64,11 +64,11 @@ The learner can confidently modify and extend GSD for their own needs, validated
 
 <!-- v8.0 scope -->
 
-- Update Module 1 lessons for new GSD v1.26-1.28 slash commands (forensics, fast, ship, next, profile-user, etc.)
-- Update Module 3 lessons for decision IDs, CLAUDE.md compliance (plan-checker Dimension 10)
-- Update Module 4 lessons for advisor mode, cross-AI peer review, MCP tool awareness
-- Update Module 5 lessons for enhanced verification (data-flow tracing, stub detection, regression gate, security hardening)
-- Update Module 6 lessons for multi-runtime support, forensics debugging, developer profiling
+- ✓ Update Module 1 lessons for /gsd:fast, /gsd:next, /gsd:ship — v8.0 Phase 31
+- ✓ Update Module 3 lessons for decision IDs, CLAUDE.md compliance — v8.0 Phase 31
+- ✓ Update Module 4 lessons for advisor mode — v8.0 Phase 31
+- ✓ Update Module 5 lessons for enhanced verification, stub detection, regression gate, security hardening — v8.0 Phase 31
+- ✓ Update Module 6 lessons for multi-runtime, forensics, developer profiling — v8.0 Phase 31
 - New Module 7: Workspaces & Collaboration (workstream namespacing, multi-project workspaces, cross-AI peer review)
 - Module 7 infrastructure (v7→v8 progress migration, module registration)
 - AI curriculum export updated with all module changes
@@ -160,4 +160,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-22 after v8.0 milestone start*
+*Last updated: 2026-03-22 after Phase 31 completion*
