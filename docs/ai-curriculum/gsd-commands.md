@@ -270,6 +270,286 @@ The design is intentional: markdown files are easy to read, edit, and version co
 
 ---
 
+## Lesson 7: The Fast Lane
+
+**Objective:** Understand how /gsd:fast skips planning overhead for trivial tasks, executing inline without subagents, plans, or verification -- and when to use it versus /gsd:quick.
+
+Sometimes you need to fix a typo, update a config value, or add a missing import. These are trivial tasks -- under 5 minutes, touching 3 files or fewer, needing zero research. For these, /gsd:quick's planning overhead (create PLAN.md, spawn subagents, run verification) is overkill. That's where /gsd:fast comes in. It's the fastest path from intent to committed code in GSD.
+
+```markdown
+<purpose>
+Execute a trivial task inline without subagent overhead. No PLAN.md, no Task spawning,
+no research, no plan checking. Just: understand -> do -> commit -> log.
+
+For tasks like: fix a typo, update a config value, add a missing import, rename a
+variable, commit uncommitted work, add a .gitignore entry, bump a version number.
+
+Use /gsd:quick for anything that needs multi-step planning or research.
+</purpose>
+```
+
+The purpose section makes the contract explicit: no PLAN.md, no Task spawning, no research, no plan checking. Compare this to /gsd:quick, which creates a plan, spawns a planner subagent, runs a plan checker, then spawns an executor subagent. The fast workflow does everything inline in the current context -- Claude reads the file, makes the change, commits, and logs it. The entire operation targets under 2 minutes of wall time.
+
+```markdown
+<step name="scope_check">
+**Before doing anything, verify this is actually trivial.**
+
+A task is trivial if it can be completed in:
+- <= 3 file edits
+- <= 1 minute of work
+- No new dependencies or architecture changes
+- No research needed
+
+If the task seems non-trivial (multi-file refactor, new feature, needs research),
+say:
+
+```
+This looks like it needs planning. Use /gsd:quick instead:
+  /gsd:quick "{task description}"
+```
+
+And stop.
+</step>
+```
+
+The scope check is a guardrail, not a suggestion. If the task needs more than 3 file edits, introduces new dependencies, or requires research, /gsd:fast redirects you to /gsd:quick. This prevents the temptation to use the fast path for work that actually needs planning. The criteria are concrete and checkable: file count, time estimate, dependency changes, research needs. No ambiguity.
+
+```markdown
+<step name="execute_inline">
+Do the work directly:
+
+1. Read the relevant file(s)
+2. Make the change(s)
+3. Verify the change works (run existing tests if applicable, or do a quick sanity check)
+
+**No PLAN.md.** Just do it.
+</step>
+
+<guardrails>
+- NEVER spawn a Task/subagent -- this runs inline
+- NEVER create PLAN.md or SUMMARY.md files
+- NEVER run research or plan-checking
+- If the task takes more than 3 file edits, STOP and redirect to /gsd:quick
+- If you're unsure how to implement it, STOP and redirect to /gsd:quick
+</guardrails>
+```
+
+Notice the pattern: read, change, verify -- three steps, no ceremony. The guardrails section reinforces this with NEVER rules. No subagents, no planning artifacts, no research. If uncertainty creeps in during execution, the workflow stops and redirects. This is a key design principle in GSD: each command has a clear scope boundary, and crossing it means switching to a different command rather than stretching the current one.
+
+Here's the GSD command spectrum from fastest to most thorough: /gsd:fast (no planning, no verification, single-agent inline), /gsd:quick (lightweight planning, executor subagent, optional verification), and the full /gsd:execute-phase pipeline (research, planning, plan-checking, parallel execution, verification). Each level adds safety at the cost of speed. /gsd:fast trades all safety mechanisms for raw speed -- appropriate only when the task is genuinely trivial. If you're unsure which to use, /gsd:quick is the safe default. /gsd:fast is for when you're certain.
+
+---
+
+## Lesson 8: Automatic Progression
+
+**Objective:** Understand how /gsd:next reads project state and automatically determines which GSD command to run next, eliminating the cognitive load of remembering the workflow progression.
+
+GSD projects follow a progression: discuss a phase, plan it, execute it, verify the work, complete the phase, then move to the next one. But remembering where you left off and which command to run next adds cognitive load -- especially when you return after a break. /gsd:next solves this by reading the project state and automatically dispatching to the correct next command. You type one command; GSD figures out the rest.
+
+```markdown
+<purpose>
+Detect current project state and automatically advance to the next logical GSD workflow step.
+Reads project state to determine: discuss -> plan -> execute -> verify -> complete progression.
+</purpose>
+
+<step name="detect_state">
+Read project state to determine current position:
+
+```bash
+# Get state snapshot
+node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" state json 2>/dev/null || echo "{}"
+```
+
+Also read:
+- `.planning/STATE.md` -- current phase, progress, plan counts
+- `.planning/ROADMAP.md` -- milestone structure and phase list
+
+Extract:
+- `current_phase` -- which phase is active
+- `plan_of` / `plans_total` -- plan execution progress
+- `progress` -- overall percentage
+- `status` -- active, paused, etc.
+</step>
+```
+
+The detect_state step loads everything GSD knows about the project: which phase is active, how many plans are complete, overall progress percentage, and whether work is paused. This is the same state that STATE.md tracks persistently across sessions. By reading it programmatically, /gsd:next can make an informed decision about what comes next without asking you anything.
+
+```markdown
+<step name="determine_next_action">
+Apply routing rules based on state:
+
+**Route 1: No phases exist yet -> discuss**
+If ROADMAP has phases but no phase directories exist on disk:
+-> Next action: `/gsd:discuss-phase <first-phase>`
+
+**Route 2: Phase exists but has no CONTEXT.md or RESEARCH.md -> discuss**
+If the current phase directory exists but has neither CONTEXT.md nor RESEARCH.md:
+-> Next action: `/gsd:discuss-phase <current-phase>`
+
+**Route 3: Phase has context but no plans -> plan**
+If the current phase has CONTEXT.md (or RESEARCH.md) but no PLAN.md files:
+-> Next action: `/gsd:plan-phase <current-phase>`
+
+**Route 4: Phase has plans but incomplete summaries -> execute**
+If plans exist but not all have matching summaries:
+-> Next action: `/gsd:execute-phase <current-phase>`
+
+**Route 5: All plans have summaries -> verify and complete**
+If all plans in the current phase have summaries:
+-> Next action: `/gsd:verify-work` then `/gsd:complete-phase`
+
+**Route 6: Phase complete, next phase exists -> advance**
+If the current phase is complete and the next phase exists in ROADMAP:
+-> Next action: `/gsd:discuss-phase <next-phase>`
+
+**Route 7: All phases complete -> complete milestone**
+If all phases are complete:
+-> Next action: `/gsd:complete-milestone`
+</step>
+```
+
+The decision tree has 8 routes, and each maps a project state to exactly one GSD command. The logic follows the natural GSD lifecycle: discuss, plan, execute, verify, complete. Route 1 handles brand-new phases. Routes 2-5 handle the progression within a single phase. Route 6 advances across phases. Route 7 completes the entire milestone. Route 8 (not shown) handles paused projects by routing to /gsd:resume-work. Every possible state maps to a clear next action.
+
+```markdown
+<step name="show_and_execute">
+Display the determination:
+
+```
+## GSD Next
+
+**Current:** Phase [N] -- [name] | [progress]%
+**Status:** [status description]
+
+> **Next step:** `/gsd:[command] [args]`
+  [One-line explanation of why this is the next step]
+```
+
+Then immediately invoke the determined command via SlashCommand.
+Do not ask for confirmation -- the whole point of `/gsd:next` is zero-friction advancement.
+</step>
+```
+
+The key line is 'Do not ask for confirmation.' /gsd:next is designed for zero-friction advancement. It shows you what it detected and what it's about to do, then immediately invokes the command. This is what makes it a true progression command rather than just a status display. Combined with GSD's auto-advance feature, /gsd:next can chain entire sequences: discuss, plan, execute, verify -- all from a single invocation.
+
+/gsd:next embodies a core GSD principle: the system should know where you are and what comes next. By encoding the discuss-plan-execute-verify-complete lifecycle into routing rules, it transforms a multi-step workflow into a single repeatable command. Type /gsd:next, and GSD handles the rest. This is especially powerful when returning to a project after days or weeks -- instead of reading STATE.md and figuring out the next step, you let the state-driven dispatch do it for you.
+
+---
+
+## Lesson 9: Ship It
+
+**Objective:** Understand how /gsd:ship creates pull requests from verified work, auto-generating rich PR bodies from planning artifacts and running pre-flight safety checks before pushing.
+
+You've discussed, planned, executed, and verified a phase. The code works, tests pass, and SUMMARY.md files document what was built. Now it's time to ship -- create a pull request that communicates all of this to reviewers. /gsd:ship automates PR creation by reading GSD's planning artifacts to generate a rich PR body, running pre-flight safety checks, and using the GitHub CLI to create the PR. No manual PR descriptions needed.
+
+```markdown
+<step name="preflight_checks">
+Verify the work is ready to ship:
+
+1. **Verification passed?**
+   ```bash
+   VERIFICATION=$(cat ${PHASE_DIR}/*-VERIFICATION.md 2>/dev/null)
+   ```
+   Check for `status: passed` or `status: human_needed` (with human approval).
+   If no VERIFICATION.md or status is `gaps_found`: warn and ask user to confirm.
+
+2. **Clean working tree?**
+   ```bash
+   git status --short
+   ```
+   If uncommitted changes exist: ask user to commit or stash first.
+
+3. **On correct branch?**
+   ```bash
+   CURRENT_BRANCH=$(git branch --show-current)
+   ```
+   If on `main`/`master`: warn -- should be on a feature branch.
+
+4. **Remote configured?**
+   ```bash
+   git remote -v | head -2
+   ```
+   Detect `origin` remote. If no remote: error -- can't create PR.
+
+5. **`gh` CLI available?**
+   ```bash
+   which gh && gh auth status 2>&1
+   ```
+   If `gh` not found or not authenticated: provide setup instructions and exit.
+</step>
+```
+
+Five pre-flight checks run before anything touches GitHub. Verification status is checked first -- shipping unverified work requires explicit user confirmation. Clean working tree prevents accidental inclusion of uncommitted changes. Branch verification catches the common mistake of trying to PR from main. Remote and gh CLI checks ensure the infrastructure exists. Each check either passes silently or stops with a clear message. No silent failures.
+
+```markdown
+<step name="generate_pr_body">
+Auto-generate a rich PR body from planning artifacts:
+
+**1. Title:**
+```
+Phase {phase_number}: {phase_name}
+```
+
+**2. Summary section:**
+Read ROADMAP.md for phase goal. Read VERIFICATION.md for verification status.
+
+```markdown
+## Summary
+
+**Phase {N}: {Name}**
+**Goal:** {goal from ROADMAP.md}
+**Status:** Verified
+
+{One paragraph synthesized from SUMMARY.md files -- what was built}
+```
+
+**3. Changes section:**
+For each SUMMARY.md in the phase directory:
+```markdown
+## Changes
+
+### Plan {plan_id}: {plan_name}
+{one_liner from SUMMARY.md frontmatter}
+
+**Key files:**
+{key-files.created and key-files.modified from SUMMARY.md frontmatter}
+```
+</step>
+```
+
+The PR body is not written from scratch -- it's assembled from artifacts that already exist. ROADMAP.md provides the phase goal. VERIFICATION.md provides the verification status. Each SUMMARY.md contributes its one-liner description and key files list. This means every PR body is consistent, complete, and accurate -- it reflects what actually happened, not what someone remembers happening. The artifact chain from discuss through ship creates end-to-end traceability.
+
+```markdown
+<step name="create_pr">
+Create the PR using the generated body:
+
+```bash
+gh pr create \
+  --title "Phase ${PHASE_NUMBER}: ${PHASE_NAME}" \
+  --body "${PR_BODY}" \
+  --base main
+```
+
+If `--draft` flag was passed: add `--draft`.
+
+Report: "PR #{number} created: {url}"
+</step>
+
+<step name="track_shipping">
+Update STATE.md to reflect the shipping action:
+
+```bash
+node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" state update "Status" \
+  "Phase ${PHASE_NUMBER} shipped -- PR #${PR_NUMBER}"
+```
+</step>
+```
+
+The gh CLI does the heavy lifting of PR creation. After the PR is created, STATE.md is updated to reflect the shipping action -- maintaining the audit trail. /gsd:ship also offers optional code review routing: skip review, self-review, or request review from a teammate. This flexibility lets solo developers ship quickly while teams can enforce review workflows.
+
+/gsd:ship closes the GSD lifecycle loop. The full pipeline runs: /gsd:discuss-phase captures decisions, /gsd:plan-phase creates executable plans, /gsd:execute-phase builds the code, /gsd:verify-work confirms correctness, and /gsd:ship turns it all into a PR. Each step reads artifacts from previous steps, so no information is lost. The PR body proves this -- it contains the phase goal from ROADMAP.md, verification status from the checker, and change details from SUMMARY.md files. Reviewers see not just what changed, but why it changed and how it was verified.
+
+---
+
 ## Concept Map
 
 ```

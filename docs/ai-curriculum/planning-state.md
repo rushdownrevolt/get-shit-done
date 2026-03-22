@@ -596,6 +596,184 @@ You now understand the complete GSD planning system -- from the first /gsd:kicko
 
 ---
 
+## Lesson 8: Decision Traceability
+
+**Objective:** Understand how decision IDs (D-01, D-02, etc.) flow from discuss-phase through plan-phase, creating an unbroken traceability chain that prevents scope drift and ensures user preferences are honored in every task.
+
+When you discuss a phase with /gsd:discuss-phase, you make decisions: 'use card layout,' 'no animations,' 'infinite scroll.' These decisions need to survive the handoff to the planner and executor agents who do the actual work. If a decision gets lost or misinterpreted, the built feature won't match your intent. GSD solves this with decision IDs -- each decision gets a unique identifier (D-01, D-02, etc.) that flows through every downstream artifact, creating a traceability chain from discussion to implementation.
+
+```markdown
+<decisions>
+## Implementation Decisions
+
+### [Category 1 that was discussed]
+- **D-01:** [Decision or preference captured]
+- **D-02:** [Another decision if applicable]
+
+### [Category 2 that was discussed]
+- **D-03:** [Decision or preference captured]
+
+### Claude's Discretion
+[Areas where user said "you decide" -- note that Claude has flexibility here]
+
+### Folded Todos
+[If any todos were folded into scope from the cross_reference_todos step, list them here.]
+
+</decisions>
+```
+
+This is the CONTEXT.md output format from discuss-phase. Each decision gets a numbered ID: D-01, D-02, D-03, and so on. The decisions section has three tiers. Locked decisions (D-01, D-02, etc.) are things the user explicitly chose -- these are non-negotiable. Claude's Discretion covers areas where the user said 'you decide' -- the planner has flexibility here. Deferred Ideas (captured in a separate section) are features explicitly excluded from this phase. This taxonomy -- locked, discretion, deferred -- gives downstream agents clear rules for each decision.
+
+```markdown
+<context_fidelity>
+## CRITICAL: User Decision Fidelity
+
+The orchestrator provides user decisions in `<user_decisions>` tags from `\gsd:discuss-phase`.
+
+1. **Locked Decisions (from `## Implementation Decisions`)** -- MUST be implemented exactly
+   - If user said "use library X" -> task MUST use library X, not an alternative
+   - If user said "card layout" -> task MUST implement cards, not tables
+   - If user said "no animations" -> task MUST NOT include animations
+   - Reference the decision ID (D-01, D-02, etc.) in task actions for traceability
+
+2. **Deferred Ideas (from `## Deferred Ideas`)** -- MUST NOT appear in plans
+   - If user deferred "search functionality" -> NO search tasks allowed
+
+3. **Claude's Discretion (from `### Claude's Discretion`)** -- Claude chooses
+   - Make reasonable choices and document in task actions
+
+**Self-check before returning:** For each plan, verify:
+- [ ] Every locked decision (D-01, D-02, etc.) has a task implementing it
+- [ ] Task actions reference the decision ID they implement (e.g., "per D-03")
+- [ ] No task implements a deferred idea
+- [ ] Discretion areas are handled reasonably
+</context_fidelity>
+```
+
+The planner's context_fidelity section is marked CRITICAL for a reason. Every locked decision must have a task implementing it -- 100% coverage, no exceptions. Task actions must reference the decision ID they implement (e.g., 'per D-03') so reviewers can trace any piece of code back to the user's original decision. Deferred ideas are explicitly blocked from appearing in plans. And if a conflict exists -- say, research suggests library Y but the user locked library X -- the user's locked decision wins. The note 'Using X per user decision (research suggested Y)' makes the override visible.
+
+```markdown
+**Process:**
+1. Parse CONTEXT.md sections: Decisions, Claude's Discretion, Deferred Ideas
+2. Extract all numbered decisions (D-01, D-02, etc.) from the `<decisions>` section
+3. For each locked Decision, find implementing task(s) -- check task actions for D-XX references
+4. Verify 100% decision coverage: every D-XX must appear in at least one task's action or rationale
+5. Verify no tasks implement Deferred Ideas (scope creep)
+
+**Red flags:**
+- Locked decision has no implementing task
+- Task contradicts a locked decision (e.g., user said "cards layout", plan says "table layout")
+- Task implements something from Deferred Ideas
+- Plan ignores user's stated preference
+
+issue:
+  dimension: context_compliance
+  severity: blocker
+  description: "Plan contradicts locked decision: user specified 'card layout' but Task 2 implements 'table layout'"
+  plan: "01"
+  task: 2
+  user_decision: "Layout: Cards (from Decisions section)"
+```
+
+The plan checker runs after the planner finishes and independently verifies context compliance. It extracts every D-XX decision ID, checks that each has an implementing task, and flags any contradictions as blockers. A blocker means the plan cannot proceed to execution until fixed. This double verification -- planner self-check plus independent checker -- ensures that user decisions survive the entire planning pipeline. If you said 'card layout' and the planner writes 'table layout,' the checker catches it.
+
+Decision IDs create end-to-end traceability: you make a decision during discussion (D-01 in CONTEXT.md), the planner references it in the task action ('implement card layout per D-01'), the executor builds what the task says, and the plan checker independently verifies the chain is unbroken. This prevents the most common failure mode in AI-assisted development: the system builds something technically correct but different from what the user intended. With decision IDs, intent is preserved as a first-class artifact, not a suggestion lost in natural language.
+
+---
+
+## Lesson 9: CLAUDE.md as Dimension 10
+
+**Objective:** Understand how the plan checker validates plans against project-specific CLAUDE.md instructions, enforcing coding conventions, forbidden patterns, and required tools as a dedicated verification dimension.
+
+Every project has its own rules: 'use Vitest not Jest,' 'never import from the barrel file,' 'all API routes must have rate limiting.' In a traditional workflow, these rules live in a developer's head or a wiki page that AI tools never read. GSD formalizes this with CLAUDE.md -- a file in the project root that contains project-specific instructions. The plan checker treats CLAUDE.md as Dimension 10: a dedicated verification dimension that ensures every plan respects the project's unique conventions and constraints.
+
+```markdown
+**Project instructions:** Read ./CLAUDE.md if exists -- follow project-specific guidelines
+**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists) --
+read SKILL.md files, plans should account for project skill rules
+
+## Spawn gsd-planner Agent
+
+Planner prompt:
+```markdown
+<planning_context>
+**Phase:** {phase_number}
+
+<files_to_read>
+- {state_path} (Project State)
+- {roadmap_path} (Roadmap)
+- {requirements_path} (Requirements)
+- {context_path} (USER DECISIONS from /gsd:discuss-phase)
+- {research_path} (Technical Research)
+</files_to_read>
+
+**Project instructions:** Read ./CLAUDE.md if exists -- follow project-specific guidelines
+**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists)
+</planning_context>
+```
+```
+
+CLAUDE.md appears at two stages. First, the plan-phase orchestrator instructs both the planner and checker agents to read it. The planner uses CLAUDE.md to ensure plans don't violate project rules during creation. Then the checker independently verifies compliance during review. This means CLAUDE.md rules are enforced twice -- once proactively (planner reads the rules) and once reactively (checker flags violations). The dual enforcement is intentional: it catches rules the planner might overlook.
+
+```markdown
+## Dimension 10: CLAUDE.md Compliance
+
+**Question:** Do plans respect project-specific conventions, constraints, and requirements
+from CLAUDE.md?
+
+**Process:**
+1. Read `./CLAUDE.md` in the working directory
+2. Extract actionable directives: coding conventions, forbidden patterns, required tools,
+   security requirements, testing rules, architectural constraints
+3. For each directive, check if any plan task contradicts or ignores it
+4. Flag plans that introduce patterns CLAUDE.md explicitly forbids
+5. Flag plans that skip steps CLAUDE.md explicitly requires
+
+**Red flags:**
+- Plan uses a library/pattern CLAUDE.md explicitly forbids
+- Plan skips a required step (e.g., CLAUDE.md says "always run X before Y" but plan omits X)
+- Plan introduces code style that contradicts CLAUDE.md conventions
+- Plan creates files in locations that violate CLAUDE.md's architectural constraints
+- Plan ignores security requirements documented in CLAUDE.md
+
+**Skip condition:** If no `./CLAUDE.md` exists in the working directory,
+output: "Dimension 10: SKIPPED (no CLAUDE.md found)" and move on.
+```
+
+Dimension 10 follows a clear process: extract directives from CLAUDE.md, then check each one against every plan task. It looks for five categories of violations: forbidden libraries or patterns, skipped required steps, contradicted code styles, wrong file locations, and missing security requirements. The skip condition is important -- projects without CLAUDE.md simply skip this dimension. There's no penalty for not having one, but projects that do have one get automatic compliance checking.
+
+```yaml
+# Example: CLAUDE.md says "always use Vitest, never Jest"
+# Plan Task 1 says "Install Jest and create test suite..."
+
+issue:
+  dimension: claude_md_compliance
+  severity: blocker
+  description: "Plan uses Jest for testing but CLAUDE.md requires Vitest"
+  plan: "01"
+  task: 1
+  claude_md_rule: "Testing: Always use Vitest, never Jest"
+  plan_action: "Install Jest and create test suite..."
+  fix_hint: "Replace Jest with Vitest per project CLAUDE.md"
+
+# Example: CLAUDE.md says "All tasks must run eslint before committing"
+# Plan 02 has no lint step
+
+issue:
+  dimension: claude_md_compliance
+  severity: warning
+  description: "Plan does not include lint step required by CLAUDE.md"
+  plan: "02"
+  claude_md_rule: "All tasks must run eslint before committing"
+  fix_hint: "Add eslint verification step to each task's <verify> block"
+```
+
+Violations come in two severities. A blocker (like using a forbidden library) stops the plan from proceeding to execution -- the planner must fix it in the revision loop. A warning (like a missing lint step) is flagged but doesn't block execution. Each issue includes the exact CLAUDE.md rule being violated, what the plan does wrong, and a fix hint. This structured format lets the planner make targeted fixes without guessing what went wrong.
+
+CLAUDE.md as Dimension 10 completes the plan checker's verification model. Dimensions 1-9 check universal quality (task specificity, dependency correctness, must-haves coverage, etc.). Dimension 10 checks project-specific quality -- the rules that make YOUR project unique. Together, they ensure plans are both generally well-formed and specifically compliant with your project's conventions. For teams using GSD across multiple projects, CLAUDE.md is what customizes the same planning pipeline to respect each project's unique constraints without modifying the pipeline itself.
+
+---
+
 ## Concept Map
 
 ```

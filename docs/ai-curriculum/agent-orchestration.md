@@ -582,6 +582,97 @@ GSD's orchestration is not magic -- it is structured decomposition. Break work i
 
 ---
 
+## Lesson 9: Advisor Mode
+
+**Objective:** Explain how discuss-phase spawns parallel research agents to evaluate uncertain areas before presenting synthesized recommendations to the user.
+
+When you run /gsd:discuss-phase, GSD identifies gray areas -- implementation decisions that could go multiple ways and would change the result. In simple cases, the workflow asks you directly. But when advisor mode is active, GSD does something more powerful: it spawns parallel research agents to investigate each gray area independently, then synthesizes their findings into comparison tables so you can make informed decisions. Advisor mode transforms discussion from 'what do you think?' into 'here are the trade-offs we found -- which direction?'
+
+```text
+From discuss-phase.md — Advisor Mode Detection:
+
+**Advisor Mode Detection:**
+
+Check if advisor mode should activate:
+
+1. Check for USER-PROFILE.md:
+   ```bash
+   PROFILE_PATH="$HOME/.claude/get-shit-done/USER-PROFILE.md"
+   ```
+   ADVISOR_MODE = file exists at PROFILE_PATH -> true, otherwise -> false
+
+2. If ADVISOR_MODE is true, resolve vendor_philosophy calibration tier:
+   - Priority 1: Read config.json > preferences.vendor_philosophy
+   - Priority 2: Read USER-PROFILE.md Vendor Choices/Philosophy rating
+   - Priority 3: Default to "standard" if neither has a value
+
+   Map to calibration tier:
+   - conservative OR thorough-evaluator -> full_maturity
+   - opinionated -> minimal_decisive
+   - pragmatic-fast OR any other value -> standard
+```
+
+Advisor mode activates based on your developer profile. If you have run /gsd:profile-user and a USER-PROFILE.md exists, the system knows enough about your decision-making style to calibrate its research. The calibration tier controls how many options each research agent presents: a thorough evaluator gets 3-5 options with full maturity analysis, a pragmatic-fast developer gets 2-4 options at standard depth, and an opinionated developer gets 1-2 options with minimal overhead. The system adapts to how you actually make decisions.
+
+```text
+From discuss-phase.md — Spawning Parallel Research Agents:
+
+After user selects gray areas, spawn parallel research agents.
+
+1. Display brief status: "Researching {N} areas..."
+
+2. For EACH user-selected gray area, spawn a Task() in parallel:
+
+   Task(
+     prompt="First, read @.../gsd-advisor-researcher.md...
+
+     <gray_area>{area_name}: {area_description}</gray_area>
+     <phase_context>{phase_goal from ROADMAP.md}</phase_context>
+     <project_context>{project name and description}</project_context>
+     <calibration_tier>{full_maturity | standard | minimal_decisive}</calibration_tier>
+
+     Research this gray area and return a structured comparison
+     table with rationale.",
+     subagent_type="general-purpose",
+     model="{ADVISOR_MODEL}",
+     description="Research: {area_name}"
+   )
+
+   All Task() calls spawn simultaneously -- do NOT wait for one
+   before starting the next.
+```
+
+The parallel spawning is key. If you selected 4 gray areas to discuss, GSD does not research them one at a time -- it launches 4 research agents simultaneously. Each agent gets a focused prompt with the specific gray area, the phase context from ROADMAP.md, the project description, and the calibration tier. Because each agent runs in a fresh context window, they all operate at peak quality. The result is 4 independent research reports completed in the time it takes for one.
+
+```text
+From discuss-phase.md — Synthesizing Research Results:
+
+After ALL agents return, SYNTHESIZE results before presenting:
+
+For each agent's return:
+  a. Parse the markdown comparison table and rationale paragraph
+  b. Verify all 5 columns present:
+     (Option | Pros | Cons | Complexity | Recommendation)
+     Fill any missing columns rather than showing broken table
+  c. Verify option count matches calibration tier:
+     - full_maturity: 3-5 options acceptable
+     - standard: 2-4 options acceptable
+     - minimal_decisive: 1-2 options acceptable
+     If agent returned too many, trim least viable.
+  d. Rewrite rationale paragraph to weave in project context
+     and ongoing discussion context that the agent did not
+     have access to
+  e. If agent returned only 1 option, convert from table format
+     to direct recommendation:
+     "Standard approach for {area}: {option}. {rationale}"
+```
+
+The synthesis step is what separates advisor mode from raw agent output. Each research agent works in isolation -- it does not know about your ongoing conversation, other gray areas being researched, or decisions you have already made in the discussion. The orchestrator fills these gaps: it rewrites rationale paragraphs to include project context the agents lacked, trims option counts to match your calibration tier, ensures table formatting is complete, and converts single-option results into direct recommendations. The user sees polished comparison tables, not raw agent output.
+
+From the user's perspective, advisor mode is seamless: you select which gray areas to discuss, wait briefly while research runs in parallel, then see a comparison table for each area with clear options, pros, cons, and a recommendation. You pick your preferred option (or specify something different), and the decision is recorded in CONTEXT.md for downstream agents. The entire discuss-phase workflow -- from gray area identification through advisor research to final decisions -- ensures that planning agents receive clear, user-validated decisions without the user needing to know about agent orchestration, calibration tiers, or synthesis steps.
+
+---
+
 ## Concept Map
 
 ```

@@ -625,6 +625,308 @@ GSD-2 is a methodology that became executable. Every concept from the original G
 
 ---
 
+## Lesson 9: Multi-Runtime Support
+
+**Objective:** Explain how GSD-2 supports Cursor CLI, Gemini CLI, and other AI runtimes alongside Claude Code through a provider registry and health checking system.
+
+GSD started as a Claude Code-only framework. But different AI models excel at different tasks -- Claude for planning and writing, GPT for certain code patterns, Gemini for large-context analysis. GSD-2 abstracts the runtime layer so you can use any supported AI provider. The system tracks which runtime is executing each unit of work, checks provider health before dispatching, and lets you configure per-phase model preferences. Multi-runtime support means GSD adapts to your available tools rather than locking you into one provider.
+
+```typescript
+// From unit-runtime.ts — Runtime Phase Tracking:
+
+export type UnitRuntimePhase =
+  | "dispatched"
+  | "wrapup-warning-sent"
+  | "timeout"
+  | "recovered"
+  | "finalized"
+  | "paused"
+  | "skipped";
+
+export interface AutoUnitRuntimeRecord {
+  version: 1;
+  unitType: string;
+  unitId: string;
+  startedAt: number;
+  updatedAt: number;
+  phase: UnitRuntimePhase;
+  wrapupWarningSent: boolean;
+  continueHereFired: boolean;
+  timeoutAt: number | null;
+  lastProgressAt: number;
+  progressCount: number;
+  lastProgressKind: string;
+  recovery?: ExecuteTaskRecoveryStatus;
+  recoveryAttempts?: number;
+  lastRecoveryReason?: "idle" | "hard";
+}
+```
+
+Every unit of work in GSD-2 has a runtime record that tracks its lifecycle phase -- from dispatched through finalized or timeout. The UnitRuntimePhase type captures the seven possible states: dispatched (agent is working), wrapup-warning-sent (approaching timeout), timeout (exceeded time limit), recovered (restarted after failure), finalized (successfully completed), paused (waiting for human input), and skipped (bypassed). The AutoUnitRuntimeRecord interface tracks progress counts, last progress timestamps, and recovery attempts. This state lives on disk, so the system can resume from any point after a crash.
+
+```typescript
+// From doctor-providers.ts — Provider Health Checking:
+
+export type ProviderCheckStatus = "ok" | "warning" | "error" | "unconfigured";
+
+export interface ProviderCheckResult {
+  /** Provider id from PROVIDER_REGISTRY (e.g. "anthropic") */
+  name: string;
+  /** Human-readable label */
+  label: string;
+  /** Functional grouping */
+  category: ProviderCategory;
+  status: ProviderCheckStatus;
+  message: string;
+  /** Optional extra detail (e.g. which env var to set) */
+  detail?: string;
+  /** True if this provider is actively required by preferences */
+  required: boolean;
+}
+```
+
+The doctor-providers module checks every configured provider before GSD-2 starts autonomous execution. Each provider gets a ProviderCheckResult with a clear status: ok (key found and valid), warning (key present but may have issues), error (required but missing), or unconfigured (optional and not set up). The 'required' flag distinguishes providers you have configured in your model preferences from optional ones. Running /gsd doctor shows you which providers are healthy, which are missing keys, and which environment variables to set. No network calls -- it checks key presence in auth.json and environment variables for sub-10ms results.
+
+```typescript
+// From key-manager.ts — Provider Registry:
+
+export type ProviderCategory = "llm" | "tool" | "search" | "remote";
+
+export const PROVIDER_REGISTRY: ProviderInfo[] = [
+  // LLM Providers
+  { id: "anthropic",         label: "Anthropic (Claude)",
+    category: "llm", envVar: "ANTHROPIC_API_KEY" },
+  { id: "openai",            label: "OpenAI",
+    category: "llm", envVar: "OPENAI_API_KEY" },
+  { id: "github-copilot",    label: "GitHub Copilot",
+    category: "llm", hasOAuth: true },
+  { id: "google-gemini-cli", label: "Google Gemini CLI",
+    category: "llm", hasOAuth: true },
+  { id: "google",            label: "Google (Gemini)",
+    category: "llm", envVar: "GEMINI_API_KEY" },
+  { id: "groq",              label: "Groq",
+    category: "llm", envVar: "GROQ_API_KEY" },
+  { id: "xai",               label: "xAI (Grok)",
+    category: "llm", envVar: "XAI_API_KEY" },
+  { id: "openrouter",        label: "OpenRouter",
+    category: "llm", envVar: "OPENROUTER_API_KEY" },
+  // ... plus tool, search, and remote integrations
+];
+```
+
+The PROVIDER_REGISTRY is the single source of truth for all supported providers. Each entry specifies an id, human-readable label, category (LLM, tool, search, or remote integration), optional environment variable name, and authentication method (API key or OAuth). Adding a new provider means adding one entry to this array -- no control flow changes needed. The registry pattern mirrors GSD's declarative dispatch philosophy: data structures drive behavior, not if-else chains. Categories let the doctor command group providers logically: LLM providers for model execution, tool providers for integrations like Context7, search providers for web research, and remote providers for notification channels.
+
+Multi-runtime support is the natural extension of GSD-2's state-on-disk principle. Because every unit's runtime phase is tracked in a JSON file, the system does not care which AI model executed it -- it cares whether the artifact was produced. The provider registry tells the system what is available. The doctor checks tell the system what is healthy. The model preferences in config tell the system what to use for each phase. And the unit runtime record tracks what actually happened. This separation of concerns means you can switch from Claude to Gemini for a specific phase without changing any workflow code -- you change a config value.
+
+---
+
+## Lesson 10: Forensics Debugging
+
+**Objective:** Explain how /gsd:forensics performs post-mortem investigation of failed or stuck workflows by gathering evidence from git, planning state, and file system artifacts.
+
+When a GSD workflow fails or gets stuck, the question is not 'what broke?' but 'why did it break, and what was the system doing when it happened?' /gsd:forensics is a read-only investigation tool that reconstructs the failure timeline by examining git history, planning artifacts, worktree state, and session reports. It detects anomaly patterns like stuck loops, missing artifacts, abandoned work, and scope drift. The output is a structured diagnostic report with evidence, root cause hypothesis, and specific remediation steps.
+
+```text
+From forensics.md — Evidence Gathering:
+
+Step 2: Gather Evidence
+
+2a. Git History:
+  git log --oneline -30
+  git log --format="%H %ai %s" -30     (timestamps for gap analysis)
+  git log --name-only --format="" -20   (detect repeated edits)
+  git status --short                     (uncommitted work)
+  git diff --stat
+
+2b. Planning State:
+  .planning/STATE.md   -- current milestone, phase, progress, blockers
+  .planning/ROADMAP.md -- phase list with status
+  .planning/config.json -- workflow configuration
+
+2c. Phase Artifacts:
+  For each phase: check PLAN.md, SUMMARY.md, VERIFICATION.md,
+  CONTEXT.md, RESEARCH.md existence
+  Track which phases have complete artifact sets vs gaps
+
+2d. Session Reports:
+  .planning/reports/SESSION_REPORT.md -- last outcomes, token estimates
+
+2e. Git Worktree State:
+  git worktree list    (check for orphaned worktrees from crashed agents)
+```
+
+Forensics gathers evidence from five sources. Git history reveals the timeline: what was committed, when, and how frequently. Planning state shows where the system thinks it is versus where it actually is. Phase artifacts reveal gaps: a phase with PLAN.md but no SUMMARY.md was started but never finished. Session reports provide the last known good state. Worktree state catches orphaned worktrees from crashed autonomous agents. Each source independently contributes pieces of the puzzle. Together, they reconstruct the full picture of what went wrong.
+
+```text
+From forensics.md — Anomaly Detection Patterns:
+
+Stuck Loop Detection:
+  Signal: Same file appears in 3+ consecutive commits
+  within a short time window.
+  HIGH confidence if commit messages are similar
+  (e.g., "fix:", "fix:", "fix:" on same file)
+  MEDIUM confidence if file appears frequently
+  but messages vary
+
+Missing Artifact Detection:
+  Signal: Phase appears complete but lacks expected artifacts.
+  PLAN.md missing   -> planning step was skipped
+  SUMMARY.md missing -> phase was not properly closed
+  VERIFICATION.md missing -> quality check was skipped
+
+Abandoned Work Detection:
+  Signal: Large gap between last commit and current time,
+  with STATE.md showing mid-execution.
+
+Crash/Interruption Detection:
+  Signal: Uncommitted changes + STATE.md shows
+  mid-execution + orphaned worktrees.
+
+Scope Drift Detection:
+  Signal: Recent commits touch files outside the
+  current phase's expected scope.
+```
+
+Each anomaly pattern targets a specific failure mode. Stuck loops (the same file committed 3+ times in sequence) indicate an agent retrying the same fix repeatedly. Missing artifacts show where the workflow was skipped or interrupted. Abandoned work (long gap since last commit while STATE.md shows active execution) indicates a crash or manual interruption. Scope drift (commits touching files outside the phase's expected domain) indicates an agent working on the wrong thing. The confidence levels (HIGH, MEDIUM, LOW) help you prioritize which anomalies to investigate first.
+
+```text
+From forensics.md — Report Structure:
+
+# Forensic Report
+
+**Generated:** {ISO timestamp}
+**Problem:** {user's description}
+
+## Evidence Summary
+
+### Git Activity
+- **Last commit:** {date} -- "{message}"
+- **Commits (last 30):** {count}
+- **Time span:** {earliest} -> {latest}
+- **Uncommitted changes:** {yes/no}
+- **Active worktrees:** {count}
+
+### Artifact Completeness
+| Phase | PLAN | CONTEXT | RESEARCH | SUMMARY | VERIFICATION |
+|-------|------|---------|----------|---------|--------------|
+{for each phase: name | yes/no per artifact}
+
+## Anomalies Detected
+### {Anomaly Type} -- {Confidence: HIGH/MEDIUM/LOW}
+**Evidence:** {specific commits, files, or state data}
+**Interpretation:** {what this likely means}
+
+## Root Cause Hypothesis
+{1-3 sentence hypothesis grounded in the anomalies}
+
+## Recommended Actions
+1. {Specific, actionable remediation step}
+```
+
+The report follows a disciplined structure: evidence first, interpretation second, action third. The evidence summary presents raw facts from git and planning state without interpretation. The anomalies section maps evidence to known failure patterns with confidence levels. The root cause hypothesis synthesizes anomalies into a 1-3 sentence explanation grounded in the evidence -- not speculation. The recommended actions give specific next steps: a /gsd:execute-phase command to resume, a file to fix, or a worktree to clean up. Absolute paths are redacted for portability.
+
+Use /gsd:forensics after any unexpected failure: autonomous mode got stuck, a phase failed silently, costs seem unusually high (indicating stuck loops), or the project state feels inconsistent. The command is read-only -- it never modifies project files, only writes the forensic report. This makes it safe to run at any time without fear of making things worse. Forensics embodies the same principle as the rest of GSD's quality system: evidence-based investigation, not guessing. The git history, planning artifacts, and worktree state tell you exactly what happened -- forensics just reads the evidence and presents it clearly.
+
+---
+
+## Lesson 11: Developer Profiling
+
+**Objective:** Explain how /gsd:profile-user builds a developer profile across 8 behavioral dimensions to personalize GSD interactions.
+
+Every Claude conversation starts generic. Claude does not know if you prefer terse commands or detailed explanations, if you evaluate libraries carefully or pick the first popular option, or if you debug by reading stack traces or by adding log statements. /gsd:profile-user analyzes your actual Claude Code sessions to build a profile across 8 behavioral dimensions. This profile is stored locally and used by GSD workflows to calibrate their behavior -- advisor mode adjusts research depth, explanations match your preferred detail level, and suggestions align with your decision style.
+
+```text
+From profile-user.md — The 8 Behavioral Dimensions:
+
+| Dimension            | What It Measures                            |
+|----------------------|---------------------------------------------|
+| Communication Style  | How you phrase requests (terse vs. detailed) |
+| Decision Speed       | How you choose between options               |
+| Explanation Depth    | How much explanation you want with code      |
+| Debugging Approach   | How you tackle errors and bugs               |
+| UX Philosophy        | How much you care about design vs. function  |
+| Vendor Philosophy    | How you evaluate libraries and tools         |
+| Frustration Triggers | What makes you correct Claude                |
+| Learning Style       | How you prefer to learn new things           |
+
+Data Handling:
+  Reads session files locally (read-only, nothing modified)
+  Analyzes message patterns (not content meaning)
+  Stores profile at $HOME/.claude/get-shit-done/USER-PROFILE.md
+  Nothing is sent to external services
+  Sensitive content (API keys, passwords) automatically excluded
+```
+
+The 8 dimensions capture how you work, not what you work on. Communication Style detects whether you give Claude terse commands ('fix the auth bug') or detailed specifications. Decision Speed tracks whether you deliberate between options or pick quickly. Vendor Philosophy is particularly important for advisor mode -- it determines the calibration tier (thorough evaluator gets 3-5 options, pragmatic-fast gets 2-4, opinionated gets 1-2). Frustration Triggers reveal what makes you correct Claude, so the system can avoid those patterns proactively.
+
+```text
+From profile-user.md — Data Gathering Pipeline:
+
+1. Initialize:
+   Parse flags: --questionnaire (skip sessions), --refresh
+   Check for existing profile at USER-PROFILE.md
+   If exists: offer View / Refresh / Cancel
+
+2. Consent Gate:
+   Display what will be analyzed
+   User explicitly opts in before any data is read
+
+3. Session Scan:
+   node gsd-tools.cjs scan-sessions --json
+   Found N sessions across M projects
+
+4a. Session Analysis Path:
+   node gsd-tools.cjs profile-sample --json
+   Spawn gsd-user-profiler agent with sampled messages
+   Agent analyzes patterns across all 8 dimensions
+   Returns structured analysis JSON
+
+4b. Questionnaire Path (fallback):
+   8 questions, one per dimension
+   User selects from predefined answer options
+   Answers converted to analysis scores
+
+5. Profile Generation:
+   Analysis -> USER-PROFILE.md
+```
+
+The profiling pipeline has a consent gate before reading any data -- the user explicitly opts in. There are two paths: session analysis (the primary path) reads your actual Claude Code sessions and uses a profiler agent to detect patterns across all 8 dimensions. The questionnaire path is a fallback for users without enough session history -- 8 multiple-choice questions, one per dimension. Both paths produce the same structured analysis format. The system also detects 'splits' -- dimensions where you behave differently across projects (e.g., terse in personal projects, detailed at work) -- and asks you to resolve them.
+
+```text
+From profile-user.md — Profile Storage and Usage:
+
+Profile stored at:
+  $HOME/.claude/get-shit-done/USER-PROFILE.md
+
+Profile influences GSD behavior:
+
+1. Advisor Mode (discuss-phase.md):
+   Vendor Philosophy score -> calibration tier
+   conservative/thorough-evaluator -> full_maturity (3-5 options)
+   opinionated -> minimal_decisive (1-2 options)
+   pragmatic-fast -> standard (2-4 options)
+
+2. Explanation Depth:
+   Affects how much context agents provide with code changes
+
+3. Communication Style:
+   Affects prompt tone and verbosity level
+
+4. Frustration Triggers:
+   Agents proactively avoid known pain points
+
+Profile management:
+  --refresh flag rebuilds from latest sessions
+  Backup created at USER-PROFILE.backup.md before refresh
+  View existing profile without reanalyzing
+```
+
+The profile is a single markdown file at a known location. Any GSD workflow can read it to calibrate behavior. The most direct integration is with advisor mode: your Vendor Philosophy score determines how many options research agents present. But the influence is broader -- explanation depth affects how verbose agent responses are, communication style affects prompt tone, and frustration triggers let agents avoid patterns that previously caused corrections. The profile is refreshable (--refresh flag) and always backed up before updates.
+
+The key difference between a developer profile and a settings file is that the profile is inferred from behavior, not configured manually. You do not check a box that says 'I am a thorough evaluator' -- the system observes that you ask clarifying questions, compare multiple libraries, and read documentation before deciding. This means the profile reflects how you actually work, which may differ from how you think you work. Combined with GSD-2's other personalization features (skills for project conventions, config for workflow preferences), developer profiling makes GSD adapt to you rather than requiring you to adapt to it.
+
+---
+
 ## Concept Map
 
 ```

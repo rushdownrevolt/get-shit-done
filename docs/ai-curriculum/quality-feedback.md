@@ -584,6 +584,393 @@ GSD's quality system embodies one principle: close the loop. Every verification 
 
 ---
 
+## Lesson 9: Enhanced Verification
+
+**Objective:** Explain data-flow tracing, behavioral spot-checks, and environment audits as verification techniques that go beyond basic test-passing.
+
+Basic verification asks: do the tests pass? Enhanced verification asks: does data actually flow from source to destination? A component can pass all its unit tests while rendering an empty list because the API call never fires. A database query can return correct results while the component never imports the function that calls it. Enhanced verification catches these gaps through three techniques: data-flow tracing, behavioral spot-checks, and environment audits. Each targets a different class of silent failure.
+
+```text
+From verify-phase.md — Data-Flow Tracing:
+
+verify-phase checks each must_haves level:
+
+1. Truths - observable behaviors that must be TRUE:
+   "User can see existing messages"
+   "User can send a message"
+   "Messages persist across refresh"
+
+2. Artifacts - files that must EXIST with real content:
+   path: "src/components/Chat.tsx"
+   provides: "Message list rendering"
+   Check: exists + substantive (not stub) + wired (imported/used)
+
+3. Key links - critical connections verified with grep:
+   from: "src/components/Chat.tsx"
+   to: "/api/chat"
+   pattern: "fetch.*api/chat"
+
+   grep -r "fetch.*api/chat" src/components/Chat.tsx
+   FOUND = wired. NOT FOUND = orphaned component.
+
+Evidence-based: grep on actual source, not trust.
+```
+
+Data-flow tracing works at three levels. Level 1 (Truths) states what a user must be able to observe -- these are written as plain English sentences like 'User can see existing messages.' Level 2 (Artifacts) identifies the files that make those truths possible and checks that they exist with real content, not stubs. Level 3 (Key Links) verifies that artifacts are actually connected to each other by running grep on source code. A Chat.tsx component that exists and has real content but never calls fetch('/api/chat') is an orphaned component -- it looks complete but does nothing. Key links catch this.
+
+```text
+From verify-phase.md — Behavioral Spot-Checks:
+
+For each observable truth, determine if the codebase enables it.
+
+Status:
+  VERIFIED   (all supporting artifacts pass)
+  FAILED     (artifact missing/stub/unwired)
+  UNCERTAIN  (needs human)
+
+For each truth:
+  identify supporting artifacts ->
+  check artifact status ->
+  check wiring ->
+  determine truth status.
+
+Example:
+  Truth: "User can see existing messages"
+  Depends on:
+    Chat.tsx       (renders)
+    /api/chat GET  (provides)
+    Message model  (schema)
+
+  If Chat.tsx is a stub or API returns hardcoded [] -> FAILED
+  If all exist, are substantive, and connected    -> VERIFIED
+```
+
+Behavioral spot-checks decompose each truth into its supporting chain. The question is not 'does Chat.tsx exist?' but 'does the chain from Message model through /api/chat GET through Chat.tsx actually deliver messages to the user?' If any link in the chain is broken -- the model has no data, the API returns an empty array, or the component never calls the API -- the truth fails. This is why GSD marks truths as VERIFIED, FAILED, or UNCERTAIN. UNCERTAIN means the automated check cannot determine the answer and a human must look.
+
+```text
+From verify-phase.md — Artifact Verification Levels:
+
+| Exists | Substantive | Wired | Status       |
+|--------|-------------|-------|--------------|
+|  yes   |    yes      |  yes  | VERIFIED     |
+|  yes   |    yes      |  no   | ORPHANED     |
+|  yes   |    no       |   -   | STUB         |
+|  no    |     -       |   -   | MISSING      |
+
+Export-level spot check (WARNING severity):
+
+For artifacts that pass Level 3, spot-check individual exports:
+- Extract key exported symbols (functions, constants, classes)
+- For each, grep for usage outside the defining file
+- Flag exports with zero external call sites as
+  "exported but unused"
+
+This catches dead stores like setPlan() that exist in a
+wired file but are never actually called.
+```
+
+The environment audit extends verification beyond code. It checks that artifacts are not just present but substantive -- a file with 3 lines is likely a stub even if it exists and is imported. The export-level spot-check goes deeper still: even in a file that passes all three levels (exists, substantive, wired), individual exported functions might never be called. A setPlan() function that exists, is exported, and lives in a properly wired module -- but has zero call sites outside its own file -- is dead code that signals incomplete integration.
+
+Enhanced verification is the difference between 'it compiles' and 'it works.' Data-flow tracing ensures connections exist between components. Behavioral spot-checks ensure those connections deliver the right data. Environment audits ensure nothing is a stub or dead code. Together, they catch the most common failure mode in AI-generated code: components that look complete in isolation but are never wired together. The verifier runs these checks automatically after each phase, producing a VERIFICATION.md report with evidence for every finding.
+
+---
+
+## Lesson 10: Stub Detection
+
+**Objective:** Explain how the verifier identifies incomplete implementations -- stubs, TODOs, placeholder code -- that slip through tests but prevent features from working.
+
+A stub is code that exists structurally but does not actually do anything. It might be a function that returns an empty array, a component that renders 'Coming soon', or a handler that logs to console instead of processing data. Stubs are dangerous because they pass basic tests -- the function is callable, the component renders, the handler does not throw. But the feature does not work. Stub detection is the verifier's defense against code that looks complete but delivers nothing.
+
+```text
+From verify-phase.md — Anti-Pattern Scanning:
+
+| Pattern              | Search                                    | Severity  |
+|----------------------|-------------------------------------------|-----------|
+| TODO/FIXME/XXX/HACK  | grep -n -E "TODO|FIXME|XXX|HACK"          | Warning   |
+| Placeholder content  | grep -n -iE "placeholder|coming soon|     | Blocker   |
+|                      |  will be here"                            |           |
+| Empty returns        | grep -n -E "return null|return {}|        | Warning   |
+|                      |  return []|=> {}"                         |           |
+| Log-only functions   | Functions containing only console.log     | Warning   |
+
+Categorize:
+  Blocker  (prevents goal)
+  Warning  (incomplete)
+  Info     (notable)
+```
+
+The verifier scans every file modified in the phase against four stub patterns. TODO and FIXME comments signal work the developer intended to finish but did not. Placeholder content like 'coming soon' is a blocker -- it directly prevents the feature from working. Empty returns (return null, return {}, return []) mean data never reaches the consumer. Log-only functions appear to handle events but discard them. Each pattern maps to a severity: blockers prevent the phase goal from being achieved, warnings indicate incomplete work that may need attention.
+
+```text
+From verify-phase.md — Artifact Stub Detection:
+
+Artifact status from verification result:
+- exists=false           -> MISSING
+- issues not empty       -> STUB
+  (check issues for "Only N lines" or "Missing pattern")
+- passed=true            -> VERIFIED (Levels 1-2 pass)
+
+Level 3 -- Wired (manual check for artifacts that pass 1-2):
+
+grep -r "import.*$artifact_name" src/ --include="*.ts"
+grep -r "$artifact_name" src/ --include="*.ts" | grep -v "import"
+
+WIRED   = imported AND used
+ORPHANED = exists but not imported/used
+
+A 3-line file that exports a function signature and
+returns null is detected as STUB -- it passes the
+"exists" check but fails the "substantive" check
+because its issues array contains "Only 3 lines."
+```
+
+The verifier combines grep-based pattern detection with size heuristics. A file with only 3 lines cannot contain a real implementation -- it is flagged as a stub even if it has no TODO comments. The issues array captures what specifically is wrong: 'Only N lines' means the file is too small to be substantive, 'Missing pattern' means expected content (like a specific function name or API call) was not found. This multi-signal approach catches stubs that any single check would miss.
+
+```text
+From verify-phase.md — Stub Reporting in VERIFICATION.md:
+
+Scan Anti-patterns section of the verification report:
+
+## Anti-Patterns Found
+
+| File                        | Pattern           | Severity | Line |
+|-----------------------------|-------------------|----------|------|
+| src/api/comments.ts         | return []          | Warning  | 42   |
+| src/components/Feed.tsx     | placeholder        | Blocker  | 15   |
+| src/utils/format.ts         | TODO               | Warning  | 8    |
+
+## Artifact Status
+
+| Artifact                    | Exists | Substantive | Wired   | Status   |
+|-----------------------------|--------|-------------|---------|----------|
+| src/api/comments.ts         | yes    | no          | -       | STUB     |
+| src/components/Feed.tsx     | yes    | no          | -       | STUB     |
+| src/components/Chat.tsx     | yes    | yes         | yes     | VERIFIED |
+```
+
+The VERIFICATION.md report gives a clear, actionable view of every stub. The anti-patterns table shows exact file, pattern matched, severity, and line number. The artifact status table shows which files passed all verification levels and which are stubs. When the verifier finds blockers, it generates fix plans -- targeted tasks that replace the stub with a real implementation. A 'return []' in src/api/comments.ts becomes a task: 'Replace empty return with actual database query.' The stub is not just detected -- it triggers a concrete remediation path.
+
+Stub detection is one layer in GSD's quality system. It works alongside data-flow tracing (Lesson 9) to catch incomplete implementations. A component might be wired correctly (key links pass) but return empty data (stub detection catches it). Or a component might have real content (stub detection passes) but never be imported (data-flow tracing catches it). Together, these techniques ensure that code is not just present and connected, but actually delivers real data to real users. The next lesson covers how GSD prevents regressions across phases.
+
+---
+
+## Lesson 11: Regression Gate
+
+**Objective:** Explain how execute-phase runs cross-phase regression checks before advancing, preventing phase N+1 from silently breaking what phase N delivered.
+
+In a multi-phase project, each phase builds on what previous phases delivered. Phase 1 creates the database schema, Phase 2 builds the API, Phase 3 creates the UI. But Phase 3's changes might break Phase 2's API routes, or Phase 2's migrations might alter Phase 1's schema. Without regression checks, these breakages go undetected until the milestone audit -- by which point the damage is spread across multiple phases and much harder to fix. The regression gate catches these problems immediately, before advancing to the next phase.
+
+```text
+From execute-phase.md — Regression Gate Design:
+
+Orchestrator coordinates, not executes. Each subagent loads
+the full execute-plan context.
+
+Orchestrator workflow:
+  discover plans ->
+  analyze deps ->
+  group waves ->
+  spawn agents ->
+  handle checkpoints ->
+  collect results
+
+After all waves complete, the orchestrator runs verification:
+
+  gsd-verifier -> VERIFICATION.md
+
+The verifier checks:
+  1. All must_haves from every PLAN.md in the phase
+  2. Artifacts exist, are substantive, and are wired
+  3. Key links verified with grep on actual source
+  4. Anti-patterns scanned (stubs, TODOs, placeholders)
+  5. Requirements coverage from REQUIREMENTS.md
+```
+
+The regression gate operates at the boundary between execution and advancement. After all plans in a phase complete, the orchestrator spawns a gsd-verifier agent. This agent does not just check the current phase -- it verifies that previous phase outputs still work by checking must_haves, artifacts, and key links. If Phase 3 altered a file that Phase 2 depends on, the key link verification will catch it: the grep pattern from Phase 2's must_haves will fail against the modified file. The gate blocks advancement until all verification passes.
+
+```text
+From verify-phase.md — Gate Pass/Fail Logic:
+
+Determine overall status:
+
+passed:
+  All truths VERIFIED
+  All artifacts pass levels 1-3
+  All key links WIRED
+  No blocker anti-patterns
+
+gaps_found:
+  Any truth FAILED
+  Artifact MISSING/STUB
+  Key link NOT_WIRED
+  Or blocker found
+
+human_needed:
+  All automated checks pass
+  But human verification items remain
+
+Orchestrator routes:
+  passed      -> update_roadmap (advance to next phase)
+  gaps_found  -> create/execute fixes, re-verify
+  human_needed -> present to user
+```
+
+When the gate returns 'gaps_found', the orchestrator does not just stop -- it creates fix plans. The verifier clusters related gaps (e.g., 'API stub + component unwired' becomes one fix plan: 'Wire frontend to backend'), generates targeted tasks with specific files and actions, and orders them by dependency: fix missing artifacts first, then stubs, then wiring, then re-verify. The fix plans execute in the same automated pipeline. Only after all gaps are resolved and re-verification passes does the system advance to the next phase.
+
+```text
+From verify-phase.md — Fix Plan Generation:
+
+If gaps_found:
+
+1. Cluster related gaps:
+   API stub + component unwired -> "Wire frontend to backend"
+   Multiple missing artifacts   -> "Complete core implementation"
+   Wiring only issues           -> "Connect existing components"
+
+2. Generate plan per cluster:
+   Objective, 2-3 tasks (files/action/verify each),
+   re-verify step.
+   Keep focused: single concern per plan.
+
+3. Order by dependency:
+   Fix missing  -> fix stubs -> fix wiring -> verify
+
+Orchestrator routes:
+  passed      -> update roadmap, advance
+  gaps_found  -> create/execute fixes, re-verify
+  human_needed -> present to user for manual check
+```
+
+The clustering step is important. Without it, a single broken feature could produce dozens of individual gap findings: missing function, unwired component, stub return, failed truth. Clustering groups these into a coherent fix: 'Wire the comments feature' with tasks that address the function, the component, and the wiring in sequence. This mirrors how a developer would fix the issue -- as one coherent change, not as isolated patches.
+
+The regression gate is the quality system's boundary enforcer. While stub detection (Lesson 10) catches incomplete code within a phase and enhanced verification (Lesson 9) traces data flow, the regression gate prevents advancement until everything checks out. It enforces the principle that later work must not break earlier work. Combined with atomic commits (each task independently verifiable), wave-based execution (dependency-aware ordering), and the fix-then-re-verify cycle, the regression gate ensures that milestone completion means all phases work together, not just individually.
+
+---
+
+## Lesson 12: Security Hardening
+
+**Objective:** Explain how the centralized security.cjs module prevents path traversal, prompt injection, and other security issues in an AI-driven tool.
+
+GSD generates markdown files that become LLM system prompts. It reads user-supplied file paths. It executes shell commands. Each of these is a potential attack vector. Path traversal could let a malicious argument escape the project directory. Prompt injection could embed rogue instructions in planning documents. Shell metacharacters could execute arbitrary commands. GSD centralizes all security checks in a single module -- security.cjs -- so every tool calls into one validated, tested defense layer instead of implementing its own ad-hoc checks.
+
+```javascript
+// From security.cjs — Path Validation:
+
+function validatePath(filePath, baseDir, opts = {}) {
+  if (!filePath || typeof filePath !== 'string') {
+    return { safe: false, resolved: '', error: 'Empty or invalid file path' };
+  }
+
+  // Reject null bytes (can bypass path checks in some environments)
+  if (filePath.includes('\0')) {
+    return { safe: false, resolved: '', error: 'Path contains null bytes' };
+  }
+
+  // Resolve symlinks in base directory
+  let resolvedBase;
+  try {
+    resolvedBase = fs.realpathSync(path.resolve(baseDir));
+  } catch {
+    resolvedBase = path.resolve(baseDir);
+  }
+
+  // ... resolve the target path ...
+
+  // The resolved path must start with the base directory
+  if (resolvedPath !== resolvedBase &&
+      !normalizedPath.startsWith(normalizedBase)) {
+    return {
+      safe: false,
+      resolved: resolvedPath,
+      error: `Path escapes allowed directory: ${resolvedPath}`
+    };
+  }
+
+  return { safe: true, resolved: resolvedPath };
+}
+```
+
+The validatePath function prevents path traversal by resolving the user-supplied path to its absolute form and checking that it falls within the allowed base directory. It handles three edge cases that simpler checks miss: null bytes (which can bypass string-based path checks in some environments), symlinks (which can make a path appear to be inside the base directory while actually pointing outside), and absolute paths (which bypass relative path assumptions). The function resolves symlinks using fs.realpathSync on both the base directory and the target path before comparing.
+
+```javascript
+// From security.cjs — Prompt Injection Detection:
+
+const INJECTION_PATTERNS = [
+  // Direct instruction override attempts
+  /ignore\s+(all\s+)?previous\s+instructions/i,
+  /disregard\s+(all\s+)?previous/i,
+  /override\s+(system|previous)\s+(prompt|instructions)/i,
+
+  // Role/identity manipulation
+  /you\s+are\s+now\s+(?:a|an|the)\s+/i,
+  /pretend\s+(?:you(?:'re| are)\s+|to\s+be\s+)/i,
+
+  // System prompt extraction
+  /(?:print|output|reveal|show)\s+(?:your\s+)?(?:system\s+)?prompt/i,
+
+  // Hidden instruction markers
+  /<\/?(?:system|assistant|human)>/i,
+  /\[SYSTEM\]/i,
+  /\[INST\]/i,
+
+  // Exfiltration attempts
+  /(?:send|post|fetch|curl)\s+(?:to|from)\s+https?:\/\//i,
+];
+
+function scanForInjection(text, opts = {}) {
+  const findings = [];
+  for (const pattern of INJECTION_PATTERNS) {
+    if (pattern.test(text)) {
+      findings.push(`Matched injection pattern: ${pattern.source}`);
+    }
+  }
+  return { clean: findings.length === 0, findings };
+}
+```
+
+Prompt injection is particularly relevant for GSD because user-supplied text (project descriptions, phase goals, task names) flows into markdown files that become agent system prompts. If a malicious user embeds 'ignore all previous instructions' in a task name, that text would appear in the executor agent's prompt. The scanForInjection function detects five categories of injection: instruction overrides, role manipulation, prompt extraction, hidden instruction markers (XML tags mimicking system boundaries), and exfiltration attempts. This is defense-in-depth -- the primary defense is proper input/output boundaries in agent prompts.
+
+```javascript
+// From security.cjs — Convenience Wrapper and Exports:
+
+function requireSafePath(filePath, baseDir, label, opts = {}) {
+  const result = validatePath(filePath, baseDir, opts);
+  if (!result.safe) {
+    throw new Error(
+      `${label || 'Path'} validation failed: ${result.error}`
+    );
+  }
+  return result.resolved;
+}
+
+module.exports = {
+  // Path safety
+  validatePath,
+  requireSafePath,
+
+  // Prompt injection
+  INJECTION_PATTERNS,
+  scanForInjection,
+  sanitizeForPrompt,
+
+  // Shell safety
+  validateShellArg,
+
+  // JSON safety
+  safeJsonParse,
+
+  // Input validation
+  validatePhaseNumber,
+  validateFieldName,
+};
+```
+
+Tools call into security.cjs before performing any file operation or accepting user input. The requireSafePath wrapper is the most common pattern: pass a user-supplied path and a base directory, get back either a safe resolved path or an exception. Other tools use scanForInjection before embedding user text in agent prompts, validateShellArg before constructing shell commands, safeJsonParse before processing JSON input, and validatePhaseNumber before using phase arguments in file path construction. Each function returns structured results (not just true/false) so callers know exactly what failed and why.
+
+Centralized security has three advantages over scattered checks. First, consistency: every path validation uses the same null-byte check, symlink resolution, and containment logic. A bug fix in validatePath fixes every tool at once. Second, testability: security.cjs can be unit-tested in isolation with adversarial inputs (paths with ../, null bytes, symlinks) without running the full tool chain. Third, auditability: a security review examines one file, not dozens of scattered checks across the codebase. This pattern -- centralize validation, export functions, call before every operation -- applies to any tool that handles untrusted input, not just GSD.
+
+---
+
 ## Concept Map
 
 ```

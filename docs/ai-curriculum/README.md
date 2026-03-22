@@ -10,6 +10,9 @@ This document contains the complete GSD (Get Shit Done) curriculum. It is design
   - [Lesson 3: Workflow File Anatomy](#lesson-3-workflow-file-anatomy)
   - [Lesson 4: Command to Workflow Wiring](#lesson-4-command-to-workflow-wiring)
   - [Lesson 5: Bridge to Node.js](#lesson-5-bridge-to-nodejs)
+  - [Lesson 7: The Fast Lane](#lesson-7-the-fast-lane)
+  - [Lesson 8: Automatic Progression](#lesson-8-automatic-progression)
+  - [Lesson 9: Ship It](#lesson-9-ship-it)
   - [Mini-Project: Build /gsd:skeptic](#mini-project-build-gsdskeptic)
 - [Module 2: Command Lifecycle](#module-2-command-lifecycle)
   - [Lesson 1: Welcome to GSD](#lesson-1-welcome-to-gsd)
@@ -25,6 +28,8 @@ This document contains the complete GSD (Get Shit Done) curriculum. It is design
   - [Lesson 4: Inside a Phase: Plan, Execute, Verify](#lesson-4-inside-a-phase-plan-execute-verify)
   - [Lesson 5: State Tracking & Milestone Lifecycle](#lesson-5-state-tracking-milestone-lifecycle)
   - [Lesson 6: From Idea to Shipped Milestone](#lesson-6-from-idea-to-shipped-milestone)
+  - [Lesson 8: Decision Traceability](#lesson-8-decision-traceability)
+  - [Lesson 9: CLAUDE.md as Dimension 10](#lesson-9-claudemd-as-dimension-10)
   - [Mini-Project: Build Persistent Skeptic Reviews](#mini-project-build-persistent-skeptic-reviews)
 - [Module 4: Agent Orchestration](#module-4-agent-orchestration)
   - [Lesson 1: The Orchestration Model](#lesson-1-the-orchestration-model)
@@ -34,6 +39,7 @@ This document contains the complete GSD (Get Shit Done) curriculum. It is design
   - [Lesson 5: Checkpoints and Gates](#lesson-5-checkpoints-and-gates)
   - [Lesson 6: Auto-Advance Chains](#lesson-6-auto-advance-chains)
   - [Lesson 7: The Full Lifecycle](#lesson-7-the-full-lifecycle)
+  - [Lesson 9: Advisor Mode](#lesson-9-advisor-mode)
   - [Mini-Project: Build Orchestrated Skeptic Reviews](#mini-project-build-orchestrated-skeptic-reviews)
 - [Module 5: Quality & Feedback Loops](#module-5-quality-feedback-loops)
   - [Lesson 1: The Quality Lifecycle](#lesson-1-the-quality-lifecycle)
@@ -43,6 +49,10 @@ This document contains the complete GSD (Get Shit Done) curriculum. It is design
   - [Lesson 5: Gap Closure](#lesson-5-gap-closure)
   - [Lesson 6: Milestone Audit](#lesson-6-milestone-audit)
   - [Lesson 7: The Quality Feedback System](#lesson-7-the-quality-feedback-system)
+  - [Lesson 9: Enhanced Verification](#lesson-9-enhanced-verification)
+  - [Lesson 10: Stub Detection](#lesson-10-stub-detection)
+  - [Lesson 11: Regression Gate](#lesson-11-regression-gate)
+  - [Lesson 12: Security Hardening](#lesson-12-security-hardening)
   - [Mini-Project: Add Quality Verification to Skeptic Reviews](#mini-project-add-quality-verification-to-skeptic-reviews)
 - [Module 6: GSD-2 -- The Agent Application](#module-6-gsd-2----the-agent-application)
   - [Lesson 1: Why GSD-2 Exists](#lesson-1-why-gsd-2-exists)
@@ -52,7 +62,19 @@ This document contains the complete GSD (Get Shit Done) curriculum. It is design
   - [Lesson 5: Git & Worktrees](#lesson-5-git-worktrees)
   - [Lesson 6: Skills & Extensions](#lesson-6-skills-extensions)
   - [Lesson 7: GSD-2 Architecture Synthesis](#lesson-7-gsd-2-architecture-synthesis)
+  - [Lesson 9: Multi-Runtime Support](#lesson-9-multi-runtime-support)
+  - [Lesson 10: Forensics Debugging](#lesson-10-forensics-debugging)
+  - [Lesson 11: Developer Profiling](#lesson-11-developer-profiling)
   - [Mini-Project: Add a Dispatch Loop to Skeptic Reviews](#mini-project-add-a-dispatch-loop-to-skeptic-reviews)
+- [Module 7: Workspaces & Collaboration](#module-7-workspaces-collaboration)
+  - [Lesson 1: Workspaces & Collaboration Overview](#lesson-1-workspaces-collaboration-overview)
+  - [Lesson 2: Workstream Namespacing](#lesson-2-workstream-namespacing)
+  - [Lesson 3: Multi-Project Workspaces](#lesson-3-multi-project-workspaces)
+  - [Lesson 4: Cross-AI Peer Review](#lesson-4-cross-ai-peer-review)
+  - [Lesson 5: Workspace Isolation](#lesson-5-workspace-isolation)
+  - [Lesson 6: Workspace Lifecycle](#lesson-6-workspace-lifecycle)
+  - [Lesson 7: Collaboration Patterns](#lesson-7-collaboration-patterns)
+  - [Mini-Project: Add Cross-AI Review Orchestration to Skeptic](#mini-project-add-cross-ai-review-orchestration-to-skeptic)
 
 ---
 
@@ -325,6 +347,286 @@ Behind the switch statement are the tool modules: core.cjs handles project initi
 Remember the <process> sections in workflow files? They contain bash commands like 'node gsd-tools.cjs state advance-plan' and 'node gsd-tools.cjs roadmap update-plan-progress'. These are the connection points between the two layers. The markdown layer tells Claude what to run; the Node.js layer makes it happen. When you read Module 2, you'll recognize every CLI command from the workflows you've already studied.
 
 The design is intentional: markdown files are easy to read, edit, and version control. They're the interface between humans and Claude. The Node.js layer handles the mechanical work -- parsing files, updating state, managing configuration -- that would be tedious and error-prone to describe in natural language. Understanding both layers means you can modify GSD at any level: tweak a workflow's instructions, add a new command spec, or extend a tool module with new functionality.
+
+---
+
+### Lesson 7: The Fast Lane
+
+**Objective:** Understand how /gsd:fast skips planning overhead for trivial tasks, executing inline without subagents, plans, or verification -- and when to use it versus /gsd:quick.
+
+Sometimes you need to fix a typo, update a config value, or add a missing import. These are trivial tasks -- under 5 minutes, touching 3 files or fewer, needing zero research. For these, /gsd:quick's planning overhead (create PLAN.md, spawn subagents, run verification) is overkill. That's where /gsd:fast comes in. It's the fastest path from intent to committed code in GSD.
+
+```markdown
+<purpose>
+Execute a trivial task inline without subagent overhead. No PLAN.md, no Task spawning,
+no research, no plan checking. Just: understand -> do -> commit -> log.
+
+For tasks like: fix a typo, update a config value, add a missing import, rename a
+variable, commit uncommitted work, add a .gitignore entry, bump a version number.
+
+Use /gsd:quick for anything that needs multi-step planning or research.
+</purpose>
+```
+
+The purpose section makes the contract explicit: no PLAN.md, no Task spawning, no research, no plan checking. Compare this to /gsd:quick, which creates a plan, spawns a planner subagent, runs a plan checker, then spawns an executor subagent. The fast workflow does everything inline in the current context -- Claude reads the file, makes the change, commits, and logs it. The entire operation targets under 2 minutes of wall time.
+
+```markdown
+<step name="scope_check">
+**Before doing anything, verify this is actually trivial.**
+
+A task is trivial if it can be completed in:
+- <= 3 file edits
+- <= 1 minute of work
+- No new dependencies or architecture changes
+- No research needed
+
+If the task seems non-trivial (multi-file refactor, new feature, needs research),
+say:
+
+```
+This looks like it needs planning. Use /gsd:quick instead:
+  /gsd:quick "{task description}"
+```
+
+And stop.
+</step>
+```
+
+The scope check is a guardrail, not a suggestion. If the task needs more than 3 file edits, introduces new dependencies, or requires research, /gsd:fast redirects you to /gsd:quick. This prevents the temptation to use the fast path for work that actually needs planning. The criteria are concrete and checkable: file count, time estimate, dependency changes, research needs. No ambiguity.
+
+```markdown
+<step name="execute_inline">
+Do the work directly:
+
+1. Read the relevant file(s)
+2. Make the change(s)
+3. Verify the change works (run existing tests if applicable, or do a quick sanity check)
+
+**No PLAN.md.** Just do it.
+</step>
+
+<guardrails>
+- NEVER spawn a Task/subagent -- this runs inline
+- NEVER create PLAN.md or SUMMARY.md files
+- NEVER run research or plan-checking
+- If the task takes more than 3 file edits, STOP and redirect to /gsd:quick
+- If you're unsure how to implement it, STOP and redirect to /gsd:quick
+</guardrails>
+```
+
+Notice the pattern: read, change, verify -- three steps, no ceremony. The guardrails section reinforces this with NEVER rules. No subagents, no planning artifacts, no research. If uncertainty creeps in during execution, the workflow stops and redirects. This is a key design principle in GSD: each command has a clear scope boundary, and crossing it means switching to a different command rather than stretching the current one.
+
+Here's the GSD command spectrum from fastest to most thorough: /gsd:fast (no planning, no verification, single-agent inline), /gsd:quick (lightweight planning, executor subagent, optional verification), and the full /gsd:execute-phase pipeline (research, planning, plan-checking, parallel execution, verification). Each level adds safety at the cost of speed. /gsd:fast trades all safety mechanisms for raw speed -- appropriate only when the task is genuinely trivial. If you're unsure which to use, /gsd:quick is the safe default. /gsd:fast is for when you're certain.
+
+---
+
+### Lesson 8: Automatic Progression
+
+**Objective:** Understand how /gsd:next reads project state and automatically determines which GSD command to run next, eliminating the cognitive load of remembering the workflow progression.
+
+GSD projects follow a progression: discuss a phase, plan it, execute it, verify the work, complete the phase, then move to the next one. But remembering where you left off and which command to run next adds cognitive load -- especially when you return after a break. /gsd:next solves this by reading the project state and automatically dispatching to the correct next command. You type one command; GSD figures out the rest.
+
+```markdown
+<purpose>
+Detect current project state and automatically advance to the next logical GSD workflow step.
+Reads project state to determine: discuss -> plan -> execute -> verify -> complete progression.
+</purpose>
+
+<step name="detect_state">
+Read project state to determine current position:
+
+```bash
+## Get state snapshot
+node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" state json 2>/dev/null || echo "{}"
+```
+
+Also read:
+- `.planning/STATE.md` -- current phase, progress, plan counts
+- `.planning/ROADMAP.md` -- milestone structure and phase list
+
+Extract:
+- `current_phase` -- which phase is active
+- `plan_of` / `plans_total` -- plan execution progress
+- `progress` -- overall percentage
+- `status` -- active, paused, etc.
+</step>
+```
+
+The detect_state step loads everything GSD knows about the project: which phase is active, how many plans are complete, overall progress percentage, and whether work is paused. This is the same state that STATE.md tracks persistently across sessions. By reading it programmatically, /gsd:next can make an informed decision about what comes next without asking you anything.
+
+```markdown
+<step name="determine_next_action">
+Apply routing rules based on state:
+
+**Route 1: No phases exist yet -> discuss**
+If ROADMAP has phases but no phase directories exist on disk:
+-> Next action: `/gsd:discuss-phase <first-phase>`
+
+**Route 2: Phase exists but has no CONTEXT.md or RESEARCH.md -> discuss**
+If the current phase directory exists but has neither CONTEXT.md nor RESEARCH.md:
+-> Next action: `/gsd:discuss-phase <current-phase>`
+
+**Route 3: Phase has context but no plans -> plan**
+If the current phase has CONTEXT.md (or RESEARCH.md) but no PLAN.md files:
+-> Next action: `/gsd:plan-phase <current-phase>`
+
+**Route 4: Phase has plans but incomplete summaries -> execute**
+If plans exist but not all have matching summaries:
+-> Next action: `/gsd:execute-phase <current-phase>`
+
+**Route 5: All plans have summaries -> verify and complete**
+If all plans in the current phase have summaries:
+-> Next action: `/gsd:verify-work` then `/gsd:complete-phase`
+
+**Route 6: Phase complete, next phase exists -> advance**
+If the current phase is complete and the next phase exists in ROADMAP:
+-> Next action: `/gsd:discuss-phase <next-phase>`
+
+**Route 7: All phases complete -> complete milestone**
+If all phases are complete:
+-> Next action: `/gsd:complete-milestone`
+</step>
+```
+
+The decision tree has 8 routes, and each maps a project state to exactly one GSD command. The logic follows the natural GSD lifecycle: discuss, plan, execute, verify, complete. Route 1 handles brand-new phases. Routes 2-5 handle the progression within a single phase. Route 6 advances across phases. Route 7 completes the entire milestone. Route 8 (not shown) handles paused projects by routing to /gsd:resume-work. Every possible state maps to a clear next action.
+
+```markdown
+<step name="show_and_execute">
+Display the determination:
+
+```
+### GSD Next
+
+**Current:** Phase [N] -- [name] | [progress]%
+**Status:** [status description]
+
+> **Next step:** `/gsd:[command] [args]`
+  [One-line explanation of why this is the next step]
+```
+
+Then immediately invoke the determined command via SlashCommand.
+Do not ask for confirmation -- the whole point of `/gsd:next` is zero-friction advancement.
+</step>
+```
+
+The key line is 'Do not ask for confirmation.' /gsd:next is designed for zero-friction advancement. It shows you what it detected and what it's about to do, then immediately invokes the command. This is what makes it a true progression command rather than just a status display. Combined with GSD's auto-advance feature, /gsd:next can chain entire sequences: discuss, plan, execute, verify -- all from a single invocation.
+
+/gsd:next embodies a core GSD principle: the system should know where you are and what comes next. By encoding the discuss-plan-execute-verify-complete lifecycle into routing rules, it transforms a multi-step workflow into a single repeatable command. Type /gsd:next, and GSD handles the rest. This is especially powerful when returning to a project after days or weeks -- instead of reading STATE.md and figuring out the next step, you let the state-driven dispatch do it for you.
+
+---
+
+### Lesson 9: Ship It
+
+**Objective:** Understand how /gsd:ship creates pull requests from verified work, auto-generating rich PR bodies from planning artifacts and running pre-flight safety checks before pushing.
+
+You've discussed, planned, executed, and verified a phase. The code works, tests pass, and SUMMARY.md files document what was built. Now it's time to ship -- create a pull request that communicates all of this to reviewers. /gsd:ship automates PR creation by reading GSD's planning artifacts to generate a rich PR body, running pre-flight safety checks, and using the GitHub CLI to create the PR. No manual PR descriptions needed.
+
+```markdown
+<step name="preflight_checks">
+Verify the work is ready to ship:
+
+1. **Verification passed?**
+   ```bash
+   VERIFICATION=$(cat ${PHASE_DIR}/*-VERIFICATION.md 2>/dev/null)
+   ```
+   Check for `status: passed` or `status: human_needed` (with human approval).
+   If no VERIFICATION.md or status is `gaps_found`: warn and ask user to confirm.
+
+2. **Clean working tree?**
+   ```bash
+   git status --short
+   ```
+   If uncommitted changes exist: ask user to commit or stash first.
+
+3. **On correct branch?**
+   ```bash
+   CURRENT_BRANCH=$(git branch --show-current)
+   ```
+   If on `main`/`master`: warn -- should be on a feature branch.
+
+4. **Remote configured?**
+   ```bash
+   git remote -v | head -2
+   ```
+   Detect `origin` remote. If no remote: error -- can't create PR.
+
+5. **`gh` CLI available?**
+   ```bash
+   which gh && gh auth status 2>&1
+   ```
+   If `gh` not found or not authenticated: provide setup instructions and exit.
+</step>
+```
+
+Five pre-flight checks run before anything touches GitHub. Verification status is checked first -- shipping unverified work requires explicit user confirmation. Clean working tree prevents accidental inclusion of uncommitted changes. Branch verification catches the common mistake of trying to PR from main. Remote and gh CLI checks ensure the infrastructure exists. Each check either passes silently or stops with a clear message. No silent failures.
+
+```markdown
+<step name="generate_pr_body">
+Auto-generate a rich PR body from planning artifacts:
+
+**1. Title:**
+```
+Phase {phase_number}: {phase_name}
+```
+
+**2. Summary section:**
+Read ROADMAP.md for phase goal. Read VERIFICATION.md for verification status.
+
+```markdown
+### Summary
+
+**Phase {N}: {Name}**
+**Goal:** {goal from ROADMAP.md}
+**Status:** Verified
+
+{One paragraph synthesized from SUMMARY.md files -- what was built}
+```
+
+**3. Changes section:**
+For each SUMMARY.md in the phase directory:
+```markdown
+### Changes
+
+#### Plan {plan_id}: {plan_name}
+{one_liner from SUMMARY.md frontmatter}
+
+**Key files:**
+{key-files.created and key-files.modified from SUMMARY.md frontmatter}
+```
+</step>
+```
+
+The PR body is not written from scratch -- it's assembled from artifacts that already exist. ROADMAP.md provides the phase goal. VERIFICATION.md provides the verification status. Each SUMMARY.md contributes its one-liner description and key files list. This means every PR body is consistent, complete, and accurate -- it reflects what actually happened, not what someone remembers happening. The artifact chain from discuss through ship creates end-to-end traceability.
+
+```markdown
+<step name="create_pr">
+Create the PR using the generated body:
+
+```bash
+gh pr create \
+  --title "Phase ${PHASE_NUMBER}: ${PHASE_NAME}" \
+  --body "${PR_BODY}" \
+  --base main
+```
+
+If `--draft` flag was passed: add `--draft`.
+
+Report: "PR #{number} created: {url}"
+</step>
+
+<step name="track_shipping">
+Update STATE.md to reflect the shipping action:
+
+```bash
+node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" state update "Status" \
+  "Phase ${PHASE_NUMBER} shipped -- PR #${PR_NUMBER}"
+```
+</step>
+```
+
+The gh CLI does the heavy lifting of PR creation. After the PR is created, STATE.md is updated to reflect the shipping action -- maintaining the audit trail. /gsd:ship also offers optional code review routing: skip review, self-review, or request review from a teammate. This flexibility lets solo developers ship quickly while teams can enforce review workflows.
+
+/gsd:ship closes the GSD lifecycle loop. The full pipeline runs: /gsd:discuss-phase captures decisions, /gsd:plan-phase creates executable plans, /gsd:execute-phase builds the code, /gsd:verify-work confirms correctness, and /gsd:ship turns it all into a PR. Each step reads artifacts from previous steps, so no information is lost. The PR body proves this -- it contains the phase goal from ROADMAP.md, verification status from the checker, and change details from SUMMARY.md files. Reviewers see not just what changed, but why it changed and how it was verified.
 
 ---
 
@@ -1679,6 +1981,184 @@ You now understand the complete GSD planning system -- from the first /gsd:kicko
 
 ---
 
+### Lesson 8: Decision Traceability
+
+**Objective:** Understand how decision IDs (D-01, D-02, etc.) flow from discuss-phase through plan-phase, creating an unbroken traceability chain that prevents scope drift and ensures user preferences are honored in every task.
+
+When you discuss a phase with /gsd:discuss-phase, you make decisions: 'use card layout,' 'no animations,' 'infinite scroll.' These decisions need to survive the handoff to the planner and executor agents who do the actual work. If a decision gets lost or misinterpreted, the built feature won't match your intent. GSD solves this with decision IDs -- each decision gets a unique identifier (D-01, D-02, etc.) that flows through every downstream artifact, creating a traceability chain from discussion to implementation.
+
+```markdown
+<decisions>
+### Implementation Decisions
+
+#### [Category 1 that was discussed]
+- **D-01:** [Decision or preference captured]
+- **D-02:** [Another decision if applicable]
+
+#### [Category 2 that was discussed]
+- **D-03:** [Decision or preference captured]
+
+#### Claude's Discretion
+[Areas where user said "you decide" -- note that Claude has flexibility here]
+
+#### Folded Todos
+[If any todos were folded into scope from the cross_reference_todos step, list them here.]
+
+</decisions>
+```
+
+This is the CONTEXT.md output format from discuss-phase. Each decision gets a numbered ID: D-01, D-02, D-03, and so on. The decisions section has three tiers. Locked decisions (D-01, D-02, etc.) are things the user explicitly chose -- these are non-negotiable. Claude's Discretion covers areas where the user said 'you decide' -- the planner has flexibility here. Deferred Ideas (captured in a separate section) are features explicitly excluded from this phase. This taxonomy -- locked, discretion, deferred -- gives downstream agents clear rules for each decision.
+
+```markdown
+<context_fidelity>
+### CRITICAL: User Decision Fidelity
+
+The orchestrator provides user decisions in `<user_decisions>` tags from `\gsd:discuss-phase`.
+
+1. **Locked Decisions (from `## Implementation Decisions`)** -- MUST be implemented exactly
+   - If user said "use library X" -> task MUST use library X, not an alternative
+   - If user said "card layout" -> task MUST implement cards, not tables
+   - If user said "no animations" -> task MUST NOT include animations
+   - Reference the decision ID (D-01, D-02, etc.) in task actions for traceability
+
+2. **Deferred Ideas (from `## Deferred Ideas`)** -- MUST NOT appear in plans
+   - If user deferred "search functionality" -> NO search tasks allowed
+
+3. **Claude's Discretion (from `### Claude's Discretion`)** -- Claude chooses
+   - Make reasonable choices and document in task actions
+
+**Self-check before returning:** For each plan, verify:
+- [ ] Every locked decision (D-01, D-02, etc.) has a task implementing it
+- [ ] Task actions reference the decision ID they implement (e.g., "per D-03")
+- [ ] No task implements a deferred idea
+- [ ] Discretion areas are handled reasonably
+</context_fidelity>
+```
+
+The planner's context_fidelity section is marked CRITICAL for a reason. Every locked decision must have a task implementing it -- 100% coverage, no exceptions. Task actions must reference the decision ID they implement (e.g., 'per D-03') so reviewers can trace any piece of code back to the user's original decision. Deferred ideas are explicitly blocked from appearing in plans. And if a conflict exists -- say, research suggests library Y but the user locked library X -- the user's locked decision wins. The note 'Using X per user decision (research suggested Y)' makes the override visible.
+
+```markdown
+**Process:**
+1. Parse CONTEXT.md sections: Decisions, Claude's Discretion, Deferred Ideas
+2. Extract all numbered decisions (D-01, D-02, etc.) from the `<decisions>` section
+3. For each locked Decision, find implementing task(s) -- check task actions for D-XX references
+4. Verify 100% decision coverage: every D-XX must appear in at least one task's action or rationale
+5. Verify no tasks implement Deferred Ideas (scope creep)
+
+**Red flags:**
+- Locked decision has no implementing task
+- Task contradicts a locked decision (e.g., user said "cards layout", plan says "table layout")
+- Task implements something from Deferred Ideas
+- Plan ignores user's stated preference
+
+issue:
+  dimension: context_compliance
+  severity: blocker
+  description: "Plan contradicts locked decision: user specified 'card layout' but Task 2 implements 'table layout'"
+  plan: "01"
+  task: 2
+  user_decision: "Layout: Cards (from Decisions section)"
+```
+
+The plan checker runs after the planner finishes and independently verifies context compliance. It extracts every D-XX decision ID, checks that each has an implementing task, and flags any contradictions as blockers. A blocker means the plan cannot proceed to execution until fixed. This double verification -- planner self-check plus independent checker -- ensures that user decisions survive the entire planning pipeline. If you said 'card layout' and the planner writes 'table layout,' the checker catches it.
+
+Decision IDs create end-to-end traceability: you make a decision during discussion (D-01 in CONTEXT.md), the planner references it in the task action ('implement card layout per D-01'), the executor builds what the task says, and the plan checker independently verifies the chain is unbroken. This prevents the most common failure mode in AI-assisted development: the system builds something technically correct but different from what the user intended. With decision IDs, intent is preserved as a first-class artifact, not a suggestion lost in natural language.
+
+---
+
+### Lesson 9: CLAUDE.md as Dimension 10
+
+**Objective:** Understand how the plan checker validates plans against project-specific CLAUDE.md instructions, enforcing coding conventions, forbidden patterns, and required tools as a dedicated verification dimension.
+
+Every project has its own rules: 'use Vitest not Jest,' 'never import from the barrel file,' 'all API routes must have rate limiting.' In a traditional workflow, these rules live in a developer's head or a wiki page that AI tools never read. GSD formalizes this with CLAUDE.md -- a file in the project root that contains project-specific instructions. The plan checker treats CLAUDE.md as Dimension 10: a dedicated verification dimension that ensures every plan respects the project's unique conventions and constraints.
+
+```markdown
+**Project instructions:** Read ./CLAUDE.md if exists -- follow project-specific guidelines
+**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists) --
+read SKILL.md files, plans should account for project skill rules
+
+### Spawn gsd-planner Agent
+
+Planner prompt:
+```markdown
+<planning_context>
+**Phase:** {phase_number}
+
+<files_to_read>
+- {state_path} (Project State)
+- {roadmap_path} (Roadmap)
+- {requirements_path} (Requirements)
+- {context_path} (USER DECISIONS from /gsd:discuss-phase)
+- {research_path} (Technical Research)
+</files_to_read>
+
+**Project instructions:** Read ./CLAUDE.md if exists -- follow project-specific guidelines
+**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists)
+</planning_context>
+```
+```
+
+CLAUDE.md appears at two stages. First, the plan-phase orchestrator instructs both the planner and checker agents to read it. The planner uses CLAUDE.md to ensure plans don't violate project rules during creation. Then the checker independently verifies compliance during review. This means CLAUDE.md rules are enforced twice -- once proactively (planner reads the rules) and once reactively (checker flags violations). The dual enforcement is intentional: it catches rules the planner might overlook.
+
+```markdown
+### Dimension 10: CLAUDE.md Compliance
+
+**Question:** Do plans respect project-specific conventions, constraints, and requirements
+from CLAUDE.md?
+
+**Process:**
+1. Read `./CLAUDE.md` in the working directory
+2. Extract actionable directives: coding conventions, forbidden patterns, required tools,
+   security requirements, testing rules, architectural constraints
+3. For each directive, check if any plan task contradicts or ignores it
+4. Flag plans that introduce patterns CLAUDE.md explicitly forbids
+5. Flag plans that skip steps CLAUDE.md explicitly requires
+
+**Red flags:**
+- Plan uses a library/pattern CLAUDE.md explicitly forbids
+- Plan skips a required step (e.g., CLAUDE.md says "always run X before Y" but plan omits X)
+- Plan introduces code style that contradicts CLAUDE.md conventions
+- Plan creates files in locations that violate CLAUDE.md's architectural constraints
+- Plan ignores security requirements documented in CLAUDE.md
+
+**Skip condition:** If no `./CLAUDE.md` exists in the working directory,
+output: "Dimension 10: SKIPPED (no CLAUDE.md found)" and move on.
+```
+
+Dimension 10 follows a clear process: extract directives from CLAUDE.md, then check each one against every plan task. It looks for five categories of violations: forbidden libraries or patterns, skipped required steps, contradicted code styles, wrong file locations, and missing security requirements. The skip condition is important -- projects without CLAUDE.md simply skip this dimension. There's no penalty for not having one, but projects that do have one get automatic compliance checking.
+
+```yaml
+## Example: CLAUDE.md says "always use Vitest, never Jest"
+## Plan Task 1 says "Install Jest and create test suite..."
+
+issue:
+  dimension: claude_md_compliance
+  severity: blocker
+  description: "Plan uses Jest for testing but CLAUDE.md requires Vitest"
+  plan: "01"
+  task: 1
+  claude_md_rule: "Testing: Always use Vitest, never Jest"
+  plan_action: "Install Jest and create test suite..."
+  fix_hint: "Replace Jest with Vitest per project CLAUDE.md"
+
+## Example: CLAUDE.md says "All tasks must run eslint before committing"
+## Plan 02 has no lint step
+
+issue:
+  dimension: claude_md_compliance
+  severity: warning
+  description: "Plan does not include lint step required by CLAUDE.md"
+  plan: "02"
+  claude_md_rule: "All tasks must run eslint before committing"
+  fix_hint: "Add eslint verification step to each task's <verify> block"
+```
+
+Violations come in two severities. A blocker (like using a forbidden library) stops the plan from proceeding to execution -- the planner must fix it in the revision loop. A warning (like a missing lint step) is flagged but doesn't block execution. Each issue includes the exact CLAUDE.md rule being violated, what the plan does wrong, and a fix hint. This structured format lets the planner make targeted fixes without guessing what went wrong.
+
+CLAUDE.md as Dimension 10 completes the plan checker's verification model. Dimensions 1-9 check universal quality (task specificity, dependency correctness, must-haves coverage, etc.). Dimension 10 checks project-specific quality -- the rules that make YOUR project unique. Together, they ensure plans are both generally well-formed and specifically compliant with your project's conventions. For teams using GSD across multiple projects, CLAUDE.md is what customizes the same planning pipeline to respect each project's unique constraints without modifying the pipeline itself.
+
+---
+
 ### Concept Map
 
 ```
@@ -2369,6 +2849,97 @@ Why fresh context matters -- quality vs. context usage:
 Without fresh context per agent, a long-running session would hit 70%+ context by the third plan, producing rushed, minimal output. With orchestration, every plan gets 0-30% context -- peak quality every time. This is not theoretical. GSD's own development demonstrates it: 36+ plans executed with consistent 2-4 minute completion times and thorough output across every plan, because each executor started fresh. The orchestrator pattern is the reason a 10-plan phase produces the same quality on plan 10 as on plan 1.
 
 GSD's orchestration is not magic -- it is structured decomposition. Break work into phases. Break phases into plans. Break plans into tasks. Assign waves by dependency. Spawn agents with fresh context. Verify results. Advance automatically. Every piece you learned in this module is a specific mechanism serving this decomposition: the orchestration model (coordinate, not execute), agent types (specialized roles), waves (parallel when possible, sequential when dependent), lean design (paths not content), checkpoints (human judgment where needed), auto-advance (hands-free when possible). In the next step -- the mini-project -- you will apply these concepts yourself.
+
+---
+
+### Lesson 9: Advisor Mode
+
+**Objective:** Explain how discuss-phase spawns parallel research agents to evaluate uncertain areas before presenting synthesized recommendations to the user.
+
+When you run /gsd:discuss-phase, GSD identifies gray areas -- implementation decisions that could go multiple ways and would change the result. In simple cases, the workflow asks you directly. But when advisor mode is active, GSD does something more powerful: it spawns parallel research agents to investigate each gray area independently, then synthesizes their findings into comparison tables so you can make informed decisions. Advisor mode transforms discussion from 'what do you think?' into 'here are the trade-offs we found -- which direction?'
+
+```text
+From discuss-phase.md — Advisor Mode Detection:
+
+**Advisor Mode Detection:**
+
+Check if advisor mode should activate:
+
+1. Check for USER-PROFILE.md:
+   ```bash
+   PROFILE_PATH="$HOME/.claude/get-shit-done/USER-PROFILE.md"
+   ```
+   ADVISOR_MODE = file exists at PROFILE_PATH -> true, otherwise -> false
+
+2. If ADVISOR_MODE is true, resolve vendor_philosophy calibration tier:
+   - Priority 1: Read config.json > preferences.vendor_philosophy
+   - Priority 2: Read USER-PROFILE.md Vendor Choices/Philosophy rating
+   - Priority 3: Default to "standard" if neither has a value
+
+   Map to calibration tier:
+   - conservative OR thorough-evaluator -> full_maturity
+   - opinionated -> minimal_decisive
+   - pragmatic-fast OR any other value -> standard
+```
+
+Advisor mode activates based on your developer profile. If you have run /gsd:profile-user and a USER-PROFILE.md exists, the system knows enough about your decision-making style to calibrate its research. The calibration tier controls how many options each research agent presents: a thorough evaluator gets 3-5 options with full maturity analysis, a pragmatic-fast developer gets 2-4 options at standard depth, and an opinionated developer gets 1-2 options with minimal overhead. The system adapts to how you actually make decisions.
+
+```text
+From discuss-phase.md — Spawning Parallel Research Agents:
+
+After user selects gray areas, spawn parallel research agents.
+
+1. Display brief status: "Researching {N} areas..."
+
+2. For EACH user-selected gray area, spawn a Task() in parallel:
+
+   Task(
+     prompt="First, read @.../gsd-advisor-researcher.md...
+
+     <gray_area>{area_name}: {area_description}</gray_area>
+     <phase_context>{phase_goal from ROADMAP.md}</phase_context>
+     <project_context>{project name and description}</project_context>
+     <calibration_tier>{full_maturity | standard | minimal_decisive}</calibration_tier>
+
+     Research this gray area and return a structured comparison
+     table with rationale.",
+     subagent_type="general-purpose",
+     model="{ADVISOR_MODEL}",
+     description="Research: {area_name}"
+   )
+
+   All Task() calls spawn simultaneously -- do NOT wait for one
+   before starting the next.
+```
+
+The parallel spawning is key. If you selected 4 gray areas to discuss, GSD does not research them one at a time -- it launches 4 research agents simultaneously. Each agent gets a focused prompt with the specific gray area, the phase context from ROADMAP.md, the project description, and the calibration tier. Because each agent runs in a fresh context window, they all operate at peak quality. The result is 4 independent research reports completed in the time it takes for one.
+
+```text
+From discuss-phase.md — Synthesizing Research Results:
+
+After ALL agents return, SYNTHESIZE results before presenting:
+
+For each agent's return:
+  a. Parse the markdown comparison table and rationale paragraph
+  b. Verify all 5 columns present:
+     (Option | Pros | Cons | Complexity | Recommendation)
+     Fill any missing columns rather than showing broken table
+  c. Verify option count matches calibration tier:
+     - full_maturity: 3-5 options acceptable
+     - standard: 2-4 options acceptable
+     - minimal_decisive: 1-2 options acceptable
+     If agent returned too many, trim least viable.
+  d. Rewrite rationale paragraph to weave in project context
+     and ongoing discussion context that the agent did not
+     have access to
+  e. If agent returned only 1 option, convert from table format
+     to direct recommendation:
+     "Standard approach for {area}: {option}. {rationale}"
+```
+
+The synthesis step is what separates advisor mode from raw agent output. Each research agent works in isolation -- it does not know about your ongoing conversation, other gray areas being researched, or decisions you have already made in the discussion. The orchestrator fills these gaps: it rewrites rationale paragraphs to include project context the agents lacked, trims option counts to match your calibration tier, ensures table formatting is complete, and converts single-option results into direct recommendations. The user sees polished comparison tables, not raw agent output.
+
+From the user's perspective, advisor mode is seamless: you select which gray areas to discuss, wait briefly while research runs in parallel, then see a comparison table for each area with clear options, pros, cons, and a recommendation. You pick your preferred option (or specify something different), and the decision is recorded in CONTEXT.md for downstream agents. The entire discuss-phase workflow -- from gray area identification through advisor research to final decisions -- ensures that planning agents receive clear, user-validated decisions without the user needing to know about agent orchestration, calibration tiers, or synthesis steps.
 
 ---
 
@@ -3075,6 +3646,393 @@ Evidence-based: grep on actual source, not trust.
 Why this system works: it is not a single monolithic quality check -- it is layered, persistent, and evidence-based. Persistent because UAT.md, DEBUG.md, and VERIFICATION.md survive context window clears. If a session is interrupted mid-debug, the investigation resumes from exactly where it left off. Evidence-based because key_links use grep patterns on actual source code, not trust. A component cannot pass verification by merely existing -- it must be wired to its dependencies. Layered because plan-checker catches plan issues, verify-phase catches implementation issues, verify-work catches user-visible issues, and audit-milestone catches integration issues. Each layer catches different failure modes.
 
 GSD's quality system embodies one principle: close the loop. Every verification feeds back into planning. Every gap drives targeted fixes. Every fix gets re-verified. This is not a waterfall quality gate at the end; it is continuous feedback woven into every workflow. The result is a system where problems are caught at the right level, diagnosed with evidence, fixed with precision, and confirmed with re-testing. In the next step (the mini-project), you will apply these quality concepts by building your own verification workflow.
+
+---
+
+### Lesson 9: Enhanced Verification
+
+**Objective:** Explain data-flow tracing, behavioral spot-checks, and environment audits as verification techniques that go beyond basic test-passing.
+
+Basic verification asks: do the tests pass? Enhanced verification asks: does data actually flow from source to destination? A component can pass all its unit tests while rendering an empty list because the API call never fires. A database query can return correct results while the component never imports the function that calls it. Enhanced verification catches these gaps through three techniques: data-flow tracing, behavioral spot-checks, and environment audits. Each targets a different class of silent failure.
+
+```text
+From verify-phase.md — Data-Flow Tracing:
+
+verify-phase checks each must_haves level:
+
+1. Truths - observable behaviors that must be TRUE:
+   "User can see existing messages"
+   "User can send a message"
+   "Messages persist across refresh"
+
+2. Artifacts - files that must EXIST with real content:
+   path: "src/components/Chat.tsx"
+   provides: "Message list rendering"
+   Check: exists + substantive (not stub) + wired (imported/used)
+
+3. Key links - critical connections verified with grep:
+   from: "src/components/Chat.tsx"
+   to: "/api/chat"
+   pattern: "fetch.*api/chat"
+
+   grep -r "fetch.*api/chat" src/components/Chat.tsx
+   FOUND = wired. NOT FOUND = orphaned component.
+
+Evidence-based: grep on actual source, not trust.
+```
+
+Data-flow tracing works at three levels. Level 1 (Truths) states what a user must be able to observe -- these are written as plain English sentences like 'User can see existing messages.' Level 2 (Artifacts) identifies the files that make those truths possible and checks that they exist with real content, not stubs. Level 3 (Key Links) verifies that artifacts are actually connected to each other by running grep on source code. A Chat.tsx component that exists and has real content but never calls fetch('/api/chat') is an orphaned component -- it looks complete but does nothing. Key links catch this.
+
+```text
+From verify-phase.md — Behavioral Spot-Checks:
+
+For each observable truth, determine if the codebase enables it.
+
+Status:
+  VERIFIED   (all supporting artifacts pass)
+  FAILED     (artifact missing/stub/unwired)
+  UNCERTAIN  (needs human)
+
+For each truth:
+  identify supporting artifacts ->
+  check artifact status ->
+  check wiring ->
+  determine truth status.
+
+Example:
+  Truth: "User can see existing messages"
+  Depends on:
+    Chat.tsx       (renders)
+    /api/chat GET  (provides)
+    Message model  (schema)
+
+  If Chat.tsx is a stub or API returns hardcoded [] -> FAILED
+  If all exist, are substantive, and connected    -> VERIFIED
+```
+
+Behavioral spot-checks decompose each truth into its supporting chain. The question is not 'does Chat.tsx exist?' but 'does the chain from Message model through /api/chat GET through Chat.tsx actually deliver messages to the user?' If any link in the chain is broken -- the model has no data, the API returns an empty array, or the component never calls the API -- the truth fails. This is why GSD marks truths as VERIFIED, FAILED, or UNCERTAIN. UNCERTAIN means the automated check cannot determine the answer and a human must look.
+
+```text
+From verify-phase.md — Artifact Verification Levels:
+
+| Exists | Substantive | Wired | Status       |
+|--------|-------------|-------|--------------|
+|  yes   |    yes      |  yes  | VERIFIED     |
+|  yes   |    yes      |  no   | ORPHANED     |
+|  yes   |    no       |   -   | STUB         |
+|  no    |     -       |   -   | MISSING      |
+
+Export-level spot check (WARNING severity):
+
+For artifacts that pass Level 3, spot-check individual exports:
+- Extract key exported symbols (functions, constants, classes)
+- For each, grep for usage outside the defining file
+- Flag exports with zero external call sites as
+  "exported but unused"
+
+This catches dead stores like setPlan() that exist in a
+wired file but are never actually called.
+```
+
+The environment audit extends verification beyond code. It checks that artifacts are not just present but substantive -- a file with 3 lines is likely a stub even if it exists and is imported. The export-level spot-check goes deeper still: even in a file that passes all three levels (exists, substantive, wired), individual exported functions might never be called. A setPlan() function that exists, is exported, and lives in a properly wired module -- but has zero call sites outside its own file -- is dead code that signals incomplete integration.
+
+Enhanced verification is the difference between 'it compiles' and 'it works.' Data-flow tracing ensures connections exist between components. Behavioral spot-checks ensure those connections deliver the right data. Environment audits ensure nothing is a stub or dead code. Together, they catch the most common failure mode in AI-generated code: components that look complete in isolation but are never wired together. The verifier runs these checks automatically after each phase, producing a VERIFICATION.md report with evidence for every finding.
+
+---
+
+### Lesson 10: Stub Detection
+
+**Objective:** Explain how the verifier identifies incomplete implementations -- stubs, TODOs, placeholder code -- that slip through tests but prevent features from working.
+
+A stub is code that exists structurally but does not actually do anything. It might be a function that returns an empty array, a component that renders 'Coming soon', or a handler that logs to console instead of processing data. Stubs are dangerous because they pass basic tests -- the function is callable, the component renders, the handler does not throw. But the feature does not work. Stub detection is the verifier's defense against code that looks complete but delivers nothing.
+
+```text
+From verify-phase.md — Anti-Pattern Scanning:
+
+| Pattern              | Search                                    | Severity  |
+|----------------------|-------------------------------------------|-----------|
+| TODO/FIXME/XXX/HACK  | grep -n -E "TODO|FIXME|XXX|HACK"          | Warning   |
+| Placeholder content  | grep -n -iE "placeholder|coming soon|     | Blocker   |
+|                      |  will be here"                            |           |
+| Empty returns        | grep -n -E "return null|return {}|        | Warning   |
+|                      |  return []|=> {}"                         |           |
+| Log-only functions   | Functions containing only console.log     | Warning   |
+
+Categorize:
+  Blocker  (prevents goal)
+  Warning  (incomplete)
+  Info     (notable)
+```
+
+The verifier scans every file modified in the phase against four stub patterns. TODO and FIXME comments signal work the developer intended to finish but did not. Placeholder content like 'coming soon' is a blocker -- it directly prevents the feature from working. Empty returns (return null, return {}, return []) mean data never reaches the consumer. Log-only functions appear to handle events but discard them. Each pattern maps to a severity: blockers prevent the phase goal from being achieved, warnings indicate incomplete work that may need attention.
+
+```text
+From verify-phase.md — Artifact Stub Detection:
+
+Artifact status from verification result:
+- exists=false           -> MISSING
+- issues not empty       -> STUB
+  (check issues for "Only N lines" or "Missing pattern")
+- passed=true            -> VERIFIED (Levels 1-2 pass)
+
+Level 3 -- Wired (manual check for artifacts that pass 1-2):
+
+grep -r "import.*$artifact_name" src/ --include="*.ts"
+grep -r "$artifact_name" src/ --include="*.ts" | grep -v "import"
+
+WIRED   = imported AND used
+ORPHANED = exists but not imported/used
+
+A 3-line file that exports a function signature and
+returns null is detected as STUB -- it passes the
+"exists" check but fails the "substantive" check
+because its issues array contains "Only 3 lines."
+```
+
+The verifier combines grep-based pattern detection with size heuristics. A file with only 3 lines cannot contain a real implementation -- it is flagged as a stub even if it has no TODO comments. The issues array captures what specifically is wrong: 'Only N lines' means the file is too small to be substantive, 'Missing pattern' means expected content (like a specific function name or API call) was not found. This multi-signal approach catches stubs that any single check would miss.
+
+```text
+From verify-phase.md — Stub Reporting in VERIFICATION.md:
+
+Scan Anti-patterns section of the verification report:
+
+### Anti-Patterns Found
+
+| File                        | Pattern           | Severity | Line |
+|-----------------------------|-------------------|----------|------|
+| src/api/comments.ts         | return []          | Warning  | 42   |
+| src/components/Feed.tsx     | placeholder        | Blocker  | 15   |
+| src/utils/format.ts         | TODO               | Warning  | 8    |
+
+### Artifact Status
+
+| Artifact                    | Exists | Substantive | Wired   | Status   |
+|-----------------------------|--------|-------------|---------|----------|
+| src/api/comments.ts         | yes    | no          | -       | STUB     |
+| src/components/Feed.tsx     | yes    | no          | -       | STUB     |
+| src/components/Chat.tsx     | yes    | yes         | yes     | VERIFIED |
+```
+
+The VERIFICATION.md report gives a clear, actionable view of every stub. The anti-patterns table shows exact file, pattern matched, severity, and line number. The artifact status table shows which files passed all verification levels and which are stubs. When the verifier finds blockers, it generates fix plans -- targeted tasks that replace the stub with a real implementation. A 'return []' in src/api/comments.ts becomes a task: 'Replace empty return with actual database query.' The stub is not just detected -- it triggers a concrete remediation path.
+
+Stub detection is one layer in GSD's quality system. It works alongside data-flow tracing (Lesson 9) to catch incomplete implementations. A component might be wired correctly (key links pass) but return empty data (stub detection catches it). Or a component might have real content (stub detection passes) but never be imported (data-flow tracing catches it). Together, these techniques ensure that code is not just present and connected, but actually delivers real data to real users. The next lesson covers how GSD prevents regressions across phases.
+
+---
+
+### Lesson 11: Regression Gate
+
+**Objective:** Explain how execute-phase runs cross-phase regression checks before advancing, preventing phase N+1 from silently breaking what phase N delivered.
+
+In a multi-phase project, each phase builds on what previous phases delivered. Phase 1 creates the database schema, Phase 2 builds the API, Phase 3 creates the UI. But Phase 3's changes might break Phase 2's API routes, or Phase 2's migrations might alter Phase 1's schema. Without regression checks, these breakages go undetected until the milestone audit -- by which point the damage is spread across multiple phases and much harder to fix. The regression gate catches these problems immediately, before advancing to the next phase.
+
+```text
+From execute-phase.md — Regression Gate Design:
+
+Orchestrator coordinates, not executes. Each subagent loads
+the full execute-plan context.
+
+Orchestrator workflow:
+  discover plans ->
+  analyze deps ->
+  group waves ->
+  spawn agents ->
+  handle checkpoints ->
+  collect results
+
+After all waves complete, the orchestrator runs verification:
+
+  gsd-verifier -> VERIFICATION.md
+
+The verifier checks:
+  1. All must_haves from every PLAN.md in the phase
+  2. Artifacts exist, are substantive, and are wired
+  3. Key links verified with grep on actual source
+  4. Anti-patterns scanned (stubs, TODOs, placeholders)
+  5. Requirements coverage from REQUIREMENTS.md
+```
+
+The regression gate operates at the boundary between execution and advancement. After all plans in a phase complete, the orchestrator spawns a gsd-verifier agent. This agent does not just check the current phase -- it verifies that previous phase outputs still work by checking must_haves, artifacts, and key links. If Phase 3 altered a file that Phase 2 depends on, the key link verification will catch it: the grep pattern from Phase 2's must_haves will fail against the modified file. The gate blocks advancement until all verification passes.
+
+```text
+From verify-phase.md — Gate Pass/Fail Logic:
+
+Determine overall status:
+
+passed:
+  All truths VERIFIED
+  All artifacts pass levels 1-3
+  All key links WIRED
+  No blocker anti-patterns
+
+gaps_found:
+  Any truth FAILED
+  Artifact MISSING/STUB
+  Key link NOT_WIRED
+  Or blocker found
+
+human_needed:
+  All automated checks pass
+  But human verification items remain
+
+Orchestrator routes:
+  passed      -> update_roadmap (advance to next phase)
+  gaps_found  -> create/execute fixes, re-verify
+  human_needed -> present to user
+```
+
+When the gate returns 'gaps_found', the orchestrator does not just stop -- it creates fix plans. The verifier clusters related gaps (e.g., 'API stub + component unwired' becomes one fix plan: 'Wire frontend to backend'), generates targeted tasks with specific files and actions, and orders them by dependency: fix missing artifacts first, then stubs, then wiring, then re-verify. The fix plans execute in the same automated pipeline. Only after all gaps are resolved and re-verification passes does the system advance to the next phase.
+
+```text
+From verify-phase.md — Fix Plan Generation:
+
+If gaps_found:
+
+1. Cluster related gaps:
+   API stub + component unwired -> "Wire frontend to backend"
+   Multiple missing artifacts   -> "Complete core implementation"
+   Wiring only issues           -> "Connect existing components"
+
+2. Generate plan per cluster:
+   Objective, 2-3 tasks (files/action/verify each),
+   re-verify step.
+   Keep focused: single concern per plan.
+
+3. Order by dependency:
+   Fix missing  -> fix stubs -> fix wiring -> verify
+
+Orchestrator routes:
+  passed      -> update roadmap, advance
+  gaps_found  -> create/execute fixes, re-verify
+  human_needed -> present to user for manual check
+```
+
+The clustering step is important. Without it, a single broken feature could produce dozens of individual gap findings: missing function, unwired component, stub return, failed truth. Clustering groups these into a coherent fix: 'Wire the comments feature' with tasks that address the function, the component, and the wiring in sequence. This mirrors how a developer would fix the issue -- as one coherent change, not as isolated patches.
+
+The regression gate is the quality system's boundary enforcer. While stub detection (Lesson 10) catches incomplete code within a phase and enhanced verification (Lesson 9) traces data flow, the regression gate prevents advancement until everything checks out. It enforces the principle that later work must not break earlier work. Combined with atomic commits (each task independently verifiable), wave-based execution (dependency-aware ordering), and the fix-then-re-verify cycle, the regression gate ensures that milestone completion means all phases work together, not just individually.
+
+---
+
+### Lesson 12: Security Hardening
+
+**Objective:** Explain how the centralized security.cjs module prevents path traversal, prompt injection, and other security issues in an AI-driven tool.
+
+GSD generates markdown files that become LLM system prompts. It reads user-supplied file paths. It executes shell commands. Each of these is a potential attack vector. Path traversal could let a malicious argument escape the project directory. Prompt injection could embed rogue instructions in planning documents. Shell metacharacters could execute arbitrary commands. GSD centralizes all security checks in a single module -- security.cjs -- so every tool calls into one validated, tested defense layer instead of implementing its own ad-hoc checks.
+
+```javascript
+// From security.cjs — Path Validation:
+
+function validatePath(filePath, baseDir, opts = {}) {
+  if (!filePath || typeof filePath !== 'string') {
+    return { safe: false, resolved: '', error: 'Empty or invalid file path' };
+  }
+
+  // Reject null bytes (can bypass path checks in some environments)
+  if (filePath.includes('\0')) {
+    return { safe: false, resolved: '', error: 'Path contains null bytes' };
+  }
+
+  // Resolve symlinks in base directory
+  let resolvedBase;
+  try {
+    resolvedBase = fs.realpathSync(path.resolve(baseDir));
+  } catch {
+    resolvedBase = path.resolve(baseDir);
+  }
+
+  // ... resolve the target path ...
+
+  // The resolved path must start with the base directory
+  if (resolvedPath !== resolvedBase &&
+      !normalizedPath.startsWith(normalizedBase)) {
+    return {
+      safe: false,
+      resolved: resolvedPath,
+      error: `Path escapes allowed directory: ${resolvedPath}`
+    };
+  }
+
+  return { safe: true, resolved: resolvedPath };
+}
+```
+
+The validatePath function prevents path traversal by resolving the user-supplied path to its absolute form and checking that it falls within the allowed base directory. It handles three edge cases that simpler checks miss: null bytes (which can bypass string-based path checks in some environments), symlinks (which can make a path appear to be inside the base directory while actually pointing outside), and absolute paths (which bypass relative path assumptions). The function resolves symlinks using fs.realpathSync on both the base directory and the target path before comparing.
+
+```javascript
+// From security.cjs — Prompt Injection Detection:
+
+const INJECTION_PATTERNS = [
+  // Direct instruction override attempts
+  /ignore\s+(all\s+)?previous\s+instructions/i,
+  /disregard\s+(all\s+)?previous/i,
+  /override\s+(system|previous)\s+(prompt|instructions)/i,
+
+  // Role/identity manipulation
+  /you\s+are\s+now\s+(?:a|an|the)\s+/i,
+  /pretend\s+(?:you(?:'re| are)\s+|to\s+be\s+)/i,
+
+  // System prompt extraction
+  /(?:print|output|reveal|show)\s+(?:your\s+)?(?:system\s+)?prompt/i,
+
+  // Hidden instruction markers
+  /<\/?(?:system|assistant|human)>/i,
+  /\[SYSTEM\]/i,
+  /\[INST\]/i,
+
+  // Exfiltration attempts
+  /(?:send|post|fetch|curl)\s+(?:to|from)\s+https?:\/\//i,
+];
+
+function scanForInjection(text, opts = {}) {
+  const findings = [];
+  for (const pattern of INJECTION_PATTERNS) {
+    if (pattern.test(text)) {
+      findings.push(`Matched injection pattern: ${pattern.source}`);
+    }
+  }
+  return { clean: findings.length === 0, findings };
+}
+```
+
+Prompt injection is particularly relevant for GSD because user-supplied text (project descriptions, phase goals, task names) flows into markdown files that become agent system prompts. If a malicious user embeds 'ignore all previous instructions' in a task name, that text would appear in the executor agent's prompt. The scanForInjection function detects five categories of injection: instruction overrides, role manipulation, prompt extraction, hidden instruction markers (XML tags mimicking system boundaries), and exfiltration attempts. This is defense-in-depth -- the primary defense is proper input/output boundaries in agent prompts.
+
+```javascript
+// From security.cjs — Convenience Wrapper and Exports:
+
+function requireSafePath(filePath, baseDir, label, opts = {}) {
+  const result = validatePath(filePath, baseDir, opts);
+  if (!result.safe) {
+    throw new Error(
+      `${label || 'Path'} validation failed: ${result.error}`
+    );
+  }
+  return result.resolved;
+}
+
+module.exports = {
+  // Path safety
+  validatePath,
+  requireSafePath,
+
+  // Prompt injection
+  INJECTION_PATTERNS,
+  scanForInjection,
+  sanitizeForPrompt,
+
+  // Shell safety
+  validateShellArg,
+
+  // JSON safety
+  safeJsonParse,
+
+  // Input validation
+  validatePhaseNumber,
+  validateFieldName,
+};
+```
+
+Tools call into security.cjs before performing any file operation or accepting user input. The requireSafePath wrapper is the most common pattern: pass a user-supplied path and a base directory, get back either a safe resolved path or an exception. Other tools use scanForInjection before embedding user text in agent prompts, validateShellArg before constructing shell commands, safeJsonParse before processing JSON input, and validatePhaseNumber before using phase arguments in file path construction. Each function returns structured results (not just true/false) so callers know exactly what failed and why.
+
+Centralized security has three advantages over scattered checks. First, consistency: every path validation uses the same null-byte check, symlink resolution, and containment logic. A bug fix in validatePath fixes every tool at once. Second, testability: security.cjs can be unit-tested in isolation with adversarial inputs (paths with ../, null bytes, symlinks) without running the full tool chain. Third, auditability: a security review examines one file, not dozens of scattered checks across the codebase. This pattern -- centralize validation, export functions, call before every operation -- applies to any tool that handles untrusted input, not just GSD.
 
 ---
 
@@ -3828,6 +4786,308 @@ GSD-2 is a methodology that became executable. Every concept from the original G
 
 ---
 
+### Lesson 9: Multi-Runtime Support
+
+**Objective:** Explain how GSD-2 supports Cursor CLI, Gemini CLI, and other AI runtimes alongside Claude Code through a provider registry and health checking system.
+
+GSD started as a Claude Code-only framework. But different AI models excel at different tasks -- Claude for planning and writing, GPT for certain code patterns, Gemini for large-context analysis. GSD-2 abstracts the runtime layer so you can use any supported AI provider. The system tracks which runtime is executing each unit of work, checks provider health before dispatching, and lets you configure per-phase model preferences. Multi-runtime support means GSD adapts to your available tools rather than locking you into one provider.
+
+```typescript
+// From unit-runtime.ts — Runtime Phase Tracking:
+
+export type UnitRuntimePhase =
+  | "dispatched"
+  | "wrapup-warning-sent"
+  | "timeout"
+  | "recovered"
+  | "finalized"
+  | "paused"
+  | "skipped";
+
+export interface AutoUnitRuntimeRecord {
+  version: 1;
+  unitType: string;
+  unitId: string;
+  startedAt: number;
+  updatedAt: number;
+  phase: UnitRuntimePhase;
+  wrapupWarningSent: boolean;
+  continueHereFired: boolean;
+  timeoutAt: number | null;
+  lastProgressAt: number;
+  progressCount: number;
+  lastProgressKind: string;
+  recovery?: ExecuteTaskRecoveryStatus;
+  recoveryAttempts?: number;
+  lastRecoveryReason?: "idle" | "hard";
+}
+```
+
+Every unit of work in GSD-2 has a runtime record that tracks its lifecycle phase -- from dispatched through finalized or timeout. The UnitRuntimePhase type captures the seven possible states: dispatched (agent is working), wrapup-warning-sent (approaching timeout), timeout (exceeded time limit), recovered (restarted after failure), finalized (successfully completed), paused (waiting for human input), and skipped (bypassed). The AutoUnitRuntimeRecord interface tracks progress counts, last progress timestamps, and recovery attempts. This state lives on disk, so the system can resume from any point after a crash.
+
+```typescript
+// From doctor-providers.ts — Provider Health Checking:
+
+export type ProviderCheckStatus = "ok" | "warning" | "error" | "unconfigured";
+
+export interface ProviderCheckResult {
+  /** Provider id from PROVIDER_REGISTRY (e.g. "anthropic") */
+  name: string;
+  /** Human-readable label */
+  label: string;
+  /** Functional grouping */
+  category: ProviderCategory;
+  status: ProviderCheckStatus;
+  message: string;
+  /** Optional extra detail (e.g. which env var to set) */
+  detail?: string;
+  /** True if this provider is actively required by preferences */
+  required: boolean;
+}
+```
+
+The doctor-providers module checks every configured provider before GSD-2 starts autonomous execution. Each provider gets a ProviderCheckResult with a clear status: ok (key found and valid), warning (key present but may have issues), error (required but missing), or unconfigured (optional and not set up). The 'required' flag distinguishes providers you have configured in your model preferences from optional ones. Running /gsd doctor shows you which providers are healthy, which are missing keys, and which environment variables to set. No network calls -- it checks key presence in auth.json and environment variables for sub-10ms results.
+
+```typescript
+// From key-manager.ts — Provider Registry:
+
+export type ProviderCategory = "llm" | "tool" | "search" | "remote";
+
+export const PROVIDER_REGISTRY: ProviderInfo[] = [
+  // LLM Providers
+  { id: "anthropic",         label: "Anthropic (Claude)",
+    category: "llm", envVar: "ANTHROPIC_API_KEY" },
+  { id: "openai",            label: "OpenAI",
+    category: "llm", envVar: "OPENAI_API_KEY" },
+  { id: "github-copilot",    label: "GitHub Copilot",
+    category: "llm", hasOAuth: true },
+  { id: "google-gemini-cli", label: "Google Gemini CLI",
+    category: "llm", hasOAuth: true },
+  { id: "google",            label: "Google (Gemini)",
+    category: "llm", envVar: "GEMINI_API_KEY" },
+  { id: "groq",              label: "Groq",
+    category: "llm", envVar: "GROQ_API_KEY" },
+  { id: "xai",               label: "xAI (Grok)",
+    category: "llm", envVar: "XAI_API_KEY" },
+  { id: "openrouter",        label: "OpenRouter",
+    category: "llm", envVar: "OPENROUTER_API_KEY" },
+  // ... plus tool, search, and remote integrations
+];
+```
+
+The PROVIDER_REGISTRY is the single source of truth for all supported providers. Each entry specifies an id, human-readable label, category (LLM, tool, search, or remote integration), optional environment variable name, and authentication method (API key or OAuth). Adding a new provider means adding one entry to this array -- no control flow changes needed. The registry pattern mirrors GSD's declarative dispatch philosophy: data structures drive behavior, not if-else chains. Categories let the doctor command group providers logically: LLM providers for model execution, tool providers for integrations like Context7, search providers for web research, and remote providers for notification channels.
+
+Multi-runtime support is the natural extension of GSD-2's state-on-disk principle. Because every unit's runtime phase is tracked in a JSON file, the system does not care which AI model executed it -- it cares whether the artifact was produced. The provider registry tells the system what is available. The doctor checks tell the system what is healthy. The model preferences in config tell the system what to use for each phase. And the unit runtime record tracks what actually happened. This separation of concerns means you can switch from Claude to Gemini for a specific phase without changing any workflow code -- you change a config value.
+
+---
+
+### Lesson 10: Forensics Debugging
+
+**Objective:** Explain how /gsd:forensics performs post-mortem investigation of failed or stuck workflows by gathering evidence from git, planning state, and file system artifacts.
+
+When a GSD workflow fails or gets stuck, the question is not 'what broke?' but 'why did it break, and what was the system doing when it happened?' /gsd:forensics is a read-only investigation tool that reconstructs the failure timeline by examining git history, planning artifacts, worktree state, and session reports. It detects anomaly patterns like stuck loops, missing artifacts, abandoned work, and scope drift. The output is a structured diagnostic report with evidence, root cause hypothesis, and specific remediation steps.
+
+```text
+From forensics.md — Evidence Gathering:
+
+Step 2: Gather Evidence
+
+2a. Git History:
+  git log --oneline -30
+  git log --format="%H %ai %s" -30     (timestamps for gap analysis)
+  git log --name-only --format="" -20   (detect repeated edits)
+  git status --short                     (uncommitted work)
+  git diff --stat
+
+2b. Planning State:
+  .planning/STATE.md   -- current milestone, phase, progress, blockers
+  .planning/ROADMAP.md -- phase list with status
+  .planning/config.json -- workflow configuration
+
+2c. Phase Artifacts:
+  For each phase: check PLAN.md, SUMMARY.md, VERIFICATION.md,
+  CONTEXT.md, RESEARCH.md existence
+  Track which phases have complete artifact sets vs gaps
+
+2d. Session Reports:
+  .planning/reports/SESSION_REPORT.md -- last outcomes, token estimates
+
+2e. Git Worktree State:
+  git worktree list    (check for orphaned worktrees from crashed agents)
+```
+
+Forensics gathers evidence from five sources. Git history reveals the timeline: what was committed, when, and how frequently. Planning state shows where the system thinks it is versus where it actually is. Phase artifacts reveal gaps: a phase with PLAN.md but no SUMMARY.md was started but never finished. Session reports provide the last known good state. Worktree state catches orphaned worktrees from crashed autonomous agents. Each source independently contributes pieces of the puzzle. Together, they reconstruct the full picture of what went wrong.
+
+```text
+From forensics.md — Anomaly Detection Patterns:
+
+Stuck Loop Detection:
+  Signal: Same file appears in 3+ consecutive commits
+  within a short time window.
+  HIGH confidence if commit messages are similar
+  (e.g., "fix:", "fix:", "fix:" on same file)
+  MEDIUM confidence if file appears frequently
+  but messages vary
+
+Missing Artifact Detection:
+  Signal: Phase appears complete but lacks expected artifacts.
+  PLAN.md missing   -> planning step was skipped
+  SUMMARY.md missing -> phase was not properly closed
+  VERIFICATION.md missing -> quality check was skipped
+
+Abandoned Work Detection:
+  Signal: Large gap between last commit and current time,
+  with STATE.md showing mid-execution.
+
+Crash/Interruption Detection:
+  Signal: Uncommitted changes + STATE.md shows
+  mid-execution + orphaned worktrees.
+
+Scope Drift Detection:
+  Signal: Recent commits touch files outside the
+  current phase's expected scope.
+```
+
+Each anomaly pattern targets a specific failure mode. Stuck loops (the same file committed 3+ times in sequence) indicate an agent retrying the same fix repeatedly. Missing artifacts show where the workflow was skipped or interrupted. Abandoned work (long gap since last commit while STATE.md shows active execution) indicates a crash or manual interruption. Scope drift (commits touching files outside the phase's expected domain) indicates an agent working on the wrong thing. The confidence levels (HIGH, MEDIUM, LOW) help you prioritize which anomalies to investigate first.
+
+```text
+From forensics.md — Report Structure:
+
+## Forensic Report
+
+**Generated:** {ISO timestamp}
+**Problem:** {user's description}
+
+### Evidence Summary
+
+#### Git Activity
+- **Last commit:** {date} -- "{message}"
+- **Commits (last 30):** {count}
+- **Time span:** {earliest} -> {latest}
+- **Uncommitted changes:** {yes/no}
+- **Active worktrees:** {count}
+
+#### Artifact Completeness
+| Phase | PLAN | CONTEXT | RESEARCH | SUMMARY | VERIFICATION |
+|-------|------|---------|----------|---------|--------------|
+{for each phase: name | yes/no per artifact}
+
+### Anomalies Detected
+#### {Anomaly Type} -- {Confidence: HIGH/MEDIUM/LOW}
+**Evidence:** {specific commits, files, or state data}
+**Interpretation:** {what this likely means}
+
+### Root Cause Hypothesis
+{1-3 sentence hypothesis grounded in the anomalies}
+
+### Recommended Actions
+1. {Specific, actionable remediation step}
+```
+
+The report follows a disciplined structure: evidence first, interpretation second, action third. The evidence summary presents raw facts from git and planning state without interpretation. The anomalies section maps evidence to known failure patterns with confidence levels. The root cause hypothesis synthesizes anomalies into a 1-3 sentence explanation grounded in the evidence -- not speculation. The recommended actions give specific next steps: a /gsd:execute-phase command to resume, a file to fix, or a worktree to clean up. Absolute paths are redacted for portability.
+
+Use /gsd:forensics after any unexpected failure: autonomous mode got stuck, a phase failed silently, costs seem unusually high (indicating stuck loops), or the project state feels inconsistent. The command is read-only -- it never modifies project files, only writes the forensic report. This makes it safe to run at any time without fear of making things worse. Forensics embodies the same principle as the rest of GSD's quality system: evidence-based investigation, not guessing. The git history, planning artifacts, and worktree state tell you exactly what happened -- forensics just reads the evidence and presents it clearly.
+
+---
+
+### Lesson 11: Developer Profiling
+
+**Objective:** Explain how /gsd:profile-user builds a developer profile across 8 behavioral dimensions to personalize GSD interactions.
+
+Every Claude conversation starts generic. Claude does not know if you prefer terse commands or detailed explanations, if you evaluate libraries carefully or pick the first popular option, or if you debug by reading stack traces or by adding log statements. /gsd:profile-user analyzes your actual Claude Code sessions to build a profile across 8 behavioral dimensions. This profile is stored locally and used by GSD workflows to calibrate their behavior -- advisor mode adjusts research depth, explanations match your preferred detail level, and suggestions align with your decision style.
+
+```text
+From profile-user.md — The 8 Behavioral Dimensions:
+
+| Dimension            | What It Measures                            |
+|----------------------|---------------------------------------------|
+| Communication Style  | How you phrase requests (terse vs. detailed) |
+| Decision Speed       | How you choose between options               |
+| Explanation Depth    | How much explanation you want with code      |
+| Debugging Approach   | How you tackle errors and bugs               |
+| UX Philosophy        | How much you care about design vs. function  |
+| Vendor Philosophy    | How you evaluate libraries and tools         |
+| Frustration Triggers | What makes you correct Claude                |
+| Learning Style       | How you prefer to learn new things           |
+
+Data Handling:
+  Reads session files locally (read-only, nothing modified)
+  Analyzes message patterns (not content meaning)
+  Stores profile at $HOME/.claude/get-shit-done/USER-PROFILE.md
+  Nothing is sent to external services
+  Sensitive content (API keys, passwords) automatically excluded
+```
+
+The 8 dimensions capture how you work, not what you work on. Communication Style detects whether you give Claude terse commands ('fix the auth bug') or detailed specifications. Decision Speed tracks whether you deliberate between options or pick quickly. Vendor Philosophy is particularly important for advisor mode -- it determines the calibration tier (thorough evaluator gets 3-5 options, pragmatic-fast gets 2-4, opinionated gets 1-2). Frustration Triggers reveal what makes you correct Claude, so the system can avoid those patterns proactively.
+
+```text
+From profile-user.md — Data Gathering Pipeline:
+
+1. Initialize:
+   Parse flags: --questionnaire (skip sessions), --refresh
+   Check for existing profile at USER-PROFILE.md
+   If exists: offer View / Refresh / Cancel
+
+2. Consent Gate:
+   Display what will be analyzed
+   User explicitly opts in before any data is read
+
+3. Session Scan:
+   node gsd-tools.cjs scan-sessions --json
+   Found N sessions across M projects
+
+4a. Session Analysis Path:
+   node gsd-tools.cjs profile-sample --json
+   Spawn gsd-user-profiler agent with sampled messages
+   Agent analyzes patterns across all 8 dimensions
+   Returns structured analysis JSON
+
+4b. Questionnaire Path (fallback):
+   8 questions, one per dimension
+   User selects from predefined answer options
+   Answers converted to analysis scores
+
+5. Profile Generation:
+   Analysis -> USER-PROFILE.md
+```
+
+The profiling pipeline has a consent gate before reading any data -- the user explicitly opts in. There are two paths: session analysis (the primary path) reads your actual Claude Code sessions and uses a profiler agent to detect patterns across all 8 dimensions. The questionnaire path is a fallback for users without enough session history -- 8 multiple-choice questions, one per dimension. Both paths produce the same structured analysis format. The system also detects 'splits' -- dimensions where you behave differently across projects (e.g., terse in personal projects, detailed at work) -- and asks you to resolve them.
+
+```text
+From profile-user.md — Profile Storage and Usage:
+
+Profile stored at:
+  $HOME/.claude/get-shit-done/USER-PROFILE.md
+
+Profile influences GSD behavior:
+
+1. Advisor Mode (discuss-phase.md):
+   Vendor Philosophy score -> calibration tier
+   conservative/thorough-evaluator -> full_maturity (3-5 options)
+   opinionated -> minimal_decisive (1-2 options)
+   pragmatic-fast -> standard (2-4 options)
+
+2. Explanation Depth:
+   Affects how much context agents provide with code changes
+
+3. Communication Style:
+   Affects prompt tone and verbosity level
+
+4. Frustration Triggers:
+   Agents proactively avoid known pain points
+
+Profile management:
+  --refresh flag rebuilds from latest sessions
+  Backup created at USER-PROFILE.backup.md before refresh
+  View existing profile without reanalyzing
+```
+
+The profile is a single markdown file at a known location. Any GSD workflow can read it to calibrate behavior. The most direct integration is with advisor mode: your Vendor Philosophy score determines how many options research agents present. But the influence is broader -- explanation depth affects how verbose agent responses are, communication style affects prompt tone, and frustration triggers let agents avoid patterns that previously caused corrections. The profile is refreshable (--refresh flag) and always backed up before updates.
+
+The key difference between a developer profile and a settings file is that the profile is inferred from behavior, not configured manually. You do not check a box that says 'I am a thorough evaluator' -- the system observes that you ask clarifying questions, compare multiple libraries, and read documentation before deciding. This means the profile reflects how you actually work, which may differ from how you think you work. Combined with GSD-2's other personalization features (skills for project conventions, config for workflow preferences), developer profiling makes GSD adapt to you rather than requiring you to adapt to it.
+
+---
+
 ### Concept Map
 
 ```
@@ -3943,6 +5203,571 @@ Create a dispatch_loop step (or similar) that: (a) maintains a list of review ar
 <summary>Hint 5</summary>
 
 In your skeptic workflow, add a dispatch loop mechanism: (a) define a coverage map listing review areas and their status (e.g., architecture: pending, conventions: pending), (b) add dispatch logic that reads the coverage map, picks the next pending area, and invokes a focused review subagent for it -- provide that subagent with scoped context (only files relevant to that area, not the full project), (c) after each dispatch completes, update the coverage map to mark that area reviewed, (d) loop back to the dispatch step and repeat until all areas show complete, (e) include a termination condition (all areas reviewed or coverage threshold met) that exits the loop. The structural checks verify these patterns exist -- the specific review areas, context scoping strategy, and loop mechanism are your creative decisions.
+
+</details>
+
+
+---
+
+## Module 7: Workspaces & Collaboration
+
+Learn how GSD enables parallel development with workstream namespacing, multi-project workspaces, and cross-AI peer review — collaboration patterns that scale beyond single-milestone execution.
+
+### Lesson 1: Workspaces & Collaboration Overview
+
+**Objective:** Understand why GSD provides workspaces and collaboration features beyond sequential milestones. Learn the three isolation modes, the worktree lifecycle, and preview the module's four key topics: workstream namespacing, multi-project workspaces, cross-AI peer review, and workspace isolation.
+
+Sequential milestones work well for a single developer working on one project at a time. But real projects often demand parallel workstreams -- you need to prototype a feature while the main milestone is still executing, or you want to explore an alternative architecture without polluting the main branch. GSD solves this with workspaces: isolated environments where you can run independent planning and execution cycles. Each workspace gets its own branch, its own .gsd/ directory, and its own commit history. When the work is done, you merge it back. This module teaches the infrastructure that makes parallel work possible in GSD.
+
+```text
+#### Isolation Model
+
+Auto-mode supports three isolation modes (configured in
+`.gsd/preferences.md` under `taskIsolation.mode`):
+
+- **worktree** (default): Work happens in `.gsd/worktrees/<MID>/`,
+  a full git worktree on the `milestone/<MID>` branch.
+- **branch**: Work happens in the project root on a
+  `milestone/<MID>` branch. No worktree directory.
+- **none**: Work happens directly on the current branch.
+  No worktree, no milestone branch.
+```
+
+Those three modes -- worktree, branch, and none -- give you a spectrum of isolation. Worktree mode is the default because it provides the strongest isolation: a full working copy of the project in its own directory, on its own branch. Branch mode is lighter -- it reuses the same directory but switches to a dedicated branch. None mode is the simplest -- everything happens in place, no branches created. The mode you choose depends on your project's needs: worktree for long-running parallel work, branch for quick feature branches, none for small single-stream projects.
+
+```typescript
+export interface WorktreeInfo {
+  name: string;
+  path: string;
+  branch: string;
+  exists: boolean;
+}
+```
+
+Every worktree has a name (like 'auth-refactor'), a path under .gsd/worktrees/, a branch (worktree/<name>), and a boolean indicating whether it still exists on disk. This simple interface drives the entire worktree lifecycle: create a worktree, switch into it, do your work, merge it back, then remove it. The workspace-index module builds on this by indexing all milestones, slices, and tasks across the entire project -- providing a unified view of all work regardless of which worktree it lives in.
+
+```typescript
+export interface GSDWorkspaceIndex {
+  milestones: WorkspaceMilestoneTarget[];
+  active: {
+    milestoneId?: string;
+    sliceId?: string;
+    taskId?: string;
+    phase: string;
+  };
+  scopes: WorkspaceScopeTarget[];
+  validationIssues: ValidationIssue[];
+}
+```
+
+The GSDWorkspaceIndex is the data structure that answers 'where is everything?' It lists all milestones (each with their slices and tasks), tracks which milestone/slice/task is currently active, provides a flat list of scopes for navigation (project, milestone, slice, task), and surfaces any validation issues found during indexing. Commands like /gsd status and /gsd doctor use this index to show you the state of your entire project at a glance. This is the foundation that makes multi-project workspaces and collaboration features possible.
+
+You now know the motivation for workspaces: parallel workstreams that need isolation beyond sequential milestones. You have seen the three isolation modes (worktree, branch, none), the WorktreeInfo interface that tracks individual worktrees, and the GSDWorkspaceIndex that provides a unified project view. In the next four lessons, you will dive deep into each capability: workstream namespacing with /worktree (how to create, switch, merge, and remove worktrees), multi-project workspace indexing (how GSD tracks milestones and slices across a project), cross-AI peer review (how /review dispatches structured code analysis), and workspace isolation patterns.
+
+---
+
+### Lesson 2: Workstream Namespacing
+
+**Objective:** Learn how the /worktree command creates, lists, merges, and removes git worktrees under .gsd/worktrees/. Understand the worktree lifecycle (create -> work -> merge -> remove) and how each worktree gets its own named branch and working copy.
+
+Workstream namespacing is the practice of giving each parallel workstream its own named space -- a directory, a branch, and a set of GSD artifacts. The /worktree command (aliased as /wt) manages this namespace. When you run /worktree auth-refactor, GSD creates a new git worktree at .gsd/worktrees/auth-refactor/ on branch worktree/auth-refactor. You switch into that directory, do your work (plan, execute, verify), and when you are done, /worktree merge brings it back to the main branch. The name 'auth-refactor' acts as the namespace -- it scopes the branch, the directory, and the merge.
+
+```typescript
+/**
+ * GSD Worktree Command -- /worktree
+ *
+ * Create, list, merge, and remove git worktrees
+ * under .gsd/worktrees/.
+ *
+ * Usage:
+ *   /worktree <name>        -- create a new worktree
+ *   /worktree list          -- list existing worktrees
+ *   /worktree merge [name]  -- start LLM-guided merge
+ *   /worktree remove <name> -- remove a worktree
+ */
+```
+
+The command is deliberately simple: four operations that map to the worktree lifecycle. Create sets up the isolated environment. List shows all active worktrees. Merge reconciles changes back to the main branch. Remove cleans up the worktree and its branch. Under the hood, the WorktreeManager handles the git operations. Its JSDoc explains the complete flow: create a worktree with git worktree add, work in it freely, merge using LLM-guided reconciliation of .gsd/ artifacts, then remove the worktree and clean up the branch.
+
+```typescript
+/**
+ * GSD Worktree Manager
+ *
+ * Creates and manages git worktrees under
+ * .gsd/worktrees/<name>/.
+ * Each worktree gets its own branch (worktree/<name>)
+ * and a full working copy of the project.
+ *
+ * The merge helper compares .gsd/ artifacts between
+ * a worktree and the main branch, then dispatches
+ * an LLM-guided merge flow.
+ *
+ * Flow:
+ *   1. create()  -- git worktree add
+ *   2. user works in the worktree
+ *   3. merge()   -- LLM-guided reconciliation
+ *   4. remove()  -- git worktree remove + cleanup
+ */
+```
+
+That flow -- create, work, merge, remove -- is the core pattern. But what happens during merge is where the real intelligence lives. GSD first attempts a deterministic squash merge (git merge --squash). If that succeeds with no conflicts, the merge is done instantly. If conflicts are detected, GSD aborts the failed merge, then falls back to an LLM-guided merge flow. The LLM receives the full diff (both .gsd/ artifacts and code changes), the commit log, and file-level statistics, then reconciles the conflicts intelligently. This two-tier approach means clean merges are fast, and only conflict resolution uses AI.
+
+```typescript
+export interface WorktreeDiffSummary {
+  /** Files only in the worktree .gsd/ (new artifacts) */
+  added: string[];
+  /** Files in both but with different content */
+  modified: string[];
+  /** Files only in main .gsd/ (deleted in worktree) */
+  removed: string[];
+}
+```
+
+The WorktreeDiffSummary categorizes every changed file as added, modified, or removed. This powers the merge preview that shows you exactly what will change before you confirm. The merge command displays file counts, line statistics (+additions, -deletions), and splits changes into code versus GSD artifacts. You see the full picture before committing to the merge. Internal paths like .gsd/worktrees/, .gsd/runtime/, and .gsd/STATE.md are automatically skipped -- they are runtime artifacts that should not be merged.
+
+You now know how workstream namespacing works in GSD. The /worktree command provides four operations (create, list, merge, remove) that manage the worktree lifecycle. Each worktree gets its own directory under .gsd/worktrees/<name>/ and its own branch (worktree/<name>). Merges use a two-tier strategy: deterministic squash for clean merges, LLM-guided reconciliation for conflicts. The WorktreeDiffSummary drives merge previews by categorizing changes as added, modified, or removed. Next, you will learn how the workspace index tracks milestones, slices, and tasks across the entire project.
+
+---
+
+### Lesson 3: Multi-Project Workspaces
+
+**Objective:** Learn how workspace-index.ts indexes milestones, slices, and tasks across a project to provide a unified view of all work. Understand the hierarchy (Milestone -> Slice -> Task), scope targeting, and how this index enables commands like /gsd status and /gsd doctor.
+
+A GSD project can have multiple milestones running simultaneously -- especially when worktrees enable parallel development. But how does GSD know what work exists across the entire project? The workspace-index.ts module answers this by scanning all milestone directories, parsing their roadmaps and plans, and building a structured index of every milestone, slice, and task. This index is the data layer behind /gsd status (which shows project state at a glance) and /gsd doctor (which validates plan and completion boundaries). Without it, GSD would only know about the currently active work -- not the full picture.
+
+```typescript
+export interface WorkspaceMilestoneTarget {
+  id: string;
+  title: string;
+  roadmapPath?: string;
+  slices: WorkspaceSliceTarget[];
+}
+
+export interface WorkspaceSliceTarget {
+  id: string;
+  title: string;
+  done: boolean;
+  planPath?: string;
+  summaryPath?: string;
+  uatPath?: string;
+  tasksDir?: string;
+  branch?: string;
+  tasks: WorkspaceTaskTarget[];
+}
+```
+
+Each milestone in the index contains its ID, title, roadmap path, and a list of slices. Each slice tracks its completion status (done), paths to its plan, summary, and UAT files, the tasks directory, the git branch it runs on, and a list of its tasks. This hierarchy -- milestone contains slices, slices contain tasks -- mirrors the physical directory structure under .gsd/milestones/. The index reads this structure and makes it queryable. When /gsd status shows you 'Milestone M01: 3/5 slices complete,' it is reading from this index.
+
+```typescript
+export interface WorkspaceScopeTarget {
+  scope: string;
+  label: string;
+  kind: "project" | "milestone" | "slice" | "task";
+}
+```
+
+WorkspaceScopeTarget flattens the milestone/slice/task hierarchy into a navigable list of scopes. Each scope has a string identifier (like 'M01/S01/T01'), a human-readable label, and a kind that tells you what level of the hierarchy it targets. This powers scope-based commands: /gsd doctor M01/S01 validates a specific slice, /gsd doctor M01 validates an entire milestone, and /gsd doctor with no argument validates the whole project. The flat scope list also drives tab-completion in the CLI -- when you type /gsd doctor and hit tab, you see all available scopes.
+
+```text
+.gsd/
+  milestones/
+    M01-abc123/
+      ROADMAP.md
+      S01-setup/
+        PLAN.md
+        SUMMARY.md
+        UAT.md
+        tasks/
+          T01-PLAN.md
+          T01-SUMMARY.md
+      S02-core/
+        PLAN.md
+```
+
+That directory tree is what indexWorkspace() scans. It finds all milestone directories (M01-abc123/), reads their ROADMAP.md files to extract titles and slice lists, then dives into each slice directory to find plans, summaries, UAT files, and tasks. The function also derives the current state -- which milestone, slice, and task are active -- and builds the flat scope list. Optionally, it runs validation checks (validatePlanBoundary and validateCompleteBoundary) to detect issues like plans without summaries or slices marked done without proper artifacts. This is what /gsd doctor uses to find problems.
+
+You now know how multi-project workspace indexing works. The workspace-index.ts module scans all milestone directories, parses roadmaps and plans, and builds a GSDWorkspaceIndex containing every milestone, slice, and task. WorkspaceMilestoneTarget and WorkspaceSliceTarget represent the hierarchy, while WorkspaceScopeTarget flattens it for navigation and commands. The indexWorkspace() function reads the .gsd/milestones/ directory tree, derives active state, and optionally runs validation. This index powers /gsd status, /gsd doctor, and scope-based tab completion. Next, you will learn how /review dispatches structured code analysis across AI models.
+
+---
+
+### Lesson 4: Cross-AI Peer Review
+
+**Objective:** Learn how the /review skill determines review scope, gathers context, analyzes changes against five categories (Security, Performance, Bugs, Code Quality, Test Coverage), formats findings with severity levels, and offers a decision gate after review. Understand why this is cross-AI: GSD can dispatch review to multiple AI runtimes.
+
+Code review is one of the most valuable quality gates in software development, but it traditionally requires another human. GSD's /review skill automates structured code review by analyzing diffs against five categories: Security, Performance, Bug Risks, Code Quality, and Test Coverage. The skill is 'cross-AI' because GSD can dispatch it to different AI runtimes -- the same review prompt works across models. The core principle is clear: find real issues, not style nits. The reviewer focuses on problems that cause bugs, security vulnerabilities, performance degradation, or maintainability pain.
+
+```text
+<determine_review_scope>
+
+Parse the user's input to determine what to review:
+
+1. **No arguments** - Review staged changes first.
+   If nothing staged, review unstaged changes.
+   If both empty, review the most recent commit.
+
+2. **Commit hash argument** (e.g., `/review abc1234`)
+   Review that specific commit.
+
+3. **File path argument** (e.g., `/review src/foo.ts`)
+   Review unstaged changes in that file.
+
+4. **"pr" argument** (e.g., `/review pr`)
+   Review all changes since branching from main.
+
+</determine_review_scope>
+```
+
+The scope resolution is pragmatic: with no arguments, it reviews what you are about to commit (staged first, then unstaged, then last commit). With a commit hash, it reviews that specific commit. With 'pr', it reviews everything since you branched from main -- the full pull request diff. After determining scope, the reviewer does not just read the diff in isolation. It reads each modified file in full to understand surrounding code, identifies the tech stack, checks for related test files, and examines configuration changes. This context-gathering step is critical -- a diff without context leads to false positives.
+
+```text
+<review_categories>
+
+**A. Security Issues** (CRITICAL or HIGH)
+- Injection vulnerabilities, XSS, auth flaws
+- Secrets hardcoded or logged
+- Path traversal, unsafe eval
+
+**B. Performance Concerns** (HIGH or MEDIUM)
+- N+1 queries, blocking operations
+- Missing pagination, redundant computation
+
+**C. Bug Risks** (HIGH or MEDIUM)
+- Off-by-one errors, null dereferences
+- Race conditions, incorrect error handling
+
+**D. Code Quality** (MEDIUM or LOW)
+- Unclear naming, code duplication
+- Excessive complexity, dead code
+
+**E. Test Coverage Gaps** (MEDIUM or LOW)
+- New logic without tests
+- Changed behavior without updated tests
+
+</review_categories>
+```
+
+Each category has a default severity range -- Security issues are CRITICAL or HIGH because they can cause data breaches, while Test Coverage Gaps are MEDIUM or LOW because they represent risk, not immediate harm. The reviewer only reports findings that are actually present; categories with no issues are skipped entirely. This prevents the noise problem that plagues many automated review tools -- you only see what matters. Every finding includes the file path, line numbers, a clear description, why it matters, and a suggested fix.
+
+```text
+### Code Review: [brief description]
+
+**Scope**: [staged | unstaged | commit | PR changes]
+**Files reviewed**: [count] files, [+adds] [-dels]
+
+---
+
+#### Findings
+
+[Findings grouped by severity, highest first]
+
+#### Summary
+
+| Severity | Count |
+|----------|-------|
+| CRITICAL | X     |
+| HIGH     | X     |
+| MEDIUM   | X     |
+| LOW      | X     |
+
+#### Recommended Actions
+
+1. [Most important action]
+2. [Next most important]
+```
+
+After presenting findings, the review always ends with a decision gate: fix issues, save the review to a file, review again with different scope, discuss a specific finding, or take another action. This gate is mandatory -- the reviewer never auto-implements fixes. This separation of roles (reviewer versus author) is deliberate: it prevents the AI from silently changing code during a review pass. The user always decides what to act on. This is what makes /review a collaboration tool rather than an automation tool.
+
+You now know how cross-AI peer review works in GSD. The /review skill determines scope (staged, unstaged, commit, or PR), gathers context by reading full files, analyzes changes against five categories (Security, Performance, Bugs, Code Quality, Test Coverage), formats findings with severity levels and recommended actions, and offers a mandatory decision gate. It is cross-AI because the same skill definition works across different AI runtimes. The core principle -- find real issues, not style nits -- keeps reviews focused on problems that matter. Next, you will learn about workspace isolation patterns.
+
+---
+
+### Lesson 5: Workspace Isolation
+
+**Objective:** Understand how workspaces isolate workstreams to avoid conflicts -- file ownership, .gsd/ separation, and branch scoping. Learn the three layers of isolation that prevent parallel workstreams from interfering with each other.
+
+When you run parallel workstreams, three things can go wrong: file conflicts (two workstreams editing the same file), branch pollution (commits from different workstreams interleaving on the same branch), and state corruption (two workstreams writing to the same .gsd/ directory). GSD prevents all three through isolation -- each worktree gets its own directory, its own branch, and its own .gsd/ state. This lesson examines how each layer works, starting with directory isolation.
+
+```typescript
+export function worktreesDir(basePath: string): string {
+  return join(basePath, ".gsd", "worktrees");
+}
+
+export function worktreePath(
+  basePath: string,
+  name: string,
+): string {
+  return join(worktreesDir(basePath), name);
+}
+```
+
+Directory isolation is the foundation. Every worktree lives under .gsd/worktrees/<name>/ -- a full working copy of the project at its own path. worktreesDir() returns the container directory, and worktreePath() returns the specific worktree's location. Because each worktree has its own directory, two workstreams can edit the same logical file without conflicting -- they are editing different physical files in different directories. No file locking, no merge-on-save, just separate copies.
+
+```typescript
+export function worktreeBranchName(
+  name: string,
+): string {
+  return `worktree/${name}`;
+}
+
+// Inside createWorktree():
+const branchAlreadyExists =
+  nativeBranchExists(basePath, branch);
+
+if (branchAlreadyExists) {
+  const worktreeEntries =
+    nativeWorktreeList(basePath);
+  const branchInUse = worktreeEntries.some(
+    entry => entry.branch === branch,
+  );
+
+  if (branchInUse) {
+    throw new GSDError(
+      GSD_LOCK_HELD,
+      `Branch "${branch}" is already in use ` +
+      `by another worktree.`,
+    );
+  }
+}
+```
+
+Branch isolation ensures each worktree gets a dedicated branch named worktree/<name>. The worktreeBranchName() function generates this name from the worktree name. During creation, GSD validates that no other worktree is already using that branch -- if branchInUse is true, it throws an error. This prevents two worktrees from sharing a branch, which would cause their commits to interleave and their git histories to collide. Each workstream has a clean, linear commit history on its own branch.
+
+```typescript
+/**
+ * Sync .gsd/ state from the main repo into the
+ * worktree.
+ *
+ * Only adds missing content -- never overwrites
+ * existing files in the worktree (the worktree's
+ * execution state is authoritative for in-progress
+ * work).
+ */
+export function syncGsdStateToWorktree(
+  mainBasePath: string,
+  worktreePath_: string,
+): { synced: string[] } {
+  const mainGsd = gsdRoot(mainBasePath);
+  const wtGsd = gsdRoot(worktreePath_);
+  const synced: string[] = [];
+  // ...
+}
+```
+
+The third layer is .gsd/ state isolation. Each worktree has its own .gsd/ directory containing milestones, roadmaps, decisions, and other planning artifacts. State syncs one-way from main to worktree using syncGsdStateToWorktree(), which only adds missing content -- it never overwrites existing files. The comment says it clearly: the worktree's execution state is authoritative for in-progress work. This means if you modify a ROADMAP.md in your worktree, the main repo's version will not clobber it during sync. Two workstreams can evolve their planning state independently without corrupting each other.
+
+Workspace isolation works through three reinforcing layers. Directory isolation gives each worktree its own working copy under .gsd/worktrees/<name>/, so file edits never collide. Branch isolation assigns each worktree a dedicated worktree/<name> branch with validation that prevents branch sharing. State isolation gives each worktree its own .gsd/ directory with one-way additive sync from main -- the worktree's state is authoritative for in-progress work. Together, these layers mean you can run multiple parallel workstreams with confidence that they will not interfere with each other. In the next lesson, you will learn the lifecycle that creates, manages, and merges these isolated workspaces.
+
+---
+
+### Lesson 6: Workspace Lifecycle
+
+**Objective:** Understand the full workspace lifecycle: create, switch, complete (merge), and resume. Learn how GSD auto-commits before transitions, how switch/return tracks the original directory, and how WorktreeResolver automates the lifecycle for auto-mode.
+
+A workspace has four lifecycle phases: create (set up the isolated environment), switch (move between worktrees), complete (merge back to main), and resume (re-enter an existing worktree). Each phase builds on the isolation you learned in the previous lesson -- create sets up the three isolation layers, switch preserves them while moving between worktrees, complete reconciles them back to main, and resume re-enters an existing worktree without losing state. Let's trace through each phase.
+
+```typescript
+async function handleCreate(
+  basePath: string,
+  name: string,
+  ctx: ExtensionCommandContext,
+): Promise<void> {
+  // Auto-commit dirty files before leaving
+  // current workspace
+  const commitMsg = autoCommitCurrentBranch(
+    basePath, "worktree-switch", name,
+  );
+
+  // Create from the main tree
+  const mainBase = originalCwd ?? basePath;
+  const info = createWorktree(mainBase, name);
+
+  // Run post-create hook -- e.g. copy .env,
+  // symlink assets
+  const hookError = runWorktreePostCreateHook(
+    mainBase, info.path,
+  );
+
+  // Track original cwd before switching
+  if (!originalCwd) originalCwd = basePath;
+  process.chdir(info.path);
+}
+```
+
+The create flow does four things in sequence. First, it auto-commits any dirty files on the current branch -- this prevents uncommitted work from being lost when you switch away. Second, it calls createWorktree() which sets up the directory, branch, and runs git worktree add. Third, it runs a post-create hook for environment setup -- copying .env files, symlinking shared assets, or anything else your project needs in a fresh worktree. Fourth, it tracks the original working directory (originalCwd) and chdir's into the new worktree. That originalCwd is the key to the return command.
+
+```text
+Usage:
+  /worktree <name>          create and switch into a new worktree
+  /worktree switch <name>   switch into an existing worktree
+  /worktree return          switch back to the main project tree
+  /worktree list            list all worktrees
+  /worktree merge [name] [target]   merge worktree into target branch
+  /worktree remove <name|all>       remove a worktree and its branch
+```
+
+The /worktree command (aliased as /wt) covers the entire lifecycle. The create-or-switch behavior is smart: if you run /worktree auth-refactor and that worktree exists, it switches to it; if it does not exist, it creates it. The return command takes you back to the main project tree by restoring the originalCwd that was saved during create. GSD tracks this so return always works, even after multiple switches between worktrees. The list command shows all active worktrees with their branches and paths, highlighting which one you are currently in.
+
+```typescript
+export interface WorktreeResolverDeps {
+  isInAutoWorktree: (
+    basePath: string,
+  ) => boolean;
+  getIsolationMode: () =>
+    "worktree" | "branch" | "none";
+  mergeMilestoneToMain: (
+    basePath: string,
+    milestoneId: string,
+    roadmapContent: string,
+  ) => { pushed: boolean };
+  syncWorktreeStateBack: (
+    mainBasePath: string,
+    worktreePath: string,
+    milestoneId: string,
+  ) => { synced: string[] };
+  teardownAutoWorktree: (
+    basePath: string,
+    milestoneId: string,
+    opts?: { preserveBranch?: boolean },
+  ) => void;
+  createAutoWorktree: (
+    basePath: string,
+    milestoneId: string,
+  ) => string;
+  enterAutoWorktree: (
+    basePath: string,
+    milestoneId: string,
+  ) => string;
+}
+```
+
+In auto-mode, the WorktreeResolver orchestrates the lifecycle automatically at milestone boundaries. Its dependency interface reveals the full set of operations: createAutoWorktree and enterAutoWorktree handle creation and resumption, mergeMilestoneToMain brings completed work back via squash merge, syncWorktreeStateBack copies worktree state to the project root before teardown, and teardownAutoWorktree removes the worktree directory and optionally the branch. The getIsolationMode function returns 'worktree', 'branch', or 'none' -- the resolver adapts its behavior to whichever mode is configured.
+
+The workspace lifecycle is create, switch/return, merge, and remove. Create auto-commits dirty files, sets up the isolated environment, runs post-create hooks, and tracks the original directory. Switch and return let you move between worktrees while preserving state -- the smart create-or-switch behavior means /worktree <name> always does the right thing. Merge brings work back to main via squash merge, syncing state back to the project root first. In auto-mode, WorktreeResolver manages this entire lifecycle automatically, adapting to the configured isolation mode. In the next lesson, you will learn collaboration patterns -- how review feedback loops and multi-runtime coordination work across workspaces.
+
+---
+
+### Lesson 7: Collaboration Patterns
+
+**Objective:** Understand collaboration patterns in GSD: review feedback loops (read-only structured analysis), multi-runtime coordination (file-system protocol via .gsd/ state), and when to choose workstreams vs sequential milestones.
+
+Collaboration in GSD goes beyond parallel workstreams. It is about structured feedback loops and coordinated work across different AI runtimes. Three patterns make this work: review feedback (read-only analysis that feeds back into development), multi-runtime coordination (different AI tools sharing state through the file system), and the workstreams vs milestones decision (knowing when parallel isolation adds value vs when sequential is simpler). Let's start with the review pattern.
+
+```text
+<core_principle>
+**FIND REAL ISSUES, NOT STYLE NITS.** Focus on
+problems that cause bugs, security vulnerabilities,
+performance degradation, or maintainability pain.
+Avoid nitpicking formatting or subjective style
+preferences unless they harm readability.
+</core_principle>
+
+<analysis_only_rule>
+**THIS SKILL IS READ-ONLY. DO NOT MODIFY CODE.**
+
+The purpose is to review and report findings.
+Making changes during review conflates the
+reviewer and author roles. Present findings and
+let the user decide what to act on.
+</analysis_only_rule>
+```
+
+The /review skill is read-only by design -- the reviewer never modifies code. This separation of roles is critical for collaboration: one AI runtime writes code, another reviews it, and neither steps on the other's work. The review analyzes diffs across five categories (security, performance, bugs, code quality, test coverage gaps) and produces structured output with severity ratings, file paths, line numbers, and concrete suggestions. This structured feedback feeds back into the development loop -- the author can address findings in priority order, starting with CRITICAL and HIGH severity issues.
+
+```typescript
+export interface WorktreeResolverDeps {
+  getIsolationMode: () =>
+    "worktree" | "branch" | "none";
+  mergeMilestoneToMain: (
+    basePath: string,
+    milestoneId: string,
+    roadmapContent: string,
+  ) => { pushed: boolean };
+  syncWorktreeStateBack: (
+    mainBasePath: string,
+    worktreePath: string,
+    milestoneId: string,
+  ) => { synced: string[] };
+}
+```
+
+Multi-runtime coordination means different AI runtimes -- Claude Code, Cursor CLI, Gemini CLI, or any tool that understands GSD -- can work on the same project. They coordinate through the file system, not through APIs. The .gsd/ directory is the shared protocol: STATE.md tracks position, ROADMAP.md tracks progress, milestone directories contain plans and summaries. WorktreeResolver ensures consistency by syncing worktree state back to the project root (syncWorktreeStateBack) after each milestone. This means you can start work in one runtime and continue in another -- the .gsd/ state tells the new runtime exactly where things stand.
+
+```text
+#### When to Use Workstreams vs Sequential Milestones
+
+| Factor             | Sequential Milestones     | Parallel Workstreams       |
+|--------------------|---------------------------|----------------------------|
+| Work independence  | Tasks depend on each other | Tasks are independent      |
+| Risk tolerance     | Low -- linear progress    | Higher -- merge complexity |
+| Project size       | Small-medium              | Medium-large               |
+| Exploration needed | No -- path is clear       | Yes -- prototyping/spikes  |
+| Team/runtime count | Single runtime            | Multiple runtimes          |
+| Merge overhead     | None                      | Squash merge per worktree  |
+
+Rule of thumb: if you would create a feature branch
+in plain git, use a workstream. If you would just
+keep committing to main, use sequential milestones.
+```
+
+Sequential milestones are the default and work well for most projects. They are simpler -- no merge overhead, no branch management, linear progress. Workstreams add value in specific situations: when tasks are genuinely independent (e.g., frontend and backend can be built in parallel), when you need to explore alternatives without disrupting main (prototyping spikes), or when multiple runtimes need isolated workspaces. The merge overhead is real -- each worktree requires a squash merge, and conflicts may need LLM-guided resolution. Use workstreams when the isolation benefit clearly outweighs the merge cost.
+
+GSD supports three collaboration patterns. Review feedback provides read-only structured analysis across security, performance, bugs, and quality -- the reviewer never modifies code, maintaining clean role separation. Multi-runtime coordination lets different AI tools work on the same project through .gsd/ state files as a shared file-system protocol, with syncWorktreeStateBack ensuring consistency across transitions. The workstreams vs milestones decision comes down to a rule of thumb: if tasks are independent and you would create a feature branch in plain git, use a workstream; if you would keep committing to main, use sequential milestones. In the next lesson, you will apply everything you have learned in a hands-on mini-project.
+
+---
+
+### Mini-Project: Add Cross-AI Review Orchestration to Skeptic
+
+Extend your skeptic workflow with a cross-AI review orchestrator that dispatches reviews to multiple AI runtimes, aggregates findings with attribution, and formats a unified review report
+
+#### Artifacts
+
+##### Skeptic workflow with cross-AI review orchestration
+
+**Path:** `~/.claude/get-shit-done/workflows/skeptic.md`
+
+**Verification Checks:**
+
+- [ ] Defines or lists multiple AI runtimes to dispatch reviews to
+- [ ] Dispatches review requests to multiple AI runtimes
+- [ ] Collects responses from dispatched runtimes
+- [ ] Aggregates or merges findings from multiple review sources
+- [ ] Tracks which runtime produced each finding
+- [ ] Produces formatted combined review output
+
+#### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+Your skeptic currently dispatches to one AI. The cross-AI pattern from /gsd:review dispatches the same review prompt to multiple runtimes and combines their perspectives. Think about what your workflow needs to track which runtimes are available and route reviews to each.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+A cross-AI review orchestrator has four parts: (1) a registry of AI runtimes to use, (2) dispatch logic that sends the review to each runtime, (3) collection of responses from all runtimes, (4) aggregation that merges findings with attribution. All four need to appear in your workflow.
+
+</details>
+
+<details>
+<summary>Hint 3</summary>
+
+Add a step (or extend existing steps) that lists available runtimes (claude, cursor, gemini), dispatches the current review context to each, collects their responses, and merges findings. Each finding should note which runtime produced it. The aggregation step should deduplicate overlapping findings from different runtimes.
+
+</details>
+
+<details>
+<summary>Hint 4</summary>
+
+Create a cross_ai_review step that: (a) defines a runtime registry listing available AI runtimes, (b) for each runtime, formats and dispatches a review prompt with scoped context, (c) collects each runtime's response and findings, (d) aggregates findings across runtimes with deduplication and attribution, (e) formats a unified output report with per-runtime sections.
+
+</details>
+
+<details>
+<summary>Hint 5</summary>
+
+In your skeptic workflow, add a cross-AI review mechanism: (a) define a runtime registry (e.g., runtimes: claude, cursor, gemini -- each with invocation method), (b) for each runtime in the registry, dispatch the review prompt with scoped context from your dispatch loop, (c) collect each runtime's response into a results array, (d) aggregate by merging findings, deduplicating overlaps, and attributing each finding to its source runtime, (e) format a unified review report with a section per runtime and a combined findings summary, (f) output the formatted report. The structural checks verify these patterns exist -- the specific runtimes, invocation methods, dedup strategy, and report format are your creative decisions.
 
 </details>
 
