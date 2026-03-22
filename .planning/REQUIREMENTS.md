@@ -87,17 +87,43 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 
 ## Traceability
 
-Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| — | — | — |
+| CMD-01 | Phase 31 | Pending |
+| CMD-02 | Phase 31 | Pending |
+| CMD-03 | Phase 31 | Pending |
+| PLN-01 | Phase 31 | Pending |
+| PLN-02 | Phase 31 | Pending |
+| AGT-01 | Phase 31 | Pending |
+| QUA-01 | Phase 31 | Pending |
+| QUA-02 | Phase 31 | Pending |
+| QUA-03 | Phase 31 | Pending |
+| QUA-04 | Phase 31 | Pending |
+| G2-01 | Phase 31 | Pending |
+| G2-02 | Phase 31 | Pending |
+| G2-03 | Phase 31 | Pending |
+| INFR-01 | Phase 32 | Pending |
+| INFR-02 | Phase 32 | Pending |
+| INFR-03 | Phase 32 | Pending |
+| WRK-01 | Phase 33 | Pending |
+| WRK-02 | Phase 33 | Pending |
+| WRK-03 | Phase 33 | Pending |
+| WRK-04 | Phase 34 | Pending |
+| WRK-05 | Phase 34 | Pending |
+| WRK-06 | Phase 34 | Pending |
+| WRK-07 | Phase 34 | Pending |
+| MINI-01 | Phase 35 | Pending |
+| MINI-02 | Phase 35 | Pending |
+| MINI-03 | Phase 35 | Pending |
+| EXPO-01 | Phase 36 | Pending |
+| EXPO-02 | Phase 36 | Pending |
+| EXPO-03 | Phase 36 | Pending |
 
 **Coverage:**
 - v8.0 requirements: 26 total
-- Mapped to phases: 0
-- Unmapped: 26
+- Mapped to phases: 26
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-22*
-*Last updated: 2026-03-22 after initial definition*
+*Last updated: 2026-03-22 after roadmap creation*

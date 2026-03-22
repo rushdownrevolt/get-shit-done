@@ -12,6 +12,7 @@
 - ✅ **v5.0 Agent Orchestration Module** — Phases 18-21 (shipped 2026-03-16)
 - ✅ **v6.0 Quality & Feedback Loops Module** — Phases 22-25 (shipped 2026-03-16)
 - ✅ **v7.0 GSD-2 — The Agent Application** — Phases 26-30 (shipped 2026-03-20)
+- 🚧 **v8.0 GSD v1.26-1.28 Module Updates** — Phases 31-36 (in progress)
 
 ## Phases
 
@@ -98,86 +99,116 @@
 
 </details>
 
-### v7.0 GSD-2 — The Agent Application (Shipped 2026-03-20)
+<details>
+<summary>v7.0 GSD-2 — The Agent Application (Phases 26-30) — SHIPPED 2026-03-20</summary>
 
-**Milestone Goal:** Teach learners how GSD evolved from a prompt framework (v1) into a standalone agent CLI (v2), covering dispatch pipeline, state machine, auto mode, context engineering, and extensibility through skills.
+- [x] Phase 26: Module Infrastructure (1/1 plan) — completed 2026-03-20
+- [x] Phase 27: Lesson Content (Lessons 1-3) (3/3 plans) — completed 2026-03-20
+- [x] Phase 28: Lesson Content (Lessons 4-7) (4/4 plans) — completed 2026-03-20
+- [x] Phase 29: Mini-Project (1/1 plan) — completed 2026-03-20
+- [x] Phase 30: Export Update (1/1 plan) — completed 2026-03-20
 
-- [x] **Phase 26: Module Infrastructure** - Register Module 6, migrate progress, create lesson files (completed 2026-03-20)
-- [x] **Phase 27: Lesson Content (Lessons 1-3)** - Overview, Dispatch Pipeline, Context Engineering (completed 2026-03-20)
-- [x] **Phase 28: Lesson Content (Lessons 4-7)** - Auto Mode, Git & Worktrees, Skills & Extensions, Synthesis (completed 2026-03-20)
-- [x] **Phase 29: Mini-Project** - Hands-on task with verification and progressive hints (completed 2026-03-20)
-- [x] **Phase 30: Export Update** - AI curriculum export with Module 6 content (completed 2026-03-20)
+</details>
+
+### 🚧 v8.0 GSD v1.26-1.28 Module Updates (In Progress)
+
+**Milestone Goal:** Update existing GSD Learn modules for features added in GSD v1.26-1.28 and add Module 7: Workspaces & Collaboration
+
+- [ ] **Phase 31: Existing Module Updates** - Update Modules 1, 3, 4, 5, 6 lessons for new GSD v1.26-1.28 features
+- [ ] **Phase 32: Module 7 Infrastructure** - Register Module 7, v7-v8 migration, skeleton lessons
+- [ ] **Phase 33: Module 7 Content (Lessons 1-3)** - Workstream namespacing, multi-project workspaces, cross-AI peer review
+- [ ] **Phase 34: Module 7 Content (Lessons 4-7)** - Workspace isolation, lifecycle, collaboration patterns, decision guidance
+- [ ] **Phase 35: Module 7 Mini-Project** - Cross-AI review orchestrator with verification and hints
+- [ ] **Phase 36: Export Update** - AI curriculum export with all module changes
 
 ## Phase Details
 
-### Phase 26: Module Infrastructure
-**Goal**: Module 6 exists in the system and learners can navigate to it
-**Depends on**: Phase 25 (v6.0 complete)
+### Phase 31: Existing Module Updates
+**Goal**: Learners understand the new GSD v1.26-1.28 features through updated lessons across Modules 1, 3, 4, 5, and 6
+**Depends on**: Phase 30 (v7.0 complete)
+**Requirements**: CMD-01, CMD-02, CMD-03, PLN-01, PLN-02, AGT-01, QUA-01, QUA-02, QUA-03, QUA-04, G2-01, G2-02, G2-03
+**Success Criteria** (what must be TRUE):
+  1. Learner launching Module 1 sees lessons covering /gsd:fast, /gsd:next, and /gsd:ship commands with real source snippets
+  2. Learner launching Module 3 sees lessons covering decision IDs and CLAUDE.md compliance (Dimension 10)
+  3. Learner launching Module 4 sees a lesson covering advisor mode with parallel research agents
+  4. Learner launching Module 5 sees lessons covering enhanced verification (data-flow tracing, stub detection, regression gate, security hardening)
+  5. Learner launching Module 6 sees lessons covering multi-runtime support, forensics debugging, and developer profiling
+**Plans**: TBD
+
+Plans:
+- [ ] 31-01: TBD
+- [ ] 31-02: TBD
+
+### Phase 32: Module 7 Infrastructure
+**Goal**: Module 7 is registered, progress migration works, and skeleton lessons validate the module pipeline
+**Depends on**: Phase 31
 **Requirements**: INFR-01, INFR-02, INFR-03
 **Success Criteria** (what must be TRUE):
-  1. Module 6 appears in the module picker with correct title "GSD-2 -- The Agent Application" and description
-  2. Existing learner progress from v6.0 is fully preserved after v7 migration (no data loss)
-  3. Lesson JSON files for all 7 lessons + mini-project load and render in the learning shell without errors
-**Plans**: 1 plan
-Plans:
-- [ ] 26-01-PLAN.md — Register Module 6, add v6-to-v7 migration, create skeleton lesson JSONs
+  1. Module 7 "Workspaces & Collaboration" appears in the module picker with correct name and lesson count
+  2. Existing v7 progress data migrates to v8 format preserving all module completion states
+  3. Learner can navigate into Module 7 and see placeholder skeleton lessons without errors
+**Plans**: TBD
 
-### Phase 27: Lesson Content (Lessons 1-3)
-**Goal**: Learner understands why GSD-2 exists, how its dispatch pipeline works, and how it engineers context
-**Depends on**: Phase 26
-**Requirements**: LESS-01, LESS-02, LESS-03
+Plans:
+- [ ] 32-01: TBD
+
+### Phase 33: Module 7 Content (Lessons 1-3)
+**Goal**: Learners understand workstream namespacing, multi-project workspaces, and cross-AI peer review through interactive lessons
+**Depends on**: Phase 32
+**Requirements**: WRK-01, WRK-02, WRK-03
 **Success Criteria** (what must be TRUE):
-  1. Lesson 1 teaches the v1-to-v2 evolution story and the Milestone/Slice/Task hierarchy
-  2. Lesson 2 walks through deriveState, resolveDispatch, and unit dispatch with real GSD-2 source snippets
-  3. Lesson 3 explains fresh sessions, prompt pre-loading, .gsd/ artifacts, and inlined context with real examples
-  4. All three lessons render with consistent 8-block pacing (5 text, 3 code) and accurate code snippets from GSD-2 source
-**Plans**: 3 plans
-Plans:
-- [ ] 27-01-PLAN.md — Lesson 1: Why GSD-2 Exists (v1-to-v2 evolution, hierarchy, agent identity)
-- [ ] 27-02-PLAN.md — Lesson 2: The Dispatch Pipeline (deriveState, resolveDispatch, unit dispatch)
-- [ ] 27-03-PLAN.md — Lesson 3: Context Engineering (fresh sessions, prompt loading, inlined context)
+  1. Learner can navigate Module 7 Lesson 1 and understand workstream namespacing via /gsd:workstreams with real source snippets
+  2. Learner can navigate Module 7 Lesson 2 and understand multi-project workspace management from a single root
+  3. Learner can navigate Module 7 Lesson 3 and understand cross-AI peer review via /gsd:review
+**Plans**: TBD
 
-### Phase 28: Lesson Content (Lessons 4-7)
-**Goal**: Learner understands auto mode, git workflow, extensibility, and how all GSD-2 pieces connect
-**Depends on**: Phase 27
-**Requirements**: LESS-04, LESS-05, LESS-06, LESS-07
+Plans:
+- [ ] 33-01: TBD
+
+### Phase 34: Module 7 Content (Lessons 4-7)
+**Goal**: Learners understand workspace isolation, lifecycle management, collaboration patterns, and workstream decision-making
+**Depends on**: Phase 33
+**Requirements**: WRK-04, WRK-05, WRK-06, WRK-07
 **Success Criteria** (what must be TRUE):
-  1. Lesson 4 teaches the auto loop, crash recovery, stuck detection, and timeout supervision with real source
-  2. Lesson 5 teaches branch-per-milestone, squash merge, and worktree isolation patterns
-  3. Lesson 6 teaches skill discovery, extension manifest, and custom skill authoring
-  4. Lesson 7 synthesizes all concepts with a v1 vs v2 mental model comparison
-  5. All four lessons render correctly with accurate GSD-2 source code snippets
-**Plans**: 4 plans
-Plans:
-- [ ] 28-01-PLAN.md — Lesson 4: Auto Mode (auto loop, crash recovery, stuck detection)
-- [ ] 28-02-PLAN.md — Lesson 5: Git & Worktrees (isolation modes, worktree lifecycle, squash merge)
-- [ ] 28-03-PLAN.md — Lesson 6: Skills & Extensions (manifest, discovery, custom authoring)
-- [ ] 28-04-PLAN.md — Lesson 7: GSD-2 Architecture Synthesis (v1 vs v2, full cycle, principles)
+  1. Learner can navigate Module 7 Lesson 4 and understand workspace isolation and conflict avoidance between workstreams
+  2. Learner can navigate Module 7 Lesson 5 and understand the full workspace lifecycle (create, switch, complete, resume)
+  3. Learner can navigate Module 7 Lesson 6 and understand collaboration patterns including review feedback and multi-runtime coordination
+  4. Learner can navigate Module 7 Lesson 7 and understand when to use workstreams vs sequential milestones
+**Plans**: TBD
 
-### Phase 29: Mini-Project
-**Goal**: Learner demonstrates understanding of GSD-2 architecture through a hands-on building task
-**Depends on**: Phase 28
+Plans:
+- [ ] 34-01: TBD
+
+### Phase 35: Module 7 Mini-Project
+**Goal**: Learner validates Module 7 understanding by building a cross-AI review orchestrator extending skeptic
+**Depends on**: Phase 34
 **Requirements**: MINI-01, MINI-02, MINI-03
 **Success Criteria** (what must be TRUE):
-  1. Mini-project spec defines a creative task that exercises GSD-2 concepts taught in lessons 1-7
-  2. Structural verification checks validate mini-project completion (pass/fail for each check)
-  3. 5 progressive hints guide the learner from orientation through completion without giving away the answer
-**Plans**: 1 plan
-Plans:
-- [ ] 29-01-PLAN.md — Create dispatch-loop mini-project spec, hints, and lesson content
+  1. Module 7 mini-project lesson presents the cross-AI review orchestrator challenge with clear objectives
+  2. Verification spec checks for review pipeline implementation (multi-runtime dispatch, result aggregation)
+  3. 5 progressive hints are available via H key, guiding learner through the orchestrator build step by step
+**Plans**: TBD
 
-### Phase 30: Export Update
-**Goal**: AI curriculum includes Module 6 content for LLM consumption
-**Depends on**: Phase 29
-**Requirements**: EXPO-01
-**Success Criteria** (what must be TRUE):
-  1. Export script generates gsd-2-agent-application.md with all 7 lessons, mini-project spec, and hints
-  2. Master README.md includes Module 6 in the table of contents and sequential content
-**Plans**: 1 plan
 Plans:
-- [x] 30-01-PLAN.md — Run export script to generate Module 6 AI curriculum
+- [ ] 35-01: TBD
+
+### Phase 36: Export Update
+**Goal**: AI curriculum export reflects all v8.0 module changes including new Module 7
+**Depends on**: Phase 35
+**Requirements**: EXPO-01, EXPO-02, EXPO-03
+**Success Criteria** (what must be TRUE):
+  1. Running export script produces docs/ai-curriculum/workspaces-collaboration.md with full Module 7 content
+  2. Master README includes Module 7 in the sequential curriculum with correct heading structure
+  3. All updated module docs (Modules 1, 3, 4, 5, 6) reflect the new v1.26-1.28 lesson content
+**Plans**: TBD
+
+Plans:
+- [ ] 36-01: TBD
 
 ## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 31 → 32 → 33 → 34 → 35 → 36
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -212,9 +243,15 @@ Plans:
 | 25. Export Update | v6.0 | 1/1 | Complete | 2026-03-16 |
 | 26. Module Infrastructure | v7.0 | 1/1 | Complete | 2026-03-20 |
 | 27. Lesson Content (Lessons 1-3) | v7.0 | 3/3 | Complete | 2026-03-20 |
-| 28. Lesson Content (Lessons 4-7) | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 29. Mini-Project | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 30. Export Update | v7.0 | Complete    | 2026-03-20 | 2026-03-20 |
+| 28. Lesson Content (Lessons 4-7) | v7.0 | 4/4 | Complete | 2026-03-20 |
+| 29. Mini-Project | v7.0 | 1/1 | Complete | 2026-03-20 |
+| 30. Export Update | v7.0 | 1/1 | Complete | 2026-03-20 |
+| 31. Existing Module Updates | v8.0 | 0/2 | Not started | - |
+| 32. Module 7 Infrastructure | v8.0 | 0/1 | Not started | - |
+| 33. Module 7 Content (Lessons 1-3) | v8.0 | 0/1 | Not started | - |
+| 34. Module 7 Content (Lessons 4-7) | v8.0 | 0/1 | Not started | - |
+| 35. Module 7 Mini-Project | v8.0 | 0/1 | Not started | - |
+| 36. Export Update | v8.0 | 0/1 | Not started | - |
 
 ---
 *For v1.0 phase details, see: milestones/v1.0-ROADMAP.md*
