@@ -62,7 +62,7 @@ Each task was committed atomically:
 
 1. **Task 1: Create mini-project lesson, verification spec, and hints** - `f97349b` (feat)
 
-**Plan metadata:** [pending] (docs: complete plan)
+**Plan metadata:** `35c7e19` (docs: complete plan)
 
 ## Files Created/Modified
 - `learn/content/modules/workspaces-collaboration/lessons/08-mini-project.json` - Full mini-project lesson with 7 content blocks, project block, conceptMap, successCriteria
