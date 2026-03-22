@@ -175,10 +175,10 @@ Plans:
   2. Learner can navigate Module 7 Lesson 5 and understand the full workspace lifecycle (create, switch, complete, resume)
   3. Learner can navigate Module 7 Lesson 6 and understand collaboration patterns including review feedback and multi-runtime coordination
   4. Learner can navigate Module 7 Lesson 7 and understand when to use workstreams vs sequential milestones
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 34-01: TBD
+- [ ] 34-01-PLAN.md — Replace skeleton lessons 5-7 with full 8-block content (workspace isolation, lifecycle, collaboration patterns)
 
 ### Phase 35: Module 7 Mini-Project
 **Goal**: Learner validates Module 7 understanding by building a cross-AI review orchestrator extending skeptic
