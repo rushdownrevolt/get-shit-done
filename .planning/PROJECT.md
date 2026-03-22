@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships six modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), Planning & State (planning system), Agent Orchestration (subagent execution engine), Quality & Feedback Loops (verification and debugging), and GSD-2: The Agent Application (the evolution from prompt framework to standalone CLI). Features a welcome screen, module picker with progress tracking, and context-dependent navigation. Also ships an AI-ready curriculum export (`docs/ai-curriculum/`) — a self-contained master document and per-module docs that let an LLM learn GSD by reading structured markdown.
+A Node.js CLI tool that teaches how GSD (Get Shit Done) works through guided, interactive terminal lessons. It parses GSD's actual source files to generate lesson content, tracks per-module learning progress across sessions, and validates understanding through hands-on mini-projects — not quizzes. Ships seven modules: GSD Commands & Workflows (markdown layer), Command Lifecycle (Node.js layer), Planning & State (planning system), Agent Orchestration (subagent execution engine), Quality & Feedback Loops (verification and debugging), GSD-2: The Agent Application (dispatch pipeline, auto mode, skills/extensions), and Workspaces & Collaboration (workstream namespacing, multi-project workspaces, cross-AI peer review). Features a welcome screen, module picker with progress tracking, and context-dependent navigation. Also ships an AI-ready curriculum export (`docs/ai-curriculum/`) — a self-contained master document and per-module docs that let an LLM learn GSD by reading structured markdown.
 
 ## Core Value
 
@@ -60,22 +60,18 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - ✓ v6→v7 progress migration for Module 6 tracking — v7.0
 - ✓ AI curriculum export updated with Module 6 content — v7.0
 
+- ✓ Update Module 1 lessons for /gsd:fast, /gsd:next, /gsd:ship — v8.0
+- ✓ Update Module 3 lessons for decision IDs, CLAUDE.md compliance — v8.0
+- ✓ Update Module 4 lessons for advisor mode — v8.0
+- ✓ Update Module 5 lessons for enhanced verification, stub detection, regression gate, security hardening — v8.0
+- ✓ Update Module 6 lessons for multi-runtime, forensics, developer profiling — v8.0
+- ✓ Module 7: Workspaces & Collaboration with 8 lessons covering workstream namespacing, multi-project workspaces, cross-AI peer review, workspace isolation, lifecycle, collaboration patterns — v8.0
+- ✓ v7→v8 progress migration for Module 7 tracking — v8.0
+- ✓ AI curriculum export updated with Module 7 and all v8.0 content — v8.0
+
 ### Active
 
-<!-- v8.0 scope -->
-
-- ✓ Update Module 1 lessons for /gsd:fast, /gsd:next, /gsd:ship — v8.0 Phase 31
-- ✓ Update Module 3 lessons for decision IDs, CLAUDE.md compliance — v8.0 Phase 31
-- ✓ Update Module 4 lessons for advisor mode — v8.0 Phase 31
-- ✓ Update Module 5 lessons for enhanced verification, stub detection, regression gate, security hardening — v8.0 Phase 31
-- ✓ Update Module 6 lessons for multi-runtime, forensics, developer profiling — v8.0 Phase 31
-- ✓ New Module 7: Workspaces & Collaboration (workstream namespacing, multi-project workspaces, cross-AI peer review) — v8.0 Phases 33-35
-- ✓ Module 7 infrastructure (v7→v8 progress migration, module registration) — v8.0 Phase 32
-- ✓ AI curriculum export updated with all module changes — v8.0 Phase 36
-
-## Current Milestone: v8.0 GSD v1.26-1.28 Module Updates
-
-**Goal:** Update existing GSD Learn modules for features added in GSD v1.26-1.28 and add Module 7: Workspaces & Collaboration
+<!-- Next milestone scope -->
 
 **Target features:**
 - Update Modules 1, 3, 4, 5, 6 for new GSD features (10+ new commands, advisor mode, enhanced verification, multi-runtime)
@@ -100,9 +96,9 @@ The learner can confidently modify and extend GSD for their own needs, validated
 - GSD is a zero-dependency Node.js project using CommonJS modules
 - GSD's architecture has TWO layers: (1) markdown layer (slash commands + workflows) and (2) Node.js layer (gsd-tools.cjs + lib modules)
 - The codebase map at `.planning/codebase/` provides detailed architecture, stack, conventions, and structure docs
-- Shipped: ~10,300 LOC (Node.js/JSON), 6 modules, 43 lessons total, 6 mini-projects
-- AI curriculum: ~5,600 LOC generated markdown (6 per-module docs + 1 master README)
-- 300 tests passing (renderer, navigator, progress, verifier, hints, feedback, markdown-renderer)
+- Shipped: ~19,000 LOC (Node.js/JSON), 7 modules, 56 lessons total, 7 mini-projects
+- AI curriculum: ~9,200 LOC generated markdown (7 per-module docs + 1 master README)
+- 333 tests passing (renderer, navigator, progress, verifier, hints, feedback, markdown-renderer)
 - Module 3 teaches the planning system that built gsd-learn itself (meta-recursive)
 - GSD-2 (v2.35.0) installed globally via `npm install -g gsd-pi` — source at `C:/Users/18182/AppData/Roaming/npm/node_modules/gsd-pi/`
 - GSD-2 is a TypeScript CLI built on Pi SDK; source files for lessons live in `src/resources/extensions/gsd/` (prompts, templates, skills, auto mode)

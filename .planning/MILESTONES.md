@@ -1,5 +1,22 @@
 # Milestones: GSD Learn
 
+## v8.0 GSD v1.26-1.28 Module Updates (Shipped: 2026-03-22)
+
+**Phases completed:** 6 phases, 8 plans, 11 tasks
+
+**Key accomplishments:**
+
+- 5 new lessons across Modules 1 and 3 teaching /gsd:fast, /gsd:next, /gsd:ship, decision ID traceability, and CLAUDE.md Dimension 10 compliance
+- 8 new lessons added across Modules 4, 5, and 6 covering advisor mode, enhanced verification, stub detection, regression gates, security hardening, multi-runtime support, forensics debugging, and developer profiling -- all using real source snippets from GSD workflows and GSD-2 source files.
+- Module 7 registered as workspaces-collaboration with 8 sectionMap entries and v7-to-v8 progress migration adding module entry per D-09
+- 8 skeleton JSON lessons for Module 7 with placeholder content, sequential numbering, and sectionMap-matching IDs
+- 4 full lessons teaching workspaces and collaboration with real snippets from worktree-manager.ts, workspace-index.ts, and review/SKILL.md
+- Three workspace lessons with real GSD source snippets covering isolation layers, lifecycle phases, and collaboration patterns including workstreams vs milestones decision guidance
+- Cross-AI review orchestrator challenge with 6 structural checks, 5 progressive hints, and template-first pedagogy following Modules 5/6 pattern
+- Regenerated AI curriculum export with Module 7 (Workspaces & Collaboration) and v8.0 lesson updates across all 7 modules
+
+---
+
 ## v7.0 GSD-2 — The Agent Application (Shipped: 2026-03-20)
 
 **Phases completed:** 5 phases, 10 plans, 0 tasks
