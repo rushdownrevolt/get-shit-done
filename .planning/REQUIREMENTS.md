@@ -53,9 +53,9 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 
 ### Module 7 Mini-Project
 
-- [ ] **MINI-01**: Mini-project extends skeptic with a cross-AI review orchestrator
-- [ ] **MINI-02**: Mini-project verification spec checks for review pipeline implementation
-- [ ] **MINI-03**: 5 progressive hints guide learner through the review orchestrator build
+- [x] **MINI-01**: Mini-project extends skeptic with a cross-AI review orchestrator
+- [x] **MINI-02**: Mini-project verification spec checks for review pipeline implementation
+- [x] **MINI-03**: 5 progressive hints guide learner through the review orchestrator build
 
 ### Export Update
 
@@ -112,9 +112,9 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 | WRK-05 | Phase 34 | Complete |
 | WRK-06 | Phase 34 | Complete |
 | WRK-07 | Phase 34 | Complete |
-| MINI-01 | Phase 35 | Pending |
-| MINI-02 | Phase 35 | Pending |
-| MINI-03 | Phase 35 | Pending |
+| MINI-01 | Phase 35 | Complete |
+| MINI-02 | Phase 35 | Complete |
+| MINI-03 | Phase 35 | Complete |
 | EXPO-01 | Phase 36 | Pending |
 | EXPO-02 | Phase 36 | Pending |
 | EXPO-03 | Phase 36 | Pending |
