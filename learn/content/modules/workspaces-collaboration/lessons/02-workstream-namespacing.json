@@ -2,15 +2,57 @@
   "id": "workstream-namespacing",
   "title": "Workstream Namespacing",
   "lessonNumber": 2,
-  "objective": "Placeholder — content will be added in Phase 33.",
+  "objective": "Learn how the /worktree command creates, lists, merges, and removes git worktrees under .gsd/worktrees/. Understand the worktree lifecycle (create -> work -> merge -> remove) and how each worktree gets its own named branch and working copy.",
   "content": [
     {
       "type": "text",
-      "value": "This lesson will cover workstream namespacing via /gsd:workstreams for parallel milestone development.",
-      "focus": "Workstream namespacing isolates parallel work into named branches.",
-      "bridge": "Next, you will learn about multi-project workspaces."
+      "value": "Workstream namespacing is the practice of giving each parallel workstream its own named space -- a directory, a branch, and a set of GSD artifacts. The /worktree command (aliased as /wt) manages this namespace. When you run /worktree auth-refactor, GSD creates a new git worktree at .gsd/worktrees/auth-refactor/ on branch worktree/auth-refactor. You switch into that directory, do your work (plan, execute, verify), and when you are done, /worktree merge brings it back to the main branch. The name 'auth-refactor' acts as the namespace -- it scopes the branch, the directory, and the merge.",
+      "focus": "Each worktree gets a name that scopes its branch, directory, and lifecycle.",
+      "bridge": "Here is the /worktree command's interface -- the entry point for all worktree operations."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "/**\n * GSD Worktree Command -- /worktree\n *\n * Create, list, merge, and remove git worktrees\n * under .gsd/worktrees/.\n *\n * Usage:\n *   /worktree <name>        -- create a new worktree\n *   /worktree list          -- list existing worktrees\n *   /worktree merge [name]  -- start LLM-guided merge\n *   /worktree remove <name> -- remove a worktree\n */",
+      "highlight": [7, 8, 9, 10]
+    },
+    {
+      "type": "text",
+      "value": "The command is deliberately simple: four operations that map to the worktree lifecycle. Create sets up the isolated environment. List shows all active worktrees. Merge reconciles changes back to the main branch. Remove cleans up the worktree and its branch. Under the hood, the WorktreeManager handles the git operations. Its JSDoc explains the complete flow: create a worktree with git worktree add, work in it freely, merge using LLM-guided reconciliation of .gsd/ artifacts, then remove the worktree and clean up the branch.",
+      "focus": "Four operations map to the worktree lifecycle: create, list, merge, remove.",
+      "bridge": "Here is the WorktreeManager's design -- the engine behind the /worktree command."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "/**\n * GSD Worktree Manager\n *\n * Creates and manages git worktrees under\n * .gsd/worktrees/<name>/.\n * Each worktree gets its own branch (worktree/<name>)\n * and a full working copy of the project.\n *\n * The merge helper compares .gsd/ artifacts between\n * a worktree and the main branch, then dispatches\n * an LLM-guided merge flow.\n *\n * Flow:\n *   1. create()  -- git worktree add\n *   2. user works in the worktree\n *   3. merge()   -- LLM-guided reconciliation\n *   4. remove()  -- git worktree remove + cleanup\n */",
+      "highlight": [13, 14, 15, 16, 17]
+    },
+    {
+      "type": "text",
+      "value": "That flow -- create, work, merge, remove -- is the core pattern. But what happens during merge is where the real intelligence lives. GSD first attempts a deterministic squash merge (git merge --squash). If that succeeds with no conflicts, the merge is done instantly. If conflicts are detected, GSD aborts the failed merge, then falls back to an LLM-guided merge flow. The LLM receives the full diff (both .gsd/ artifacts and code changes), the commit log, and file-level statistics, then reconciles the conflicts intelligently. This two-tier approach means clean merges are fast, and only conflict resolution uses AI.",
+      "focus": "Merge uses a two-tier approach: deterministic squash first, LLM fallback on conflict.",
+      "bridge": "The diff summary that drives merge decisions uses this interface."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export interface WorktreeDiffSummary {\n  /** Files only in the worktree .gsd/ (new artifacts) */\n  added: string[];\n  /** Files in both but with different content */\n  modified: string[];\n  /** Files only in main .gsd/ (deleted in worktree) */\n  removed: string[];\n}",
+      "highlight": [2, 4, 6]
+    },
+    {
+      "type": "text",
+      "value": "The WorktreeDiffSummary categorizes every changed file as added, modified, or removed. This powers the merge preview that shows you exactly what will change before you confirm. The merge command displays file counts, line statistics (+additions, -deletions), and splits changes into code versus GSD artifacts. You see the full picture before committing to the merge. Internal paths like .gsd/worktrees/, .gsd/runtime/, and .gsd/STATE.md are automatically skipped -- they are runtime artifacts that should not be merged.",
+      "focus": "WorktreeDiffSummary categorizes changes for the merge preview.",
+      "bridge": "Now that you understand the worktree lifecycle, let's look at the broader workspace."
+    },
+    {
+      "type": "text",
+      "value": "You now know how workstream namespacing works in GSD. The /worktree command provides four operations (create, list, merge, remove) that manage the worktree lifecycle. Each worktree gets its own directory under .gsd/worktrees/<name>/ and its own branch (worktree/<name>). Merges use a two-tier strategy: deterministic squash for clean merges, LLM-guided reconciliation for conflicts. The WorktreeDiffSummary drives merge previews by categorizing changes as added, modified, or removed. Next, you will learn how the workspace index tracks milestones, slices, and tasks across the entire project.",
+      "focus": "Worktree namespacing: named isolation with a create-work-merge-remove lifecycle.",
+      "bridge": "In the next lesson, we will see how workspace-index.ts provides a unified view across all project work."
     }
   ],
-  "conceptMap": {},
-  "successCriteria": []
+  "conceptMap": "workstream-namespacing",
+  "successCriteria": "You can explain the /worktree command's four operations, describe the create-work-merge-remove lifecycle, explain the two-tier merge strategy (deterministic squash then LLM fallback), and identify what WorktreeDiffSummary tracks."
 }

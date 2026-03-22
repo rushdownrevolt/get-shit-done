@@ -2,15 +2,57 @@
   "id": "overview",
   "title": "Workspaces & Collaboration Overview",
   "lessonNumber": 1,
-  "objective": "Placeholder — content will be added in Phase 33.",
+  "objective": "Understand why GSD provides workspaces and collaboration features beyond sequential milestones. Learn the three isolation modes, the worktree lifecycle, and preview the module's four key topics: workstream namespacing, multi-project workspaces, cross-AI peer review, and workspace isolation.",
   "content": [
     {
       "type": "text",
-      "value": "This lesson will cover an overview of workspace and collaboration features in GSD.",
-      "focus": "Workspaces enable parallel development beyond sequential milestones.",
-      "bridge": "Next, you will learn about workstream namespacing."
+      "value": "Sequential milestones work well for a single developer working on one project at a time. But real projects often demand parallel workstreams -- you need to prototype a feature while the main milestone is still executing, or you want to explore an alternative architecture without polluting the main branch. GSD solves this with workspaces: isolated environments where you can run independent planning and execution cycles. Each workspace gets its own branch, its own .gsd/ directory, and its own commit history. When the work is done, you merge it back. This module teaches the infrastructure that makes parallel work possible in GSD.",
+      "focus": "Sequential milestones are not always enough -- parallel workstreams require isolation.",
+      "bridge": "Let's see the three isolation modes that GSD supports."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "### Isolation Model\n\nAuto-mode supports three isolation modes (configured in\n`.gsd/preferences.md` under `taskIsolation.mode`):\n\n- **worktree** (default): Work happens in `.gsd/worktrees/<MID>/`,\n  a full git worktree on the `milestone/<MID>` branch.\n- **branch**: Work happens in the project root on a\n  `milestone/<MID>` branch. No worktree directory.\n- **none**: Work happens directly on the current branch.\n  No worktree, no milestone branch.",
+      "highlight": [6, 8, 10]
+    },
+    {
+      "type": "text",
+      "value": "Those three modes -- worktree, branch, and none -- give you a spectrum of isolation. Worktree mode is the default because it provides the strongest isolation: a full working copy of the project in its own directory, on its own branch. Branch mode is lighter -- it reuses the same directory but switches to a dedicated branch. None mode is the simplest -- everything happens in place, no branches created. The mode you choose depends on your project's needs: worktree for long-running parallel work, branch for quick feature branches, none for small single-stream projects.",
+      "focus": "Three isolation modes: worktree (strongest), branch (medium), none (simplest).",
+      "bridge": "Here is the WorktreeInfo interface that represents a managed worktree."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export interface WorktreeInfo {\n  name: string;\n  path: string;\n  branch: string;\n  exists: boolean;\n}",
+      "highlight": [1, 2, 3, 4, 5]
+    },
+    {
+      "type": "text",
+      "value": "Every worktree has a name (like 'auth-refactor'), a path under .gsd/worktrees/, a branch (worktree/<name>), and a boolean indicating whether it still exists on disk. This simple interface drives the entire worktree lifecycle: create a worktree, switch into it, do your work, merge it back, then remove it. The workspace-index module builds on this by indexing all milestones, slices, and tasks across the entire project -- providing a unified view of all work regardless of which worktree it lives in.",
+      "focus": "WorktreeInfo tracks each worktree's identity and lifecycle state.",
+      "bridge": "The workspace index provides that unified view. Here is its core interface."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export interface GSDWorkspaceIndex {\n  milestones: WorkspaceMilestoneTarget[];\n  active: {\n    milestoneId?: string;\n    sliceId?: string;\n    taskId?: string;\n    phase: string;\n  };\n  scopes: WorkspaceScopeTarget[];\n  validationIssues: ValidationIssue[];\n}",
+      "highlight": [1, 2, 3, 9]
+    },
+    {
+      "type": "text",
+      "value": "The GSDWorkspaceIndex is the data structure that answers 'where is everything?' It lists all milestones (each with their slices and tasks), tracks which milestone/slice/task is currently active, provides a flat list of scopes for navigation (project, milestone, slice, task), and surfaces any validation issues found during indexing. Commands like /gsd status and /gsd doctor use this index to show you the state of your entire project at a glance. This is the foundation that makes multi-project workspaces and collaboration features possible.",
+      "focus": "GSDWorkspaceIndex provides a unified view of all work across the project.",
+      "bridge": "Here is what this module will cover in the upcoming lessons."
+    },
+    {
+      "type": "text",
+      "value": "You now know the motivation for workspaces: parallel workstreams that need isolation beyond sequential milestones. You have seen the three isolation modes (worktree, branch, none), the WorktreeInfo interface that tracks individual worktrees, and the GSDWorkspaceIndex that provides a unified project view. In the next four lessons, you will dive deep into each capability: workstream namespacing with /worktree (how to create, switch, merge, and remove worktrees), multi-project workspace indexing (how GSD tracks milestones and slices across a project), cross-AI peer review (how /review dispatches structured code analysis), and workspace isolation patterns.",
+      "focus": "This module covers namespacing, indexing, peer review, and isolation.",
+      "bridge": "Next, you will learn how /worktree creates and manages named workstreams."
     }
   ],
-  "conceptMap": {},
-  "successCriteria": []
+  "conceptMap": "overview",
+  "successCriteria": "You can explain why parallel workstreams need isolation beyond sequential milestones, describe the three isolation modes (worktree, branch, none) and when to use each, identify the key fields in WorktreeInfo and GSDWorkspaceIndex, and list the four topics this module covers."
 }

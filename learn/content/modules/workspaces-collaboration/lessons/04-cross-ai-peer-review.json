@@ -2,15 +2,57 @@
   "id": "cross-ai-peer-review",
   "title": "Cross-AI Peer Review",
   "lessonNumber": 4,
-  "objective": "Placeholder — content will be added in Phase 33.",
+  "objective": "Learn how the /review skill determines review scope, gathers context, analyzes changes against five categories (Security, Performance, Bugs, Code Quality, Test Coverage), formats findings with severity levels, and offers a decision gate after review. Understand why this is cross-AI: GSD can dispatch review to multiple AI runtimes.",
   "content": [
     {
       "type": "text",
-      "value": "This lesson will cover cross-AI peer review via /gsd:review for multi-model code evaluation.",
-      "focus": "Cross-AI review dispatches your work to multiple AI models for independent feedback.",
-      "bridge": "Next, you will learn about workspace isolation."
+      "value": "Code review is one of the most valuable quality gates in software development, but it traditionally requires another human. GSD's /review skill automates structured code review by analyzing diffs against five categories: Security, Performance, Bug Risks, Code Quality, and Test Coverage. The skill is 'cross-AI' because GSD can dispatch it to different AI runtimes -- the same review prompt works across models. The core principle is clear: find real issues, not style nits. The reviewer focuses on problems that cause bugs, security vulnerabilities, performance degradation, or maintainability pain.",
+      "focus": "Cross-AI review: structured code analysis dispatched to any AI runtime.",
+      "bridge": "The first step is determining what to review. Here is how the scope is resolved."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<determine_review_scope>\n\nParse the user's input to determine what to review:\n\n1. **No arguments** - Review staged changes first.\n   If nothing staged, review unstaged changes.\n   If both empty, review the most recent commit.\n\n2. **Commit hash argument** (e.g., `/review abc1234`)\n   Review that specific commit.\n\n3. **File path argument** (e.g., `/review src/foo.ts`)\n   Review unstaged changes in that file.\n\n4. **\"pr\" argument** (e.g., `/review pr`)\n   Review all changes since branching from main.\n\n</determine_review_scope>",
+      "highlight": [5, 6, 9, 13, 16]
+    },
+    {
+      "type": "text",
+      "value": "The scope resolution is pragmatic: with no arguments, it reviews what you are about to commit (staged first, then unstaged, then last commit). With a commit hash, it reviews that specific commit. With 'pr', it reviews everything since you branched from main -- the full pull request diff. After determining scope, the reviewer does not just read the diff in isolation. It reads each modified file in full to understand surrounding code, identifies the tech stack, checks for related test files, and examines configuration changes. This context-gathering step is critical -- a diff without context leads to false positives.",
+      "focus": "Scope resolution is pragmatic; context gathering prevents false positives.",
+      "bridge": "Now let's see the five analysis categories that structure every review."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "<review_categories>\n\n**A. Security Issues** (CRITICAL or HIGH)\n- Injection vulnerabilities, XSS, auth flaws\n- Secrets hardcoded or logged\n- Path traversal, unsafe eval\n\n**B. Performance Concerns** (HIGH or MEDIUM)\n- N+1 queries, blocking operations\n- Missing pagination, redundant computation\n\n**C. Bug Risks** (HIGH or MEDIUM)\n- Off-by-one errors, null dereferences\n- Race conditions, incorrect error handling\n\n**D. Code Quality** (MEDIUM or LOW)\n- Unclear naming, code duplication\n- Excessive complexity, dead code\n\n**E. Test Coverage Gaps** (MEDIUM or LOW)\n- New logic without tests\n- Changed behavior without updated tests\n\n</review_categories>",
+      "highlight": [3, 8, 12, 16, 20]
+    },
+    {
+      "type": "text",
+      "value": "Each category has a default severity range -- Security issues are CRITICAL or HIGH because they can cause data breaches, while Test Coverage Gaps are MEDIUM or LOW because they represent risk, not immediate harm. The reviewer only reports findings that are actually present; categories with no issues are skipped entirely. This prevents the noise problem that plagues many automated review tools -- you only see what matters. Every finding includes the file path, line numbers, a clear description, why it matters, and a suggested fix.",
+      "focus": "Categories have severity ranges; only real findings are reported.",
+      "bridge": "Here is the output format that structures every review's results."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "## Code Review: [brief description]\n\n**Scope**: [staged | unstaged | commit | PR changes]\n**Files reviewed**: [count] files, [+adds] [-dels]\n\n---\n\n### Findings\n\n[Findings grouped by severity, highest first]\n\n### Summary\n\n| Severity | Count |\n|----------|-------|\n| CRITICAL | X     |\n| HIGH     | X     |\n| MEDIUM   | X     |\n| LOW      | X     |\n\n### Recommended Actions\n\n1. [Most important action]\n2. [Next most important]",
+      "highlight": [1, 3, 8, 14, 22]
+    },
+    {
+      "type": "text",
+      "value": "After presenting findings, the review always ends with a decision gate: fix issues, save the review to a file, review again with different scope, discuss a specific finding, or take another action. This gate is mandatory -- the reviewer never auto-implements fixes. This separation of roles (reviewer versus author) is deliberate: it prevents the AI from silently changing code during a review pass. The user always decides what to act on. This is what makes /review a collaboration tool rather than an automation tool.",
+      "focus": "The decision gate separates reviewer and author roles -- user decides what to fix.",
+      "bridge": "Now you understand the full review pipeline. Let's wrap up what you have learned."
+    },
+    {
+      "type": "text",
+      "value": "You now know how cross-AI peer review works in GSD. The /review skill determines scope (staged, unstaged, commit, or PR), gathers context by reading full files, analyzes changes against five categories (Security, Performance, Bugs, Code Quality, Test Coverage), formats findings with severity levels and recommended actions, and offers a mandatory decision gate. It is cross-AI because the same skill definition works across different AI runtimes. The core principle -- find real issues, not style nits -- keeps reviews focused on problems that matter. Next, you will learn about workspace isolation patterns.",
+      "focus": "Review pipeline: scope -> context -> analyze -> format -> decide.",
+      "bridge": "In the next lesson, we will explore workspace isolation patterns and how they prevent interference between parallel workstreams."
     }
   ],
-  "conceptMap": {},
-  "successCriteria": []
+  "conceptMap": "cross-ai-peer-review",
+  "successCriteria": "You can explain how /review determines what to review (four scope modes), list the five analysis categories and their severity ranges, describe the output format with findings grouped by severity, and explain why the decision gate prevents the reviewer from auto-implementing fixes."
 }

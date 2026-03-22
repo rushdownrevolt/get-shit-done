@@ -2,15 +2,57 @@
   "id": "multi-project-workspaces",
   "title": "Multi-Project Workspaces",
   "lessonNumber": 3,
-  "objective": "Placeholder — content will be added in Phase 33.",
+  "objective": "Learn how workspace-index.ts indexes milestones, slices, and tasks across a project to provide a unified view of all work. Understand the hierarchy (Milestone -> Slice -> Task), scope targeting, and how this index enables commands like /gsd status and /gsd doctor.",
   "content": [
     {
       "type": "text",
-      "value": "This lesson will cover managing multiple projects from a single workspace root.",
-      "focus": "Multi-project workspaces let you manage several repos from one GSD instance.",
-      "bridge": "Next, you will learn about cross-AI peer review."
+      "value": "A GSD project can have multiple milestones running simultaneously -- especially when worktrees enable parallel development. But how does GSD know what work exists across the entire project? The workspace-index.ts module answers this by scanning all milestone directories, parsing their roadmaps and plans, and building a structured index of every milestone, slice, and task. This index is the data layer behind /gsd status (which shows project state at a glance) and /gsd doctor (which validates plan and completion boundaries). Without it, GSD would only know about the currently active work -- not the full picture.",
+      "focus": "The workspace index provides a unified view of all work across all milestones.",
+      "bridge": "Let's see the data structures that represent milestones and slices in this index."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export interface WorkspaceMilestoneTarget {\n  id: string;\n  title: string;\n  roadmapPath?: string;\n  slices: WorkspaceSliceTarget[];\n}\n\nexport interface WorkspaceSliceTarget {\n  id: string;\n  title: string;\n  done: boolean;\n  planPath?: string;\n  summaryPath?: string;\n  uatPath?: string;\n  tasksDir?: string;\n  branch?: string;\n  tasks: WorkspaceTaskTarget[];\n}",
+      "highlight": [1, 5, 8, 11, 17]
+    },
+    {
+      "type": "text",
+      "value": "Each milestone in the index contains its ID, title, roadmap path, and a list of slices. Each slice tracks its completion status (done), paths to its plan, summary, and UAT files, the tasks directory, the git branch it runs on, and a list of its tasks. This hierarchy -- milestone contains slices, slices contain tasks -- mirrors the physical directory structure under .gsd/milestones/. The index reads this structure and makes it queryable. When /gsd status shows you 'Milestone M01: 3/5 slices complete,' it is reading from this index.",
+      "focus": "The hierarchy: milestone -> slices -> tasks, mirroring the directory structure.",
+      "bridge": "Now let's see how scope targeting lets you navigate this hierarchy."
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "value": "export interface WorkspaceScopeTarget {\n  scope: string;\n  label: string;\n  kind: \"project\" | \"milestone\" | \"slice\" | \"task\";\n}",
+      "highlight": [2, 4]
+    },
+    {
+      "type": "text",
+      "value": "WorkspaceScopeTarget flattens the milestone/slice/task hierarchy into a navigable list of scopes. Each scope has a string identifier (like 'M01/S01/T01'), a human-readable label, and a kind that tells you what level of the hierarchy it targets. This powers scope-based commands: /gsd doctor M01/S01 validates a specific slice, /gsd doctor M01 validates an entire milestone, and /gsd doctor with no argument validates the whole project. The flat scope list also drives tab-completion in the CLI -- when you type /gsd doctor and hit tab, you see all available scopes.",
+      "focus": "Scope targeting lets you navigate and operate at any level of the hierarchy.",
+      "bridge": "Let's see the directory structure that the index reads from."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": ".gsd/\n  milestones/\n    M01-abc123/\n      ROADMAP.md\n      S01-setup/\n        PLAN.md\n        SUMMARY.md\n        UAT.md\n        tasks/\n          T01-PLAN.md\n          T01-SUMMARY.md\n      S02-core/\n        PLAN.md",
+      "highlight": [2, 3, 5, 9]
+    },
+    {
+      "type": "text",
+      "value": "That directory tree is what indexWorkspace() scans. It finds all milestone directories (M01-abc123/), reads their ROADMAP.md files to extract titles and slice lists, then dives into each slice directory to find plans, summaries, UAT files, and tasks. The function also derives the current state -- which milestone, slice, and task are active -- and builds the flat scope list. Optionally, it runs validation checks (validatePlanBoundary and validateCompleteBoundary) to detect issues like plans without summaries or slices marked done without proper artifacts. This is what /gsd doctor uses to find problems.",
+      "focus": "indexWorkspace() scans the directory tree and builds the queryable index.",
+      "bridge": "Now you understand how the workspace is indexed. The next lesson covers code review."
+    },
+    {
+      "type": "text",
+      "value": "You now know how multi-project workspace indexing works. The workspace-index.ts module scans all milestone directories, parses roadmaps and plans, and builds a GSDWorkspaceIndex containing every milestone, slice, and task. WorkspaceMilestoneTarget and WorkspaceSliceTarget represent the hierarchy, while WorkspaceScopeTarget flattens it for navigation and commands. The indexWorkspace() function reads the .gsd/milestones/ directory tree, derives active state, and optionally runs validation. This index powers /gsd status, /gsd doctor, and scope-based tab completion. Next, you will learn how /review dispatches structured code analysis across AI models.",
+      "focus": "Workspace indexing: scan, parse, index, validate -- the unified project view.",
+      "bridge": "In the next lesson, we will see how cross-AI peer review works via the /review skill."
     }
   ],
-  "conceptMap": {},
-  "successCriteria": []
+  "conceptMap": "multi-project-workspaces",
+  "successCriteria": "You can explain how indexWorkspace() builds the project index, describe the milestone/slice/task hierarchy and how it maps to the directory structure, explain what WorkspaceScopeTarget enables for commands and navigation, and identify what validation the index optionally performs."
 }
