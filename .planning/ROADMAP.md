@@ -188,10 +188,10 @@ Plans:
   1. Module 7 mini-project lesson presents the cross-AI review orchestrator challenge with clear objectives
   2. Verification spec checks for review pipeline implementation (multi-runtime dispatch, result aggregation)
   3. 5 progressive hints are available via H key, guiding learner through the orchestrator build step by step
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 35-01: TBD
+- [ ] 35-01-PLAN.md — Create mini-project lesson, verification spec, and hints for cross-AI review orchestrator
 
 ### Phase 36: Export Update
 **Goal**: AI curriculum export reflects all v8.0 module changes including new Module 7
