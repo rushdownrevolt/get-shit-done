@@ -1,0 +1,58 @@
+{
+  "id": "claude-md-compliance",
+  "title": "CLAUDE.md as Dimension 10",
+  "lessonNumber": 9,
+  "objective": "Understand how the plan checker validates plans against project-specific CLAUDE.md instructions, enforcing coding conventions, forbidden patterns, and required tools as a dedicated verification dimension.",
+  "content": [
+    {
+      "type": "text",
+      "value": "Every project has its own rules: 'use Vitest not Jest,' 'never import from the barrel file,' 'all API routes must have rate limiting.' In a traditional workflow, these rules live in a developer's head or a wiki page that AI tools never read. GSD formalizes this with CLAUDE.md -- a file in the project root that contains project-specific instructions. The plan checker treats CLAUDE.md as Dimension 10: a dedicated verification dimension that ensures every plan respects the project's unique conventions and constraints.",
+      "focus": "What CLAUDE.md is and why it matters",
+      "bridge": "Let's see how the planning workflow reads CLAUDE.md."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "**Project instructions:** Read ./CLAUDE.md if exists -- follow project-specific guidelines\n**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists) --\nread SKILL.md files, plans should account for project skill rules\n\n## Spawn gsd-planner Agent\n\nPlanner prompt:\n```markdown\n<planning_context>\n**Phase:** {phase_number}\n\n<files_to_read>\n- {state_path} (Project State)\n- {roadmap_path} (Roadmap)\n- {requirements_path} (Requirements)\n- {context_path} (USER DECISIONS from /gsd:discuss-phase)\n- {research_path} (Technical Research)\n</files_to_read>\n\n**Project instructions:** Read ./CLAUDE.md if exists -- follow project-specific guidelines\n**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists)\n</planning_context>\n```",
+      "highlight": [1, 2, 19, 20]
+    },
+    {
+      "type": "text",
+      "value": "CLAUDE.md appears at two stages. First, the plan-phase orchestrator instructs both the planner and checker agents to read it. The planner uses CLAUDE.md to ensure plans don't violate project rules during creation. Then the checker independently verifies compliance during review. This means CLAUDE.md rules are enforced twice -- once proactively (planner reads the rules) and once reactively (checker flags violations). The dual enforcement is intentional: it catches rules the planner might overlook.",
+      "focus": "Dual enforcement: planner reads rules, checker verifies compliance",
+      "bridge": "The checker's Dimension 10 is where violations get flagged."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "## Dimension 10: CLAUDE.md Compliance\n\n**Question:** Do plans respect project-specific conventions, constraints, and requirements\nfrom CLAUDE.md?\n\n**Process:**\n1. Read `./CLAUDE.md` in the working directory\n2. Extract actionable directives: coding conventions, forbidden patterns, required tools,\n   security requirements, testing rules, architectural constraints\n3. For each directive, check if any plan task contradicts or ignores it\n4. Flag plans that introduce patterns CLAUDE.md explicitly forbids\n5. Flag plans that skip steps CLAUDE.md explicitly requires\n\n**Red flags:**\n- Plan uses a library/pattern CLAUDE.md explicitly forbids\n- Plan skips a required step (e.g., CLAUDE.md says \"always run X before Y\" but plan omits X)\n- Plan introduces code style that contradicts CLAUDE.md conventions\n- Plan creates files in locations that violate CLAUDE.md's architectural constraints\n- Plan ignores security requirements documented in CLAUDE.md\n\n**Skip condition:** If no `./CLAUDE.md` exists in the working directory,\noutput: \"Dimension 10: SKIPPED (no CLAUDE.md found)\" and move on.",
+      "highlight": [1, 3, 4, 7, 10, 11, 12, 21, 22]
+    },
+    {
+      "type": "text",
+      "value": "Dimension 10 follows a clear process: extract directives from CLAUDE.md, then check each one against every plan task. It looks for five categories of violations: forbidden libraries or patterns, skipped required steps, contradicted code styles, wrong file locations, and missing security requirements. The skip condition is important -- projects without CLAUDE.md simply skip this dimension. There's no penalty for not having one, but projects that do have one get automatic compliance checking.",
+      "focus": "Five categories of violations checked",
+      "bridge": "Let's see what a violation looks like in practice."
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "value": "# Example: CLAUDE.md says \"always use Vitest, never Jest\"\n# Plan Task 1 says \"Install Jest and create test suite...\"\n\nissue:\n  dimension: claude_md_compliance\n  severity: blocker\n  description: \"Plan uses Jest for testing but CLAUDE.md requires Vitest\"\n  plan: \"01\"\n  task: 1\n  claude_md_rule: \"Testing: Always use Vitest, never Jest\"\n  plan_action: \"Install Jest and create test suite...\"\n  fix_hint: \"Replace Jest with Vitest per project CLAUDE.md\"\n\n# Example: CLAUDE.md says \"All tasks must run eslint before committing\"\n# Plan 02 has no lint step\n\nissue:\n  dimension: claude_md_compliance\n  severity: warning\n  description: \"Plan does not include lint step required by CLAUDE.md\"\n  plan: \"02\"\n  claude_md_rule: \"All tasks must run eslint before committing\"\n  fix_hint: \"Add eslint verification step to each task's <verify> block\"",
+      "highlight": [4, 7, 10, 12, 17, 20, 23]
+    },
+    {
+      "type": "text",
+      "value": "Violations come in two severities. A blocker (like using a forbidden library) stops the plan from proceeding to execution -- the planner must fix it in the revision loop. A warning (like a missing lint step) is flagged but doesn't block execution. Each issue includes the exact CLAUDE.md rule being violated, what the plan does wrong, and a fix hint. This structured format lets the planner make targeted fixes without guessing what went wrong.",
+      "focus": "Blockers stop execution, warnings flag concerns",
+      "bridge": "CLAUDE.md compliance connects to the broader verification system."
+    },
+    {
+      "type": "text",
+      "value": "CLAUDE.md as Dimension 10 completes the plan checker's verification model. Dimensions 1-9 check universal quality (task specificity, dependency correctness, must-haves coverage, etc.). Dimension 10 checks project-specific quality -- the rules that make YOUR project unique. Together, they ensure plans are both generally well-formed and specifically compliant with your project's conventions. For teams using GSD across multiple projects, CLAUDE.md is what customizes the same planning pipeline to respect each project's unique constraints without modifying the pipeline itself.",
+      "focus": "Universal quality (Dim 1-9) plus project-specific quality (Dim 10)",
+      "bridge": "In the mini-project, you'll build artifact persistence that creates this same kind of cross-session continuity."
+    }
+  ],
+  "conceptMap": "claude-md-compliance",
+  "successCriteria": "You can explain what CLAUDE.md is (project-specific instructions in the project root), describe how Dimension 10 of the plan checker enforces it (extract directives, check plans, flag violations), give examples of violations (forbidden library, missing required step), and distinguish blocker from warning severity."
+}

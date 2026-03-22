@@ -1,0 +1,58 @@
+{
+  "id": "decision-ids",
+  "title": "Decision Traceability",
+  "lessonNumber": 8,
+  "objective": "Understand how decision IDs (D-01, D-02, etc.) flow from discuss-phase through plan-phase, creating an unbroken traceability chain that prevents scope drift and ensures user preferences are honored in every task.",
+  "content": [
+    {
+      "type": "text",
+      "value": "When you discuss a phase with /gsd:discuss-phase, you make decisions: 'use card layout,' 'no animations,' 'infinite scroll.' These decisions need to survive the handoff to the planner and executor agents who do the actual work. If a decision gets lost or misinterpreted, the built feature won't match your intent. GSD solves this with decision IDs -- each decision gets a unique identifier (D-01, D-02, etc.) that flows through every downstream artifact, creating a traceability chain from discussion to implementation.",
+      "focus": "Why traceability matters for decision preservation",
+      "bridge": "Let's see how decisions get their IDs during the discuss phase."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<decisions>\n## Implementation Decisions\n\n### [Category 1 that was discussed]\n- **D-01:** [Decision or preference captured]\n- **D-02:** [Another decision if applicable]\n\n### [Category 2 that was discussed]\n- **D-03:** [Decision or preference captured]\n\n### Claude's Discretion\n[Areas where user said \"you decide\" -- note that Claude has flexibility here]\n\n### Folded Todos\n[If any todos were folded into scope from the cross_reference_todos step, list them here.]\n\n</decisions>",
+      "highlight": [5, 6, 9, 11]
+    },
+    {
+      "type": "text",
+      "value": "This is the CONTEXT.md output format from discuss-phase. Each decision gets a numbered ID: D-01, D-02, D-03, and so on. The decisions section has three tiers. Locked decisions (D-01, D-02, etc.) are things the user explicitly chose -- these are non-negotiable. Claude's Discretion covers areas where the user said 'you decide' -- the planner has flexibility here. Deferred Ideas (captured in a separate section) are features explicitly excluded from this phase. This taxonomy -- locked, discretion, deferred -- gives downstream agents clear rules for each decision.",
+      "focus": "The locked / discretion / deferred taxonomy",
+      "bridge": "Now let's see how the planner agent enforces these decisions."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "<context_fidelity>\n## CRITICAL: User Decision Fidelity\n\nThe orchestrator provides user decisions in `<user_decisions>` tags from `\\gsd:discuss-phase`.\n\n1. **Locked Decisions (from `## Implementation Decisions`)** -- MUST be implemented exactly\n   - If user said \"use library X\" -> task MUST use library X, not an alternative\n   - If user said \"card layout\" -> task MUST implement cards, not tables\n   - If user said \"no animations\" -> task MUST NOT include animations\n   - Reference the decision ID (D-01, D-02, etc.) in task actions for traceability\n\n2. **Deferred Ideas (from `## Deferred Ideas`)** -- MUST NOT appear in plans\n   - If user deferred \"search functionality\" -> NO search tasks allowed\n\n3. **Claude's Discretion (from `### Claude's Discretion`)** -- Claude chooses\n   - Make reasonable choices and document in task actions\n\n**Self-check before returning:** For each plan, verify:\n- [ ] Every locked decision (D-01, D-02, etc.) has a task implementing it\n- [ ] Task actions reference the decision ID they implement (e.g., \"per D-03\")\n- [ ] No task implements a deferred idea\n- [ ] Discretion areas are handled reasonably\n</context_fidelity>",
+      "highlight": [2, 6, 10, 12, 18, 19]
+    },
+    {
+      "type": "text",
+      "value": "The planner's context_fidelity section is marked CRITICAL for a reason. Every locked decision must have a task implementing it -- 100% coverage, no exceptions. Task actions must reference the decision ID they implement (e.g., 'per D-03') so reviewers can trace any piece of code back to the user's original decision. Deferred ideas are explicitly blocked from appearing in plans. And if a conflict exists -- say, research suggests library Y but the user locked library X -- the user's locked decision wins. The note 'Using X per user decision (research suggested Y)' makes the override visible.",
+      "focus": "100% coverage and explicit ID references in task actions",
+      "bridge": "The plan checker adds a second layer of enforcement."
+    },
+    {
+      "type": "code",
+      "language": "markdown",
+      "value": "**Process:**\n1. Parse CONTEXT.md sections: Decisions, Claude's Discretion, Deferred Ideas\n2. Extract all numbered decisions (D-01, D-02, etc.) from the `<decisions>` section\n3. For each locked Decision, find implementing task(s) -- check task actions for D-XX references\n4. Verify 100% decision coverage: every D-XX must appear in at least one task's action or rationale\n5. Verify no tasks implement Deferred Ideas (scope creep)\n\n**Red flags:**\n- Locked decision has no implementing task\n- Task contradicts a locked decision (e.g., user said \"cards layout\", plan says \"table layout\")\n- Task implements something from Deferred Ideas\n- Plan ignores user's stated preference\n\nissue:\n  dimension: context_compliance\n  severity: blocker\n  description: \"Plan contradicts locked decision: user specified 'card layout' but Task 2 implements 'table layout'\"\n  plan: \"01\"\n  task: 2\n  user_decision: \"Layout: Cards (from Decisions section)\"",
+      "highlight": [3, 4, 5, 9, 10, 16, 17]
+    },
+    {
+      "type": "text",
+      "value": "The plan checker runs after the planner finishes and independently verifies context compliance. It extracts every D-XX decision ID, checks that each has an implementing task, and flags any contradictions as blockers. A blocker means the plan cannot proceed to execution until fixed. This double verification -- planner self-check plus independent checker -- ensures that user decisions survive the entire planning pipeline. If you said 'card layout' and the planner writes 'table layout,' the checker catches it.",
+      "focus": "Independent verification catches what self-checks miss",
+      "bridge": "The result is an unbroken chain from discussion to code."
+    },
+    {
+      "type": "text",
+      "value": "Decision IDs create end-to-end traceability: you make a decision during discussion (D-01 in CONTEXT.md), the planner references it in the task action ('implement card layout per D-01'), the executor builds what the task says, and the plan checker independently verifies the chain is unbroken. This prevents the most common failure mode in AI-assisted development: the system builds something technically correct but different from what the user intended. With decision IDs, intent is preserved as a first-class artifact, not a suggestion lost in natural language.",
+      "focus": "Intent preserved as a first-class artifact",
+      "bridge": "Next, we'll see how CLAUDE.md adds another layer of compliance -- project-level rules that every plan must honor."
+    }
+  ],
+  "conceptMap": "decision-ids",
+  "successCriteria": "You can explain the D-01/D-02 numbering format for decision IDs, describe the locked/discretion/deferred taxonomy, trace how the planner references decision IDs in task actions ('per D-03'), and explain how the plan checker independently verifies 100% decision coverage."
+}

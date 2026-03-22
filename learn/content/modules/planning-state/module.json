@@ -9,6 +9,8 @@
     "requirements-roadmap": "Requirements & Roadmap",
     "phase-lifecycle": "Phase Lifecycle",
     "state-milestones": "State & Milestones",
+    "decision-ids": "Decision IDs",
+    "claude-md-compliance": "CLAUDE.md Compliance",
     "mini-project": "Mini-Project"
   }
 }
