@@ -46,10 +46,10 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 - [x] **WRK-01**: Learner understands workstream namespacing — parallel milestone development via `/gsd:workstreams`
 - [x] **WRK-02**: Learner understands multi-project workspace management from a single root
 - [x] **WRK-03**: Learner understands cross-AI peer review via `/gsd:review`
-- [ ] **WRK-04**: Learner understands workspace isolation and how workstreams avoid conflicts
-- [ ] **WRK-05**: Learner understands workspace lifecycle (create, switch, complete, resume)
-- [ ] **WRK-06**: Learner understands collaboration patterns (review feedback, multi-runtime coordination)
-- [ ] **WRK-07**: Learner understands when to use workstreams vs sequential milestones
+- [x] **WRK-04**: Learner understands workspace isolation and how workstreams avoid conflicts
+- [x] **WRK-05**: Learner understands workspace lifecycle (create, switch, complete, resume)
+- [x] **WRK-06**: Learner understands collaboration patterns (review feedback, multi-runtime coordination)
+- [x] **WRK-07**: Learner understands when to use workstreams vs sequential milestones
 
 ### Module 7 Mini-Project
 
@@ -108,10 +108,10 @@ Requirements for v8.0 milestone. Updates existing modules for GSD v1.26-1.28 fea
 | WRK-01 | Phase 33 | Complete |
 | WRK-02 | Phase 33 | Complete |
 | WRK-03 | Phase 33 | Complete |
-| WRK-04 | Phase 34 | Pending |
-| WRK-05 | Phase 34 | Pending |
-| WRK-06 | Phase 34 | Pending |
-| WRK-07 | Phase 34 | Pending |
+| WRK-04 | Phase 34 | Complete |
+| WRK-05 | Phase 34 | Complete |
+| WRK-06 | Phase 34 | Complete |
+| WRK-07 | Phase 34 | Complete |
 | MINI-01 | Phase 35 | Pending |
 | MINI-02 | Phase 35 | Pending |
 | MINI-03 | Phase 35 | Pending |
